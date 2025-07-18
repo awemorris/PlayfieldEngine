@@ -1,0 +1,15 @@
+#!/bin/sh
+
+HERE="$(dirname "$(readlink -f "$0")")"
+
+case `uname -p` in
+    aarch64)
+        exec "$HERE/usr/bin/noctvm-linux-aarch64";
+        ;;
+    x86_64)
+        exec "$HERE/usr/bin/noctvm-linux-x86_64";
+        ;;
+    *)
+        echo "Unsupported architecture.";
+        ;;
+esac

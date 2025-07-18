@@ -1,0 +1,47 @@
+func setup() {
+    // This function is called when the app wants to open a window.
+    // Just return a window configuration here.
+    // Note that APIs are not available in this function.
+
+    return {
+        title:  "Sample", // Window title
+        width:  640,      // Window width
+        height: 480       // Window height
+    };
+}
+
+func start() {
+    // This function is called when the app wants to start a game.
+    // Please do initialization here.
+
+    // Load a texture.
+    var tex = API.loadTexture({file: "apple.png"});
+
+    // Store to the app storage.
+    App.tex1 = tex;
+}
+
+func frame() {
+    // This function is called every frame.
+    // Please do a rendering here.
+
+    // If you want a time, use this. (not used here)
+    var t = API.millisec;
+
+    // Get a texture.
+    var tex = App.tex1;
+
+    // Render.
+    API.renderTexture({
+	dstLeft:   API.mousePosX,
+	dstTop:    API.mousePosY,
+	dstWidth:  tex.width,
+	dstHeight: tex.height,
+	texture:   tex,
+	srcLeft:   0,
+	srcTop:    0,
+	srcWidth:  tex.width,
+	srcHeight: tex.height,
+	alpha:     255
+    });
+}
