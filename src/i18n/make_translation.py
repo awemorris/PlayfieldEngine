@@ -5,7 +5,7 @@ with open("message.txt") as f:
     print("")
     print("const char *get_system_language(void);")
     print("")
-    print("const char *translation_gettext(const char *msg)")
+    print("const char *noct2d_gettext(const char *msg)")
     print("{")
     print("    const char *lang_code = get_system_language();")
 

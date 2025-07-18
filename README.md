@@ -1,7 +1,7 @@
-NoctVM
+Noct2D
 ======
 
-**NoctVM** is a lightweight scripting runtime for game
+**Noct2D** is a lightweight scripting runtime for game
 development, often described as a game engine.
 
 It is designed to provide:
@@ -10,21 +10,21 @@ It is designed to provide:
 - Real-time graphics and audio capabilities
 - Cross-platform deployment across desktops, mobile devices, and game consoles
 
-Originally developed under the name **Fuel**, NoctVM was reimagined to
-meet the demands of modern, production-ready environments across
-diverse platforms.
+Originally developed under the name **Fuel** and **NoctVM**, Noct2D
+was reimagined to meet the demands of modern, production-ready
+environments across diverse platforms.
 
 ---
 
 ## Quick Start
 
 1. Download the latest release:
-  Precompiled binaries are available on the [Releases page](https://github.com/awemorris/NoctVM/releases)
+  Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
 
 2. Clone and build from the repository:
   ```sh
-  git clone --recursive https://github.com/awemorris/NoctVM.git
-  cd NoctVM
+  git clone --recursive https://github.com/awemorris/Noct2D.git
+  cd Noct2D
   mkdir build
   cd build
   cmake ..
@@ -56,7 +56,7 @@ diverse platforms.
     - All from a single codebase.
     - On mobile platforms (iOS, Android), ahead-of-time (AOT) compilation is available as an alternative to JIT.
 - **Portable by Design**
-    - NoctVM runs on nearly any computer made after the year 2000.
+    - Noct2D runs on nearly any computer made after the year 2000.
     - See the [Platform Guide](docs/porting.md)
 - **Console-Ready**
     - Build for platforms you don't physically own,
@@ -107,23 +107,23 @@ For more examples, check the [Getting Started Guide](docs/gettingstarted.md)
 
 ---
 
-## What's NoctVM?
+## What's Noct2D?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-NoctVM was born from this single question.
+Noct2D was born from this single question.
 
-NoctVM is a lightweight and flexible game engine written in C89,
+Noct2D is a lightweight and flexible game engine written in C89,
 designed to support creators across desktop, mobile, and console platforms.
 
 It runs smoothly even on older or low-spec machines — if you have a computer,
 there's a place for you to create.
 
 And if you're using something more powerful, like a modern MacBook or
-iPhone, NoctVM adapts to draw out the full capabilities of your
+iPhone, Noct2D adapts to draw out the full capabilities of your
 device.
 
-You don't need the latest or most expensive hardware. NoctVM helps you
+You don't need the latest or most expensive hardware. Noct2D helps you
 go beyond your environment. It's a helpful companion for creators
 everywhere — especially in places with fewer resources.
 
@@ -140,7 +140,7 @@ Create at your pace, wherever you are in the world.
 ### Core Architecture
 
 * **C89**:
-  NoctVM is implemented entirely in ANSI C (C89), making it highly
+  Noct2D is implemented entirely in ANSI C (C89), making it highly
   portable and dependency-free.
 
 * **Scripting**:
@@ -182,7 +182,7 @@ Create at your pace, wherever you are in the world.
 ### Noct Language and Tools
 
 **NoctLang** is a lightweight scripting language designed specifically
-for NoctVM. With a game-oriented syntax, it emphasizes clarity,
+for Noct2D. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
@@ -196,38 +196,38 @@ controlled environments.
 
 ## NoctScript IDE
 
-**NoctScript** is the official IDE for NoctVM-based projects, designed
+**NoctScript** is the official IDE for Noct2D-based projects, designed
 to streamline development and testing.
 
 It includes:
 
 - A built-in editor with syntax highlighting for NoctLang
-- One-click run and debug support for NoctVM scripts
+- One-click run and debug support for Noct2D scripts
 - Integrated asset preview and configuration panels
 - A seamless workflow between code, assets, and runtime behavior
 
-By separating the **core runtime (NoctVM)** from the **development
+By separating the **core runtime (Noct2D)** from the **development
 environment (NoctScript)**, you can choose to use the IDE when
-convenient — or embed NoctVM directly into your own tools and
+convenient — or embed Noct2D directly into your own tools and
 pipelines.
 
 ---
 
-## Why NoctVM?
+## Why Noct2D?
 
-NoctVM is for those who quietly hold a dream, and wish to share it, one
+Noct2D is for those who quietly hold a dream, and wish to share it, one
 small step at a time.
 
 Creativity shouldn't depend on the power of your computer, where you
 live, or what tools you have.
 
-NoctVM was created with the belief that every creator deserves space
+Noct2D was created with the belief that every creator deserves space
 to explore, no matter their surroundings.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, NoctVM offers gentle
+UN-issued Chromebook in a temporary shelter, Noct2D offers gentle
 tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own. If you have something to make, NoctVM will
+thoughtful, and your own. If you have something to make, Noct2D will
 be here to walk with you.
 
 **Dreams fuel it — and they're the only requirement.**
@@ -236,13 +236,13 @@ be here to walk with you.
 
 ## 🤝 Join Us
 
-NoctVM is still in its early stages. We're building a game engine with
+Noct2D is still in its early stages. We're building a game engine with
 care, hoping it will inspire and empower creators around the world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what NoctVM can become. You're welcome to
+Every small step helps shape what Noct2D can become. You're welcome to
 join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

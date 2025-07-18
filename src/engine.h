@@ -11,6 +11,8 @@
 #ifndef ENGINE_ENGINE_H
 #define ENGINE_ENGINE_H
 
+#include "c89compat.h"
+
 /* StratoHAL */
 #include "stratohal/platform.h"
 

@@ -7,6 +7,7 @@
 #ifndef ENGINE_VM_H
 #define ENGINE_VM_H
 
+#include "c89compat.h"
 #include "stratohal/c89compat.h"
 
 bool create_vm(char **title, int *width, int *height);

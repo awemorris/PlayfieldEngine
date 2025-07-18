@@ -298,8 +298,8 @@ inline void strlcat(char *d, const char *s, size_t len)
 #if !defined(USE_TRANSLATION)
 #define _(text)		text
 #else
-#define _(text)		translation_gettext(text)
-const char *translation_gettext(const char *msg);
+#define _(text)		noct2d_gettext(text)
+const char *noct2d_gettext(const char *msg);
 #endif
 
 #endif
