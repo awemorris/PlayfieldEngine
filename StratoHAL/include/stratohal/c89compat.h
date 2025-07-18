@@ -291,15 +291,4 @@ inline void strlcat(char *d, const char *s, size_t len)
 #define BETOHOST16(d)	(d)
 #endif
 
-/*
- * Message Translation
- */
-
-#if !defined(USE_TRANSLATION)
-#define _(text)		text
-#else
-#define _(text)		translation_gettext(text)
-const char *translation_gettext(const char *msg);
-#endif
-
 #endif

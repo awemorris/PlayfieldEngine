@@ -15,7 +15,7 @@
 #include "stratohal/platform.h"
 
 /* NoctLang */
-#include "noctlang/runtime.h"
+#include <noct/noct.h>
 
 /* Standard C */
 #include <stdio.h>
