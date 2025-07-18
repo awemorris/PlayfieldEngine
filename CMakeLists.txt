@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(NoctVM LANGUAGES C CXX)
+project(Noct2D LANGUAGES C CXX)
 
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 
@@ -23,19 +23,19 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/StratoHAL)
 #
 
 # Main sources.
-set(NOCTVM_SOURCES
+set(NOCT2D_SOURCES
   src/main.c
   src/api.c
   src/vm.c
   src/translation.c
 )
 
-# Add NoctVM binary.
-add_executable(noctvm ${NOCTVM_SOURCES})
+# Add Noct2D binary.
+add_executable(noct2d ${NOCT2D_SOURCES})
 
 # Change the bundle name.
 if (APPLE AND NOT IOS AND USE_BUNDLE)
-  set_target_properties(noctvm PROPERTIES OUTPUT_NAME NoctVM)
+  set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
 endif()
 
 #
@@ -43,34 +43,34 @@ endif()
 #
 
 # -INoctLang/include
-target_include_directories(noctvm PRIVATE {$CMAKE_SOURCE_DIR}/NoctLang/include)
+target_include_directories(noct2d PRIVATE {$CMAKE_SOURCE_DIR}/NoctLang/include)
 
 # -IStratoHAL/include
-target_include_directories(noctvm PRIVATE {$CMAKE_SOURCE_DIR}/StratoHAL/include)
+target_include_directories(noct2d PRIVATE {$CMAKE_SOURCE_DIR}/StratoHAL/include)
 
 # -DUSE_SHARED if we use dynamic linking.
 if(USE_SHARED)
-  target_compile_definitions(noctvm PRIVATE USE_SHARED)
+  target_compile_definitions(noct2d PRIVATE USE_SHARED)
 endif()
 
 # -DUSE_JIT if we use JIT.
 if(USE_JIT)
-  target_compile_definitions(noctvm PRIVATE USE_JIT)
+  target_compile_definitions(noct2d PRIVATE USE_JIT)
 endif()
 
 # FreeBSD: Add -I/usr/local/include
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  target_include_directories(noctvm PRIVATE /usr/local/include)
+  target_include_directories(noct2d PRIVATE /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
 if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  target_include_directories(noctvm PRIVATE /usr/local/include /usr/X11R7/include)
+  target_include_directories(noct2d PRIVATE /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
 if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  target_include_directories(noctvm PRIVATE /usr/local/include /usr/X11R6/include)
+  target_include_directories(noct2d PRIVATE /usr/local/include /usr/X11R6/include)
 endif()
 
 #
@@ -95,7 +95,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
 #
 
 # Libraries.
-target_link_libraries(noctvm PRIVATE
+target_link_libraries(noct2d PRIVATE
   noctlang
   strato
 )
@@ -103,10 +103,10 @@ target_link_libraries(noctvm PRIVATE
 # Windows link options.
 if(WIN32)
   # No console.
-  set_target_properties(noctvm PROPERTIES WIN32_EXECUTABLE TRUE)
+  set_target_properties(noct2d PROPERTIES WIN32_EXECUTABLE TRUE)
 
   # DLLs.
-  target_link_libraries(noctvm PRIVATE
+  target_link_libraries(noct2d PRIVATE
     gdi32
     ole32
     dsound
@@ -116,7 +116,7 @@ if(WIN32)
 
   # -municode
   if (MINGW)
-    target_link_options(noctvm PRIVATE
+    target_link_options(noct2d PRIVATE
       -municode
     )
   endif()
@@ -124,10 +124,10 @@ endif()
 
 # macOS link options.
 if(APPLE AND NOT IOS)
-  target_compile_options(noctvm PRIVATE
+  target_compile_options(noct2d PRIVATE
     -fmodules
   )
-  target_link_libraries(noctvm PRIVATE
+  target_link_libraries(noct2d PRIVATE
     "-framework AppKit"
     "-framework MetalKit"
     "-framework AVFoundation"
@@ -137,7 +137,7 @@ endif()
 # POSIX GLX: Add -lGL -lGLX
 if(UNIX AND NOT APPLE)
   if(USE_GLX)
-    target_link_libraries(noctvm PRIVATE
+    target_link_libraries(noct2d PRIVATE
       GL
       GLX
     )
@@ -146,7 +146,7 @@ endif()
 
 # POSIX: Add -lm -lpthread -lXpm -lX11
 if(UNIX AND NOT APPLE)
-  target_link_libraries(noctvm PRIVATE
+  target_link_libraries(noct2d PRIVATE
     m
     pthread
     Xpm
@@ -156,7 +156,7 @@ endif()
 
 # Linux: Add -lasound
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_link_libraries(noctvm PRIVATE
+  target_link_libraries(noct2d PRIVATE
     asound
   )
 endif()
@@ -187,7 +187,7 @@ endif()
 
 # Haiku: Add -lbe -lmedia
 if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  target_link_libraries(noctvm PRIVATE
+  target_link_libraries(noct2d PRIVATE
     be
     media
   )
@@ -199,18 +199,18 @@ endif()
 
 if(APPLE AND NOT IOS AND USE_BUNDLE)
   # Make an app bundle.
-  set_target_properties(noctvm PROPERTIES
+  set_target_properties(noct2d PROPERTIES
     MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.noctvm"
-    MACOSX_BUNDLE_BUNDLE_NAME "NoctVM"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.noct2d"
+    MACOSX_BUNDLE_BUNDLE_NAME "Noct2D"
   )
 
   # Set an icon.
   set(APP_ICON "${CMAKE_SOURCE_DIR}/resources/icon512.png")
-  target_sources(noctvm PRIVATE ${APP_ICON})
+  target_sources(noct2d PRIVATE ${APP_ICON})
   set_source_files_properties(${APP_ICON} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources")
-  set_target_properties(noctvm PROPERTIES
+  set_target_properties(noct2d PROPERTIES
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
@@ -219,5 +219,5 @@ if(APPLE AND NOT IOS AND USE_BUNDLE)
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  target_sources(noctvm PRIVATE ${APP_GAME_DATA})
+  target_sources(noct2d PRIVATE ${APP_GAME_DATA})
 endif()
