@@ -9,7 +9,7 @@
  */
 
 /* HAL */
-#include "c89compat.h"
+#include "stratohal/c89compat.h"
 #include "stratohal/platform.h"
 #include "d3drender.h"
 #include "dsound.h"

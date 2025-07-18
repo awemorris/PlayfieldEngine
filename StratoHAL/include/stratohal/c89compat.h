@@ -291,4 +291,14 @@ inline void strlcat(char *d, const char *s, size_t len)
 #define BETOHOST16(d)	(d)
 #endif
 
+/*
+ * Message Translation
+ */
+#if defined(USE_GETTEXT_COMPAT)
+#define _(s)		noct2d_gettext(s)
+const char *noct_gettext(const char *msg);
+#else
+#define _(s)		(s)
+#endif
+
 #endif
