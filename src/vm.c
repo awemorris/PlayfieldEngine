@@ -18,13 +18,13 @@ NoctEnv *env;
 static bool setup_variables(void);
 static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height);
-static bool get_int_param(struct rt_env *rt, const char *name, int *ret);
+static bool get_int_param(NoctEnv *env, const char *name, int *ret);
 #if 0
-static bool get_float_param(struct rt_env *rt, const char *name, float *ret);
+static bool get_float_param(NoctEnv *env, const char *name, float *ret);
 #endif
-static bool get_string_param(struct rt_env *rt, const char *name, const char **ret);
-static bool get_dict_elem_int_param(struct rt_env *rt, const char *name, const char *key, int *ret);
-static bool install_api(struct rt_env *rt);
+static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
+static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret);
+static bool install_api(NoctEnv *env);
 
 /*
  * Create a VM.
@@ -157,6 +157,7 @@ static bool call_setup(char **title, int *width, int *height)
 				break;
 		}
 
+		/* Do a fast GC. */
 		noct_fast_gc(env);
 
 		succeeded = true;
@@ -169,8 +170,9 @@ static bool call_setup(char **title, int *width, int *height)
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
 		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		return false;
 	}
-	
+
 	return true;
 }
 
@@ -179,7 +181,7 @@ static bool call_setup(char **title, int *width, int *height)
  */
 bool call_vm_function(const char *func_name)
 {
-	struct rt_value ret;
+	NoctValue ret;
 
 	/* Call a function. */
 	if (!noct_enter_vm(env, func_name, 0, NULL, &ret)) {
@@ -193,7 +195,7 @@ bool call_vm_function(const char *func_name)
 		return false;
 	}
 
-	/* Do a shallow GC. */
+	/* Do a fast GC. */
 	fast_gc();
 
 	return true;
@@ -205,12 +207,12 @@ bool call_vm_function(const char *func_name)
 bool call_vm_tag_function(void)
 {
 	struct tag *t;
-	struct rt_value dict;
+	NoctValue dict;
 	int i;
 	char func_name[256];
-	struct rt_value func_val;
-	struct rt_func *func;
-	struct rt_value ret;
+	NoctValue func_val;
+	NoctFunc *func;
+	NoctValue ret;
 
 	/* Get a current command. */
 	t = get_current_tag();
@@ -229,7 +231,7 @@ bool call_vm_tag_function(void)
 
 	/* Setup properties as dictionary items. */
 	for (i = 0; i < t->prop_count; i++) {
-		struct rt_value str;
+		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
 			log_error(_("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
@@ -289,7 +291,7 @@ bool call_vm_tag_function(void)
  */
 bool set_vm_int(const char *prop_name, int val)
 {
-	struct rt_value api, prop_val;
+	NoctValue api, prop_val;
 
 	if (!noct_get_global(env, "Engine", &api))
 		return false;
@@ -301,7 +303,7 @@ bool set_vm_int(const char *prop_name, int val)
 }
 
 /*
- * Do a shallow GC.
+ * Do a fast GC.
  */
 void fast_gc(void)
 {
@@ -309,7 +311,7 @@ void fast_gc(void)
 }
 
 /*
- * Do a deep GC.
+ * Do a full GC.
  */
 void full_gc(void)
 {
@@ -321,9 +323,9 @@ void full_gc(void)
  */
 
 /* debug() */
-static bool debug(struct rt_env *env)
+static bool debug(NoctEnv *env)
 {
-	struct rt_value param;
+	NoctValue param;
 	int type;
 	bool succeeded;
 
@@ -380,7 +382,7 @@ static bool debug(struct rt_env *env)
 }
 
 /* Engine.moveToTagFile() */
-static bool Engine_moveToTagFile(struct rt_env *rt)
+static bool Engine_moveToTagFile(NoctEnv *env)
 {
 	const char *file;
 
@@ -394,9 +396,9 @@ static bool Engine_moveToTagFile(struct rt_env *rt)
 }
 
 /* Engine.moveToNextTag() */
-static bool Engine_moveToNextTag(struct rt_env *rt)
+static bool Engine_moveToNextTag(NoctEnv *env)
 {
-	UNUSED_PARAMETER(rt);
+	UNUSED_PARAMETER(env);
 
 	noct2d_move_to_next_tag();
 
@@ -404,9 +406,9 @@ static bool Engine_moveToNextTag(struct rt_env *rt)
 }
 
 /* Engine.callTagFunction() */
-static bool Engine_callTagFunction(struct rt_env *rt)
+static bool Engine_callTagFunction(NoctEnv *env)
 {
-	UNUSED_PARAMETER(rt);
+	UNUSED_PARAMETER(env);
 
 	if (!call_vm_tag_function())
 		return false;
@@ -415,13 +417,13 @@ static bool Engine_callTagFunction(struct rt_env *rt)
 }
 
 /* Engine.loadTexture() */
-static bool Engine_loadTexture(struct rt_env *rt)
+static bool Engine_loadTexture(NoctEnv *env)
 {
 	const char *file;
 	int tex_id;
 	int tex_width;
 	int tex_height;
-	struct rt_value ret, ival;
+	NoctValue ret, ival;
 
 	if (!get_string_param(env, "file", &file)) {
 		noct_error(env, _("file parameter is not set."));
@@ -455,7 +457,7 @@ static bool Engine_loadTexture(struct rt_env *rt)
 }
 
 /* Engine.renderTexture() */
-static bool Engine_renderTexture(struct rt_env *rt)
+static bool Engine_renderTexture(NoctEnv *env)
 {
 	int dst_left;
 	int dst_top;
@@ -505,7 +507,7 @@ static bool Engine_renderTexture(struct rt_env *rt)
 }
 
 /* Engine.draw() */
-static bool Engine_draw(struct rt_env *rt)
+static bool Engine_draw(NoctEnv *env)
 {
 	int tex_id, x, y;
 
@@ -522,7 +524,7 @@ static bool Engine_draw(struct rt_env *rt)
 }
 
 /* Engine.destroyTexture() */
-static bool Engine_destroyTexture(struct rt_env *rt)
+static bool Engine_destroyTexture(NoctEnv *env)
 {
 	int tex_id;
 
@@ -535,11 +537,11 @@ static bool Engine_destroyTexture(struct rt_env *rt)
 }
 
 /* Engine.playSound() */
-static bool Engine_playSound(struct rt_env *rt)
+static bool Engine_playSound(NoctEnv *env)
 {
 	int stream;
 	const char *file;
-	struct rt_value ret;
+	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
@@ -557,10 +559,10 @@ static bool Engine_playSound(struct rt_env *rt)
 }
 
 /* Engine.stopSound() */
-static bool Engine_stopSound(struct rt_env *rt)
+static bool Engine_stopSound(NoctEnv *env)
 {
 	int stream;
-	struct rt_value ret;
+	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
@@ -576,10 +578,10 @@ static bool Engine_stopSound(struct rt_env *rt)
 }
 
 /* Engine.stopSound() */
-static bool Engine_setSoundVolume(struct rt_env *env)
+static bool Engine_setSoundVolume(NoctEnv *env)
 {
 	int stream;
-	struct rt_value ret;
+	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
@@ -595,11 +597,11 @@ static bool Engine_setSoundVolume(struct rt_env *env)
 }
 
 /* Engine.loadFont() */
-static bool Engine_loadFont(struct rt_env *rt)
+static bool Engine_loadFont(NoctEnv *rt)
 {
 	int slot;
 	const char *file;
-	struct rt_value ret;
+	NoctValue ret;
 
 	if (!get_int_param(env, "slot", &slot))
 		return false;
@@ -617,7 +619,7 @@ static bool Engine_loadFont(struct rt_env *rt)
 }
 
 /* Engine.createTextTexture() */
-static bool Engine_createTextTexture(struct rt_env *rt)
+static bool Engine_createTextTexture(NoctEnv *env)
 {
 	int slot;
 	const char *text;
@@ -627,8 +629,8 @@ static bool Engine_createTextTexture(struct rt_env *rt)
 	int tex_id;
 	int tex_width;
 	int tex_height;
-	struct rt_value ret;
-	struct rt_value ival;
+	NoctValue ret;
+	NoctValue ival;
 
 	if (!get_int_param(env, "slot", &slot))
 		return false;
@@ -670,9 +672,9 @@ static bool Engine_createTextTexture(struct rt_env *rt)
  */
 
 /* Get an integer parameter. */
-static bool get_int_param(struct rt_env *rt, const char *name, int *ret)
+static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 {
-	struct rt_value param, elem;
+	NoctValue param, elem;
 	float f;
 	const char *s;
 
@@ -704,9 +706,9 @@ static bool get_int_param(struct rt_env *rt, const char *name, int *ret)
 
 #if 0
 /* Get a float parameter. */
-static bool get_float_param(struct rt_env *rt, const char *name, float *ret)
+static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 {
-	struct rt_value param, elem;
+	NoctValue param, elem;
 
 	if (!rt_get_arg(env, 0, &param))
 		return false;
@@ -734,9 +736,9 @@ static bool get_float_param(struct rt_env *rt, const char *name, float *ret)
 #endif
 
 /* Get a string parameter. */
-static bool get_string_param(struct rt_env *rt, const char *name, const char **ret)
+static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 {
-	struct rt_value param, elem;
+	NoctValue param, elem;
 	static char buf[128];
 
 	if (!noct_get_arg(env, 0, &param))
@@ -774,9 +776,9 @@ static bool get_string_param(struct rt_env *rt, const char *name, const char **r
 }
 
 /* Get an integer parameter. */
-static bool get_dict_elem_int_param(struct rt_env *rt, const char *name, const char *key, int *ret)
+static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret)
 {
-	struct rt_value param, elem, ival;
+	NoctValue param, elem, ival;
 
 	if (!noct_get_arg(env, 0, &param))
 		return false;
@@ -807,7 +809,7 @@ static bool get_dict_elem_int_param(struct rt_env *rt, const char *name, const c
 /*
  * Install Engine functions to a runtime.
  */
-bool install_api(struct rt_env *rt)
+bool install_api(NoctEnv *env)
 {
 	const char *params[] = {"param"};
 	struct func {
