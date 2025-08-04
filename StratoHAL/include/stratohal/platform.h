@@ -7,19 +7,14 @@
 /*
  * Main Header of Game Porting Layer
  */
+#ifndef STRATOHAL_PLATFORM_H
+#define STRATOHAL_PLATFORM_H
 
-#ifndef NOCTSTRATO_PLATFORM_H
-#define NOCTSTRATO_PLATFORM_H
-
-/* Types */
-#include "c89compat.h"
+#include <stratohal/c89compat.h>
 
 /*************************
  * Files and Directories *
  *************************/
-
-/* Startup file name */
-#define STARTUP_FILE		"main.ns"
 
 /* Package file name */
 #define PACKAGE_FILE		"product.img"

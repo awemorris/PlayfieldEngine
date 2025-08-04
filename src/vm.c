@@ -7,8 +7,12 @@
 #include "engine.h"
 #include "vm.h"
 
-/* The runtime. */
-struct rt_env *rt;
+/* NoctLang */
+#include <noct/noct.h>
+
+/* NoctLang. */
+NoctVM *vm;
+NoctEnv *env;
 
 /* Forward Declaration */
 static bool setup_variables(void);
@@ -28,7 +32,7 @@ static bool install_api(struct rt_env *rt);
 bool create_vm(char **title, int *width, int *height)
 {
 	/* Create a language runtime. */
-	if (!noct_create(&rt))
+	if (!noct_create_vm(&vm, &env))
 		return false;
 
 	/* Setup variables. */
@@ -41,15 +45,18 @@ bool create_vm(char **title, int *width, int *height)
 
 	/* Call "setup()" and get a title and window size. */
 	if (!call_setup(title, width, height)) {
-		log_error(_("%s:%d: error: %s\n"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+		const char *file;
+		int line;
+		const char *msg;
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
 	/* Install the API to the runtime. */
-	if (!install_api(rt))
+	if (!install_api(env))
 		return false;
 
 	return true;
@@ -58,23 +65,25 @@ bool create_vm(char **title, int *width, int *height)
 /* Setup global variables. */
 static bool setup_variables(void)
 {
-	struct rt_value dict;
+	NoctValue dict;
 	bool succeeded;
 
 	/* Try: */
 	succeeded = false;
 	do {
 		/* Add a global variable "App". */
-		if (!noct_make_empty_dict(rt, &dict))
+		if (!noct_make_empty_dict(env, &dict))
 			break;
-		if (!noct_set_global(rt, "App", &dict))
+		if (!noct_set_global(env, "App", &dict))
 			break;
 
 		succeeded = true;
 	} while (0);
 
 	if (!succeeded) {
-		log_error(_("error: %s\n"), noct_get_error_message(rt));
+		const char *msg;
+		noct_get_error_message(env, &msg);
+		log_error(_("error: %s\n"), msg);
 		return false;
 	}
 
@@ -91,11 +100,14 @@ static bool load_startup_file(void)
 		return false;
 
 	/* Register the script text to the language runtime. */
-	if (!noct_register_source(rt, STARTUP_FILE, buf)) {
-		log_error(_("%s:%d: error: %s"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+	if (!noct_register_source(env, STARTUP_FILE, buf)) {
+		const char *file;
+		int line;
+		const char *msg;
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -107,53 +119,56 @@ static bool load_startup_file(void)
 /* Call "setup()" function to determin a title, width, and height. */
 static bool call_setup(char **title, int *width, int *height)
 {
-	struct rt_value ret;
-	struct rt_value title_val;
-	struct rt_value width_val;
-	struct rt_value height_val;
+	NoctValue ret;
+	NoctValue title_val;
+	NoctValue width_val;
+	NoctValue height_val;
 	const char *title_s;
 	bool succeeded;
 
 	succeeded = false;
 	do {
 		/* Call setup() and get a return dictionary. */
-		if (!noct_call_with_name(rt, "setup", NULL, 0, NULL, &ret))
+		if (!noct_enter_vm(env, "setup", 0, NULL, &ret))
 			break;
 
 		/* Get the "title" element from the dictionary. */
 		if (title != NULL) {
-			if (!noct_get_dict_elem(rt, &ret, "title", &title_val))
+			if (!noct_get_dict_elem(env, &ret, "title", &title_val))
 				break;
-			if (!noct_get_string(rt, &title_val, &title_s))
+			if (!noct_get_string(env, &title_val, &title_s))
 				break;
 			*title = strdup(title_s);
 		}
 
 		/* Get the "width" element from the dictionary. */
 		if (width != NULL) {
-			if (!noct_get_dict_elem(rt, &ret, "width", &width_val))
+			if (!noct_get_dict_elem(env, &ret, "width", &width_val))
 				break;
-			if (!noct_get_int(rt, &width_val, width))
+			if (!noct_get_int(env, &width_val, width))
 				break;
 		}
 
 		/* Get the "height" element from the dictionary. */
 		if (height != NULL) {
-			if (!noct_get_dict_elem(rt, &ret, "height", &height_val))
+			if (!noct_get_dict_elem(env, &ret, "height", &height_val))
 				break;
-			if (!noct_get_int(rt, &height_val, height))
+			if (!noct_get_int(env, &height_val, height))
 				break;
 		}
 
-		noct_shallow_gc(rt);
+		noct_fast_gc(env);
 
 		succeeded = true;
 	} while (0);
 	if (!succeeded) {
-		log_error(_("%s:%d: error: %s\n"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+		const char *file;
+		int line;
+		const char *msg;
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 	}
 	
 	return true;
@@ -167,20 +182,19 @@ bool call_vm_function(const char *func_name)
 	struct rt_value ret;
 
 	/* Call a function. */
-	if (!noct_call_with_name(rt, func_name, NULL, 0, NULL, &ret)) {
-		log_error(_("%s:%d: error: %s\n"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+	if (!noct_enter_vm(env, func_name, 0, NULL, &ret)) {
+		const char *file;
+		int line;
+		const char *msg;
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
 	/* Do a shallow GC. */
-	shallow_gc();
-
-	/* Do a deep GC if required. */
-	if (get_heap_usage() > 256 * 1024 * 1024)
-		deep_gc();
+	fast_gc();
 
 	return true;
 }
@@ -206,7 +220,7 @@ bool call_vm_tag_function(void)
 	}
 
 	/* Make a parameter dictionary. */
-	if (!noct_make_empty_dict(rt, &dict)) {
+	if (!noct_make_empty_dict(env, &dict)) {
 		log_error(_("In scenario %s:%d: runtime error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line());
@@ -216,13 +230,13 @@ bool call_vm_tag_function(void)
 	/* Setup properties as dictionary items. */
 	for (i = 0; i < t->prop_count; i++) {
 		struct rt_value str;
-		if (!noct_make_string(rt, &str, t->prop_value[i])) {
+		if (!noct_make_string(env, &str, t->prop_value[i])) {
 			log_error(_("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
 		}
-		if (!noct_set_dict_elem(rt, &dict, t->prop_name[i], &str)) {
+		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
 			log_error(_("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
@@ -234,14 +248,14 @@ bool call_vm_tag_function(void)
 	snprintf(func_name, sizeof(func_name), "tag_%s", t->tag_name);
 
 	/* Get a corresponding function.  */
-	if (!noct_get_global(rt, func_name, &func_val)) {
+	if (!noct_get_global(env, func_name, &func_val)) {
 		log_error(_("%s:%d: Tag \"%s\" not found.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
 		return false;
 	}
-	if (!noct_get_func(rt, &func_val, &func)) {
+	if (!noct_get_func(env, &func_val, &func)) {
 		log_error(_("%s:%d: \"tag_%s\" is not a function.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
@@ -250,15 +264,20 @@ bool call_vm_tag_function(void)
 	}
 
 	/* Call the function. */
-	if (!noct_call_with_name(rt, func_name, NULL, 1, &dict, &ret)) {
+	if (!noct_enter_vm(env, func_name, 1, &dict, &ret)) {
+		const char *file;
+		int line;
+		const char *msg;
+
 		log_error(_("In scenario %s:%d: Tag \"%s\" execution error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
-		log_error(_("%s:%d: %s"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -272,41 +291,29 @@ bool set_vm_int(const char *prop_name, int val)
 {
 	struct rt_value api, prop_val;
 
-	if (!noct_get_global(rt, "API", &api))
+	if (!noct_get_global(env, "Engine", &api))
 		return false;
-	noct_make_int(&prop_val, val);
-	if (!noct_set_dict_elem(rt, &api, prop_name, &prop_val))
+	noct_make_int(env, &prop_val, val);
+	if (!noct_set_dict_elem(env, &api, prop_name, &prop_val))
 		return false;
 
 	return true;
 }
 
 /*
- * Get the heap usage.
- */
-size_t get_heap_usage(void)
-{
-	size_t ret;
-
-	rt_get_heap_usage(rt, &ret);
-
-	return ret;
-}
-
-/*
  * Do a shallow GC.
  */
-void shallow_gc(void)
+void fast_gc(void)
 {
-	noct_shallow_gc(rt);
+	noct_fast_gc(env);
 }
 
 /*
  * Do a deep GC.
  */
-void deep_gc(void)
+void full_gc(void)
 {
-	noct_deep_gc(rt);
+	noct_compact_gc(env);
 }
 
 /*
@@ -314,7 +321,7 @@ void deep_gc(void)
  */
 
 /* debug() */
-static bool debug(struct rt_env *rt)
+static bool debug(struct rt_env *env)
 {
 	struct rt_value param;
 	int type;
@@ -323,19 +330,22 @@ static bool debug(struct rt_env *rt)
 	type = 0;
 	succeeded = false;
 	do {
-		if (!noct_get_arg(rt, 0, &param))
+		if (!noct_get_arg(env, 0, &param))
 			break;
 
-		if (!noct_get_value_type(rt, &param, &type))
+		if (!noct_get_value_type(env, &param, &type))
 			break;
 
 		succeeded = true;
 	} while (0);
 	if (!succeeded) {
-		log_error(_("%s:%d: error: %s\n"),
-			  noct_get_error_file(rt),
-			  noct_get_error_line(rt),
-			  noct_get_error_message(rt));
+		const char *file;
+		int line;
+		const char *msg;
+		noct_get_error_file(env, &file);
+		noct_get_error_line(env, &line);
+		noct_get_error_message(env, &msg);
+		log_error(_("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -343,21 +353,21 @@ static bool debug(struct rt_env *rt)
 	case NOCT_VALUE_INT:
 	{
 		int d;
-		noct_get_int(rt, &param, &d);
+		noct_get_int(env, &param, &d);
 		printf("%d\n", d);
 		break;
 	}
 	case NOCT_VALUE_FLOAT:
 	{
 		float f;
-		noct_get_float(rt, &param, &f);
+		noct_get_float(env, &param, &f);
 		printf("%f\n", f);
 		break;
 	}
 	case NOCT_VALUE_STRING:
 	{
 		const char *s;
-		noct_get_string(rt, &param, &s);
+		noct_get_string(env, &param, &s);
 		printf("%s\n", s);
 		break;
 	}
@@ -369,32 +379,32 @@ static bool debug(struct rt_env *rt)
 	return true;
 }
 
-/* API.moveToTagFile() */
-static bool API_moveToTagFile(struct rt_env *rt)
+/* Engine.moveToTagFile() */
+static bool Engine_moveToTagFile(struct rt_env *rt)
 {
 	const char *file;
 
-	if (!get_string_param(rt, "file", &file))
+	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!move_to_tag_file(file))
+	if (!noct2d_move_to_tag_file(file))
 		return false;
 
 	return true;
 }
 
-/* API.moveToNextTag() */
-static bool API_moveToNextTag(struct rt_env *rt)
+/* Engine.moveToNextTag() */
+static bool Engine_moveToNextTag(struct rt_env *rt)
 {
 	UNUSED_PARAMETER(rt);
 
-	move_to_next_tag();
+	noct2d_move_to_next_tag();
 
 	return true;
 }
 
-/* API.callTagFunction() */
-static bool API_callTagFunction(struct rt_env *rt)
+/* Engine.callTagFunction() */
+static bool Engine_callTagFunction(struct rt_env *rt)
 {
 	UNUSED_PARAMETER(rt);
 
@@ -404,8 +414,8 @@ static bool API_callTagFunction(struct rt_env *rt)
 	return true;
 }
 
-/* API.loadTexture() */
-static bool API_loadTexture(struct rt_env *rt)
+/* Engine.loadTexture() */
+static bool Engine_loadTexture(struct rt_env *rt)
 {
 	const char *file;
 	int tex_id;
@@ -413,39 +423,39 @@ static bool API_loadTexture(struct rt_env *rt)
 	int tex_height;
 	struct rt_value ret, ival;
 
-	if (!get_string_param(rt, "file", &file)) {
-		noct_error(rt, _("file parameter is not set."));
+	if (!get_string_param(env, "file", &file)) {
+		noct_error(env, _("file parameter is not set."));
 		return false;
 	}
 
-	if (!load_texture(file, &tex_id, &tex_width, &tex_height)) {
-		noct_error(rt, _("Failed to load a texture."));
+	if (!noct2d_load_texture(file, &tex_id, &tex_width, &tex_height)) {
+		noct_error(env, _("Failed to load a texture."));
 		return false;
 	}
 
-	if (!noct_make_empty_dict(rt, &ret))
+	if (!noct_make_empty_dict(env, &ret))
 		return false;
 
-	noct_make_int(&ival, tex_id);
-	if (!noct_set_dict_elem(rt, &ret, "id", &ival))
+	noct_make_int(env, &ival, tex_id);
+	if (!noct_set_dict_elem(env, &ret, "id", &ival))
 		return false;
 	
-	noct_make_int(&ival, tex_width);
-	if (!noct_set_dict_elem(rt, &ret, "width", &ival))
+	noct_make_int(env, &ival, tex_width);
+	if (!noct_set_dict_elem(env, &ret, "width", &ival))
 		return false;
 
-	noct_make_int(&ival, tex_height);
-	if (!noct_set_dict_elem(rt, &ret, "height", &ival))
+	noct_make_int(env, &ival, tex_height);
+	if (!noct_set_dict_elem(env, &ret, "height", &ival))
 		return false;
 
-	if (!noct_set_return(rt, &ret))
+	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
 }
 
-/* API.renderTexture() */
-static bool API_renderTexture(struct rt_env *rt)
+/* Engine.renderTexture() */
+static bool Engine_renderTexture(struct rt_env *rt)
 {
 	int dst_left;
 	int dst_top;
@@ -458,119 +468,156 @@ static bool API_renderTexture(struct rt_env *rt)
 	int src_height;
 	int alpha;
 
-	if (!get_int_param(rt, "dstLeft", &dst_left))
+	if (!get_int_param(env, "dstLeft", &dst_left))
 		return false;
-	if (!get_int_param(rt, "dstTop", &dst_top))
+	if (!get_int_param(env, "dstTop", &dst_top))
 		return false;
-	if (!get_int_param(rt, "dstWidth", &dst_width))
+	if (!get_int_param(env, "dstWidth", &dst_width))
 		return false;
-	if (!get_int_param(rt, "dstHeight", &dst_height))
+	if (!get_int_param(env, "dstHeight", &dst_height))
 		return false;
-	if (!get_dict_elem_int_param(rt, "texture", "id", &tex_id))
+	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
 		return false;
-	if (!get_int_param(rt, "srcLeft", &src_left))
+	if (!get_int_param(env, "srcLeft", &src_left))
 		return false;
-	if (!get_int_param(rt, "srcTop", &src_top))
+	if (!get_int_param(env, "srcTop", &src_top))
 		return false;
-	if (!get_int_param(rt, "srcWidth", &src_width))
+	if (!get_int_param(env, "srcWidth", &src_width))
 		return false;
-	if (!get_int_param(rt, "srcHeight", &src_height))
+	if (!get_int_param(env, "srcHeight", &src_height))
 		return false;
-	if (!get_int_param(rt, "alpha", &alpha))
+	if (!get_int_param(env, "alpha", &alpha))
 		return false;
 
-	render_texture(dst_left,
-		       dst_top,
-		       dst_width,
-		       dst_height,
-		       tex_id,
-		       src_left,
-		       src_top,
-		       src_width,
-		       src_height,
-		       alpha);
+	noct2d_render_texture(
+		dst_left,
+		dst_top,
+		dst_width,
+		dst_height,
+		tex_id,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
+		alpha);
 
 	return true;
 }
 
-/* API.destroyTexture() */
-static bool API_destroyTexture(struct rt_env *rt)
+/* Engine.draw() */
+static bool Engine_draw(struct rt_env *rt)
+{
+	int tex_id, x, y;
+
+	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
+		return false;
+	if (!get_int_param(env, "x", &x))
+		return false;
+	if (!get_int_param(env, "y", &y))
+		return false;
+
+	noct2d_draw(tex_id, x, y);
+
+	return true;
+}
+
+/* Engine.destroyTexture() */
+static bool Engine_destroyTexture(struct rt_env *rt)
 {
 	int tex_id;
 
-	if (!get_dict_elem_int_param(rt, "texture", "id", &tex_id))
+	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
 		return false;
 
-	destroy_texture(tex_id);
+	noct2d_destroy_texture(tex_id);
 
 	return true;
 }
 
-/* API.playSound() */
-static bool API_playSound(struct rt_env *rt)
+/* Engine.playSound() */
+static bool Engine_playSound(struct rt_env *rt)
 {
 	int stream;
 	const char *file;
 	struct rt_value ret;
 
-	if (!get_int_param(rt, "stream", &stream))
+	if (!get_int_param(env, "stream", &stream))
 		return false;
-	if (!get_string_param(rt, "file", &file))
-		return false;
-
-	if (!play_sound_stream(stream, file))
+	if (!get_string_param(env, "file", &file))
 		return false;
 
-	noct_make_int(&ret, 1);
-	if (!noct_set_return(rt, &ret))
+	if (!noct2d_play_sound(stream, file))
+		return false;
+
+	noct_make_int(env, &ret, 1);
+	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
 }
 
-/* API.stopSound() */
-static bool API_stopSound(struct rt_env *rt)
+/* Engine.stopSound() */
+static bool Engine_stopSound(struct rt_env *rt)
 {
 	int stream;
 	struct rt_value ret;
 
-	if (!get_int_param(rt, "stream", &stream))
+	if (!get_int_param(env, "stream", &stream))
 		return false;
 
-	if (!stop_sound_stream(stream))
+	if (!noct2d_stop_sound(stream))
 		return false;
 
-	noct_make_int(&ret, 1);
-	if (!noct_set_return(rt, &ret))
+	noct_make_int(env, &ret, 1);
+	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
 }
 
-/* API.loadFont() */
-static bool API_loadFont(struct rt_env *rt)
+/* Engine.stopSound() */
+static bool Engine_setSoundVolume(struct rt_env *env)
+{
+	int stream;
+	struct rt_value ret;
+
+	if (!get_int_param(env, "stream", &stream))
+		return false;
+
+	if (!noct2d_stop_sound(stream))
+		return false;
+
+	noct_make_int(env, &ret, 1);
+	if (!noct_set_return(env, &ret))
+		return false;
+
+	return true;
+}
+
+/* Engine.loadFont() */
+static bool Engine_loadFont(struct rt_env *rt)
 {
 	int slot;
 	const char *file;
 	struct rt_value ret;
 
-	if (!get_int_param(rt, "slot", &slot))
+	if (!get_int_param(env, "slot", &slot))
 		return false;
-	if (!get_string_param(rt, "file", &file))
-		return false;
-
-	if (!load_font(slot, file))
+	if (!get_string_param(env, "file", &file))
 		return false;
 
-	noct_make_int(&ret, 1);
-	if (!noct_set_return(rt, &ret))
+	if (!noct2d_load_font(slot, file))
+		return false;
+
+	noct_make_int(env, &ret, 1);
+	if (!noct_set_return(env, &ret))
 		return false;
 	
 	return true;
 }
 
-/* API.createTextTexture() */
-static bool API_createTextTexture(struct rt_env *rt)
+/* Engine.createTextTexture() */
+static bool Engine_createTextTexture(struct rt_env *rt)
 {
 	int slot;
 	const char *text;
@@ -583,36 +630,36 @@ static bool API_createTextTexture(struct rt_env *rt)
 	struct rt_value ret;
 	struct rt_value ival;
 
-	if (!get_int_param(rt, "slot", &slot))
+	if (!get_int_param(env, "slot", &slot))
 		return false;
-	if (!get_string_param(rt, "text", &text))
+	if (!get_string_param(env, "text", &text))
 		return false;
-	if (!get_int_param(rt, "size", &size))
+	if (!get_int_param(env, "size", &size))
 		return false;
-	if (!get_string_param(rt, "color", &color))
+	if (!get_string_param(env, "color", &color))
 		return false;
 
 	pcolor = color_code_to_pixel_value(color);
 
-	if (!create_text_texture(slot, text, size, pcolor, &tex_id, &tex_width, &tex_height))
+	if (!noct2d_create_text_texture(slot, text, size, pcolor, &tex_id, &tex_width, &tex_height))
 		return false;
 
-	if (!noct_make_empty_dict(rt, &ret))
+	if (!noct_make_empty_dict(env, &ret))
 		return false;
 
-	noct_make_int(&ival, tex_id);
-	if (!noct_set_dict_elem(rt, &ret, "id", &ival))
+	noct_make_int(env, &ival, tex_id);
+	if (!noct_set_dict_elem(env, &ret, "id", &ival))
 		return false;
 	
-	noct_make_int(&ival, tex_width);
-	if (!noct_set_dict_elem(rt, &ret, "width", &ival))
+	noct_make_int(env, &ival, tex_width);
+	if (!noct_set_dict_elem(env, &ret, "width", &ival))
 		return false;
 
-	noct_make_int(&ival, tex_height);
-	if (!noct_set_dict_elem(rt, &ret, "height", &ival))
+	noct_make_int(env, &ival, tex_height);
+	if (!noct_set_dict_elem(env, &ret, "height", &ival))
 		return false;
 
-	if (!noct_set_return(rt, &ret))
+	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
@@ -629,26 +676,26 @@ static bool get_int_param(struct rt_env *rt, const char *name, int *ret)
 	float f;
 	const char *s;
 
-	if (!noct_get_arg(rt, 0, &param))
+	if (!noct_get_arg(env, 0, &param))
 		return false;
 
-	if (!noct_get_dict_elem(rt, &param, name, &elem))
+	if (!noct_get_dict_elem(env, &param, name, &elem))
 		return false;
 
 	switch (elem.type) {
 	case NOCT_VALUE_INT:
-		noct_get_int(rt, &elem, ret);
+		noct_get_int(env, &elem, ret);
 		break;
 	case NOCT_VALUE_FLOAT:
-		noct_get_float(rt, &elem, &f);
+		noct_get_float(env, &elem, &f);
 		*ret = (int)f;
 		break;
 	case NOCT_VALUE_STRING:
-		noct_get_string(rt, &elem, &s);
+		noct_get_string(env, &elem, &s);
 		*ret = atoi(s);
 		break;
 	default:
-		noct_error(rt, "Unexpected parameter value for %s.", name);
+		noct_error(env, "Unexpected parameter value for %s.", name);
 		return false;
 	}
 
@@ -661,10 +708,10 @@ static bool get_float_param(struct rt_env *rt, const char *name, float *ret)
 {
 	struct rt_value param, elem;
 
-	if (!rt_get_arg(rt, 0, &param))
+	if (!rt_get_arg(env, 0, &param))
 		return false;
 
-	if (!rt_get_dict_elem(rt, &param, name, &elem))
+	if (!rt_get_dict_elem(env, &param, name, &elem))
 		return false;
 
 	switch (elem.type) {
@@ -678,7 +725,7 @@ static bool get_float_param(struct rt_env *rt, const char *name, float *ret)
 		*ret = (float)atof(elem.val.str->s);
 		break;
 	default:
-		rt_error(rt, "Unexpected parameter value for %s.", name);
+		rt_error(env, "Unexpected parameter value for %s.", name);
 		return false;
 	}
 
@@ -692,17 +739,17 @@ static bool get_string_param(struct rt_env *rt, const char *name, const char **r
 	struct rt_value param, elem;
 	static char buf[128];
 
-	if (!noct_get_arg(rt, 0, &param))
+	if (!noct_get_arg(env, 0, &param))
 		return false;
 
-	if (!noct_get_dict_elem(rt, &param, name, &elem))
+	if (!noct_get_dict_elem(env, &param, name, &elem))
 		return false;
 
 	switch (elem.type) {
 	case NOCT_VALUE_INT:
 	{
 		int i;
-		noct_get_int(rt, &elem, &i);
+		noct_get_int(env, &elem, &i);
 		snprintf(buf, sizeof(buf), "%d", i);
 		*ret = buf;
 		break;
@@ -710,16 +757,16 @@ static bool get_string_param(struct rt_env *rt, const char *name, const char **r
 	case NOCT_VALUE_FLOAT:
 	{
 		float f;
-		noct_get_float(rt, &elem, &f);
+		noct_get_float(env, &elem, &f);
 		snprintf(buf, sizeof(buf), "%f", f);
 		*ret = buf;
 		break;
 	}
 	case NOCT_VALUE_STRING:
-		noct_get_string(rt, &elem, ret);
+		noct_get_string(env, &elem, ret);
 		break;
 	default:
-		noct_error(rt, "Unexpected parameter value for %s.", name);
+		noct_error(env, "Unexpected parameter value for %s.", name);
 		return false;
 	}
 
@@ -731,20 +778,20 @@ static bool get_dict_elem_int_param(struct rt_env *rt, const char *name, const c
 {
 	struct rt_value param, elem, ival;
 
-	if (!noct_get_arg(rt, 0, &param))
+	if (!noct_get_arg(env, 0, &param))
 		return false;
 
-	if (!noct_get_dict_elem(rt, &param, name, &elem))
+	if (!noct_get_dict_elem(env, &param, name, &elem))
 		return false;
 	if (elem.type != NOCT_VALUE_DICT) {
-		noct_error(rt, "Unexpected parameter value for %s.", name);
+		noct_error(env, "Unexpected parameter value for %s.", name);
 		return false;
 	}
 
-	if (!noct_get_dict_elem(rt, &elem, key, &ival))
+	if (!noct_get_dict_elem(env, &elem, key, &ival))
 		return false;
 	if (ival.type != NOCT_VALUE_INT) {
-		noct_error(rt, "Unexpected parameter value for %s.", name);
+		noct_error(env, "Unexpected parameter value for %s.", name);
 		return false;
 	}
 
@@ -754,11 +801,11 @@ static bool get_dict_elem_int_param(struct rt_env *rt, const char *name, const c
 }
 
 /*
- * API Installation
+ * Engine Installation
  */
 
 /*
- * Install API functions to a runtime.
+ * Install Engine functions to a runtime.
  */
 bool install_api(struct rt_env *rt)
 {
@@ -768,13 +815,14 @@ bool install_api(struct rt_env *rt)
 		const char *field;
 		const char *name;
 	} funcs[] = {
-#define RTFUNC(name) {API_##name, #name, "api_" # name}
+#define RTFUNC(name) {Engine_##name, #name, "Engine_" # name}
 		{debug, NULL, "debug"},
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
 		RTFUNC(callTagFunction),
 		RTFUNC(loadTexture),
 		RTFUNC(renderTexture),
+		RTFUNC(draw),
 		RTFUNC(destroyTexture),
 		RTFUNC(playSound),
 		RTFUNC(stopSound),
@@ -785,10 +833,10 @@ bool install_api(struct rt_env *rt)
 	struct rt_value dict;
 	int i;
 
-	/* Make a global variable "API". */
-	if (!noct_make_empty_dict(rt, &dict))
+	/* Make a global variable "Engine". */
+	if (!noct_make_empty_dict(env, &dict))
 		return false;
-	if (!noct_set_global(rt, "API", &dict))
+	if (!noct_set_global(env, "Engine", &dict))
 		return false;
 
 	/* Register functions. */
@@ -796,17 +844,17 @@ bool install_api(struct rt_env *rt)
 		struct rt_value funcval;
 
 		/* Register a cfunc. */
-		if (!noct_register_cfunc(rt, funcs[i].name, 1, params, funcs[i].func, NULL))
+		if (!noct_register_cfunc(env, funcs[i].name, 1, params, funcs[i].func, NULL))
 			return false;
 
 		/* Add to the API dictionary. */
 		if (funcs[i].field != NULL) {
 			/* Get a function value. */
-			if (!noct_get_global(rt, funcs[i].name, &funcval))
+			if (!noct_get_global(env, funcs[i].name, &funcval))
 				return false;
 
 			/* Make a dictionary element. */
-			if (!noct_set_dict_elem(rt, &dict, funcs[i].field, &funcval))
+			if (!noct_set_dict_elem(env, &dict, funcs[i].field, &funcval))
 				return false;
 		}
 	}

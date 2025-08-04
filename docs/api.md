@@ -1,4 +1,4 @@
-NoctVM Engine API
+Noct2D Engine API
 =================
 
 Every API function takes one parameter. The parameter must be a dictionary and
@@ -8,16 +8,16 @@ arguments must be stored as key-and-value pairs.
 
 ### Mouse Positions
 
-|Variable                 |Description                                |
-|-------------------------|-------------------------------------------|
-|API.mousePosX            |Mouse position X.                          |
-|API.mousePosY            |Mouse position Y.                          |
-|API.isMouseLeftPressed   |Left mouse button state.                   |
-|API.isMouseRightPressed  |Right mouse button state.                  |
+|Variable                    |Description                                |
+|----------------------------|-------------------------------------------|
+|Engine.mousePosX            |Mouse position X.                          |
+|Engine.mousePosY            |Mouse position Y.                          |
+|Engine.isMouseLeftPressed   |Left mouse button state.                   |
+|Engine.isMouseRightPressed  |Right mouse button state.                  |
 
 ## Rendering
 
-### API.loadTexture()
+### Engine.loadTexture()
 
 This API loads a texture from assets, and returns a texture.
 
@@ -25,7 +25,7 @@ This API loads a texture from assets, and returns a texture.
 |--------------------|--------------------------------------------------------------|
 |file                |File name to load.                                            |
 
-### API.removeTexture()
+### Engine.removeTexture()
 
 This API removes a texture.
 
@@ -33,7 +33,7 @@ This API removes a texture.
 |--------------------|--------------------------------------------------------------|
 |tex                 |Texture.                                                      |
 
-### API.renderTexture()
+### Engine.renderTexture()
 
 This API renders a texture to the screen.
 
@@ -43,14 +43,24 @@ This API renders a texture to the screen.
 |dstTop              |Screen coordinate Y.                                          |
 |dstWidth            |Width in screen.                                              |
 |dstHeight           |Height in screen.                                             |
-|texId               |Texture ID.                                                   |
+|texture             |Texture ID.                                                   |
 |srcLeft             |Texture top left X.                                           |
 |srcTop              |Texture top left Y.                                           |
 |srcWidth            |Texture rectangle width.                                      |
 |srcHeight           |Texture rectangle height.                                     |
 |alpha               |Alpha value (0-255)                                           |
 
-### API.loadFontSlot()
+### Engine.drawImage()
+
+This API renders a texture to the screen.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|texture             |Texture ID.                                                   |
+|x                   |Screen coordinate X.                                          |
+|y                   |Screen coordinate Y.                                          |
+
+### Engine.loadFontSlot()
 
 This API loads an asset font file to a specified font slot.
 
@@ -59,10 +69,10 @@ This API loads an asset font file to a specified font slot.
 |slot                |Font slot index. (0-3)                                        |
 |file                |File name to load.                                            |
 
-### API.createTextTexture()
+### Engine.createTextTexture()
 
 This API creates a texture and draws a text on it.
-
+     	 	 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
 |slot                |Font slot index. (0-3)                                        |
@@ -72,7 +82,7 @@ This API creates a texture and draws a text on it.
 
 ## Sound
 
-### API.playSound()
+### Engine.playSound()
 
 This API starts playing a sound asset file on a specified sound track.
 
@@ -81,7 +91,7 @@ This API starts playing a sound asset file on a specified sound track.
 |stream              |Track index. (0-3)                                            |
 |file                |File to play.                                                 |
 
-### API.stopSound()
+### Engine.stopSound()
 
 This API stops a sound playback on a specified sound track.
 
@@ -89,7 +99,7 @@ This API stops a sound playback on a specified sound track.
 |--------------------|--------------------------------------------------------------|
 |stream              |Track index. (0-3)                                            |
 
-### API.setVolume()
+### Engine.setSoundVolume()
 
 This API sets a sound volume on a specified sound track.
 
@@ -97,3 +107,11 @@ This API sets a sound volume on a specified sound track.
 |--------------------|--------------------------------------------------------------|
 |stream              |Track index. (0-3)                                            |
 |volume              |Volume value. (0-1.0)                                         |
+
+## Time
+
+### Absolute Time
+
+|Variable                    |Description                                |
+|----------------------------|-------------------------------------------|
+|Engine.millisec             |Time in millisec.                          |

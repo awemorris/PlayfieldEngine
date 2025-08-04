@@ -15,10 +15,7 @@ func start() {
     // Please do initialization here.
 
     // Load a texture.
-    var tex = API.loadTexture({file: "apple.png"});
-
-    // Store to the app storage.
-    App.tex1 = tex;
+    App.tex1 = Engine.loadTexture({file: "apple.png"});
 }
 
 func frame() {
@@ -26,22 +23,12 @@ func frame() {
     // Please do a rendering here.
 
     // If you want a time, use this. (not used here)
-    var t = API.millisec;
-
-    // Get a texture.
-    var tex = App.tex1;
+    var t = Engine.millisec;
 
     // Render.
-    API.renderTexture({
-	dstLeft:   API.mousePosX,
-	dstTop:    API.mousePosY,
-	dstWidth:  tex.width,
-	dstHeight: tex.height,
-	texture:   tex,
-	srcLeft:   0,
-	srcTop:    0,
-	srcWidth:  tex.width,
-	srcHeight: tex.height,
-	alpha:     255
+    Engine.draw({
+        texture: App.tex1,
+        x: Engine.mousePosX,
+        y: Engine.mousePosY
     });
 }

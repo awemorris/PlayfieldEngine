@@ -241,6 +241,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	check_cpuid();
 #endif
 
+#if 0
 	/* Check files. */
 	bFileOK = FALSE;
 	if (FILE_EXISTS(STARTUP_FILE))
@@ -252,6 +253,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		log_error(_("No startup file."));
 		return FALSE;
 	}
+#endif
 
 	/* Initialize the file HAL. */
 	if (!init_file())

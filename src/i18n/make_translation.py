@@ -3,11 +3,11 @@ with open("message.txt") as f:
 
     print("#include <string.h>")
     print("")
-    print("const char *get_system_language(void);")
+    print("const char *gettextcompat_get_system_language(void);")
     print("")
-    print("const char *noct2d_gettext(const char *msg)")
+    print("const char *gettextcompat_gettext(const char *msg)")
     print("{")
-    print("    const char *lang_code = get_system_language();")
+    print("    const char *lang_code = getextcompat_get_system_language();")
 
     last = ""
     for line in lines:

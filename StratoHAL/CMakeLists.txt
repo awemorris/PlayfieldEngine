@@ -7,14 +7,14 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 # Configuration
 #
 
-option(USE_SHARED "Enable shared libraries" OFF)
-option(USE_GLX    "Enable OpenGL on X11"    ON)
+option(ENABLE_SHARED "Enable shared libraries" OFF)
+option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
 
 #
 # Dependency
 #
 
-if(USE_SHARED)
+if(ENABLE_SHARED)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
   find_package(PNG REQUIRED)
   find_package(JPEG REQUIRED)
@@ -35,6 +35,27 @@ else()
   include(cmake/brotli.cmake)
   include(cmake/bzip2.cmake)
   include(cmake/freetype.cmake)
+endif()
+
+#
+# Checks
+#
+
+include(CheckIncludeFile)
+
+check_include_file("stdint.h" HAVE_STDINT_H)
+if(HAVE_STDINT_H)
+  add_definitions(-DHAVE_STDINT_H=1)
+endif()
+
+check_include_file("inttypes.h" HAVE_INTTYPES_H)
+if(HAVE_INTTYPES_H)
+  add_definitions(-DHAVE_INTTYPES_H=1)
+endif()
+
+check_include_file("sys/types.h" HAVE_SYS_TYPES_H)
+if(HAVE_SYS_TYPES_H)
+  add_definitions(-DHAVE_SYS_TYPES_H=1)
 endif()
 
 #
@@ -103,7 +124,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   )
 endif()
 
-if(USE_SHARED)
+if(ENABLE_SHARED)
   add_library(strato SHARED ${SOURCES})
 else()
   add_library(strato STATIC
@@ -147,18 +168,18 @@ target_include_directories(strato PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(strato PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -DUSE_SHARED if we use dynamic linking.
-if(USE_SHARED)
+if(ENABLE_SHARED)
   target_compile_definitions(strato PRIVATE USE_SHARED)
 endif()
 
 # -DUSE_JIT if we use JIT.
-if(USE_JIT)
+if(ENABLE_JIT)
   target_compile_definitions(strato PRIVATE USE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
 if(UNIX AND NOT Haiku)
-  if(USE_GLX)
+  if(ENABLE_GLX)
     target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
   else()
     target_compile_definitions(strato PRIVATE USE_X11_SOFTRENDER)
@@ -188,16 +209,19 @@ endif()
 # FreeBSD: Add -I/usr/local/include
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
   target_include_directories(strato PRIVATE /usr/local/include)
+  target_include_directories(strato PUBLIC  /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
 if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R7/include)
+  target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
 if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R6/include)
+  target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R6/include)
 endif()
 
 #
@@ -222,7 +246,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
 #
 
 # Libraries.
-if(USE_SHARED)
+if(ENABLE_SHARED)
   target_link_libraries(strato PRIVATE
     ${PNG_LIBRARIES}
     ${JPEG_LIBRARIES}
@@ -238,12 +262,36 @@ if(USE_SHARED)
   )
 endif()
 
+# Windows link options.
+if(WIN32)
+  # DLLs.
+  target_link_libraries(strato PUBLIC
+    gdi32
+    ole32
+    dsound
+    strmiids
+    dxguid
+  )
+
+  # -municode
+  if (MINGW)
+    target_link_options(strato PUBLIC
+      -municode
+    )
+  endif()
+endif()
+
 # macOS link options.
 if(APPLE AND NOT IOS)
-  target_compile_options(strato PRIVATE
-    -fmodules
-  )
+  target_compile_options(strato PRIVATE -fmodules)
+  target_compile_options(strato PUBLIC  -fmodules)
+
   target_link_libraries(strato PRIVATE
+    "-framework AppKit"
+    "-framework MetalKit"
+    "-framework AVFoundation"
+  )
+  target_link_libraries(strato PUBLIC
     "-framework AppKit"
     "-framework MetalKit"
     "-framework AVFoundation"
@@ -252,59 +300,44 @@ endif()
 
 # POSIX GLX: Add -lGL -lGLX
 if(UNIX AND NOT APPLE)
-  if(USE_GLX)
-    target_link_libraries(strato PRIVATE
-      GL
-      GLX
-    )
+  if(ENABLE_GLX)
+    target_link_libraries(strato PRIVATE GL GLX)
+    target_link_libraries(strato PUBLIC  GL GLX)
   endif()
 endif()
 
 # POSIX: Add -lm -lpthread -lXpm -lX11
 if(UNIX AND NOT APPLE)
-  target_link_libraries(strato PRIVATE
-    m
-    pthread
-    Xpm
-    X11
-  )
+  target_link_libraries(strato PRIVATE m pthread Xpm X11)
+  target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 endif()
 
 # Linux: Add -lasound
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_link_libraries(strato PRIVATE
-    asound
-  )
+  target_link_libraries(strato PRIVATE asound)
+  target_link_libraries(strato PUBLIC  asound)
 endif()
 
 # FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R7/lib
-  )
+  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
+  target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
 if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R7/lib
-  )
+  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
+  target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
 if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R6/lib
-  )
+  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R6/lib)
+  target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R6/lib)
 endif()
 
 # Haiku: Add -lbe -lmedia
 if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  target_link_libraries(strato PRIVATE
-    be
-    media
-  )
+  target_link_libraries(strato PRIVATE be media)
+  target_link_libraries(strato PUBLIC  be media)
 endif()

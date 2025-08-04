@@ -80,7 +80,7 @@ static int search_free_entry(void);
 /*
  * Create a texture. (for font drawing)
  */
-bool create_texture(int width, int height, int *ret, struct image **img)
+bool noct2d_create_texture(int width, int height, int *ret, struct image **img)
 {
 	int index;
 
@@ -108,7 +108,7 @@ bool create_texture(int width, int height, int *ret, struct image **img)
 /*
  * Load a texture.
  */
-bool load_texture(const char *fname, int *ret, int *width, int *height)
+bool noct2d_load_texture(const char *fname, int *ret, int *width, int *height)
 {
 	int index;
 	const char *ext;
@@ -186,7 +186,7 @@ static int search_free_entry(void)
 /*
  * Destroy a texture.
  */
-void destroy_texture(int tex_id)
+void noct2d_destroy_texture(int tex_id)
 {
 	assert(tex_id > 0);
 	assert(tex_id < TEXTURE_COUNT);
@@ -202,7 +202,7 @@ void destroy_texture(int tex_id)
  * Render a texture.
  */
 void
-render_texture(
+noct2d_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -235,13 +235,42 @@ render_texture(
 }
 
 /*
+ * Render a texture.
+ */
+void
+noct2d_draw(
+	int tex_id,
+	int x,
+	int y)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_normal(x,
+			    y,
+			    t->img->width,
+			    t->img->height,
+			    t->img,
+			    0,
+			    0,
+			    t->img->width,
+			    t->img->height,
+			    255);
+}
+
+/*
  * Font
  */
 
 /*
  * Load a font file to a font slot.
  */
-bool load_font(int slot, const char *file)
+bool noct2d_load_font(int slot, const char *file)
 {
 	uint8_t *data;
 	size_t len;
@@ -292,7 +321,7 @@ pixel_t color_code_to_pixel_value(const char *code)
 /*
  * Create a text texture.
  */
-bool create_text_texture(int slot, const char *text, int size, pixel_t color, int *tex_id, int *width, int *height)
+bool noct2d_create_text_texture(int slot, const char *text, int size, pixel_t color, int *tex_id, int *width, int *height)
 {
 	struct image *img;
 	int w, h;
@@ -307,7 +336,7 @@ bool create_text_texture(int slot, const char *text, int size, pixel_t color, in
 		h = 1;
 
 	/* Create a texture. */
-	if (!create_texture(w, h, &tid, &img))
+	if (!noct2d_create_texture(w, h, &tid, &img))
 		return false;
 
 	/* Draw for each character. */
@@ -357,7 +386,7 @@ bool create_text_texture(int slot, const char *text, int size, pixel_t color, in
 /* Wave table. */
 static struct wave *wave_tbl[SOUND_TRACKS];
 
-bool play_sound_stream(int stream, const char *file)
+bool noct2d_play_sound(int stream, const char *file)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
 		log_error("Invalid stream index.");
@@ -374,7 +403,7 @@ bool play_sound_stream(int stream, const char *file)
 	return true;
 }
 
-bool stop_sound_stream(int stream)
+bool noct2d_stop_sound(int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
 		log_error("Invalid stream index.");
@@ -385,6 +414,18 @@ bool stop_sound_stream(int stream)
 
 	destroy_wave(wave_tbl[stream]);
 	wave_tbl[stream] = NULL;
+
+	return true;
+}
+
+bool noct2d_set_sound_volue(int stream, float vol)
+{
+	if (stream < 0 || stream >= SOUND_TRACKS) {
+		log_error("Invalid stream index.");
+		return false;
+	}
+
+	set_sound_volume(stream, vol);
 
 	return true;
 }
@@ -475,7 +516,7 @@ struct tag *get_current_tag(void)
 /*
  * Load a tag file and move to it.
  */
-bool move_to_tag_file(const char *file)
+bool noct2d_move_to_tag_file(const char *file)
 {
 	char *buf;
 	char *error_message;
@@ -508,7 +549,7 @@ bool move_to_tag_file(const char *file)
 /*
  * Move to a next tag.
  */
-void move_to_next_tag(void)
+void noct2d_move_to_next_tag(void)
 {
 	cur_index++;
 }

@@ -1,10 +1,10 @@
 #include <string.h>
 
-const char *get_system_language(void);
+const char *gettextcompat_get_system_language(void);
 
-const char *noct2d_gettext(const char *msg)
+const char *gettextcompat_gettext(const char *msg)
 {
-    const char *lang_code = get_system_language();
+    const char *lang_code = gettextcompat_get_system_language();
     if (strcmp(msg, "Error: %s: %d: %s\n") == 0) {
         if (strcmp(lang_code, "ja") == 0) return "エラー: %s: %d: %s\n";
         if (strcmp(lang_code, "ca") == 0) return "Error: %s: %d: %s\n";

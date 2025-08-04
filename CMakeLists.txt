@@ -7,75 +7,10 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 # Configuration
 #
 
-option(USE_SHARED "Enable shared libraries" OFF)
-option(USE_GLX    "Enable OpenGL on X11"    ON)
-option(USE_BUNDLE "Enable macOS bundle"     ON)
-
-#
-# Dependencies
-#
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/NoctLang)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/StratoHAL)
-
-#
-# Source Files
-#
-
-# Main sources.
-set(NOCT2D_SOURCES
-  src/main.c
-  src/api.c
-  src/vm.c
-  src/translation.c
-)
-
-# Add Noct2D binary.
-add_executable(noct2d ${NOCT2D_SOURCES})
-
-# Change the bundle name.
-if (APPLE AND NOT IOS AND USE_BUNDLE)
-  set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
-endif()
-
-#
-# CPPFLAGS
-#
-
-# -INoctLang/include
-target_include_directories(noct2d PRIVATE {$CMAKE_SOURCE_DIR}/NoctLang/include)
-
-# -IStratoHAL/include
-target_include_directories(noct2d PRIVATE {$CMAKE_SOURCE_DIR}/StratoHAL/include)
-
-# -DUSE_SHARED if we use dynamic linking.
-if(USE_SHARED)
-  target_compile_definitions(noct2d PRIVATE USE_SHARED)
-endif()
-
-# -DUSE_JIT if we use JIT.
-if(USE_JIT)
-  target_compile_definitions(noct2d PRIVATE USE_JIT)
-endif()
-
-# FreeBSD: Add -I/usr/local/include
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  target_include_directories(noct2d PRIVATE /usr/local/include)
-endif()
-
-# NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  target_include_directories(noct2d PRIVATE /usr/local/include /usr/X11R7/include)
-endif()
-
-# OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  target_include_directories(noct2d PRIVATE /usr/local/include /usr/X11R6/include)
-endif()
-
-#
-# CFLAGS
-#
+option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
+option(ENABLE_BUNDLE "Enable macOS bundle"     ON)
+option(ENABLE_I18N   "Enable translation"      OFF)
+option(ENABLE_SHARED "Enable shared libraries" OFF)
 
 # Use "Release" build type by default.
 if(NOT CMAKE_BUILD_TYPE)
@@ -83,121 +18,91 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Debug Configuration.
-set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_RELEASE}   -O0 -g3")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -O0 -g3")
+set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_RELEASE}     -O0 -g3")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE}   -O0 -g3")
 
 # Release Configuration.
 set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE}   -O3 -g0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
 
 #
-# Link
+# Dependencies
 #
 
-# Libraries.
+# NoctLang
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/NoctLang)
+
+# StratoHAL
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/StratoHAL)
+
+#
+# Checks
+#
+
+include(CheckIncludeFile)
+
+check_include_file("stdint.h" HAVE_STDINT_H)
+if(HAVE_STDINT_H)
+  add_definitions(-DHAVE_STDINT_H=1)
+endif()
+
+check_include_file("inttypes.h" HAVE_INTTYPES_H)
+if(HAVE_INTTYPES_H)
+  add_definitions(-DHAVE_INTTYPES_H=1)
+endif()
+
+check_include_file("sys/types.h" HAVE_SYS_TYPES_H)
+if(HAVE_SYS_TYPES_H)
+  add_definitions(-DHAVE_SYS_TYPES_H=1)
+endif()
+
+#
+# Main Target
+#
+
+set(BASE_SOURCES
+  src/main.c
+  src/api.c
+  src/vm.c
+)
+
+if(ENABLE_I18N)
+  set(I18N_SOURCES
+    src/translation.c
+  )
+endif()
+
+add_executable(
+  noct2d
+  ${BASE_SOURCES}
+  ${I18N_SOURCES}
+)
+
 target_link_libraries(noct2d PRIVATE
   noctlang
   strato
 )
 
-# Windows link options.
-if(WIN32)
-  # No console.
-  set_target_properties(noct2d PROPERTIES WIN32_EXECUTABLE TRUE)
+target_include_directories(noct2d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-  # DLLs.
-  target_link_libraries(noct2d PRIVATE
-    gdi32
-    ole32
-    dsound
-    strmiids
-    dxguid
-  )
-
-  # -municode
-  if (MINGW)
-    target_link_options(noct2d PRIVATE
-      -municode
-    )
-  endif()
+if(ENABLE_SHARED)
+  target_compile_definitions(noct2d PRIVATE USE_SHARED)
 endif()
 
-# macOS link options.
-if(APPLE AND NOT IOS)
-  target_compile_options(noct2d PRIVATE
-    -fmodules
-  )
-  target_link_libraries(noct2d PRIVATE
-    "-framework AppKit"
-    "-framework MetalKit"
-    "-framework AVFoundation"
-  )
+if(ENABLE_JIT)
+  target_compile_definitions(noct2d PRIVATE USE_JIT)
 endif()
 
-# POSIX GLX: Add -lGL -lGLX
-if(UNIX AND NOT APPLE)
-  if(USE_GLX)
-    target_link_libraries(noct2d PRIVATE
-      GL
-      GLX
-    )
-  endif()
-endif()
-
-# POSIX: Add -lm -lpthread -lXpm -lX11
-if(UNIX AND NOT APPLE)
-  target_link_libraries(noct2d PRIVATE
-    m
-    pthread
-    Xpm
-    X11
-  )
-endif()
-
-# Linux: Add -lasound
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_link_libraries(noct2d PRIVATE
-    asound
-  )
-endif()
-
-# FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R7/lib
-  )
-endif()
-
-# NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R7/lib
-  )
-endif()
-
-# OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  link_directories(
-    /usr/local/lib
-    /usr/X11R6/lib
-  )
-endif()
-
-# Haiku: Add -lbe -lmedia
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  target_link_libraries(noct2d PRIVATE
-    be
-    media
-  )
+# Change the bundle name.
+if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
+  set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
 endif()
 
 #
 # macOS Bundle
 #
 
-if(APPLE AND NOT IOS AND USE_BUNDLE)
+if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
   # Make an app bundle.
   set_target_properties(noct2d PROPERTIES
     MACOSX_BUNDLE TRUE
