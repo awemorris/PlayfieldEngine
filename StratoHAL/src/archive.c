@@ -8,10 +8,10 @@
  * Packager
  */
 
-#include "noctcli.h"
+#include <stratohal/c89compat.h>
 
 /* Obfuscation Key */
-#include "platform/key.h"
+#include "key.h"
 
 #ifdef TARGET_WINDOWS
 #include <windows.h>
@@ -20,6 +20,10 @@
 #include <dirent.h>
 #include <unistd.h>
 #endif
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /* Maximum file entries */
 #define FILE_ENTRY_SIZE		(8192)

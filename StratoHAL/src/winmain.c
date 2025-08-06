@@ -320,7 +320,7 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 
 	/* Register a window class. */
 	ZeroMemory(&wcex, sizeof(wcex));
-	wcex.cbSize			= sizeof(WNDCLASSEX);
+	wcex.cbSize			= sizeof(WNDCLASSEXW);
 	wcex.lpfnWndProc    = WndProc;
 	wcex.hInstance      = hInstance;
 	wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON));

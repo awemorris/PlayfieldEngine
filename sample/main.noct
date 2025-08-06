@@ -1,7 +1,6 @@
 func setup() {
     // This function is called when the app wants to open a window.
-    // Just return a window configuration here.
-    // Note that APIs are not available in this function.
+    // Please just return a window configuration here.
 
     return {
         title:  "Sample", // Window title
@@ -15,19 +14,16 @@ func start() {
     // Please do initialization here.
 
     // Load a texture.
-    App.tex1 = Engine.loadTexture({file: "apple.png"});
+    myTexture = Engine.loadTexture({file: "apple.png"});
 }
 
 func frame() {
     // This function is called every frame.
-    // Please do a rendering here.
+    // Please do rendering here.
 
-    // If you want a time, use this. (not used here)
-    var t = Engine.millisec;
-
-    // Render.
+    // Render a texture.
     Engine.draw({
-        texture: App.tex1,
+        texture: myTexture,
         x: Engine.mousePosX,
         y: Engine.mousePosY
     });

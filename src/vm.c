@@ -15,7 +15,6 @@ NoctVM *vm;
 NoctEnv *env;
 
 /* Forward Declaration */
-static bool setup_variables(void);
 static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
@@ -33,10 +32,6 @@ bool create_vm(char **title, int *width, int *height)
 {
 	/* Create a language runtime. */
 	if (!noct_create_vm(&vm, &env))
-		return false;
-
-	/* Setup variables. */
-	if (!setup_variables())
 		return false;
 
 	/* Load the startup file. */
@@ -58,34 +53,6 @@ bool create_vm(char **title, int *width, int *height)
 	/* Install the API to the runtime. */
 	if (!install_api(env))
 		return false;
-
-	return true;
-}
-
-/* Setup global variables. */
-static bool setup_variables(void)
-{
-	NoctValue dict;
-	bool succeeded;
-
-	/* Try: */
-	succeeded = false;
-	do {
-		/* Add a global variable "App". */
-		if (!noct_make_empty_dict(env, &dict))
-			break;
-		if (!noct_set_global(env, "App", &dict))
-			break;
-
-		succeeded = true;
-	} while (0);
-
-	if (!succeeded) {
-		const char *msg;
-		noct_get_error_message(env, &msg);
-		log_error(_("error: %s\n"), msg);
-		return false;
-	}
 
 	return true;
 }

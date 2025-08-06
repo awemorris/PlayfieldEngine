@@ -50,7 +50,7 @@ This API renders a texture to the screen.
 |srcHeight           |Texture rectangle height.                                     |
 |alpha               |Alpha value (0-255)                                           |
 
-### Engine.drawImage()
+### Engine.draw()
 
 This API renders a texture to the screen.
 

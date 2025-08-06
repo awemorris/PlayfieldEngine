@@ -69,6 +69,7 @@ if(WIN32)
     src/glyph.c
     src/wave.c
     src/stdfile.c
+    src/archive.c
     src/winmain.c
     src/d3drender.c
     src/d3d12render.cc
@@ -87,6 +88,7 @@ if(APPLE AND NOT IOS)
     src/glyph.c
     src/wave.c
     src/stdfile.c
+    src/archive.c
     src/nsmain.m
     src/aunit.c
     src/GameRenderer.m
@@ -101,6 +103,7 @@ if(UNIX AND NOT APPLE)
     src/glyph.c
     src/wave.c
     src/stdfile.c
+    src/archive.c
     src/x11main.c
     src/x11opengl.c
     src/x11softrender.c
@@ -116,10 +119,11 @@ endif()
 # For Haiku.
 if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   set(SOURCES
-    src/platform/image.c
-    src/platform/glyph.c
-    src/platform/wave.c
-    src/platform/stdfile.c
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/stdfile.c
+    src/archive.c
     src/platform/bemain.cc
   )
 endif()
@@ -241,6 +245,16 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -O0 -g3")
 set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE}   -O3 -g0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
 
+# Windows compile options.
+if(WIN32)
+  # -municode
+  if (MINGW)
+    target_compile_options(strato PUBLIC
+      -municode
+    )
+  endif()
+endif()
+
 #
 # Link
 #
@@ -273,9 +287,10 @@ if(WIN32)
     dxguid
   )
 
-  # -municode
+  # -mwindows -municode
   if (MINGW)
     target_link_options(strato PUBLIC
+      -mwindows
       -municode
     )
   endif()

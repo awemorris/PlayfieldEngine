@@ -72,10 +72,17 @@ if(ENABLE_I18N)
   )
 endif()
 
+if(WIN32)
+  set(RESOURCES
+    resources/resource.rc
+  )
+endif()
+
 add_executable(
   noct2d
   ${BASE_SOURCES}
   ${I18N_SOURCES}
+  ${RESOURCES}
 )
 
 target_link_libraries(noct2d PRIVATE
@@ -97,6 +104,17 @@ endif()
 if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
 endif()
+
+#
+# Packager
+#
+
+add_executable(
+  noct2dpack
+  src/noct2dpack.c
+)
+
+target_link_libraries(noct2dpack strato)
 
 #
 # macOS Bundle

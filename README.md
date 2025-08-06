@@ -1,16 +1,17 @@
 Noct2D
 ======
 
-**Noct2D** is a lightweight scripting runtime for game
-development, often described as a game engine.
+**Noct2D** is a game scripting runtime for the Noct language, often
+described as a "Game Engine" for Noct.
 
 It is designed to provide:
 
-- A fast scripting language with JIT or AOT compilation
-- Real-time graphics and audio capabilities
-- Cross-platform deployment across desktops, mobile devices, and game consoles
+- Graphics
+- Audio
+- Input
+- Cross-platform deployment
 
-Originally developed under the name **Fuel** and **NoctVM**, Noct2D
+Originally developed under the name "Fuel" and "NoctVM", Noct2D
 was reimagined to meet the demands of modern, production-ready
 environments across diverse platforms.
 
@@ -25,10 +26,9 @@ environments across diverse platforms.
   ```sh
   git clone --recursive https://github.com/awemorris/Noct2D.git
   cd Noct2D
-  mkdir build
-  cd build
-  cmake ..
-  cmake --build .
+  cmake -B build .
+  cmake --build build
+  ./build/noct2d
   ```
 
 3. Run your first script
@@ -73,29 +73,23 @@ cursor. This shows the basic lifecycle: `setup` (window config),
 
 ```
 func setup() {
-    return {
+    var config = {
         title: "My Sample Game",
         width: 640,
         height: 480
     };
+    return config;
 }
 
 func start() {
-    App.myTexture = API.loadTexture({file: "apple.png"});
+    myTexture = Engine.loadTexture({file: "apple.png"});
 }
 
 func frame() {
-    API.renderTexture({
-	dstLeft:   API.mousePosX,
-	dstTop:    API.mousePosY,
-	dstWidth:  App.myTexture.width,
-	dstHeight: App.myTexture.height,
-	texture:   App.myTexture,
-	srcLeft:   0,
-	srcTop:    0,
-	srcWidth:  App.myTexture.width,
-	srcHeight: App.myTexture.height,
-	alpha:     255
+    Engine.renderTexture({
+	texture: myTexture
+	x: Engine.mousePosX,
+	y: Engine.mousePosY,
     });
 }
 ```
@@ -139,18 +133,9 @@ Create at your pace, wherever you are in the world.
 
 ### Core Architecture
 
-* **C89**:
-  Noct2D is implemented entirely in ANSI C (C89), making it highly
-  portable and dependency-free.
-
 * **Scripting**:
   Integrates [NoctLang](https://github.com/awemorris/NoctLang), a
-  lightweight language designed for clarity, performance, and fast
-  startup.
-
-* **JIT Compilation**:
-  Includes a built-in JIT compiler supporting multiple architectures.  
-  For mobile platforms, ahead-of-time (AOT) compilation is also available.
+  mighty language designed for game scripting.
 
 * **Rendering**:
   Supports DirectX 9/11/12, Metal, OpenGL, and a fallback software
@@ -236,8 +221,9 @@ be here to walk with you.
 
 ## 🤝 Join Us
 
-Noct2D is still in its early stages. We're building a game engine with
-care, hoping it will inspire and empower creators around the world.
+Noct2D is still in its early stages. We're building the game engine
+with care, hoping it will inspire and empower creators around the
+world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
@@ -252,16 +238,6 @@ join us on this journey.
 ## About the Author
 
 Awe (/aːwe/, "ah-weh") is a seasoned programmer living in a remote,
-small house, surrounded by fields. They live in a small village,
-working from home for a Japanese game console company as a systems
-engineer. On holidays, they visit a nearby city to teach programming
-to children.
-
-They love writing code — it feels simple and clear. Understanding
-people's feelings takes time, but tools can be kind.
-
-This software is Awe's small universe. Thank you for visiting.
-And thank you for receiving their seasoned craftsmanship.
-
-Please use this dream-fueled engine with confidence.
-It was made for you, even before we met.
+small house, surrounded by fields. They love writing code — it feels
+simple and clear. Understanding people's feelings takes time, but
+tools can be kind.
