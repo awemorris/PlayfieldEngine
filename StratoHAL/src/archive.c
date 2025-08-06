@@ -126,14 +126,14 @@ int command_archive(int argc, char *argv[])
 static wchar_t wszMessage[CONV_MESSAGE_SIZE];
 static char szMessage[CONV_MESSAGE_SIZE];
 
-const wchar_t *win32_utf8_to_utf16(const char *utf8_message)
+static const wchar_t *utf8_to_utf16(const char *utf8_message)
 {
 	assert(utf8_message != NULL);
 	MultiByteToWideChar(CP_UTF8, 0, utf8_message, -1, wszMessage, CONV_MESSAGE_SIZE - 1);
 	return wszMessage;
 }
 
-const char *win32_utf16_to_utf8(const wchar_t *utf16_message)
+static const char *utf16_to_utf8(const wchar_t *utf16_message)
 {
 	assert(utf16_message != NULL);
 	WideCharToMultiByte(CP_UTF8, 0, utf16_message, -1, szMessage, CONV_MESSAGE_SIZE - 1, NULL, NULL);
@@ -153,14 +153,14 @@ static bool add_file(const char *fname)
 		return false;
 	}
 
-	dwAttr = GetFileAttributesW(win32_utf8_to_utf16(fname));
+	dwAttr = GetFileAttributesW(utf8_to_utf16(fname));
 	if (dwAttr == INVALID_FILE_ATTRIBUTES)
 		return false;
 	if (dwAttr & FILE_ATTRIBUTE_DIRECTORY)
 	{
 		wchar_t wszFindPath[PATH_SIZE];
 
-		_snwprintf(wszFindPath, PATH_SIZE, L"%s\\*.*", win32_utf8_to_utf16(fname));
+		_snwprintf(wszFindPath, PATH_SIZE, L"%s\\*.*", utf8_to_utf16(fname));
 
 		hFind = FindFirstFileW(wszFindPath, &wfd);
 		if(hFind == INVALID_HANDLE_VALUE)
@@ -174,8 +174,8 @@ static bool add_file(const char *fname)
 			if (wcscmp(wfd.cFileName, L"..") == 0)
 				continue;
 
-			_snwprintf(wszNextPath, PATH_SIZE, L"%s\\%s", win32_utf8_to_utf16(fname), wfd.cFileName);
-			if (!add_file(win32_utf16_to_utf8(wszNextPath)))
+			_snwprintf(wszNextPath, PATH_SIZE, L"%s\\%s", utf8_to_utf16(fname), wfd.cFileName);
+			if (!add_file(utf16_to_utf8(wszNextPath)))
 				return false;
 		}
 		while(FindNextFileW(hFind, &wfd));
