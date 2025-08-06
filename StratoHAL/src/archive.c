@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 /* Maximum file entries */
 #define FILE_ENTRY_SIZE		(8192)
