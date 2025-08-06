@@ -114,7 +114,7 @@ add_executable(
   src/noct2dpack.c
 )
 
-target_link_libraries(noct2dpack strato)
+target_link_libraries(noct2dpack stratopack)
 
 #
 # macOS Bundle

@@ -69,7 +69,6 @@ if(WIN32)
     src/glyph.c
     src/wave.c
     src/stdfile.c
-    src/archive.c
     src/winmain.c
     src/d3drender.c
     src/d3d12render.cc
@@ -88,7 +87,6 @@ if(APPLE AND NOT IOS)
     src/glyph.c
     src/wave.c
     src/stdfile.c
-    src/archive.c
     src/nsmain.m
     src/aunit.c
     src/GameRenderer.m
@@ -103,7 +101,6 @@ if(UNIX AND NOT APPLE)
     src/glyph.c
     src/wave.c
     src/stdfile.c
-    src/archive.c
     src/x11main.c
     src/x11opengl.c
     src/x11softrender.c
@@ -123,7 +120,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
     src/glyph.c
     src/wave.c
     src/stdfile.c
-    src/archive.c
     src/platform/bemain.cc
   )
 endif()
@@ -162,6 +158,18 @@ endif()
 if(APPLE)
   enable_language(OBJC)
 endif()
+
+#
+# Archiver
+#
+
+add_library(
+  stratopack
+  STATIC
+  src/archive.c
+)
+
+target_include_directories(stratopack PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 #
 # CPPFLAGS
