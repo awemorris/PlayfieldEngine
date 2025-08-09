@@ -128,7 +128,7 @@ cd ../..
 # Sample
 #
 
-cp -R sample/* ../../dist/sample/
+cp -R sample/* dist/sample/
 
 #
 # ZIP
