@@ -14,7 +14,7 @@ unity-src: libnoct2d-win64.dll libnoct2d-switch.a libnoct2d-ps5.a libnoct2d-xbox
 	@mkdir unity-src/Assets
 	@mkdir unity-src/Assets/StreamingAssets
 	@mkdir unity-src/Assets/Resources
-	@cp -v ../../StratoHAL/src/NoctScript.cs unity-src/Assets/
+	@cp -v ../../StratoHAL/src/Noct2D.cs unity-src/Assets/
 	@cp -v ../../StratoHAL/src/NormalShader.shader unity-src/Assets/Resources/
 	@cp -v ../../StratoHAL/src/AddShader.shader unity-src/Assets/Resources/
 	@cp -v ../../StratoHAL/src/DimShader.shader unity-src/Assets/Resources/
