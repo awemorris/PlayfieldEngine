@@ -20,6 +20,7 @@ mkdir dist/linux-x86_64
 mkdir dist/linux-arm64
 mkdir dist/wasm
 mkdir dist/unity
+mkdir dist/sample
 
 #
 # Windows x86
@@ -122,6 +123,12 @@ make clean
 make src
 cp -R unity-src/* ../../dist/unity/
 cd ../..
+
+#
+# Sample
+#
+
+cp -R sample/* ../../dist/sample/
 
 #
 # ZIP
