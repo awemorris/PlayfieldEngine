@@ -83,17 +83,17 @@ int command_archive(int argc, char *argv[])
 	offset = 0;
 	next_random = 0;
 
-	if (argc < 3) {
+	if (argc < 2) {
 		printf("Specify an output file.\n");
 		return 1;
 	}
-	if (argc < 4) {
+	if (argc < 3) {
 		printf("Specify input files.\n");
 		return 1;
 	}
 
 	/* Add scpecified files. */
-	for (i = 3; i < argc; i++) {
+	for (i = 2; i < argc; i++) {
 		if (!add_file(argv[i])) {
 			printf("Failed.\n");
 			return 1;
@@ -107,7 +107,7 @@ int command_archive(int argc, char *argv[])
 	}
 
 	/* Write an archive file. */
-	if (!write_archive_file(argv[2])) {
+	if (!write_archive_file(argv[1])) {
 		printf("Failed.\n");
 		return 1;
 	}
