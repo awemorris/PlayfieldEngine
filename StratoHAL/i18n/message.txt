@@ -1,0 +1,14 @@
+ID:Cannot open file "%s".\n
+ja:ファイル "%s" を開けません。\n
+ca:No es pot obrir el fitxer "%s".\n
+es:No se puede abrir el archivo "%s".\n
+de:Datei "%s" kann nicht geöffnet werden.\n
+it:Impossibile aprire il file "%s".\n
+---
+ID:Cannot read file "%s".\n
+ja:ファイル "%s" を読み込めません。\n
+ca:No es pot llegir el fitxer "%s".\n
+es:No se puede leer el archivo "%s".\n
+de:Datei "%s" kann nicht gelesen werden.\n
+it:Impossibile leggere il file "%s".\n
+---

@@ -9,11 +9,17 @@
 
 static uint64_t lap_origin;
 
+/* i18n.c */
+void noct2d_init_locale(void);
+
 /*
  * This function is called when the app is going to be initialized.
  */
 bool on_event_boot(char **title, int *width, int *height)
 {
+	/* Initialize the locale. */
+	noct2d_init_locale();
+
 	/* Create a VM and call setup(). */
 	if (!create_vm(title, width, height))
 		return false;

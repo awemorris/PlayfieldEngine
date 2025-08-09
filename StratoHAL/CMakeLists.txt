@@ -9,6 +9,7 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 
 option(ENABLE_SHARED "Enable shared libraries" OFF)
 option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
+option(ENABLE_I18N   "Enable translation"      ON)
 
 #
 # Dependency
@@ -124,11 +125,19 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   )
 endif()
 
+# For translation.
+if(ENABLE_I18N)
+  set(I18N_SOURCES
+    src/translation.c
+  )
+endif()
+
 if(ENABLE_SHARED)
   add_library(strato SHARED ${SOURCES})
 else()
   add_library(strato STATIC
     ${SOURCES}
+    ${I18N_SOURCES}
     $<TARGET_OBJECTS:png>
     $<TARGET_OBJECTS:jpeg>
     $<TARGET_OBJECTS:webp>
@@ -157,6 +166,11 @@ endif()
 # macOS specific
 if(APPLE)
   enable_language(OBJC)
+endif()
+
+# For translation.
+if(ENABLE_I18N)
+  target_compile_definitions(strato PRIVATE USE_TRANSLATION)
 endif()
 
 #

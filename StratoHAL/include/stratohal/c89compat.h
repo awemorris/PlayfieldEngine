@@ -389,10 +389,10 @@ typedef unsigned long long uint64_t;
  * Message Translation
  */
 #if defined(USE_TRANSLATION)
-#define S_TR(s)	noct_gettext(s)
-const char *noct_gettext(const char *s);
+#define S_TR(s)		stratohal_gettext(s)
+const char *stratohal_gettext(const char *s);
 #else
-#define S_TR(s)	(s)
+#define S_TR(s)		(s)
 #endif
 
 #endif

@@ -4,11 +4,16 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
+#include <noct2d/noct2d.h>
+
 #include "engine.h"
 #include "vm.h"
 
 /* NoctLang */
 #include <noct/noct.h>
+
+/* Bytecode File Header */
+#define BYTECODE_HEADER		"Noct Bytecode"
 
 /* NoctLang. */
 NoctVM *vm;
@@ -46,7 +51,7 @@ bool create_vm(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -74,7 +79,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -136,7 +141,7 @@ static bool call_setup(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -158,7 +163,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -190,7 +195,7 @@ bool call_vm_tag_function(void)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		log_error(S_TR("In scenario %s:%d: runtime error.\n"),
+		log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line());
 		return false;
@@ -200,13 +205,13 @@ bool call_vm_tag_function(void)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			log_error(S_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			log_error(S_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
@@ -218,14 +223,14 @@ bool call_vm_tag_function(void)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		log_error(S_TR("%s:%d: Tag \"%s\" not found.\n"),
+		log_error(N2D_TR("%s:%d: Tag \"%s\" not found.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		log_error(S_TR("%s:%d: \"tag_%s\" is not a function.\n"),
+		log_error(N2D_TR("%s:%d: \"tag_%s\" is not a function.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -238,7 +243,7 @@ bool call_vm_tag_function(void)
 		int line;
 		const char *msg;
 
-		log_error(S_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
+		log_error(N2D_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -246,7 +251,7 @@ bool call_vm_tag_function(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -289,8 +294,8 @@ void full_gc(void)
  * API
  */
 
-/* debug() */
-static bool debug(NoctEnv *env)
+/* Engine.debug() */
+static bool Engine_debug(NoctEnv *env)
 {
 	NoctValue param;
 	int type;
@@ -314,7 +319,7 @@ static bool debug(NoctEnv *env)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -323,26 +328,70 @@ static bool debug(NoctEnv *env)
 	{
 		int d;
 		noct_get_int(env, &param, &d);
-		printf("%d\n", d);
+		log_info("%d\n", d);
 		break;
 	}
 	case NOCT_VALUE_FLOAT:
 	{
 		float f;
 		noct_get_float(env, &param, &f);
-		printf("%f\n", f);
+		log_info("%f\n", f);
 		break;
 	}
 	case NOCT_VALUE_STRING:
 	{
 		const char *s;
 		noct_get_string(env, &param, &s);
-		printf("%s\n", s);
+		log_info("%s\n", s);
 		break;
 	}
 	default:
-		printf("[object]\n");
+		log_info("[object]\n");
 		break;
+	}
+
+	return true;
+}
+
+/* Engine.import() */
+static bool Engine_import(NoctEnv *env)
+{
+	NoctValue file;
+	const char *file_s;
+	char *data;
+	size_t len;
+
+	/* Get the argument. */
+	if (!noct_get_arg_check_string(env, 0, &file, &file_s))
+		return false;
+
+	/* Load the source file content. */
+	if (!load_file(file_s, &data, &len))
+		return false;
+
+	/* Check for the bytecode header. */
+	if (strncmp(data, BYTECODE_HEADER, strlen(BYTECODE_HEADER)) != 0) {
+		/* It's a source file. */
+		if (!noct_register_source(env, file_s, data)) {
+			const char *file, *msg;
+			int line;
+			noct_get_error_file(env, &file);
+			noct_get_error_line(env, &line);
+			noct_get_error_message(env, &msg);
+			log_error(N2D_TR("%s:%d: Error: %s\n"), file, line, msg);
+			return false;
+		}
+	} else {
+		/* It's a bytecode file. */
+		if (!noct_register_bytecode(env, (void *)data, len)) {
+			const char *file, *msg;
+			int line;
+			noct_get_error_file(env, &file);
+			noct_get_error_line(env, &line);
+			noct_get_error_message(env, &msg);
+			log_error(N2D_TR("%s:%d: Error: %s\n"), file, line, msg);
+			return false;
+		}
 	}
 
 	return true;
@@ -393,12 +442,12 @@ static bool Engine_loadTexture(NoctEnv *env)
 	NoctValue ret, ival;
 
 	if (!get_string_param(env, "file", &file)) {
-		noct_error(env, S_TR("file parameter is not set."));
+		noct_error(env, N2D_TR("file parameter is not set."));
 		return false;
 	}
 
 	if (!noct2d_load_texture(file, &tex_id, &tex_width, &tex_height)) {
-		noct_error(env, S_TR("Failed to load a texture."));
+		noct_error(env, N2D_TR("Failed to load a texture."));
 		return false;
 	}
 
@@ -785,7 +834,8 @@ bool install_api(NoctEnv *env)
 		const char *name;
 	} funcs[] = {
 #define RTFUNC(name) {Engine_##name, #name, "Engine_" # name}
-		{debug, NULL, "debug"},
+		RTFUNC(debug),
+		RTFUNC(import),
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
 		RTFUNC(callTagFunction),

@@ -9,7 +9,7 @@ set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 
 option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
 option(ENABLE_BUNDLE "Enable macOS bundle"     ON)
-option(ENABLE_I18N   "Enable translation"      OFF)
+option(ENABLE_I18N   "Enable translation"      ON)
 option(ENABLE_SHARED "Enable shared libraries" OFF)
 
 # Use "Release" build type by default.
@@ -68,6 +68,7 @@ set(BASE_SOURCES
 
 if(ENABLE_I18N)
   set(I18N_SOURCES
+    src/i18n.c
     src/translation.c
   )
 endif()
@@ -98,6 +99,10 @@ endif()
 
 if(ENABLE_JIT)
   target_compile_definitions(noct2d PRIVATE USE_JIT)
+endif()
+
+if(ENABLE_I18N)
+  target_compile_definitions(noct2d PRIVATE USE_TRANSLATION)
 endif()
 
 if(WIN32)

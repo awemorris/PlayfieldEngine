@@ -313,37 +313,6 @@ typedef unsigned long long uint64_t;
 #endif
 
 /*
- * strlcpy() and strlcat().
- */
-#if defined(TARGET_WINDOWS)
-
-/* Use *_s() instead. */
-#ifndef strlcpy
-#define strlcpy(d, s, l)	strcpy_s(d, l, s)
-#endif
-#ifndef strlcat
-#define strlcat(d, s, l)	strcat_s(d, l, s)
-#endif
-
-#elif defined(TARGET_LINUX) && !(defined(__GLIBC__) && (__GLIBC__ >= 2 && __GLIBC_MINOR__ >= 38))
-
-/* glibc older than 2.38 */
-#include <stdio.h>
-#include <string.h>
-inline void strlcpy(char *d, const char *s, size_t len)
-{
-	snprintf(d, len, "%s", s);
-}
-inline void strlcat(char *d, const char *s, size_t len)
-{
-	size_t l = strlen(d);
-	if (len > l)
-		snprintf(d + l, len - l, "%s", s);
-}
-
-#endif
-
-/*
  * strdup()
  */
 #if defined(_MSC_VER)
@@ -407,11 +376,12 @@ inline void strlcat(char *d, const char *s, size_t len)
 /*
  * Message Translation
  */
-#if !defined(_)
-#if defined(USE_GETTEXT_COMPAT)
-#define _(s)	gettextcompat_gettext(
+#if !defined(N2D_TR)
+#if defined(USE_TRANSLATION)
+#define N2D_TR(s)	noct2d_gettext(s)
+const char *noct2d_gettext(const char *msg);
 #else
-#define _(s)	(s)
+#define N2D_TR(s)	(s)
 #endif
 #endif
 

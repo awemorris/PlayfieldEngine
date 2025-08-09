@@ -7,6 +7,7 @@
 #ifndef NOCT2D_NOCT2D_H
 #define NOCT2D_NOCT2D_H
 
+#include <noct2d/c89compat.h>
 #include <stratohal/platform.h>
 
 /*
