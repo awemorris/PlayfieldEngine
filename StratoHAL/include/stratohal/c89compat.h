@@ -325,44 +325,6 @@ typedef unsigned long long uint64_t;
 #endif
 
 /*
- * strlcpy() and strlcat().
- */
-#if defined(TARGET_WINDOWS)
-
-/* Use *_s() instead. */
-#ifndef strlcpy
-#define strlcpy(d, s, l)	strcpy_s(d, l, s)
-#endif
-#ifndef strlcat
-#define strlcat(d, s, l)	strcat_s(d, l, s)
-#endif
-
-#elif defined(TARGET_LINUX) && !(defined(__GLIBC__) && (__GLIBC__ >= 2 && __GLIBC_MINOR__ >= 38))
-
-/* glibc older than 2.38 */
-#include <stdio.h>
-#include <string.h>
-
-#ifndef strlcpy_defined
-#define strlcpy_defined
-inline void strlcpy(char *d, const char *s, size_t len)
-{
-	snprintf(d, len, "%s", s);
-}
-#endif
-#ifndef strlcat_define
-#define strlcat_define
-inline void strlcat(char *d, const char *s, size_t len)
-{
-	size_t l = strlen(d);
-	if (len > l)
-		snprintf(d + l, len - l, "%s", s);
-}
-#endif
-
-#endif
-
-/*
  * strdup()
  */
 #if defined(_MSC_VER)
