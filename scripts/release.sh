@@ -83,7 +83,6 @@ rm -rf build
 # Linux x86_64
 #
 
-read str
 docker build --platform=linux/amd64 -t ubuntu22-x86_64 ./scripts
 mkdir build
 docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-x86_64 cmake .. -G Ninja
@@ -96,7 +95,6 @@ rm -rf build
 # Linux arm64
 #
 
-read str
 docker build --platform=linux/arm64 -t ubuntu22-arm64 ./scripts
 mkdir build
 docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-arm64 cmake .. -G Ninja
