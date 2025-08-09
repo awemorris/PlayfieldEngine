@@ -9,13 +9,15 @@ SRCS = \
     ../../external/NoctLang/src/execution.c \
     ../../external/NoctLang/src/intrinsics.c \
     ../../external/NoctLang/src/jit.c \
-    ../../external/StratoHAL/src/stdfile.c \
-    ../../external/StratoHAL/src/image.c \
-    ../../external/StratoHAL/src/glyph.c \
-    ../../external/StratoHAL/src/wave.c \
-    ../../external/StratoHAL/src/emmain.c \
-    ../../external/StratoHAL/src/alsound.c \
-    ../../external/StratoHAL/src/glrender.c \
+    ../../external/NoctLang/src/gc.c \
+    ../../external/NoctLang/src/noct.c \
+    ../../StratoHAL/src/stdfile.c \
+    ../../StratoHAL/src/image.c \
+    ../../StratoHAL/src/glyph.c \
+    ../../StratoHAL/src/wave.c \
+    ../../StratoHAL/src/emmain.c \
+    ../../StratoHAL/src/alsound.c \
+    ../../StratoHAL/src/glrender.c \
     ../../src/main.c \
     ../../src/api.c \
     ../../src/vm.c \
@@ -24,13 +26,14 @@ SRCS = \
 all: index.html
 
 index.html: $(SRCS)
-	@tar xzf ../../external/StratoHAL/lib/archive/libwebp-1.3.2.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/libwebp-1.3.2.tar.gz
 	@rm -f html/index.*
 	@emcc \
 		-O2 \
 		-o index.html \
 		-I../../external/NoctLang/include \
-		-I../../external/StratoHAL/include \
+		-I../../StratoHAL/include \
+		-I../../include \
 		-I../../src \
 		-I./libwebp-1.3.2 \
 		-I./libwebp-1.3.2/src \

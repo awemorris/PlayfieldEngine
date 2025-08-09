@@ -14,12 +14,12 @@ unity-src: libnoctvm-win64.dll libnoctvm-switch.a libnoctvm-ps5.a libnoctvm-xbox
 	@mkdir unity-src/Assets
 	@mkdir unity-src/Assets/StreamingAssets
 	@mkdir unity-src/Assets/Resources
-	@cp -v ../../external/StratoHAL/src/NoctScript.cs unity-src/Assets/
-	@cp -v ../../external/StratoHAL/src/NormalShader.shader unity-src/Assets/Resources/
-	@cp -v ../../external/StratoHAL/src/AddShader.shader unity-src/Assets/Resources/
-	@cp -v ../../external/StratoHAL/src/DimShader.shader unity-src/Assets/Resources/
-	@cp -v ../../external/StratoHAL/src/RuleShader.shader unity-src/Assets/Resources/
-	@cp -v ../../external/StratoHAL/src/MeltShader.shader unity-src/Assets/Resources/
+	@cp -v ../../StratoHAL/src/NoctScript.cs unity-src/Assets/
+	@cp -v ../../StratoHAL/src/NormalShader.shader unity-src/Assets/Resources/
+	@cp -v ../../StratoHAL/src/AddShader.shader unity-src/Assets/Resources/
+	@cp -v ../../StratoHAL/src/DimShader.shader unity-src/Assets/Resources/
+	@cp -v ../../StratoHAL/src/RuleShader.shader unity-src/Assets/Resources/
+	@cp -v ../../StratoHAL/src/MeltShader.shader unity-src/Assets/Resources/
 	@mkdir unity-src/Assets/Plugins
 	@mkdir unity-src/Assets/Plugins/x86_64
 	@mkdir unity-src/Assets/Plugins/Switch
@@ -51,15 +51,15 @@ unity-plugin-src.zip:
 	@mkdir unity-plugin-src/jpeg
 	@mkdir unity-plugin-src/libpng
 	@mkdir unity-plugin-src/libwebp
-	@tar xzf ../../external/StratoHAL/lib/archive/brotli-1.1.0.tar.gz -C unity-plugin-src/brotli --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/freetype-2.13.3.tar.gz -C unity-plugin-src/freetype --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/libogg-1.3.3.tar.gz -C unity-plugin-src/libogg --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz -C unity-plugin-src/libvorbis --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/zlib-1.3.1.tar.gz -C unity-plugin-src/zlib --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/bzip2-1.0.6.tar.gz -C unity-plugin-src/bzip2 --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/jpegsrc.v9e.tar.gz -C unity-plugin-src/jpeg --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/libpng-1.6.43.tar.gz -C unity-plugin-src/libpng --strip-components=1
-	@tar xzf ../../external/StratoHAL/lib/archive/libwebp-1.3.2.tar.gz -C unity-plugin-src/libwebp --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/brotli-1.1.0.tar.gz -C unity-plugin-src/brotli --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/freetype-2.13.3.tar.gz -C unity-plugin-src/freetype --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/libogg-1.3.3.tar.gz -C unity-plugin-src/libogg --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz -C unity-plugin-src/libvorbis --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/zlib-1.3.1.tar.gz -C unity-plugin-src/zlib --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/bzip2-1.0.6.tar.gz -C unity-plugin-src/bzip2 --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/jpegsrc.v9e.tar.gz -C unity-plugin-src/jpeg --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/libpng-1.6.43.tar.gz -C unity-plugin-src/libpng --strip-components=1
+	@tar xzf ../../StratoHAL/lib/archive/libwebp-1.3.2.tar.gz -C unity-plugin-src/libwebp --strip-components=1
 	@cp -R ../../src unity-plugin-src/
 	@cp scripts/build-switch.bat unity-plugin-src/
 	@cp scripts/build-ps5.bat unity-plugin-src/
@@ -72,12 +72,12 @@ unity-plugin-src.zip:
 libnoctvm-win64.dll:
 	@echo 'Building libnoctvm-win64.dll ...'
 	@rm -rf libroot
-	@../../external/StratoHAL/lib/build-libs.sh \
+	@../../StratoHAL/lib/build-libs.sh \
 		"" \
 		x86_64-w64-mingw32-gcc \
 		"-O2 -g0 -fPIC" \
 		x86_64-w64-mingw32-ar \
-		$(shell readlink -f ../../external/StratoHAL/lib)
+		$(shell readlink -f ../../StratoHAL/lib)
 	@x86_64-w64-mingw32-gcc \
 		-shared \
 		-fPIC \
@@ -87,7 +87,8 @@ libnoctvm-win64.dll:
 		-DUSE_CSHARP \
 		-DUSE_DLL \
 		-I../../external/NoctLang/include \
-		-I../../external/StratoHAL/include \
+		-I../../StratoHAL/include \
+		-I../../include \
 		-I../../src \
 		-I./libroot/include \
 		-I./libroot/include/png \
@@ -102,10 +103,12 @@ libnoctvm-win64.dll:
 		../../external/NoctLang/src/execution.c \
 		../../external/NoctLang/src/intrinsics.c \
 		../../external/NoctLang/src/jit.c \
-		../../external/StratoHAL/src/halwrap.c \
-		../../external/StratoHAL/src/image.c \
-		../../external/StratoHAL/src/glyph.c \
-		../../external/StratoHAL/src/wave.c \
+		../../external/NoctLang/src/gc.c \
+		../../external/NoctLang/src/noct.c \
+		../../StratoHAL/src/halwrap.c \
+		../../StratoHAL/src/image.c \
+		../../StratoHAL/src/glyph.c \
+		../../StratoHAL/src/wave.c \
 		../../src/main.c \
 		../../src/api.c \
 		../../src/vm.c \
@@ -130,12 +133,12 @@ libnoctvm-win64.dll:
 libnoctvm-switch.a:
 	@echo 'Building libnoctvm-switch.a ...'
 	@rm -rf libroot
-	@../../external/StratoHAL/lib/build-libs.sh \
+	@../../StratoHAL/lib/build-libs.sh \
 	    "" \
             ${HOME}/opt/LLVM/bin/clang \
             "-target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0" \
             ${HOME}/opt/LLVM/bin/llvm-ar \
-            $(shell readlink -f ../../external/StratoHAL/lib)
+            $(shell readlink -f ../../StratoHAL/lib)
 	@rm -rf objs
 	@mkdir objs
 	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/lexer.yy.c -o objs/lexer.yy.o
@@ -148,13 +151,15 @@ libnoctvm-switch.a:
 	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/execution.c -o objs/execution.o
 	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/intrinsics.c -o objs/intrinsics.o
 	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/jit.c -o objs/jit.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/halwrap.c -o objs/halwrap.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/image.c -o objs/image.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/glyph.c -o objs/glyph.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/wave.c -o objs/wave.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/main.c -o objs/main.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/api.c -o objs/api.o
-	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/vm.c -o objs/vm.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/gc.c -o objs/gc.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/noct.c -o objs/noct.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/halwrap.c -o objs/halwrap.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/image.c -o objs/image.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/glyph.c -o objs/glyph.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/wave.c -o objs/wave.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/main.c -o objs/main.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/api.c -o objs/api.o
+	@${HOME}/opt/LLVM/bin/clang -target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/vm.c -o objs/vm.o
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libfreetype.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libpng.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libjpeg.a
@@ -175,12 +180,12 @@ libnoctvm-switch.a:
 libnoctvm-ps5.a:
 	@echo 'Building libnoctvm-ps5.a ...'
 	@rm -rf libroot
-	@../../external/StratoHAL/lib/build-libs.sh \
+	@../../StratoHAL/lib/build-libs.sh \
 	    "" \
             ${HOME}/opt/LLVM/bin/clang \
             "-target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0" \
             ${HOME}/opt/LLVM/bin/llvm-ar \
-            $(shell readlink -f ../../external/StratoHAL/lib)
+            $(shell readlink -f ../../StratoHAL/lib)
 	@rm -rf objs
 	@mkdir objs
 	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/lexer.yy.c -o objs/lexer.yy.o
@@ -193,13 +198,15 @@ libnoctvm-ps5.a:
 	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/execution.c -o objs/execution.o
 	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/intrinsics.c -o objs/intrinsics.o
 	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/jit.c -o objs/jit.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/halwrap.c -o objs/halwrap.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/image.c -o objs/image.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/glyph.c -o objs/glyph.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include ../../external/StratoHAL/src/wave.c -o objs/wave.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/main.c -o objs/main.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/api.c -o objs/api.o
-	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/StratoHAL/include -I../../external/NoctLang/include ../../src/vm.c -o objs/vm.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/gc.c -o objs/gc.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../external/NoctLang/include ../../external/NoctLang/src/noct.c -o objs/noct.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/halwrap.c -o objs/halwrap.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/image.c -o objs/image.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/glyph.c -o objs/glyph.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include ../../StratoHAL/src/wave.c -o objs/wave.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/main.c -o objs/main.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/api.c -o objs/api.o
+	@${HOME}/opt/LLVM/bin/clang -target x86_64-unkown-freebsd -ffreestanding -nostdinc -nostdlib -I${PWD}/../../include/clang-include -O2 -g0 -c -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../src -I./libroot/include -I./libroot/include/png -I./libroot/include/freetype2 -I../../StratoHAL/include -I../../external/NoctLang/include -I../../include ../../src/vm.c -o objs/vm.o
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libfreetype.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libpng.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libjpeg.a
@@ -226,7 +233,7 @@ libnoctvm-xboxxs.lib:
 	@echo 'Removing temporary directories...'
 	@rm -rf zlib libpng jpeg libogg libvorbis freetype bzip2 libwebp
 	@echo 'Building zlib...'
-	@tar xzf ../../external/StratoHAL/lib/archive/zlib-1.3.1.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/zlib-1.3.1.tar.gz
 	@mv zlib-1.3.1 zlib
 	@cd zlib && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include adler32.c && \
@@ -246,7 +253,7 @@ libnoctvm-xboxxs.lib:
 	@cp zlib/zlib.lib libroot/lib/
 	@rm -rf zlib
 	@echo 'Building libpng...'
-	@tar xzf ../../external/StratoHAL/lib/archive/libpng-1.6.43.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/libpng-1.6.43.tar.gz
 	@mv libpng-1.6.43 libpng
 	@cd libpng && \
 	    cp scripts/pnglibconf.h.prebuilt pnglibconf.h && \
@@ -271,7 +278,7 @@ libnoctvm-xboxxs.lib:
 	@cp libpng/libpng.lib libroot/lib/
 	@rm -rf libpng
 	@echo 'Building jpeg...'
-	@tar xzf ../../external/StratoHAL/lib/archive/jpegsrc.v9e.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/jpegsrc.v9e.tar.gz
 	@mv jpeg-9e jpeg
 	@cd jpeg && \
 	    cp jconfig.txt jconfig.h && \
@@ -329,7 +336,7 @@ libnoctvm-xboxxs.lib:
 	@cp jpeg/jpeg.lib libroot/lib/
 	@rm -rf jpeg
 	@echo 'Building bzip2...'
-	@tar xzf ../../external/StratoHAL/lib/archive/bzip2-1.0.6.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/bzip2-1.0.6.tar.gz
 	@mv bzip2-1.0.6 bzip2
 	@cd bzip2 && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include blocksort.c && \
@@ -344,7 +351,7 @@ libnoctvm-xboxxs.lib:
 	@cp bzip2/libbz2.lib libroot/lib/
 	@rm -rf bzip2
 	@echo 'Building libwebp...'
-	@tar xzf ../../external/StratoHAL/lib/archive/libwebp-1.3.2.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/libwebp-1.3.2.tar.gz
 	@mv libwebp-1.3.2 libwebp
 	@cd libwebp && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /I./ src/dec/alpha_dec.c && \
@@ -442,7 +449,7 @@ libnoctvm-xboxxs.lib:
 	@cp libwebp/libwebp.lib libroot/lib/
 	@rm -rf libwebp
 	@echo 'Building libogg...'
-	@tar xzf ../../external/StratoHAL/lib/archive/libogg-1.3.3.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/libogg-1.3.3.tar.gz
 	@mv libogg-1.3.3 libogg
 	@cd libogg && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /I./include src/bitwise.c && \
@@ -452,7 +459,7 @@ libnoctvm-xboxxs.lib:
 	@cp libogg/libogg.lib libroot/lib/
 	@rm -rf libogg
 	@echo 'Building libvorbis...'
-	@tar xzf ../../external/StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz
 	@mv libvorbis-1.3.7 libvorbis
 	@cd libvorbis && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /I./include /I./lib /I../libroot/include lib/analysis.c && \
@@ -484,7 +491,7 @@ libnoctvm-xboxxs.lib:
 	@cp libvorbis/libvorbisfile.lib libroot/lib/
 	@rm -rf libvorbis
 	@echo 'Building freetype...'
-	@tar xzf ../../external/StratoHAL/lib/archive/freetype-2.13.3.tar.gz
+	@tar xzf ../../StratoHAL/lib/archive/freetype-2.13.3.tar.gz
 	@mv freetype-2.13.3 freetype
 	@cd freetype && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /O2 /I../../../include/msvc-include /MT /DFT2_BUILD_LIBRARY /Dft_memcpy=memcpy /I./include /I../libroot/include src/base/ftadvanc.c && \
@@ -645,13 +652,13 @@ libnoctvm-xboxxs.lib:
 	@rm -rf objs
 	@mkdir objs
 	@cd objs && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../external/StratoHAL/include /I../../../src ../../../src/main.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../external/StratoHAL/include /I../../../src ../../../src/api.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../external/StratoHAL/include /I../../../src ../../../src/vm.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../external/StratoHAL/include /I../libroot/include ../../../external/StratoHAL/src/halwrap.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../external/StratoHAL/include /I../libroot/include ../../../external/StratoHAL/src/glyph.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../external/StratoHAL/include /I../libroot/include ../../../external/StratoHAL/src/wave.c && \
-	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../external/StratoHAL/include /I../libroot/include ../../../external/StratoHAL/src/image.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../StratoHAL/include /I../../../src -I../../../include ../../../src/main.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../StratoHAL/include /I../../../src -I../../../include ../../../src/api.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include /I../../../StratoHAL/include /I../../../src -I../../../include ../../../src/vm.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../StratoHAL/include /I../libroot/include ../../../StratoHAL/src/halwrap.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../StratoHAL/include /I../libroot/include ../../../StratoHAL/src/glyph.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../StratoHAL/include /I../libroot/include ../../../StratoHAL/src/wave.c && \
+	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DUSE_UNITY /DUSE_CSHARP /DUSE_DLL /I../../../StratoHAL/include /I../libroot/include ../../../StratoHAL/src/image.c && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /DYY_NO_UNISTD_H /I../../../external/NoctLang/include ../../../external/NoctLang/src/lexer.yy.c && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include ../../../external/NoctLang/src/parser.tab.c && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include ../../../external/NoctLang/src/ast.c && \

@@ -114,7 +114,7 @@ cp index.html index.js index.wasm ../../dist/wasm/
 cd ../..
 
 #
-# Wasm
+# Unity
 #
 
 cd projects/unity-src
