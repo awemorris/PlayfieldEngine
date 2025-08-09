@@ -138,7 +138,7 @@ if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
   )
 
   # Set an icon.
-  set(APP_ICON "${CMAKE_SOURCE_DIR}/resources/icon512.png")
+  set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon512.png")
   target_sources(noct2d PRIVATE ${APP_ICON})
   set_source_files_properties(${APP_ICON} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources")
