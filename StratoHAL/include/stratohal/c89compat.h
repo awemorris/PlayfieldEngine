@@ -420,10 +420,10 @@ inline void strlcat(char *d, const char *s, size_t len)
  * Message Translation
  */
 #if defined(USE_TRANSLATION)
-#define N_TR(s)	noct_gettext(s)
+#define S_TR(s)	noct_gettext(s)
 const char *noct_gettext(const char *s);
 #else
-#define N_TR(s)	(s)
+#define S_TR(s)	(s)
 #endif
 
 #endif

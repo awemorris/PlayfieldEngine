@@ -11,6 +11,7 @@
 #ifndef NOCT2D_ENGINE_H
 #define NOCT2D_ENGINE_H
 
+#include <stratohal/platform.h>
 #include <noct2d/noct2d.h>
 
 /* Standard C */

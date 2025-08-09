@@ -46,7 +46,7 @@ bool create_vm(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -74,7 +74,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -136,7 +136,7 @@ static bool call_setup(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -158,7 +158,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -190,7 +190,7 @@ bool call_vm_tag_function(void)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		log_error(_("In scenario %s:%d: runtime error.\n"),
+		log_error(S_TR("In scenario %s:%d: runtime error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line());
 		return false;
@@ -200,13 +200,13 @@ bool call_vm_tag_function(void)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			log_error(_("In scenario %s:%d: runtime error.\n"),
+			log_error(S_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			log_error(_("In scenario %s:%d: runtime error.\n"),
+			log_error(S_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
@@ -218,14 +218,14 @@ bool call_vm_tag_function(void)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		log_error(_("%s:%d: Tag \"%s\" not found.\n"),
+		log_error(S_TR("%s:%d: Tag \"%s\" not found.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		log_error(_("%s:%d: \"tag_%s\" is not a function.\n"),
+		log_error(S_TR("%s:%d: \"tag_%s\" is not a function.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -238,7 +238,7 @@ bool call_vm_tag_function(void)
 		int line;
 		const char *msg;
 
-		log_error(_("In scenario %s:%d: Tag \"%s\" execution error.\n"),
+		log_error(S_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -246,7 +246,7 @@ bool call_vm_tag_function(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -314,7 +314,7 @@ static bool debug(NoctEnv *env)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(_("%s:%d: error: %s\n"), file, line, msg);
+		log_error(S_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -393,12 +393,12 @@ static bool Engine_loadTexture(NoctEnv *env)
 	NoctValue ret, ival;
 
 	if (!get_string_param(env, "file", &file)) {
-		noct_error(env, _("file parameter is not set."));
+		noct_error(env, S_TR("file parameter is not set."));
 		return false;
 	}
 
 	if (!noct2d_load_texture(file, &tex_id, &tex_width, &tex_height)) {
-		noct_error(env, _("Failed to load a texture."));
+		noct_error(env, S_TR("Failed to load a texture."));
 		return false;
 	}
 

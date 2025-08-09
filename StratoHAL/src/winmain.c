@@ -250,7 +250,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		bFileOK = TRUE;
 	if (!bFileOK)
 	{
-		log_error(_("No startup file."));
+		log_error(S_TR("No startup file."));
 		return FALSE;
 	}
 #endif
@@ -270,7 +270,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	/* Initialize the graphics HAL. */
 	if (!D3DInitialize(hWndMain, nWindowWidth, nWindowHeight, bForceD3D9))
 	{
-		log_info(_("Failed to initialize the graphics."));
+		log_info(S_TR("Failed to initialize the graphics."));
 		return FALSE;
 	}
 
@@ -282,7 +282,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	/* Initialize the sound HAL. */
 	if (!DSInitialize(hWndMain))
 	{
-		log_error(_("Failed to initialize sound."));
+		log_error(S_TR("Failed to initialize sound."));
 
 		/* Fall-thru. */
 	}
