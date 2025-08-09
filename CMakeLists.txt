@@ -100,6 +100,10 @@ if(ENABLE_JIT)
   target_compile_definitions(noct2d PRIVATE USE_JIT)
 endif()
 
+if(WIN32)
+  target_link_options(noct2d PRIVATE -static)
+endif()
+
 # Change the bundle name.
 if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
