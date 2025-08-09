@@ -342,16 +342,21 @@ typedef unsigned long long uint64_t;
 /* glibc older than 2.38 */
 #include <stdio.h>
 #include <string.h>
+
+#ifndef strlcpy
 inline void strlcpy(char *d, const char *s, size_t len)
 {
 	snprintf(d, len, "%s", s);
 }
+#endif
+#ifndef strlcat
 inline void strlcat(char *d, const char *s, size_t len)
 {
 	size_t l = strlen(d);
 	if (len > l)
 		snprintf(d + l, len - l, "%s", s);
 }
+#endif
 
 #endif
 
