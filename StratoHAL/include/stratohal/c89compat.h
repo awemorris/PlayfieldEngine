@@ -343,13 +343,15 @@ typedef unsigned long long uint64_t;
 #include <stdio.h>
 #include <string.h>
 
-#ifndef strlcpy
+#ifndef strlcpy_defined
+#define strlcpy_defined
 inline void strlcpy(char *d, const char *s, size_t len)
 {
 	snprintf(d, len, "%s", s);
 }
 #endif
-#ifndef strlcat
+#ifndef strlcat_define
+#define strlcat_define
 inline void strlcat(char *d, const char *s, size_t len)
 {
 	size_t l = strlen(d);
