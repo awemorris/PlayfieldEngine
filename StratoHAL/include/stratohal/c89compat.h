@@ -8,8 +8,8 @@
  * C89 Compatibility
  */
 
-#ifndef C89COMPAT_H
-#define C89COMPAT_H
+#ifndef STRATOHAL_C89COMPAT_H
+#define STRATOHAL_C89COMPAT_H
 
 /*
  * Here, we define two macros that indicates the target architecture
@@ -56,15 +56,27 @@
 
 /* Arm32 */
 #define ARCH_ARM32
+
 #elif defined(_ARCH_PPC64)
 
 /* PowerPC 64 / POWER */
 #define ARCH_PPC64
+
 #elif defined(_ARCH_PPC)
 
 /* PowerPC */
 #define ARCH_PPC32
 #define ARCH_BE
+
+#elif defined(__mips64) || defined(__mips64__)
+
+/* MIPS64 */
+#define ARCH_MIPS64
+
+#elif defined(__mips__)
+
+/* MIPS32 */
+#define ARCH_MIPS32
 
 #elif defined(__riscv) && (__riscv_xlen == 64)
 
@@ -407,12 +419,11 @@ inline void strlcat(char *d, const char *s, size_t len)
 /*
  * Message Translation
  */
-#if !defined(_)
-#if defined(USE_GETTEXT_COMPAT)
-#define _(s)	gettextcompat_gettext(
+#if defined(USE_TRANSLATION)
+#define N_TR(s)	noct_gettext(s)
+const char *noct_gettext(const char *s);
 #else
-#define _(s)	(s)
-#endif
+#define N_TR(s)	(s)
 #endif
 
 #endif
