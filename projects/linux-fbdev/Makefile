@@ -50,7 +50,7 @@ OBJS_LANG=\
 	objs/interpreter.o \
 	objs/execution.o \
 	objs/intrinsics.o \
-	objs/jit-common.o
+	objs/jit.o
 
 OBJS_PLATFORM=\
 	objs/fbmain.o \
@@ -112,7 +112,7 @@ objs/intrinsics.o: ../../external/NoctLang/src/intrinsics.c
 	@mkdir -p objs
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
 
-objs/jit-common.o: ../../external/NoctLang/src/jit-common.c
+objs/jit.o: ../../external/NoctLang/src/jit.c
 	@mkdir -p objs
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
 

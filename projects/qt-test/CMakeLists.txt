@@ -62,15 +62,7 @@ set(SOURCES
     ../../external/NoctLang/src/interpreter.c
     ../../external/NoctLang/src/execution.c
     ../../external/NoctLang/src/intrinsics.c
-    ../../external/NoctLang/src/jit-common.c
-    ../../external/NoctLang/src/jit-x86_64.c
-    ../../external/NoctLang/src/jit-x86.c
-    ../../external/NoctLang/src/jit-arm64.c
-    ../../external/NoctLang/src/jit-arm32.c
-    ../../external/NoctLang/src/jit-ppc64.c
-    ../../external/NoctLang/src/jit-ppc32.c
-    ../../external/NoctLang/src/jit-mips64.c
-    ../../external/NoctLang/src/jit-mips32.c
+    ../../external/NoctLang/src/jit.c
     ../../external/StratoHAL/src/image.c
     ../../external/StratoHAL/src/glyph.c
     ../../external/StratoHAL/src/wave.c

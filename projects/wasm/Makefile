@@ -8,7 +8,7 @@ SRCS = \
     ../../external/NoctLang/src/interpreter.c \
     ../../external/NoctLang/src/execution.c \
     ../../external/NoctLang/src/intrinsics.c \
-    ../../external/NoctLang/src/jit-common.c \
+    ../../external/NoctLang/src/jit.c \
     ../../external/StratoHAL/src/stdfile.c \
     ../../external/StratoHAL/src/image.c \
     ../../external/StratoHAL/src/glyph.c \

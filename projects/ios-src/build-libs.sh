@@ -49,7 +49,7 @@ IPHONEOS_DEPLOYMENT_TARGET=13.0 clang \
     ../../../external/NoctLang/src/interpreter.c \
     ../../../external/NoctLang/src/execution.c \
     ../../../external/NoctLang/src/intrinsics.c \
-    ../../../external/NoctLang/src/jit-common.c \
+    ../../../external/NoctLang/src/jit.c \
     ../../../external/StratoHal/src/stdfile.c \
     ../../../external/StratoHal/src/image.c \
     ../../../external/StratoHal/src/aunit.c \
@@ -118,7 +118,7 @@ IPHONEOS_DEPLOYMENT_TARGET=13.0 clang \
     ../../../external/NoctLang/src/interpreter.c \
     ../../../external/NoctLang/src/execution.c \
     ../../../external/NoctLang/src/intrinsics.c \
-    ../../../external/NoctLang/src/jit-common.c \
+    ../../../external/NoctLang/src/jit.c \
     ../../../external/StratoHal/src/stdfile.c \
     ../../../external/StratoHal/src/image.c \
     ../../../external/StratoHal/src/aunit.c \
@@ -186,7 +186,7 @@ IPHONEOS_DEPLOYMENT_TARGET=13.0 clang \
     ../../../external/NoctLang/src/interpreter.c \
     ../../../external/NoctLang/src/execution.c \
     ../../../external/NoctLang/src/intrinsics.c \
-    ../../../external/NoctLang/src/jit-common.c \
+    ../../../external/NoctLang/src/jit.c \
     ../../../external/StratoHal/src/stdfile.c \
     ../../../external/StratoHal/src/image.c \
     ../../../external/StratoHal/src/aunit.c \

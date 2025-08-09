@@ -38,10 +38,9 @@ clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /D
 clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/interpreter.c
 clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/execution.c
 clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/intrinsics.c
-clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-common.c
-clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-x86.c
+clang-cl -target i686-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit.c
 cd ..
-llvm-lib /nologo /OUT:libroot/lib-x86/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit-common.obj objs/jit-x86.obj
+llvm-lib /nologo /OUT:libroot/lib-x86/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit.obj
 
 echo '[x64]'
 rm -rf objs
@@ -77,10 +76,9 @@ clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE 
 clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/interpreter.c
 clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/execution.c
 clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/intrinsics.c
-clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-common.c
-clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-x86.c
+clang-cl -target x86_64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit.c
 cd ..
-llvm-lib /nologo /OUT:libroot/lib-x64/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit-common.obj objs/jit-x86.obj
+llvm-lib /nologo /OUT:libroot/lib-x64/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit.obj
 
 echo '[arm64]'
 rm -rf objs
@@ -116,10 +114,9 @@ clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE
 clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/interpreter.c
 clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/execution.c
 clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/intrinsics.c
-clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-common.c
-clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit-x86.c
+clang-cl -target aarch64-pc-windows-msvc /nologo /c /MT /O2 /DUNICODE /D_UNICODE /DUSE_JIT /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit.c
 cd ..
-llvm-lib /nologo /OUT:libroot/lib-arm64/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit-common.obj objs/jit-x86.obj
+llvm-lib /nologo /OUT:libroot/lib-arm64/libnoctvm.lib objs/main.obj objs/api.obj objs/tag.obj objs/vm.obj objs/common.obj objs/render.obj objs/sound.obj objs/font.obj objs/winmain.obj objs/d3drender.obj objs/d3d12render.obj objs/d3d11render.obj objs/d3d9render.obj objs/gdirender.obj objs/dsound.obj objs/dsvideo.obj objs/stdfile.obj objs/image.obj objs/glyph.obj objs/wave.obj objs/cpuid.obj objs/scalar.obj objs/sse.obj objs/sse2.obj objs/avx.obj objs/avx2.obj objs/lexer.yy.obj objs/parser.tab.obj objs/ast.obj objs/hir.obj objs/lir.obj objs/runtime.obj objs/interpreter.obj objs/intrinsics.obj objs/jit.obj
 
 rm -rd vs-src/lib
 mkdir vs-src/lib
