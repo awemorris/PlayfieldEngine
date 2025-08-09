@@ -21,6 +21,8 @@ mkdir dist/linux-arm64
 mkdir dist/wasm
 mkdir dist/unity
 
+rm -rf build
+
 #
 # Linux x86_64
 #
