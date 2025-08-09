@@ -7,7 +7,7 @@ CONSOLE_CFLAGS="-O2"
 #
 src: unity-src
 
-unity-src: libnoctvm-win64.dll libnoctvm-switch.a libnoctvm-ps5.a libnoctvm-xboxxs.lib
+unity-src: libnoct2d-win64.dll libnoct2d-switch.a libnoct2d-ps5.a libnoct2d-xboxxs.lib
 	@echo 'Making Unity source tree.'
 	@rm -rf unity-src
 	@mkdir unity-src
@@ -26,10 +26,10 @@ unity-src: libnoctvm-win64.dll libnoctvm-switch.a libnoctvm-ps5.a libnoctvm-xbox
 	@mkdir unity-src/Assets/Plugins/PS5
 	@mkdir unity-src/Assets/Plugins/GameCoreXboxSeries
 	@mkdir unity-src/Assets/Plugins/Common
-	@cp libnoctvm-win64.dll unity-src/Assets/Plugins/x86_64/libnoctvm.dll
-	@cp libnoctvm-switch.a unity-src/Assets/Plugins/Switch/libnoctvm.a
-	@cp libnoctvm-ps5.a unity-src/Assets/Plugins/PS5/libnoctvm.a
-	@cp libnoctvm-xboxxs.lib unity-src/Assets/Plugins/GameCoreXboxSeries/libnoctvm.lib
+	@cp libnoct2d-win64.dll unity-src/Assets/Plugins/x86_64/libnoct2d.dll
+	@cp libnoct2d-switch.a unity-src/Assets/Plugins/Switch/libnoct2d.a
+	@cp libnoct2d-ps5.a unity-src/Assets/Plugins/PS5/libnoct2d.a
+	@cp libnoct2d-xboxxs.lib unity-src/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
 	@cp -v MainScene.unity unity-src/Assets/
 	@cp README.md unity-src/
 	@echo 'Done making Unity source tree.'
@@ -39,38 +39,38 @@ unity-src: libnoctvm-win64.dll libnoctvm-switch.a libnoctvm-ps5.a libnoctvm-xbox
 # Plugin source tree
 #
 
-unity-plugin-src.zip:
-	@rm -rf unity-plugin-src
-	@mkdir unity-plugin-src
-	@mkdir unity-plugin-src/brotli
-	@mkdir unity-plugin-src/freetype
-	@mkdir unity-plugin-src/libogg
-	@mkdir unity-plugin-src/libvorbis
-	@mkdir unity-plugin-src/zlib
-	@mkdir unity-plugin-src/bzip2
-	@mkdir unity-plugin-src/jpeg
-	@mkdir unity-plugin-src/libpng
-	@mkdir unity-plugin-src/libwebp
-	@tar xzf ../../StratoHAL/lib/archive/brotli-1.1.0.tar.gz -C unity-plugin-src/brotli --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/freetype-2.13.3.tar.gz -C unity-plugin-src/freetype --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/libogg-1.3.3.tar.gz -C unity-plugin-src/libogg --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz -C unity-plugin-src/libvorbis --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/zlib-1.3.1.tar.gz -C unity-plugin-src/zlib --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/bzip2-1.0.6.tar.gz -C unity-plugin-src/bzip2 --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/jpegsrc.v9e.tar.gz -C unity-plugin-src/jpeg --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/libpng-1.6.43.tar.gz -C unity-plugin-src/libpng --strip-components=1
-	@tar xzf ../../StratoHAL/lib/archive/libwebp-1.3.2.tar.gz -C unity-plugin-src/libwebp --strip-components=1
-	@cp -R ../../src unity-plugin-src/
-	@cp scripts/build-switch.bat unity-plugin-src/
-	@cp scripts/build-ps5.bat unity-plugin-src/
-	@cp scripts/build-xboxxs.bat unity-plugin-src/
-	@zip -r -9 -q unity-plugin-src.zip unity-plugin-src
+# unity-plugin-src.zip:
+# 	@rm -rf unity-plugin-src
+# 	@mkdir unity-plugin-src
+# 	@mkdir unity-plugin-src/brotli
+# 	@mkdir unity-plugin-src/freetype
+# 	@mkdir unity-plugin-src/libogg
+# 	@mkdir unity-plugin-src/libvorbis
+# 	@mkdir unity-plugin-src/zlib
+# 	@mkdir unity-plugin-src/bzip2
+# 	@mkdir unity-plugin-src/jpeg
+# 	@mkdir unity-plugin-src/libpng
+# 	@mkdir unity-plugin-src/libwebp
+# 	@tar xzf ../../StratoHAL/lib/archive/brotli-1.1.0.tar.gz -C unity-plugin-src/brotli --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/freetype-2.13.3.tar.gz -C unity-plugin-src/freetype --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/libogg-1.3.3.tar.gz -C unity-plugin-src/libogg --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/libvorbis-1.3.7.tar.gz -C unity-plugin-src/libvorbis --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/zlib-1.3.1.tar.gz -C unity-plugin-src/zlib --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/bzip2-1.0.6.tar.gz -C unity-plugin-src/bzip2 --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/jpegsrc.v9e.tar.gz -C unity-plugin-src/jpeg --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/libpng-1.6.43.tar.gz -C unity-plugin-src/libpng --strip-components=1
+# 	@tar xzf ../../StratoHAL/lib/archive/libwebp-1.3.2.tar.gz -C unity-plugin-src/libwebp --strip-components=1
+# 	@cp -R ../../src unity-plugin-src/
+# 	@cp scripts/build-switch.bat unity-plugin-src/
+# 	@cp scripts/build-ps5.bat unity-plugin-src/
+# 	@cp scripts/build-xboxxs.bat unity-plugin-src/
+# 	@zip -r -9 -q unity-plugin-src.zip unity-plugin-src
 
 #
 # Unity Native Plugin for Windows x86_64 (For Preview On Mac)
 #
-libnoctvm-win64.dll:
-	@echo 'Building libnoctvm-win64.dll ...'
+libnoct2d-win64.dll:
+	@echo 'Building libnoct2d-win64.dll ...'
 	@rm -rf libroot
 	@../../StratoHAL/lib/build-libs.sh \
 		"" \
@@ -81,7 +81,7 @@ libnoctvm-win64.dll:
 	@x86_64-w64-mingw32-gcc \
 		-shared \
 		-fPIC \
-		-o libnoctvm-win64.dll \
+		-o libnoct2d-win64.dll \
 		-O2 \
 		-DUSE_UNITY \
 		-DUSE_CSHARP \
@@ -124,14 +124,14 @@ libnoctvm-win64.dll:
 		./libroot/lib/libbz2.a \
 		./libroot/lib/libz.a
 	@rm -rf libroot
-	@echo 'Done building libnoctvm-win64.dll.'
+	@echo 'Done building libnoct2d-win64.dll.'
 	@echo ''
 
 #
 # Unity Native Plugin for Switch (by using an unofficial toolchain)
 #
-libnoctvm-switch.a:
-	@echo 'Building libnoctvm-switch.a ...'
+libnoct2d-switch.a:
+	@echo 'Building libnoct2d-switch.a ...'
 	@rm -rf libroot
 	@../../StratoHAL/lib/build-libs.sh \
 	    "" \
@@ -171,14 +171,14 @@ libnoctvm-switch.a:
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libogg.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libbz2.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libz.a
-	@${HOME}/opt/LLVM/bin/llvm-ar rcs libnoctvm-switch.a objs/*.o
-	@echo 'Done building libnoctvm-switch.a.'
+	@${HOME}/opt/LLVM/bin/llvm-ar rcs libnoct2d-switch.a objs/*.o
+	@echo 'Done building libnoct2d-switch.a.'
 
 #
 # Unity Native Plugin for PlayStation5 (by using an unofficial toolchain)
 #
-libnoctvm-ps5.a:
-	@echo 'Building libnoctvm-ps5.a ...'
+libnoct2d-ps5.a:
+	@echo 'Building libnoct2d-ps5.a ...'
 	@rm -rf libroot
 	@../../StratoHAL/lib/build-libs.sh \
 	    "" \
@@ -218,14 +218,14 @@ libnoctvm-ps5.a:
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libogg.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libbz2.a
 	@cd objs && ${HOME}/opt/LLVM/bin/llvm-ar x ../libroot/lib/libz.a
-	@${HOME}/opt/LLVM/bin/llvm-ar rcs libnoctvm-ps5.a objs/*.o
-	@echo 'Done building libnoctvm-ps5.a.'
+	@${HOME}/opt/LLVM/bin/llvm-ar rcs libnoct2d-ps5.a objs/*.o
+	@echo 'Done building libnoct2d-ps5.a.'
 
 #
 # Unity Native Plugin for Xbox Series X|S (by using an unofficial toolchain)
 #
-libnoctvm-xboxxs.lib:
-	@echo 'Building libnoctvm-xboxxs.a ...'
+libnoct2d-xboxxs.lib:
+	@echo 'Building libnoct2d-xboxxs.a ...'
 	@rm -rf libroot
 	@mkdir libroot
 	@mkdir libroot/include
@@ -648,7 +648,7 @@ libnoctvm-xboxxs.lib:
 	@cp freetype/include/ft2build.h libroot/include/
 	@cp freetype/freetype.lib libroot/lib/
 	@rm -rf freetype
-	@echo 'Building libnoctvm_proto.lib...'
+	@echo 'Building libnoct2d_proto.lib...'
 	@rm -rf objs
 	@mkdir objs
 	@cd objs && \
@@ -669,9 +669,9 @@ libnoctvm-xboxxs.lib:
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include ../../../external/NoctLang/src/execution.c && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include ../../../external/NoctLang/src/intrinsics.c && \
 	    ${HOME}/opt/LLVM/bin/clang-cl /nologo /c /MT /O2 /I../../../include/msvc-include /DUNICODE /D_UNICODE /I../../../external/NoctLang/include ../../../external/NoctLang/src/jit.c && \
-	    ${HOME}/opt/LLVM/bin/llvm-lib /nologo /OUT:libnoctvm_proto.lib halwrap.obj glyph.obj wave.obj image.obj lexer.yy.obj parser.tab.obj ast.obj hir.obj lir.obj runtime.obj interpreter.obj intrinsics.obj jit.obj main.obj api.obj vm.obj
+	    ${HOME}/opt/LLVM/bin/llvm-lib /nologo /OUT:libnoct2d_proto.lib halwrap.obj glyph.obj wave.obj image.obj lexer.yy.obj parser.tab.obj ast.obj hir.obj lir.obj runtime.obj interpreter.obj intrinsics.obj jit.obj main.obj api.obj vm.obj
 	@echo 'Merging libraries...'
-	@${HOME}/opt/LLVM/bin/llvm-lib /nologo /OUT:libnoctvm-xboxxs.lib objs/libnoctvm_proto.lib libroot/lib/zlib.lib libroot/lib/libpng.lib libroot/lib/jpeg.lib libroot/lib/libwebp.lib libroot/lib/libogg.lib libroot/lib/libvorbisfile.lib libroot/lib/libvorbis.lib libroot/lib/freetype.lib
+	@${HOME}/opt/LLVM/bin/llvm-lib /nologo /OUT:libnoct2d-xboxxs.lib objs/libnoct2d_proto.lib libroot/lib/zlib.lib libroot/lib/libpng.lib libroot/lib/jpeg.lib libroot/lib/libwebp.lib libroot/lib/libogg.lib libroot/lib/libvorbisfile.lib libroot/lib/libvorbis.lib libroot/lib/freetype.lib
 	@rm -rf objs
 	@rm -rf libroot
 
@@ -679,4 +679,4 @@ libnoctvm-xboxxs.lib:
 # Cleanup
 #
 clean:
-	@rm -rf unity-src libnoctvm-win64.dll libnoctvm-switch.a libnoctvm-ps5.a libnoctvm-xboxxs.lib unity-plugin-src.zip unity-plugin-src
+	@rm -rf unity-src libnoct2d-win64.dll libnoct2d-switch.a libnoct2d-ps5.a libnoct2d-xboxxs.lib unity-plugin-src.zip unity-plugin-src

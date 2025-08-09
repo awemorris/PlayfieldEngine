@@ -418,7 +418,7 @@ copy /Y include\ft2build.h ..\libroot\include\
 copy libfreetype.a ..\libroot\lib\
 cd ..
 
-echo Building NoctVM...
+echo Building Noct2D...
 cd objs
 prospero-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -Isrc src/platform/halwrap.c
 prospero-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -Isrc -I./libroot/include src/platform/glyph.c

@@ -418,24 +418,26 @@ copy /Y include\ft2build.h ..\libroot\include\
 copy libfreetype.a ..\libroot\lib\
 cd ..
 
-echo Building NoctVM...
+echo Building Noct2D...
 cd objs
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src ../../../src/platform/halwrap.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../src/platform/glyph.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../src/platform/wave.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../src/platform/image.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DYY_NO_UNISTD_H -I../../../src ../../../src/lang/lexer.yy.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/parser.tab.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/ast.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/hir.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/lir.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/runtime.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/interpreter.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/intrinsics.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/lang/jit-common.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/noctvm/main.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/noctvm/api.c
-nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../src/noctvm/vm.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src ../../../StratoHAL/src/halwrap.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../StratoHAL/src/glyph.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../StratoHAL/src/wave.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DUSE_UNITY -DUSE_CSHARP -DUSE_DLL -I../../../src -I../libroot/include ../../../StratoHAL/src/image.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -DYY_NO_UNISTD_H -I../../../src ../../../external/NoctLang/src/lexer.yy.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/parser.tab.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/ast.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/hir.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/lir.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/runtime.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/interpreter.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/intrinsics.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/jit.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/gc.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src ../../../external/NoctLang/src/lang/noct.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src -I../../../external/NoctLang/include -I../../../StratoHAL/include ../../../src/main.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src -I../../../external/NoctLang/include -I../../../StratoHAL/include ../../../src/api.c
+nx-clang.exe -c -O2 -DUNICODE -D_UNICODE -I../../../src -I../../../external/NoctLang/include -I../../../StratoHAL/include ../../../src/vm.c
 cd ..
 
 echo Merging libraries...
@@ -449,4 +451,4 @@ nx-clang.exe x ../libroot/lib/libvorbisfile.lib
 nx-clang.exe x ../libroot/lib/libvorbis.lib
 nx-clang.exe x ../libroot/lib/freetype.lib
 cd ..
-nx-ar.exe rcs libnoctvm.a objs/*.o
+nx-ar.exe rcs libnoct2d.a objs/*.o
