@@ -394,6 +394,8 @@ static bool import(NoctEnv *env)
 		}
 	}
 
+	free(data);
+
 	return true;
 }
 
