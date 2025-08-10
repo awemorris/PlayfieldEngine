@@ -294,8 +294,8 @@ void full_gc(void)
  * API
  */
 
-/* Engine.debug() */
-static bool Engine_debug(NoctEnv *env)
+/* debug() */
+static bool debug(NoctEnv *env)
 {
 	NoctValue param;
 	int type;
@@ -353,8 +353,8 @@ static bool Engine_debug(NoctEnv *env)
 	return true;
 }
 
-/* Engine.import() */
-static bool Engine_import(NoctEnv *env)
+/* import() */
+static bool import(NoctEnv *env)
 {
 	NoctValue file;
 	const char *file_s;
@@ -834,8 +834,8 @@ bool install_api(NoctEnv *env)
 		const char *name;
 	} funcs[] = {
 #define RTFUNC(name) {Engine_##name, #name, "Engine_" # name}
-		RTFUNC(debug),
-		RTFUNC(import),
+		{debug, NULL, "debug"},
+		{import, NULL, "import"},
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
 		RTFUNC(callTagFunction),
