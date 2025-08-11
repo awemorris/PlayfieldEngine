@@ -190,6 +190,10 @@ bool call_vm_tag_function(void)
 	t = get_current_tag();
 	if (t == NULL) {
 		/* Reached to the end. Finish the game loop. */
+		log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
+			  get_tag_file_name(),
+			  get_tag_line());
+		noct_error(env, N2D_TR("Reached EOF of the tag file."));
 		return false;
 	}
 

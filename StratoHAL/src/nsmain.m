@@ -33,8 +33,9 @@ int screen_height;
 // View controller.
 static ViewController *theViewController;
 
-// Log file path.
-static NSString *logFilePath;
+// Log file.
+static char *logFilePath;
+static bool logOpened;
 
 // Release mode.
 static bool releaseMode;
@@ -42,7 +43,7 @@ static bool releaseMode;
 // Forward declaration.
 static void check_bundle_resource(int argc, const char *argv[]);
 static FILE *openLog(void);
-static void show_log(void);
+static void showLogAtExit(void);
 
 //
 // main
@@ -63,6 +64,9 @@ int main(int argc, const char *argv[]) {
     [NSApplication sharedApplication];
     [NSApp setDelegate:[[AppDelegate alloc] init]];
     [NSApp run];
+
+    showLogAtExit();
+
     return 0;
 }
 
@@ -218,6 +222,7 @@ static void check_bundle_resource(int argc, const char *argv[])
     // Do a boot callback to acquire a window configuration.
     if (!on_event_boot(&window_title, &screen_width, &screen_height)) {
         NSLog(@"Startup file failed.");
+        showLogAtExit();
         [NSApp terminate:nil];
         return;
     }
@@ -254,6 +259,7 @@ static void check_bundle_resource(int argc, const char *argv[])
     // Do a start callback.
     if(!on_event_start()) {
         NSLog(@"on_start() failed.");
+        showLogAtExit();
         [NSApp terminate:nil];
         return;
     }
@@ -812,8 +818,7 @@ bool log_info(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    // Open the log when exit.
-    atexit(show_log);
+    logOpened = true;
 
     return true;
 }
@@ -836,8 +841,7 @@ bool log_warn(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    // Open the log when exit.
-    atexit(show_log);
+    logOpened = true;
 
     return true;
 }
@@ -860,8 +864,7 @@ bool log_error(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    // Open the log when exit.
-    atexit(show_log);
+    logOpened = true;
 
     return true;
 }
@@ -893,6 +896,7 @@ static FILE *openLog(void)
             [alert addButtonWithTitle:@"OK"];
             [alert runModal];
         }
+        logFilePath = strdup("log.txt");
         return fp;
     } else if (releaseMode) {
         // We are in the release mode, use the "Aplication Support" folder.
@@ -904,8 +908,8 @@ static FILE *openLog(void)
                                                    attributes:nil
                                                         error:NULL];
         path = [path stringByAppendingString:@"/log.txt"];
-        logFilePath = path;
         cpath = [path UTF8String];
+        logFilePath = strdup(cpath);
         fp = fopen(cpath, "w");
         if (fp == NULL) {
             NSAlert *alert = [[NSAlert alloc] init];
@@ -919,8 +923,9 @@ static FILE *openLog(void)
         // We are not in the release mode, use the directory where the .app bundle exists.
         NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
         NSString *basePath = [bundlePath stringByDeletingLastPathComponent];
-        logFilePath = [NSString stringWithFormat:@"%@/log.txt", basePath];
-        cpath = [logFilePath UTF8String];
+        NSString *filePath = [NSString stringWithFormat:@"%@/log.txt", basePath];
+        cpath = [filePath UTF8String];
+        logFilePath = strdup(cpath);
         fp = fopen(cpath, "w");
         if (fp == NULL) {
             NSAlert *alert = [[NSAlert alloc] init];
@@ -934,10 +939,11 @@ static FILE *openLog(void)
 }
 
 // Show the log file.
-static void show_log(void)
+static void showLogAtExit(void)
 {
-    if (logFilePath != NULL) {
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:logFilePath]];
+    if (logOpened) {
+        NSString *path = [[NSString alloc] initWithUTF8String:logFilePath];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
     }
 }
 

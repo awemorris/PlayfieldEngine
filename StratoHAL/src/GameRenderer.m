@@ -56,6 +56,11 @@ static int thePurgeArrayCount;
 static dispatch_semaphore_t in_flight_semaphore;
 
 //
+// Quit flag.
+//
+static bool quitFlag;
+
+//
 // Forward declarations
 //
 static BOOL runFrame(void);
@@ -202,9 +207,11 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view {
-    if(view.currentRenderPassDescriptor == nil)
+    if (quitFlag)
         return;
-    if([theViewController isVideoPlaying]) {
+    if (view.currentRenderPassDescriptor == nil)
+        return;
+    if ([theViewController isVideoPlaying]) {
             if(!runFrame())
                     exit(0);
             return;
@@ -236,8 +243,11 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     thePurgeArrayCount = 0;
 
     // Run a frame event and do rendering.
-    if(!runFrame())
-        exit(0);
+    if(!runFrame()) {
+        [NSApp stop:nil];
+        quitFlag = true;
+        return;
+    }
 
     // End encodings.
     if (theBlitEncoder != nil)
