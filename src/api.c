@@ -80,7 +80,7 @@ static int search_free_entry(void);
 /*
  * Create a texture. (for font drawing)
  */
-bool noct2d_create_texture(int width, int height, int *ret, struct image **img)
+static bool create_texture(int width, int height, int *ret, struct image **img)
 {
 	int index;
 
@@ -98,6 +98,38 @@ bool noct2d_create_texture(int width, int height, int *ret, struct image **img)
 	/* Mark as used. */
 	tex_tbl[index].is_used = true;
 	tex_tbl[index].img = *img;
+
+	/* Succeeded. */
+	*ret = index;
+
+	return true;
+}
+
+/*
+ * Create a color texture.
+ */
+bool noct2d_create_color_texture(int width, int height, int r, int g, int b, int a, int *ret)
+{
+	int index;
+
+	/* Allocate a texture entry. */
+	index = search_free_entry();
+	if (index == -1) {
+		log_error("Too many textures.");
+		return false;
+	}
+
+	/* Create an image. */
+	if (!create_image(width, height, &tex_tbl[index].img))
+		return false;
+
+	/* Mark as used. */
+	tex_tbl[index].is_used = true;
+	tex_tbl[index].img = tex_tbl[index].img;
+
+	/* Clear the image. */
+	clear_image(tex_tbl[index].img, make_pixel(a, r, g, b));
+	notify_image_update(tex_tbl[index].img);
 
 	/* Succeeded. */
 	*ret = index;
@@ -336,7 +368,7 @@ bool noct2d_create_text_texture(int slot, const char *text, int size, pixel_t co
 		h = 1;
 
 	/* Create a texture. */
-	if (!noct2d_create_texture(w, h, &tid, &img))
+	if (!create_texture(w, h, &tid, &img))
 		return false;
 
 	/* Draw for each character. */
@@ -533,9 +565,8 @@ bool noct2d_move_to_tag_file(const char *file)
 	strncpy(cur_file, file, sizeof(cur_file) - 1);
 
 	/* Parse the file content. */
-	buf = NULL;
 	if (!parse_tag_document(buf, parse_tag_callback, &error_message, &error_line)) {
-		log_error(S_TR("%s:%d: %s"),  file, error_line, error_message);
+		log_error(S_TR("%s:%d: %s\n"),  file, error_line, error_message);
 		free(buf);
 		return false;
 	}

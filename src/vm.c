@@ -219,7 +219,7 @@ bool call_vm_tag_function(void)
 	}
 
 	/* Make a tag function name. */
-	snprintf(func_name, sizeof(func_name), "tag_%s", t->tag_name);
+	snprintf(func_name, sizeof(func_name), "Tag_%s", t->tag_name);
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
@@ -434,6 +434,45 @@ static bool Engine_callTagFunction(NoctEnv *env)
 	return true;
 }
 
+/* Engine.createColorTexture() */
+static bool Engine_createColorTexture(NoctEnv *env)
+{
+	int r, g, b, a;
+	int width;
+	int height;
+	int tex_id;
+	NoctValue ret, tmp;
+
+	if (!get_int_param(env, "width", &width))
+		return false;
+	if (!get_int_param(env, "height", &height))
+		return false;
+	if (!get_int_param(env, "r", &r))
+		return false;
+	if (!get_int_param(env, "g", &g))
+		return false;
+	if (!get_int_param(env, "b", &b))
+		return false;
+	if (!get_int_param(env, "a", &a))
+		return false;
+
+	if (!noct2d_create_color_texture(width, height, r, g, b, a, &tex_id))
+		return false;
+
+	if (!noct_make_empty_dict(env, &ret))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "id", &tmp, tex_id))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "width", &tmp, width))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "height", &tmp, height))
+		return false;
+	if (!noct_set_return(env, &ret))
+		return false;
+
+	return true;
+}
+
 /* Engine.loadTexture() */
 static bool Engine_loadTexture(NoctEnv *env)
 {
@@ -441,7 +480,7 @@ static bool Engine_loadTexture(NoctEnv *env)
 	int tex_id;
 	int tex_width;
 	int tex_height;
-	NoctValue ret, ival;
+	NoctValue ret, tmp;
 
 	if (!get_string_param(env, "file", &file)) {
 		noct_error(env, N2D_TR("file parameter is not set."));
@@ -455,19 +494,12 @@ static bool Engine_loadTexture(NoctEnv *env)
 
 	if (!noct_make_empty_dict(env, &ret))
 		return false;
-
-	noct_make_int(env, &ival, tex_id);
-	if (!noct_set_dict_elem(env, &ret, "id", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "id", &tmp, tex_id))
 		return false;
-	
-	noct_make_int(env, &ival, tex_width);
-	if (!noct_set_dict_elem(env, &ret, "width", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "width", &tmp, tex_width))
 		return false;
-
-	noct_make_int(env, &ival, tex_height);
-	if (!noct_set_dict_elem(env, &ret, "height", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "height", &tmp, tex_height))
 		return false;
-
 	if (!noct_set_return(env, &ret))
 		return false;
 
@@ -696,11 +728,15 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	float f;
 	const char *s;
 
-	if (!noct_get_arg(env, 0, &param))
+	if (!noct_get_arg(env, 0, &param)) {
+		noct_error(env, N2D_TR("Parameter is not set."));
 		return false;
+	}
 
-	if (!noct_get_dict_elem(env, &param, name, &elem))
+	if (!noct_get_dict_elem(env, &param, name, &elem)) {
+		noct_error(env, N2D_TR("Parameter %s is not set."), name);
 		return false;
+	}
 
 	switch (elem.type) {
 	case NOCT_VALUE_INT:
@@ -728,11 +764,15 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 {
 	NoctValue param, elem;
 
-	if (!rt_get_arg(env, 0, &param))
+	if (!rt_get_arg(env, 0, &param)) {
+		noct_error(env, N2D_TR("Parameter is not set."));
 		return false;
+	}
 
-	if (!rt_get_dict_elem(env, &param, name, &elem))
+	if (!rt_get_dict_elem(env, &param, name, &elem)) {
+		noct_error(env, N2D_TR("Parameter %s is not set."), name);
 		return false;
+	}
 
 	switch (elem.type) {
 	case NOCT_VALUE_INT:
@@ -745,7 +785,7 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 		*ret = (float)atof(elem.val.str->s);
 		break;
 	default:
-		rt_error(env, "Unexpected parameter value for %s.", name);
+		rt_error(env, N2D_TR("Unexpected parameter value for %s."), name);
 		return false;
 	}
 
@@ -759,11 +799,15 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	NoctValue param, elem;
 	static char buf[128];
 
-	if (!noct_get_arg(env, 0, &param))
+	if (!noct_get_arg(env, 0, &param)) {
+		noct_error(env, N2D_TR("Parameter is not set."));
 		return false;
+	}
 
-	if (!noct_get_dict_elem(env, &param, name, &elem))
+	if (!noct_get_dict_elem(env, &param, name, &elem)) {
+		noct_error(env, N2D_TR("Parameter %s is not set."), name);
 		return false;
+	}
 
 	switch (elem.type) {
 	case NOCT_VALUE_INT:
@@ -786,7 +830,7 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		noct_get_string(env, &elem, ret);
 		break;
 	default:
-		noct_error(env, "Unexpected parameter value for %s.", name);
+		noct_error(env, N2D_TR("Unexpected parameter value for %s."), name);
 		return false;
 	}
 
@@ -798,20 +842,28 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 {
 	NoctValue param, elem, ival;
 
-	if (!noct_get_arg(env, 0, &param))
-		return false;
-
-	if (!noct_get_dict_elem(env, &param, name, &elem))
-		return false;
-	if (elem.type != NOCT_VALUE_DICT) {
-		noct_error(env, "Unexpected parameter value for %s.", name);
+	if (!noct_get_arg(env, 0, &param)) {
+		noct_error(env, N2D_TR("Parameter is not set."));
 		return false;
 	}
 
-	if (!noct_get_dict_elem(env, &elem, key, &ival))
+	if (!noct_get_dict_elem(env, &param, name, &elem)) {
+		noct_error(env, N2D_TR("Parameter %s is not set."), name);
 		return false;
+	}
+
+	if (elem.type != NOCT_VALUE_DICT) {
+		noct_error(env, N2D_TR("Unexpected parameter value for %s."), name);
+		return false;
+	}
+
+	if (!noct_get_dict_elem(env, &elem, key, &ival)) {
+		noct_error(env, N2D_TR("Parameter %s doesn't have the key %s."), name, key);
+		return false;
+	}
+
 	if (ival.type != NOCT_VALUE_INT) {
-		noct_error(env, "Unexpected parameter value for %s.", name);
+		noct_error(env, N2D_TR("Unexpected parameter value for %s.%s."), name, key);
 		return false;
 	}
 
@@ -841,6 +893,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
 		RTFUNC(callTagFunction),
+		RTFUNC(createColorTexture),
 		RTFUNC(loadTexture),
 		RTFUNC(renderTexture),
 		RTFUNC(draw),

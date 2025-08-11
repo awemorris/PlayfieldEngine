@@ -17,6 +17,19 @@
 struct image;
 
 /*
+ * Create a color texture.
+ */
+bool
+noct2d_create_color_texture(
+	int width,
+	int height,
+	int r,
+	int g,
+	int b,
+	int a,
+	int *ret);
+
+/*
  * Load a texture.
  */
 bool

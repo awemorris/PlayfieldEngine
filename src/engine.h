@@ -42,9 +42,6 @@ struct tag {
 /* Load a file content. */
 bool load_file(const char *file, char **buf, size_t *size);
 
-/* Create a texture. (for font drawing) */
-bool create_texture(int width, int height, int *ret, struct image **img);
-
 /* Convert a color code to a pixel value. */
 pixel_t color_code_to_pixel_value(const char *code);
 
