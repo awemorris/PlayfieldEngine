@@ -61,7 +61,6 @@ add_library(jpeg OBJECT
   ${CMAKE_BINARY_DIR}/jpeg/jidctflt.c
   ${CMAKE_BINARY_DIR}/jpeg/jidctfst.c
   ${CMAKE_BINARY_DIR}/jpeg/jidctint.c
-  ${CMAKE_BINARY_DIR}/jpeg/jmemansi.c
   ${CMAKE_BINARY_DIR}/jpeg/jmemmgr.c
   ${CMAKE_BINARY_DIR}/jpeg/jmemnobs.c
   ${CMAKE_BINARY_DIR}/jpeg/jquant1.c

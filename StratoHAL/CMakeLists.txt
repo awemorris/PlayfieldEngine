@@ -287,6 +287,7 @@ if(WIN32)
   # /utf-8
   if(MSVC)
     target_compile_options(strato PUBLIC /utf-8)
+    target_compile_definitions(strato PUBLIC UNICODE _UNICODE)
   endif()
 endif()
 
@@ -323,10 +324,19 @@ if(WIN32)
   )
 
   # -mwindows -municode
-  if (MINGW)
+  if(MINGW)
     target_link_options(strato PUBLIC
       -mwindows
       -municode
+    )
+  endif()
+
+  # /SUBSYSTEM:WINDOWS
+  if(MSVC)
+    target_link_options(strato PUBLIC
+      /SUBSYSTEM:WINDOWS
+      /ENTRY:wWinMainCRTStartup
+      /MANIFEST:NO
     )
   endif()
 endif()

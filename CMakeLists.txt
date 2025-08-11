@@ -124,8 +124,10 @@ if(WIN32)
 endif()
 
 if(WIN32)
-  if(NOT MSVC)
-    target_link_options(noct2d PRIVATE -static)
+  if(MSVC)
+    target_link_options(noct2d PRIVATE /SUBSYSTEM:WINDOWS)
+  else()
+    target_link_options(noct2d PRIVATE -mwindows -static)
   endif()
 endif()
 
