@@ -711,7 +711,7 @@ bool open_wfile(const char *file, struct wfile **wf)
 	/* Initialize the random seed. */
 	set_random_seed(0, &(*wf)->next_random);
 
-	return wf;
+	return true;
 }
 
 /*

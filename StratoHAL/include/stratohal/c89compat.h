@@ -225,7 +225,7 @@
 #ifndef __cplusplus
 #if defined(HAVE_STDBOOL_H)
 #include <stdbool.h>
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#elif defined(_MSC_VER) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
 #include <stdbool.h>
 #else
 #if !defined(bool) && !defined(BOOL_DEF)
