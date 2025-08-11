@@ -18,12 +18,16 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Debug Configuration.
-set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_RELEASE}     -O0 -g3")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE}   -O0 -g3")
+if(NOT MSVC)
+  set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_RELEASE}     -O0 -g3")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE}   -O0 -g3")
+endif()
 
 # Release Configuration.
-set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE}   -O3 -g0")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
+if(NOT MSVC)
+  set(CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE}   -O3 -g0")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0")
+endif()
 
 #
 # Dependencies
@@ -106,7 +110,17 @@ if(ENABLE_I18N)
 endif()
 
 if(WIN32)
-  target_link_options(noct2d PRIVATE -static)
+  if(MSVC)
+    target_compile_options(noctlang PRIVATE /utf-8)
+  else()
+    target_compile_options(noctlang PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+  endif()
+endif()
+
+if(WIN32)
+  if(NOT MSVC)
+    target_link_options(noct2d PRIVATE -static)
+  endif()
 endif()
 
 # Change the bundle name.

@@ -228,7 +228,8 @@
 #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #include <stdbool.h>
 #else
-#ifndef bool
+#if !defined(bool) && !defined(BOOL_DEF)
+#define BOOL_DEF
 typedef int bool;
 enum { false = 0, true = 1 };
 #endif
