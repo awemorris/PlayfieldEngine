@@ -99,20 +99,20 @@ func newNovel() {
             this.layerAlpha = [];
             this.layerAlpha->resize(this.STAGE_LAYERS);
             
-            this.layerSX = [];
-            this.layerSX->resize(this.STAGE_LAYERS);
+            this.layerScaleX = [];
+            this.layerScaleX->resize(this.STAGE_LAYERS);
 
-            this.layerSY = [];
-            this.layerSY->resize(this.STAGE_LAYERS);
+            this.layerScaleY = [];
+            this.layerScaleY->resize(this.STAGE_LAYERS);
 
-            this.layerCX = [];
-            this.layerCX->resize(this.STAGE_LAYERS);
+            this.layerCenterX = [];
+            this.layerCenterX->resize(this.STAGE_LAYERS);
 
-            this.layerCY = [];
-            this.layerCY->resize(this.STAGE_LAYERS);
+            this.layerCenterY = [];
+            this.layerCenterY->resize(this.STAGE_LAYERS);
 
-            this.layerRot = [];
-            this.layerRot->resize(this.STAGE_LAYERS);
+            this.layerRotate = [];
+            this.layerRotate->resize(this.STAGE_LAYERS);
 
             this.layerFrame = [];
             this.layerFrame->resize(this.STAGE_LAYERS);
@@ -136,7 +136,7 @@ func newNovel() {
 
         swapLayerImage: (this, newLayer, oldLayer) => {
             if (this.layerTex[oldLayer] != 0) {
-                this.destroyLayerImage(oldLayer);
+                this->destroyLayerImage(oldLayer);
             }
 
             this.layerTex[oldLayer]     = this.layerTex[newLayer];
@@ -182,6 +182,7 @@ func newNovel() {
                     startTime:  0,
                     curLap:     0
                 };
+                this.animeSequence[i] = [];
             }
         },
 
@@ -193,7 +194,7 @@ func newNovel() {
             // Initialize the sequence arrays of the specified layers.
             for (seq in animeSeq) {
                 this.animeSequence[seq.layer] = [];
-                result.push(seq.layer);
+                result->push(seq.layer);
             }
 
             // Add the sequences to the layer sequence arrays.
@@ -251,12 +252,15 @@ func newNovel() {
                 }
 
                 // Get the lap.
-                this.animeContext[i].curLap = Engine.millisec - this.animeContext[i].startTime;
+                this.animeContext[i].curLap = (Engine.millisec - this.animeContext[i].startTime) / 1000.0;
+                debug("curLap = " + this.animeContext[i].curLap);
 
-                var lastSeq = animeSequence[i].length - 1;
+                var lastSeq = this.animeSequence[i].length - 1;
+                debug("end time = " + this.animeSequence[i][lastSeq].endTime);
                 if (this.animeContext[i].curLap >= this.animeSequence[i][lastSeq].endTime) {
                     this.animeContext[i].isRunning = 0;
                     this.animeContext[i].isCompleted = 1;
+                    debug("end");
                 }
             }
 
@@ -278,7 +282,7 @@ func newNovel() {
                 // If already completed.
                 if (this.animeContext[i].isCompleted &&
                     this.animeSequence[i].length > 0) {
-                    var s = this.animeSequence[i][this.animeSeqence[i].length - 1];
+                    var s = this.animeSequence[i][this.animeSequence[i].length - 1];
                     this.layerX[i] = s.toX;
                     this.layerY[i] = s.toY;
                     this.layerAlpha[i] = s.toAlpha;
@@ -303,6 +307,7 @@ func newNovel() {
 
                     // Calculate the progress.
                     var progress = (this.animeContext[i].curLap - s.startTime) / (s.endTime - s.startTime);
+                    debug("progres = " + progress);
                     if (progress > 1.0) {
                         progress = 1.0;
                     }
@@ -311,6 +316,7 @@ func newNovel() {
                     this.layerX[i] = s.fromX + (s.toX - s.fromX) * progress;
                     this.layerY[i] = s.fromY + (s.toY - s.fromY) * progress;
                     this.layerAlpha[i] = s.fromAlpha + (s.toAlpha - s.fromAlpha) * progress;
+                    debug("alpha = " + this.layerAlpha[i]);
                     this.layerScaleX[i] = s.fromScaleX + (s.toScaleX - s.fromScaleX) * progress;
                     this.layerScaleY[i] = s.fromScaleY + (s.toScaleY - s.fromScaleY) * progress;
                     this.layerCenterX[i] = s.centerX;
@@ -357,6 +363,10 @@ func newNovel() {
 
         // Renders the stage.
         renderStage: (this) => {
+            // Update the layer parameters using anime.
+            this->updateAnime();
+
+            // Render the stage images.
             for (i in 0..this.STAGE_LAYERS) {
                 if (Novel.layerTex[i] != 0) {
                     Engine.renderTexture({
@@ -395,14 +405,14 @@ func Tag_background(param) {
             {
                 layer:      Novel.LAYER_BG,
                 startTime:  0.0,
-                endTime:    1.0,
+                endTime:    10.0,
                 fromAlpha:  255,
                 toAlpha:    0
             },
             {
                 layer:      Novel.LAYER_BG_FI,
                 startTime:  0.0,
-                endTime:    1.0,
+                endTime:    10.0,
                 fromAlpha:  0,
                 toAlpha:    255
             }
@@ -419,7 +429,7 @@ func Tag_background(param) {
     //
     var notCompleted = 0;
     for (layer in Novel.tagWorkspace.animeLayers) {
-        if (!this.isLayerAnimeCompleted(layer)) {
+        if (!novel->isLayerAnimeCompleted(layer)) {
             notCompleted = 1;
             break;
         }
