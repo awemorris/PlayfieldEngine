@@ -25,9 +25,9 @@ This API loads a texture from assets, and returns a texture.
 |--------------------|--------------------------------------------------------------|
 |file                |File name to load.                                            |
 
-### Engine.removeTexture()
+### Engine.destroyTexture()
 
-This API removes a texture.
+This API destroys a texture.
 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|

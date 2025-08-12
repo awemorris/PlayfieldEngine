@@ -510,6 +510,19 @@ static bool Engine_loadTexture(NoctEnv *env)
 	return true;
 }
 
+/* Engine.destroyTexture() */
+static bool Engine_destroyTexture(NoctEnv *env)
+{
+	int tex_id;
+
+	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
+		return false;
+
+	noct2d_destroy_texture(tex_id);
+
+	return true;
+}
+
 /* Engine.renderTexture() */
 static bool Engine_renderTexture(NoctEnv *env)
 {
@@ -573,19 +586,6 @@ static bool Engine_draw(NoctEnv *env)
 		return false;
 
 	noct2d_draw(tex_id, x, y);
-
-	return true;
-}
-
-/* Engine.destroyTexture() */
-static bool Engine_destroyTexture(NoctEnv *env)
-{
-	int tex_id;
-
-	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
-		return false;
-
-	noct2d_destroy_texture(tex_id);
 
 	return true;
 }
@@ -899,6 +899,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(callTagFunction),
 		RTFUNC(createColorTexture),
 		RTFUNC(loadTexture),
+		RTFUNC(destroyTexture),
 		RTFUNC(renderTexture),
 		RTFUNC(draw),
 		RTFUNC(destroyTexture),

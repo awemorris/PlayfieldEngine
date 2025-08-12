@@ -36,6 +36,8 @@ bool on_event_start(void)
 	set_vm_int("mousePosX", 0);
 	set_vm_int("mousePosY", 0);
 	set_vm_int("millisec", 0);
+	set_vm_int("isMouseLeftPressed", 0);
+	set_vm_int("isMouseRightPressed", 0);
 
 	/* Initialize the lap timer. */
 	reset_lap_timer(&lap_origin);

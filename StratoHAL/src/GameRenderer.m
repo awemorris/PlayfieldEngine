@@ -56,9 +56,10 @@ static int thePurgeArrayCount;
 static dispatch_semaphore_t in_flight_semaphore;
 
 //
-// Quit flag.
+// Start/Quit flags.
 //
-static bool quitFlag;
+bool gameRendererStartFlag;
+bool gameRendererExitFlag;
 
 //
 // Forward declarations
@@ -207,14 +208,16 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view {
-    if (quitFlag)
+    if (!gameRendererStartFlag)
+        return;
+    if (gameRendererExitFlag)
         return;
     if (view.currentRenderPassDescriptor == nil)
         return;
     if ([theViewController isVideoPlaying]) {
-            if(!runFrame())
-                    exit(0);
-            return;
+        if(!runFrame())
+            gameRendererExitFlag = true;
+        return;
     }
 
     // Create a command buffer.
@@ -244,8 +247,7 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 
     // Run a frame event and do rendering.
     if(!runFrame()) {
-        [NSApp stop:nil];
-        quitFlag = true;
+        gameRendererExitFlag = true;
         return;
     }
 

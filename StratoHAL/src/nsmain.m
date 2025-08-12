@@ -263,6 +263,7 @@ static void check_bundle_resource(int argc, const char *argv[])
         [NSApp terminate:nil];
         return;
     }
+    gameRendererStartFlag = true;
 }
 
 // Called when the view is layouted.
@@ -311,6 +312,13 @@ static void check_bundle_resource(int argc, const char *argv[])
 
 // Called every frame.
 - (void)timerFired:(NSTimer *)timer {
+    if (!gameRendererStartFlag)
+        return;
+    if (gameRendererExitFlag) {
+        [NSApp stop:nil];
+        return;
+    }
+
     // Do a redraw later.
     [_view setNeedsDisplay:TRUE];
 }

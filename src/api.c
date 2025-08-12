@@ -220,7 +220,7 @@ static int search_free_entry(void)
  */
 void noct2d_destroy_texture(int tex_id)
 {
-	assert(tex_id > 0);
+	assert(tex_id >= 0);
 	assert(tex_id < TEXTURE_COUNT);
 	assert(tex_tbl[tex_id].is_used);
 	assert(tex_tbl[tex_id].img != NULL);

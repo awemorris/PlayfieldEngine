@@ -131,6 +131,8 @@ if(WIN32)
   endif()
 endif()
 
+target_link_options(noct2d PRIVATE -lefence)
+
 # Change the bundle name.
 if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
