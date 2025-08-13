@@ -15,55 +15,6 @@
 #include <string.h>
 #include <assert.h>
 
-/*
- * Common
- */
-
-bool load_file(const char *file, char **buf, size_t *size)
-{
-	struct rfile *f;
-	size_t file_size, read_size;
-
-	assert(buf != NULL);
-
-	if (!open_rfile(file, &f)) {
-		log_error(S_TR("Cannot open file \"%s\".\n"), file);
-		return false;
-	}
-
-	if (!get_rfile_size(f, &file_size)) {
-		log_error(S_TR("Cannot get the size of file \"%s\"."), file);
-		return false;
-	}
-
-	if (buf != NULL) {
-		*buf = malloc(file_size + 1);
-		if (*buf == NULL) {
-			log_out_of_memory();
-			return false;
-		}
-
-		if (!read_rfile(f, *buf, file_size, &read_size)) {
-			log_error(S_TR("Cannot read file \"%s\"."), file);
-			free(*buf);
-			return false;
-		}
-
-		(*buf)[file_size] = '\0';
-	}
-
-	close_rfile(f);
-
-	if (size != NULL)
-		*size = file_size;
-
-	return true;
-}
-
-/*
- * Texture
- */
-
 #define TEXTURE_COUNT	(256)
 
 struct texture_entry {
@@ -71,71 +22,42 @@ struct texture_entry {
 	struct image *img;
 };
 
-/* Texture table. */
+/*
+ * Texture table.
+ */
 static struct texture_entry tex_tbl[TEXTURE_COUNT];
 
 /* Forward Declaration */
 static int search_free_entry(void);
+static bool create_texture(int width, int height, int *ret, struct image **img);
 
 /*
- * Create a texture. (for font drawing)
+ * Initialize the API.
  */
-static bool create_texture(int width, int height, int *ret, struct image **img)
+bool init_api(void)
 {
-	int index;
+	return true;
+}
 
-	/* Allocate a texture entry. */
-	index = search_free_entry();
-	if (index == -1) {
-		log_error("Too many textures.");
-		return false;
+/*
+ * Cleanup the API.
+ */
+void cleanup_api(void)
+{
+	int i;
+
+	for (i = 0; i < TEXTURE_COUNT; i++) {
+		if (tex_tbl[i].is_used) {
+			tex_tbl[i].is_used = false;
+			destroy_image(tex_tbl[i].img);
+		}
 	}
-
-	/* Create an image. */
-	if (!create_image(width, height, img))
-		return false;
 	
-	/* Mark as used. */
-	tex_tbl[index].is_used = true;
-	tex_tbl[index].img = *img;
-
-	/* Succeeded. */
-	*ret = index;
-
-	return true;
 }
 
 /*
- * Create a color texture.
+ * Texture
  */
-bool noct2d_create_color_texture(int width, int height, int r, int g, int b, int a, int *ret)
-{
-	int index;
-
-	/* Allocate a texture entry. */
-	index = search_free_entry();
-	if (index == -1) {
-		log_error("Too many textures.");
-		return false;
-	}
-
-	/* Create an image. */
-	if (!create_image(width, height, &tex_tbl[index].img))
-		return false;
-
-	/* Mark as used. */
-	tex_tbl[index].is_used = true;
-	tex_tbl[index].img = tex_tbl[index].img;
-
-	/* Clear the image. */
-	clear_image(tex_tbl[index].img, make_pixel(a, r, g, b));
-	notify_image_update(tex_tbl[index].img);
-
-	/* Succeeded. */
-	*ret = index;
-
-	return true;
-}
 
 /*
  * Load a texture.
@@ -200,6 +122,64 @@ bool noct2d_load_texture(const char *fname, int *ret, int *width, int *height)
 	*ret = index;
 	*width = tex_tbl[index].img->width;
 	*height = tex_tbl[index].img->height;
+	return true;
+}
+
+/*
+ * Create a color texture.
+ */
+bool noct2d_create_color_texture(int width, int height, int r, int g, int b, int a, int *ret)
+{
+	int index;
+
+	/* Allocate a texture entry. */
+	index = search_free_entry();
+	if (index == -1) {
+		log_error("Too many textures.");
+		return false;
+	}
+
+	/* Create an image. */
+	if (!create_image(width, height, &tex_tbl[index].img))
+		return false;
+
+	/* Mark as used. */
+	tex_tbl[index].is_used = true;
+	tex_tbl[index].img = tex_tbl[index].img;
+
+	/* Clear the image. */
+	clear_image(tex_tbl[index].img, make_pixel(a, r, g, b));
+	notify_image_update(tex_tbl[index].img);
+
+	/* Succeeded. */
+	*ret = index;
+
+	return true;
+}
+
+/* Create a texture. (for font drawing) */
+static bool create_texture(int width, int height, int *ret, struct image **img)
+{
+	int index;
+
+	/* Allocate a texture entry. */
+	index = search_free_entry();
+	if (index == -1) {
+		log_error("Too many textures.");
+		return false;
+	}
+
+	/* Create an image. */
+	if (!create_image(width, height, img))
+		return false;
+	
+	/* Mark as used. */
+	tex_tbl[index].is_used = true;
+	tex_tbl[index].img = *img;
+
+	/* Succeeded. */
+	*ret = index;
+
 	return true;
 }
 
@@ -827,6 +807,51 @@ static bool parse_tag_callback(const char *name, int props, const char **prop_na
 	}
 
 	t->line = line;
+
+	return true;
+}
+
+/*
+ * Common
+ */
+
+bool load_file(const char *file, char **buf, size_t *size)
+{
+	struct rfile *f;
+	size_t file_size, read_size;
+
+	assert(buf != NULL);
+
+	if (!open_rfile(file, &f)) {
+		log_error(S_TR("Cannot open file \"%s\".\n"), file);
+		return false;
+	}
+
+	if (!get_rfile_size(f, &file_size)) {
+		log_error(S_TR("Cannot get the size of file \"%s\"."), file);
+		return false;
+	}
+
+	if (buf != NULL) {
+		*buf = malloc(file_size + 1);
+		if (*buf == NULL) {
+			log_out_of_memory();
+			return false;
+		}
+
+		if (!read_rfile(f, *buf, file_size, &read_size)) {
+			log_error(S_TR("Cannot read file \"%s\"."), file);
+			free(*buf);
+			return false;
+		}
+
+		(*buf)[file_size] = '\0';
+	}
+
+	close_rfile(f);
+
+	if (size != NULL)
+		*size = file_size;
 
 	return true;
 }

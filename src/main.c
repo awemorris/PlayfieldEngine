@@ -20,7 +20,7 @@ bool on_event_boot(char **title, int *width, int *height)
 	/* Initialize the locale. */
 	noct2d_init_locale();
 
-	/* Create a VM and call setup(). */
+	/* Create a VM, then call setup(). */
 	if (!create_vm(title, width, height))
 		return false;
 
@@ -71,6 +71,8 @@ bool on_event_frame(void)
 
 void on_event_stop(void)
 {
+	/* Destroy the VM. */
+	destroy_vm();
 }
 
 void on_event_key_press(int key)

@@ -39,6 +39,12 @@ struct tag {
 	int line;
 };
 
+/* Initialize the API. */
+bool init_api(void);
+
+/* Cleanup the API. */
+void cleanup_api(void);
+
 /* Load a file content. */
 bool load_file(const char *file, char **buf, size_t *size);
 

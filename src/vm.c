@@ -15,9 +15,9 @@
 /* Bytecode File Header */
 #define BYTECODE_HEADER		"Noct Bytecode"
 
-/* NoctLang. */
-NoctVM *vm;
-NoctEnv *env;
+/* NoctLang */
+static NoctVM *vm;
+static NoctEnv *env;
 
 /* Forward Declaration */
 static bool load_startup_file(void);
@@ -31,7 +31,7 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 static bool install_api(NoctEnv *env);
 
 /*
- * Create a VM.
+ * Create a VM, then call setup().
  */
 bool create_vm(char **title, int *width, int *height)
 {
@@ -55,11 +55,33 @@ bool create_vm(char **title, int *width, int *height)
 		return false;
 	}
 
+	/* Save the window size. */
+	if (!set_vm_int("screenWidth", *width))
+		return false;
+	if (!set_vm_int("screenHeight", *height))
+		return false;
+
+	/* Initialize the API. */
+	if (!init_api())
+		return false;
+
 	/* Install the API to the runtime. */
 	if (!install_api(env))
 		return false;
 
 	return true;
+}
+
+/*
+ * Destroy the VM.
+ */
+void destroy_vm(void)
+{
+	/* Cleanup the API */
+	cleanup_api();
+
+	/* Destroy the VM. */
+	noct_destroy_vm(vm);
 }
 
 /* Load the startup file. */

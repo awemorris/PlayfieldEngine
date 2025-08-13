@@ -93,9 +93,6 @@ static HWND hWndMain;
 /* Frame start time. */
 static DWORD dwStartTime;
 
-/* Log file. */
-static FILE *pLogFile;
-
 /* Force D3D9? */
 static BOOL bForceD3D9;
 
@@ -132,6 +129,10 @@ static BOOL bDShowMode;
 /* Is video skippable by a click? */
 static BOOL bDShowSkippable;
 
+/* Log file. */
+static FILE *pLogFile;
+static wchar_t *pwszLogFilePath;
+
 /*
  * Init Info
  */
@@ -160,6 +161,7 @@ static void OnSizing(int edge, LPRECT lpRect);
 static void OnSize(void);
 static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight);
 static BOOL OpenLogFile(void);
+static void ShowLogFile(void);
 
 /*
  * cpuid.c
@@ -209,6 +211,8 @@ int WINAPI wWinMain(
 
 	/* Do the lower layer cleanup. */
 	CleanupApp();
+
+	ShowLogFile();
 
 	return nRet;
 }
@@ -1033,7 +1037,7 @@ bool log_warn(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
-	MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONWARNING);
+	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONWARNING);
 
 	if(pLogFile != NULL)
 	{
@@ -1061,7 +1065,7 @@ bool log_error(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
-	MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONERROR);
+	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONERROR);
 
 	if(pLogFile != NULL)
 	{
@@ -1084,7 +1088,7 @@ bool log_out_of_memory(void)
 	return true;
 }
 
-/* Open a log file. */
+/* Open the log file. */
 static BOOL OpenLogFile(void)
 {
 	wchar_t path[MAX_PATH] = {0};
@@ -1093,34 +1097,41 @@ static BOOL OpenLogFile(void)
 	if(pLogFile != NULL)
 		return TRUE;
 
+	/* Create in the game directory. */
+	pwszLogFilePath = wcsdup(L"log.txt");
+	pLogFile = _wfopen(L"log.txt", L"w");
+	if (pLogFile == NULL)
+		return FALSE;
+
 #if 0
-	/* If in the release mode */
-	if (conf_release && conf_game_title == NULL)
-	{
-#endif
-		/* Create in the game directory. */
-		pLogFile = _wfopen(L"log.txt", L"w");
-		if (pLogFile == NULL)
-			return FALSE;
-#if 0
-	}
-	else
-	{
-#endif
-		/* Create in AppData. */
-		SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, path);
-		wcsncat(path, L"\\", MAX_PATH - 1);
-		wcsncat(path, win32_utf8_to_utf16(pszWindowTitle), MAX_PATH - 1);
-		wcsncat(path, L"\\", MAX_PATH - 1);
-		wcsncat(path, L"log.txt", MAX_PATH - 1);
-		pLogFile = _wfopen(path, L"w");
-		if (pLogFile == NULL)
-			return FALSE;
-#if 0
-	}
+	/* Create in AppData. */
+	SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, path);
+	wcsncat(path, L"\\", MAX_PATH - 1);
+	wcsncat(path, win32_utf8_to_utf16(pszWindowTitle), MAX_PATH - 1);
+	wcsncat(path, L"\\", MAX_PATH - 1);
+	wcsncat(path, L"log.txt", MAX_PATH - 1);
+	pwszLogFilePath = wcsdup(path);
+	pLogFile = _wfopen(path, L"w");
+	if (pLogFile == NULL)
+		return FALSE;
 #endif
 
 	return TRUE;
+}
+
+/* Show the log file. */
+static void ShowLogFile(void)
+{
+	if (pwszLogFilePath == NULL)
+		return;
+
+	ShellExecute(
+		NULL,				// Parent window.
+		L"open",			// Behavior.
+        pwszLogFilePath,	// 開きたいファイルやURL
+        NULL,				// Arguments.
+        NULL,               // Working directory.
+        SW_SHOWNORMAL);		// ShowWindow() status.
 }
 
 /*
