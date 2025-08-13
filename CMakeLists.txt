@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(Noct2D LANGUAGES C CXX)
 
-#set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
+set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
 
 #
 # Configuration
@@ -164,11 +165,8 @@ if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
   # Set an icon.
   set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon512.png")
   target_sources(noct2d PRIVATE ${APP_ICON})
-  set_source_files_properties(${APP_ICON} PROPERTIES
-    MACOSX_PACKAGE_LOCATION "Resources")
-  set_target_properties(noct2d PROPERTIES
-    MACOSX_BUNDLE_ICON_FILE "icon512.png"
-  )
+  set_source_files_properties(${APP_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+  set_target_properties(noct2d PROPERTIES MACOSX_BUNDLE_ICON_FILE "icon512.png")
 
   # product.img
   set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/product.img")
