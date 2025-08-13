@@ -54,6 +54,8 @@ rm -rf build
 # macOS
 #
 
+export MACOSX_DEPLOYMENT_TARGET=10.13
+
 rm -rf build
 mkdir build
 cd build
