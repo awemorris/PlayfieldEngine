@@ -9,16 +9,20 @@
 
 static uint64_t lap_origin;
 
+#ifdef USE_TRANSLATION
 /* i18n.c */
 void noct2d_init_locale(void);
+#endif
 
 /*
  * This function is called when the app is going to be initialized.
  */
 bool on_event_boot(char **title, int *width, int *height)
 {
+#ifdef USE_TRANSLATION
 	/* Initialize the locale. */
 	noct2d_init_locale();
+#endif
 
 	/* Create a VM, then call setup(). */
 	if (!create_vm(title, width, height))

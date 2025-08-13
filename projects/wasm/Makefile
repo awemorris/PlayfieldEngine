@@ -20,8 +20,7 @@ SRCS = \
     ../../StratoHAL/src/glrender.c \
     ../../src/main.c \
     ../../src/api.c \
-    ../../src/vm.c \
-    ../../src/translation.c
+    ../../src/vm.c
 
 all: index.html
 
