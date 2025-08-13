@@ -1,4 +1,5 @@
 [click]
-[background file="apple.png"]
+[background file="morning.png" time="1.0"]
 [click]
-[background file="apple.png"]
+[background file="night.png" time="1.0"]
+[click]

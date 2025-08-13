@@ -13,13 +13,13 @@ func start() {
     import("novel.noct");
 
     // Create a Novel object.
-    novel = newNovel();
+    initNovel();
 
     // Load the start.tag file.
-    novel->moveToTagFile("start.tag");
+    Novel->moveToTagFile("start.tag");
 }
 
 // Called every frame.
 func frame() {
-    novel->frame();
+    Novel->frame();
 }

@@ -35,7 +35,6 @@ static ViewController *theViewController;
 
 // Log file.
 static char *logFilePath;
-static bool logOpened;
 
 // Release mode.
 static bool releaseMode;
@@ -826,7 +825,7 @@ bool log_info(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    logOpened = true;
+    __sync_synchronize();
 
     return true;
 }
@@ -849,7 +848,7 @@ bool log_warn(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    logOpened = true;
+    __sync_synchronize();
 
     return true;
 }
@@ -872,7 +871,7 @@ bool log_error(const char *s, ...)
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
 
-    logOpened = true;
+    __sync_synchronize();
 
     return true;
 }
@@ -896,6 +895,7 @@ static FILE *openLog(void)
 
     if (!is_bundled) {
         // We are running a non-bundled app, use the current directory.
+        logFilePath = strdup("log.txt");
         fp = fopen("log.txt", "w");
         if (fp == NULL) {
             NSAlert *alert = [[NSAlert alloc] init];
@@ -903,8 +903,9 @@ static FILE *openLog(void)
             [alert setInformativeText:@"Cannot open log file."];
             [alert addButtonWithTitle:@"OK"];
             [alert runModal];
+            logFilePath = NULL;
+            return NULL;
         }
-        logFilePath = strdup("log.txt");
         return fp;
     } else if (releaseMode) {
         // We are in the release mode, use the "Aplication Support" folder.
@@ -925,6 +926,8 @@ static FILE *openLog(void)
             [alert setInformativeText:@"Cannot open log file."];
             [alert addButtonWithTitle:@"OK"];
             [alert runModal];
+            logFilePath = NULL;
+            return NULL;
         }
         return fp;
     } else {
@@ -941,6 +944,8 @@ static FILE *openLog(void)
             [alert setInformativeText:@"Cannot open log file."];
             [alert addButtonWithTitle:@"OK"];
             [alert runModal];
+            logFilePath = NULL;
+            return NULL;
         }
         return fp;
     }
@@ -949,7 +954,9 @@ static FILE *openLog(void)
 // Show the log file.
 static void showLogAtExit(void)
 {
-    if (logOpened) {
+    __sync_synchronize();
+
+    if (logFilePath != NULL) {
         NSString *path = [[NSString alloc] initWithUTF8String:logFilePath];
         [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
     }

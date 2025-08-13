@@ -164,7 +164,7 @@ Create at your pace, wherever you are in the world.
 |               |PlayStation® 5     |Unity Plugin (C++ Native)                 |
 |               |Xbox Series X\|S    |Unity Plugin (C++ Native)                 |
 
-### Noct Language and Tools
+### Noct Language
 
 **NoctLang** is a lightweight scripting language designed specifically
 for Noct2D. With a game-oriented syntax, it emphasizes clarity,

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(Noct2D LANGUAGES C CXX)
 
-set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
+#set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 
 #
 # Configuration
@@ -23,6 +23,7 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi /DDEBUG /UNDEBUG")
 else()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
+    set(CMAKE_OBJC_FLAGS_DEBUG "${CMAKE_OBJC_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
 endif()
 
 # Release Configuration
@@ -33,6 +34,7 @@ if(MSVC)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU")
   # GCC/Clang
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
+  set(CMAKE_OBJC_FLAGS_RELEASE "${CMAKE_OBJC_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
 endif()
 
 #
@@ -130,8 +132,6 @@ if(WIN32)
     target_link_options(noct2d PRIVATE -mwindows -static)
   endif()
 endif()
-
-target_link_options(noct2d PRIVATE -lefence)
 
 # Change the bundle name.
 if (APPLE AND NOT IOS AND ENABLE_BUNDLE)

@@ -1,4 +1,4 @@
-func newNovel() {
+func initNovel() {
     var novel = {
         //
         // Current tag function.
@@ -253,21 +253,18 @@ func newNovel() {
 
                 // Get the lap.
                 this.animeContext[i].curLap = (Engine.millisec - this.animeContext[i].startTime) / 1000.0;
-                debug("curLap = " + this.animeContext[i].curLap);
 
                 var lastSeq = this.animeSequence[i].length - 1;
-                debug("end time = " + this.animeSequence[i][lastSeq].endTime);
                 if (this.animeContext[i].curLap >= this.animeSequence[i][lastSeq].endTime) {
                     this.animeContext[i].isRunning = 0;
                     this.animeContext[i].isCompleted = 1;
-                    debug("end");
                 }
             }
 
             // Update the parameters for the stage layers.
             for (i in 0 .. this.STAGE_LAYERS) {
                 // Skip if the anime sequence for the layer is empty.
-                if (this.animeSequence.length == 0) {
+                if (this.animeSequence[i].length == 0) {
                     continue;
                 }
 
@@ -307,7 +304,6 @@ func newNovel() {
 
                     // Calculate the progress.
                     var progress = (this.animeContext[i].curLap - s.startTime) / (s.endTime - s.startTime);
-                    debug("progres = " + progress);
                     if (progress > 1.0) {
                         progress = 1.0;
                     }
@@ -316,7 +312,6 @@ func newNovel() {
                     this.layerX[i] = s.fromX + (s.toX - s.fromX) * progress;
                     this.layerY[i] = s.fromY + (s.toY - s.fromY) * progress;
                     this.layerAlpha[i] = s.fromAlpha + (s.toAlpha - s.fromAlpha) * progress;
-                    debug("alpha = " + this.layerAlpha[i]);
                     this.layerScaleX[i] = s.fromScaleX + (s.toScaleX - s.fromScaleX) * progress;
                     this.layerScaleY[i] = s.fromScaleY + (s.toScaleY - s.fromScaleY) * progress;
                     this.layerCenterX[i] = s.centerX;
@@ -329,6 +324,18 @@ func newNovel() {
 
         isLayerAnimeCompleted: (this, layer) => {
             return this.animeContext[layer].isCompleted;
+        },
+
+        clearAnimeForLayers: (this, layers) => {
+            for (layer in layers) {
+                this.animeSequence[layer] = [];
+                this.animeContext[layer] = {
+                    isRunning:   0,
+                    isCompleted: 0,
+                    startTime:   0,
+                    curLap:      0
+                };
+            }
         },
 
         //
@@ -396,23 +403,28 @@ func Tag_background(param) {
     // Initialize.
     //
     if (Novel.curTagFunc == 0) {
+        // Register the frame callback.
         Novel.curTagFunc = Tag_background;
+
+        // Create a tag workspace.
         Novel.tagWorkspace = {};
 
+        // Load an image for the BG_FI layer.
         Novel->loadLayerImage(Novel.LAYER_BG_FI, param.file);
 
+        // Start an anime.
         Novel.tagWorkspace.animeLayers = Novel->startAnime([
             {
                 layer:      Novel.LAYER_BG,
                 startTime:  0.0,
-                endTime:    10.0,
+                endTime:    float(param.time),
                 fromAlpha:  255,
                 toAlpha:    0
             },
             {
                 layer:      Novel.LAYER_BG_FI,
                 startTime:  0.0,
-                endTime:    10.0,
+                endTime:    float(param.time),
                 fromAlpha:  0,
                 toAlpha:    255
             }
@@ -427,15 +439,31 @@ func Tag_background(param) {
     //
     // Completion.
     //
+
+    // Check that the layer animes are running.
     var notCompleted = 0;
     for (layer in Novel.tagWorkspace.animeLayers) {
-        if (!novel->isLayerAnimeCompleted(layer)) {
+        if (!Novel->isLayerAnimeCompleted(layer)) {
             notCompleted = 1;
             break;
         }
     }
+
+    // If the layer animes are completed.
     if (!notCompleted) {
+        // Clear the layer animes.
+        Novel->clearAnimeForLayers(Novel.tagWorkspace.animeLayers);
+
+        // Swap the BG_FI layer to the BG layer.
         Novel->swapLayerImage(Novel.LAYER_BG_FI, Novel.LAYER_BG);
+
+        // Unregister the frame callback.
+        Novel.curTagFunc = 0;
+
+        // Remove the tag workspace.
+        Novel.tagWorkspace = 0;
+
+        // Move to the next tag.
         Novel->moveToNextTag();
     }
 
@@ -443,10 +471,21 @@ func Tag_background(param) {
 }
 
 func Tag_click(param) {
+    //
+    // Initialize.
+    //
     if (Novel.curTagFunc == 0) {
         Novel.curTagFunc = Tag_click;
     }
 
+    //
+    // Rendering.
+    //
+    Novel->renderStage();
+
+    //
+    // Completion.
+    //
     if (Engine.isMouseLeftPressed) {
         Novel.curTagFunc = 0;
         Novel->moveToNextTag();

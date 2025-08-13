@@ -210,8 +210,6 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 - (void)drawInMTKView:(nonnull MTKView *)view {
     if (!gameRendererStartFlag)
         return;
-    if (gameRendererExitFlag)
-        return;
     if (view.currentRenderPassDescriptor == nil)
         return;
     if ([theViewController isVideoPlaying]) {
@@ -246,9 +244,9 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     thePurgeArrayCount = 0;
 
     // Run a frame event and do rendering.
-    if(!runFrame()) {
-        gameRendererExitFlag = true;
-        return;
+    if (!gameRendererExitFlag) {
+        if(!runFrame())
+            gameRendererExitFlag = true;
     }
 
     // End encodings.
