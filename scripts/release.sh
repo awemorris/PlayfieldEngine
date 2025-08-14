@@ -29,7 +29,7 @@ mkdir dist/sample
 rm -rf build
 mkdir build
 cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw-i686-toolchain.cmake
+cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw-x86_64-toolchain.cmake
 cmake --build .
 cd ..
 cp build/noct2d.exe dist/windows/
