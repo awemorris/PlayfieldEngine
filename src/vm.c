@@ -55,18 +55,18 @@ bool create_vm(char **title, int *width, int *height)
 		return false;
 	}
 
-	/* Save the window size. */
-	if (!set_vm_int("screenWidth", *width))
-		return false;
-	if (!set_vm_int("screenHeight", *height))
-		return false;
-
 	/* Initialize the API. */
 	if (!init_api())
 		return false;
 
 	/* Install the API to the runtime. */
 	if (!install_api(env))
+		return false;
+
+	/* Save the window size. */
+	if (!set_vm_int("screenWidth", *width))
+		return false;
+	if (!set_vm_int("screenHeight", *height))
 		return false;
 
 	return true;
