@@ -93,6 +93,9 @@ static HWND hWndMain;
 /* Frame start time. */
 static DWORD dwStartTime;
 
+/* Running? */
+static BOOL bRunning;
+
 /* Force D3D9? */
 static BOOL bForceD3D9;
 
@@ -431,6 +434,9 @@ static void GameLoop(void)
 {
 	BOOL bBreak;
 
+	/* Set the running flag. */
+	bRunning = TRUE;
+
 	/* Allow redraw on WM_PAINT. */
 	bRunFrameAllow = TRUE;
 
@@ -453,6 +459,9 @@ static void GameLoop(void)
 		if (!RunFrame())
 			bBreak = TRUE;
 	}
+
+	/* Clear the running flag. */
+	bRunning = TRUE;
 }
 
 /* Run a frame. */
@@ -608,24 +617,36 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 			DestroyWindow(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN:
-		on_event_mouse_press(MOUSE_LEFT,
-							 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-							 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		if (bRunning)
+		{
+			on_event_mouse_press(MOUSE_LEFT,
+								 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+								 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
 		return 0;
 	case WM_LBUTTONUP:
-		on_event_mouse_release(MOUSE_LEFT,
-							   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-							   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		if (bRunning)
+		{
+			on_event_mouse_release(MOUSE_LEFT,
+								   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+								   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
 		return 0;
 	case WM_RBUTTONDOWN:
-		on_event_mouse_press(MOUSE_RIGHT,
-							 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-							 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		if (bRunning)
+		{
+			on_event_mouse_press(MOUSE_RIGHT,
+								 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+								 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
 		return 0;
 	case WM_RBUTTONUP:
-		on_event_mouse_release(MOUSE_RIGHT,
-							   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-							   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		if (bRunning)
+		{
+			on_event_mouse_release(MOUSE_RIGHT,
+								   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+								   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
 		return 0;
 	case WM_KEYDOWN:
 		/* Exclude auto repeat cases. */
@@ -642,33 +663,48 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		}
 
 		/* Other keys. */
-		kc = ConvertKeyCode((int)wParam);
-		if(kc != -1)
-			on_event_key_press(kc);
+		if (bRunning)
+		{
+			kc = ConvertKeyCode((int)wParam);
+			if(kc != -1)
+				on_event_key_press(kc);
+		}
 		return 0;
 	case WM_KEYUP:
-		kc = ConvertKeyCode((int)wParam);
-		if(kc != -1)
-			on_event_key_release(kc);
+		if (bRunning)
+		{
+			kc = ConvertKeyCode((int)wParam);
+			if(kc != -1)
+				on_event_key_release(kc);
+		}
 		return 0;
 	case WM_MOUSEMOVE:
-		on_event_mouse_move((int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-							(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		if (bRunning)
+		{
+			on_event_mouse_move((int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+								(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
 		return 0;
 	case WM_MOUSEWHEEL:
-		if((int)(short)HIWORD(wParam) > 0)
+		if (bRunning)
 		{
-			on_event_key_press(KEY_UP);
-			on_event_key_release(KEY_UP);
-		}
-		else if((int)(short)HIWORD(wParam) < 0)
-		{
-			on_event_key_press(KEY_DOWN);
-			on_event_key_release(KEY_DOWN);
+			if((int)(short)HIWORD(wParam) > 0)
+			{
+				on_event_key_press(KEY_UP);
+				on_event_key_release(KEY_UP);
+			}
+			else if((int)(short)HIWORD(wParam) < 0)
+			{
+				on_event_key_press(KEY_DOWN);
+				on_event_key_release(KEY_DOWN);
+			}
 		}
 		return 0;
 	case WM_KILLFOCUS:
-		on_event_key_release(KEY_CONTROL);
+		if (bRunning)
+		{
+			on_event_key_release(KEY_CONTROL);
+		}
 		return 0;
 	case WM_PAINT:
 		OnPaint(hWnd);
