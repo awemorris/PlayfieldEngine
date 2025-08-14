@@ -120,11 +120,33 @@ cd ../..
 # Unity
 #
 
-cd projects/unity-src
-make clean
-make src
-cp -R unity-src/* ../../dist/unity/
-cd ../..
+./scripts/build-unity-win64.sh
+./scripts/build-unity-switch.sh
+./scripts/build-unity-ps5.sh
+./scripts/build-unity-xbox.sh
+
+mkdir dist/unity
+mkdir dist/unity/Assets
+mkdir dist/unity/Assets/StreamingAssets
+mkdir dist/unity/Assets/Resources
+cp -v StratoHAL/src/Noct2D.cs dist/unity/Assets/
+cp -v StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
+mkdir dist/unity-src/Assets/Plugins
+mkdir dist/unity/Assets/Plugins/x86_64
+mkdir dist/unity/Assets/Plugins/Switch
+mkdir dist/unity/Assets/Plugins/PS5
+mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
+mkdir dist/unity/Assets/Plugins/Common
+cp -v build-unity-win64/libnoct2d.dll dist/unity/Assets/Plugins/x86_64/libnoct2d.dll
+cp -v build-unity-switch/libnoct2d.a dist/unity/Assets/Plugins/Switch/libnoct2d.a
+cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
+cp -v build-unity-xbox/libnoct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
+cp -v src/MainScene.unity dist/unity/Assets/
+cp -v docs/unity.md dist/unity/
 
 #
 # Sample
@@ -137,7 +159,7 @@ cp -R sample/* dist/sample/
 #
 
 cd dist
-zip -r -9 Noct2D-all-platforms.zip windows windows-arm64 macos linux-x86_64 linux-arm64 unity
+zip -r -9 Noct2D-all-platforms.zip *
 cd ..
 
 #
