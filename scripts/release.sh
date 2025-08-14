@@ -120,6 +120,12 @@ cd ../..
 # Unity
 #
 
+rm -rf dist/unity
+rm -rf build-unity-win64
+rm -rf build-unity-switch
+rm -rf build-unity-ps5
+rm -rf build-unity-xbox
+
 ./scripts/build-unity-win64.sh
 ./scripts/build-unity-switch.sh
 ./scripts/build-unity-ps5.sh
