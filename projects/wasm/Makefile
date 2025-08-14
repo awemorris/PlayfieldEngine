@@ -18,8 +18,10 @@ SRCS = \
     ../../StratoHAL/src/emmain.c \
     ../../StratoHAL/src/alsound.c \
     ../../StratoHAL/src/glrender.c \
-    ../../src/main.c \
+    ../../src/mainloop.c \
     ../../src/api.c \
+    ../../src/common.c \
+    ../../src/tag.c \
     ../../src/vm.c
 
 all: index.html
