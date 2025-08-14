@@ -5,15 +5,18 @@
  */
 
 /*
- * Top Level Header
+ * C API Implementation
  */
 
-#ifndef NOCT2D_ENGINE_H
-#define NOCT2D_ENGINE_H
+#ifndef NOCT2D_API_H
+#define NOCT2D_API_H
 
 #include <noct2d/noct2d.h>
 
-/* The file name of the startup file. */
-#define STARTUP_FILE	"main.noct"
+/* Initialize the API. */
+bool init_api(void);
+
+/* Cleanup the API. */
+void cleanup_api(void);
 
 #endif

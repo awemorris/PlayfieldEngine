@@ -5,15 +5,12 @@
  */
 
 /*
- * Top Level Header
+ * Main Loop
  */
 
-#ifndef NOCT2D_ENGINE_H
-#define NOCT2D_ENGINE_H
+#ifndef NOCT2D_MAINLOOP_H
+#define NOCT2D_MAINLOOP_H
 
 #include <noct2d/noct2d.h>
-
-/* The file name of the startup file. */
-#define STARTUP_FILE	"main.noct"
 
 #endif

@@ -8,9 +8,18 @@
 
 #include "engine.h"
 #include "vm.h"
+#include "api.h"
+#include "tag.h"
+#include "common.h"
 
 /* NoctLang */
 #include <noct/noct.h>
+
+/* Standar C */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 
 /* Bytecode File Header */
 #define BYTECODE_HEADER		"Noct Bytecode"
@@ -55,18 +64,8 @@ bool create_vm(char **title, int *width, int *height)
 		return false;
 	}
 
-	/* Initialize the API. */
-	if (!init_api())
-		return false;
-
 	/* Install the API to the runtime. */
 	if (!install_api(env))
-		return false;
-
-	/* Save the window size. */
-	if (!set_vm_int("screenWidth", *width))
-		return false;
-	if (!set_vm_int("screenHeight", *height))
 		return false;
 
 	return true;
@@ -77,9 +76,6 @@ bool create_vm(char **title, int *width, int *height)
  */
 void destroy_vm(void)
 {
-	/* Cleanup the API */
-	cleanup_api();
-
 	/* Destroy the VM. */
 	noct_destroy_vm(vm);
 }
@@ -198,7 +194,7 @@ bool call_vm_function(const char *func_name)
 /*
  * Call a tag function.
  */
-bool call_vm_tag_function(void)
+bool call_vm_tag_function(bool *tag_end)
 {
 	struct tag *t;
 	NoctValue dict;
@@ -208,15 +204,14 @@ bool call_vm_tag_function(void)
 	NoctFunc *func;
 	NoctValue ret;
 
+	*tag_end = false;
+
 	/* Get a current command. */
 	t = get_current_tag();
 	if (t == NULL) {
 		/* Reached to the end. Finish the game loop. */
-		log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
-			  get_tag_file_name(),
-			  get_tag_line());
-		noct_error(env, N2D_TR("Reached EOF of the tag file."));
-		return false;
+		*tag_end = true;
+		return true;
 	}
 
 	/* Make a parameter dictionary. */
@@ -291,11 +286,34 @@ bool set_vm_int(const char *prop_name, int val)
 {
 	NoctValue api, prop_val;
 
+	noct_pin_local(env, 2, &api, &prop_val);
+
 	if (!noct_get_global(env, "Engine", &api))
 		return false;
 	noct_make_int(env, &prop_val, val);
 	if (!noct_set_dict_elem(env, &api, prop_name, &prop_val))
 		return false;
+
+	noct_unpin_local(env, 2, &api, &prop_val);
+
+	return true;
+}
+
+/*
+ * Get a VM integer.
+ */
+bool get_vm_int(const char *prop_name, int *val)
+{
+	NoctValue dict, dict_val;
+
+	noct_pin_local(env, 2, &dict, &dict_val);
+
+	if (!noct_get_global(env, "Engine", &dict))
+		return false;
+	if (!noct_get_dict_elem_check_int(env, &dict, "exitFlag", &dict_val, val))
+		return false;
+
+	noct_unpin_local(env, 2, &dict, &dict_val);
 
 	return true;
 }
@@ -452,10 +470,17 @@ static bool Engine_moveToNextTag(NoctEnv *env)
 /* Engine.callTagFunction() */
 static bool Engine_callTagFunction(NoctEnv *env)
 {
+	NoctValue ret;
+	bool tag_end;
+
 	UNUSED_PARAMETER(env);
 
-	if (!call_vm_tag_function())
+	noct_pin_local(env, 1, &ret);
+
+	if (!call_vm_tag_function(&tag_end))
 		return false;
+
+	noct_set_return_make_int(env, &ret, tag_end ? false : true);
 
 	return true;
 }
@@ -701,7 +726,7 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	const char *text;
 	int size;
 	const char *color;
-	pixel_t pcolor;
+	int r, g, b, a;
 	int tex_id;
 	int tex_width;
 	int tex_height;
@@ -714,12 +739,22 @@ static bool Engine_createTextTexture(NoctEnv *env)
 		return false;
 	if (!get_int_param(env, "size", &size))
 		return false;
-	if (!get_string_param(env, "color", &color))
+	if (!get_int_param(env, "r", &r))
+		return false;
+	if (!get_int_param(env, "g", &g))
+		return false;
+	if (!get_int_param(env, "b", &b))
+		return false;
+	if (!get_int_param(env, "a", &a))
 		return false;
 
-	pcolor = color_code_to_pixel_value(color);
-
-	if (!noct2d_create_text_texture(slot, text, size, pcolor, &tex_id, &tex_width, &tex_height))
+	if (!noct2d_create_text_texture(slot,
+					text,
+					size,
+					make_pixel(a, r, g, b),
+					&tex_id,
+					&tex_width,
+					&tex_height))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))

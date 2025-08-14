@@ -9,6 +9,8 @@
  */
 
 #include "engine.h"
+#include "common.h"
+#include "tag.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,19 +19,25 @@
 
 #define TEXTURE_COUNT	(256)
 
+/* Texture Struct */
 struct texture_entry {
 	bool is_used;
 	struct image *img;
 };
 
-/*
- * Texture table.
- */
+/* Texture table. */
 static struct texture_entry tex_tbl[TEXTURE_COUNT];
+
+/* Wave table. */
+static struct wave *wave_tbl[SOUND_TRACKS];
 
 /* Forward Declaration */
 static int search_free_entry(void);
 static bool create_texture(int width, int height, int *ret, struct image **img);
+
+/*
+ * Initialization
+ */
 
 /*
  * Initialize the API.
@@ -395,9 +403,9 @@ bool noct2d_create_text_texture(int slot, const char *text, int size, pixel_t co
  * Sound
  */
 
-/* Wave table. */
-static struct wave *wave_tbl[SOUND_TRACKS];
-
+/*
+ * Play a sound file on a stream.
+ */
 bool noct2d_play_sound(int stream, const char *file)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
@@ -415,6 +423,9 @@ bool noct2d_play_sound(int stream, const char *file)
 	return true;
 }
 
+/*
+ * Stop the sound on a stream.
+ */
 bool noct2d_stop_sound(int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
@@ -430,6 +441,9 @@ bool noct2d_stop_sound(int stream)
 	return true;
 }
 
+/*
+ * Set the sound volume on a stream.
+ */
 bool noct2d_set_sound_volue(int stream, float vol)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
@@ -446,113 +460,14 @@ bool noct2d_set_sound_volue(int stream, float vol)
  * Tag
  */
 
-/* False assertion */
-#define NEVER_COME_HERE		0
-
-/* Sizes. */
-#define TAG_NAME_MAX	128
-#define PROP_NAME_MAX	128
-#define PROP_VALUE_MAX	4096
-#define COMMAND_MAX	65536
-
-/* Current tag file. */
-static char cur_file[1024];
-
-/* Current tag index. */
-static int cur_index;
-
-/* Tag table. */
-static struct tag tag[COMMAND_MAX];
-
-/* Tag size. */
-static int tag_size;
-
-/* Forward declaration. */
-static bool parse_tag_document(const char *doc, bool (*callback)(const char *, int, const char **, const char **, int), char **error_msg, int *error_line);
-static bool parse_tag_callback(const char *name, int props, const char **prop_name, const char **prop_value, int line);
-
-/*
- * Cleanup the tag module.
- */
-void cleanup_tag(void)
-{
-	struct tag *t;
-	int i, j;
-
-	cur_index = 0;
-
-	strcpy(cur_file, "");
-
-	for (i = 0; i < tag_size; i++) {
-		t = &tag[i];
-		free(t->tag_name);
-		for (j = 0; j < PROP_MAX; j++) {
-			if (t->prop_name[i] != NULL) {
-				free(t->prop_name[i]);
-				t->prop_name[i] = NULL;
-			}
-			if (t->prop_value[i] != NULL) {
-				free(t->prop_value[i]);
-				t->prop_value[i] = NULL;
-			}
-		}
-	}
-}
-
-/* Get a file name of the current tag. */
-const char *get_tag_file_name(void)
-{
-	return &cur_file[0];
-}
-
-/* Get a line number of the current tag. */
-int get_tag_line(void)
-{
-	/* If the current tag index is invalid. */
-	if (cur_index >= tag_size)
-		return -1;
-	
-	return tag[cur_index].line;
-}
-
-/* Get a current tag. */
-struct tag *get_current_tag(void)
-{
-	/* If the current command index is invalid. */
-	if (cur_index >= tag_size)
-		return NULL;
-	
-	return &tag[cur_index];
-}
-
 /*
  * Load a tag file and move to it.
  */
 bool noct2d_move_to_tag_file(const char *file)
 {
-	char *buf;
-	char *error_message;
-	int error_line;
-
-	/* Get the file content. */
-	if (!load_file(file, &buf, NULL))
+	/* Load the tag file. */
+	if (!load_tag_file(file))
 		return false;
-
-	/* Destroy the existing commands. */
-	cleanup_tag();
-
-	/* Save the file name. */
-	strncpy(cur_file, file, sizeof(cur_file) - 1);
-
-	/* Parse the file content. */
-	if (!parse_tag_document(buf, parse_tag_callback, &error_message, &error_line)) {
-		log_error(S_TR("%s:%d: %s\n"),  file, error_line, error_message);
-		free(buf);
-		return false;
-	}
-
-	/* Free the file content. */
-	free(buf);
 
 	return true;
 }
@@ -562,296 +477,5 @@ bool noct2d_move_to_tag_file(const char *file)
  */
 void noct2d_move_to_next_tag(void)
 {
-	cur_index++;
-}
-
-/*
- * Tag Document Parser
- */
-
-/* State machine */
-enum state {
-	ST_INIT,
-	ST_TAGNAME,
-	ST_PROPNAME,
-	ST_PROPVALUE_QUOTE,
-	ST_PROPVALUE_BODY,
-};
-
-/* Parse a tag document. */
-bool
-parse_tag_document(
-	const char *doc,
-	bool (*callback)(const char *, int, const char **, const char **, int),
-	char **error_msg,
-	int *error_line)
-{
-	static char tag_name[TAG_NAME_MAX];
-	static char prop_name[PROP_MAX][PROP_NAME_MAX];
-	static char prop_val[PROP_MAX][PROP_VALUE_MAX];
-
-	const char *top;
-	char c;
-	int state;
-	int line;
-	int len;
-	int prop_count;
-	char *prop_name_tbl[PROP_MAX];
-	char *prop_val_tbl[PROP_MAX];
-	int i;
-
-	for (i = 0; i < PROP_MAX; i++) {
-		prop_name_tbl[i] = &prop_name[i][0];
-		prop_val_tbl[i] = &prop_val[i][0];
-	}
-
-	state = ST_INIT;
-	top = doc;
-	line = 1;
-	len = 0;
-	prop_count = 0;
-	while (*top != '\0') {
-		c = *top++;
-		switch (state) {
-		case ST_INIT:
-			if (c == '[') {
-				state = ST_TAGNAME;
-				len = 0;
-				continue;
-			}
-			if (c == '\n') {
-				line++;
-				continue;
-			}
-			if (c == ' ' || c == '\r' || c == '\t')
-				continue;
-
-			*error_msg = strdup(S_TR("Invalid character."));
-			*error_line = line;
-			return false;
-		case ST_TAGNAME:
-			if (len == 0 && (c == ' ' || c == '\r' || c == '\t' || c == '\n'))
-				continue;
-			if (c == '\n')
-				line++;
-			if (c == ' ' || c == '\r' || c == '\t' || c == '\n') {
-				assert(len > 0);
-				tag_name[len] = '\0';
-				state = ST_PROPNAME;
-				len = 0;
-				continue;
-			}
-			if (c == ']') {
-				tag_name[len] = '\0';
-				if (!callback(tag_name, 0, NULL, NULL, line)) {
-					*error_msg = strdup(S_TR("Too many properties."));
-					*error_line = line;
-					return false;
-				}
-				state = ST_INIT;
-				continue;
-			}
-			if (len >= TAG_NAME_MAX) {
-				*error_msg = strdup(S_TR("Tag name too long."));
-				*error_line = line;
-				return false;
-			}
-			tag_name[len++] = c;
-			continue;
-		case ST_PROPNAME:
-			if (prop_count == PROP_MAX) {
-				*error_msg = strdup(S_TR("Too many properties."));
-				*error_line = line;
-				return false;
-			}
-			if (len == 0 && c == ' ')
-				continue;
-			if (len == 0 && c == ']') {
-				if (!callback(tag_name, prop_count, (const char **)prop_name_tbl, (const char **)prop_val_tbl, line)) {
-					*error_msg = strdup(S_TR("Internal error."));
-					*error_line = line;
-					return false;
-				}
-				state = ST_INIT;
-				continue;
-			}
-			if (len == 0 && c == '\n')
-				line++;
-			if (len == 0 && (c == ' ' || c == '\r' || c == '\t' || c == '\n'))
-				continue;
-			if (len > 0 && c == '=') {
-				assert(len > 0);
-
-				/* Terminate the property name. */
-				prop_name[prop_count][len] = '\0';
-
-				state = ST_PROPVALUE_QUOTE;
-				len = 0;
-				continue;
-			}
-			if (len >= PROP_NAME_MAX) {
-				*error_msg = strdup(S_TR("Property name too long."));
-				*error_line = line;
-				return false;
-			}
-			if ((c >= 'a' && c <= 'z') ||
-			    (c >= 'A' && c <= 'Z') ||
-			    (c >= '0' && c <= '9') ||
-			    c == '-' ||
-			    c == '_') {
-				prop_name[prop_count][len++] = c;
-				continue;
-			}
-			*error_msg = strdup(S_TR("Invalid character."));
-			*error_line = line;
-			continue;
-		case ST_PROPVALUE_QUOTE:
-			if (c == '\n')
-				line++;
-			if (c == ' ' || c == '\r' || c == '\t' || c == '\n')
-				continue;
-			if (c == '\"') {
-				state = ST_PROPVALUE_BODY;
-				len = 0;
-				continue;
-			}
-			continue;
-		case ST_PROPVALUE_BODY:
-			if (c == '\\') {
-				switch (*top) {
-				case '\"':
-					prop_val[prop_count][len] = '\"';
-					len++;
-					top++;
-					continue;
-				case 'n':
-					prop_val[prop_count][len] = '\n';
-					len++;
-					top++;
-					continue;
-				case '\\':
-					prop_val[prop_count][len] = '\\';
-					len++;
-					top++;
-					continue;
-				default:
-					prop_val[prop_count][len] = '\\';
-					len++;
-					continue;
-				}
-			}
-			if (c == '\"') {
-				prop_val[prop_count][len] = '\0';
-				prop_count++;
-
-				state = ST_PROPNAME;
-				len = 0;
-				continue;
-			}
-			if (len >= PROP_VALUE_MAX) {
-				*error_msg = strdup(S_TR("Property value too long."));
-				*error_line = line;
-				return false;
-			}
-			prop_val[prop_count][len++] = c;
-			continue;
-		default:
-			assert(NEVER_COME_HERE);
-			break;
-		}
-	}
-
-	if (state == ST_INIT)
-		return true;
-
-	*error_msg = strdup(S_TR("Unexpected EOF"));
-	*error_line = line;
-	return false;
-}
-
-/* Callback for when a tag is read. */
-static bool parse_tag_callback(const char *name, int props, const char **prop_name, const char **prop_value, int line)
-{
-	struct tag *t;
-	int i;
-
-	/* If command table is full. */
-	if (tag_size >= COMMAND_MAX) {
-		log_error("Too many tags.");
-		return false;
-	}
-
-	t = &tag[tag_size++];
-	t->prop_count = props;
-
-	/* Copy a tag name. */
-	t->tag_name = strdup(name);
-	if (t->tag_name == NULL) {
-		log_out_of_memory();
-		return false;
-	}
-
-	/* Copy properties. */
-	for (i = 0; i < props; i++) {
-		t->prop_name[i] = strdup(prop_name[i]);
-		if (t->prop_name[i] == NULL) {
-			log_out_of_memory();
-			return false;
-		}
-
-		t->prop_value[i] = strdup(prop_value[i]);
-		if (t->prop_value[i] == NULL) {
-			log_out_of_memory();
-			return false;
-		}
-	}
-
-	t->line = line;
-
-	return true;
-}
-
-/*
- * Common
- */
-
-bool load_file(const char *file, char **buf, size_t *size)
-{
-	struct rfile *f;
-	size_t file_size, read_size;
-
-	assert(buf != NULL);
-
-	if (!open_rfile(file, &f)) {
-		log_error(S_TR("Cannot open file \"%s\".\n"), file);
-		return false;
-	}
-
-	if (!get_rfile_size(f, &file_size)) {
-		log_error(S_TR("Cannot get the size of file \"%s\"."), file);
-		return false;
-	}
-
-	if (buf != NULL) {
-		*buf = malloc(file_size + 1);
-		if (*buf == NULL) {
-			log_out_of_memory();
-			return false;
-		}
-
-		if (!read_rfile(f, *buf, file_size, &read_size)) {
-			log_error(S_TR("Cannot read file \"%s\"."), file);
-			free(*buf);
-			return false;
-		}
-
-		(*buf)[file_size] = '\0';
-	}
-
-	close_rfile(f);
-
-	if (size != NULL)
-		*size = file_size;
-
-	return true;
+	move_to_next_tag();
 }

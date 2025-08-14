@@ -4,15 +4,14 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-#include "engine.h"
+#include <noct2d/noct2d.h>
+
+#include "mainloop.h"
+#include "api.h"
 #include "vm.h"
+#include "i18n.h"
 
 static uint64_t lap_origin;
-
-#ifdef USE_TRANSLATION
-/* i18n.c */
-void noct2d_init_locale(void);
-#endif
 
 /*
  * This function is called when the app is going to be initialized.
@@ -24,8 +23,22 @@ bool on_event_boot(char **title, int *width, int *height)
 	noct2d_init_locale();
 #endif
 
+	/* Initialize the API. */
+	if (!init_api())
+		return false;
+
 	/* Create a VM, then call setup(). */
 	if (!create_vm(title, width, height))
+		return false;
+
+	/* Save the window size. */
+	if (!set_vm_int("screenWidth", *width))
+		return false;
+	if (!set_vm_int("screenHeight", *height))
+		return false;
+
+	/* Make the exit flag. */
+	if (!set_vm_int("exitFlag", 0))
 		return false;
 
 	return true;
@@ -58,12 +71,22 @@ bool on_event_start(void)
  */
 bool on_event_frame(void)
 {
+	int exit_flag;
+
 	/* Get the lap timer. */
 	set_vm_int("millisec", (int)get_lap_timer_millisec(&lap_origin));
 
 	/* Call frame(). */
 	if (!call_vm_function("frame"))
 		return false;
+
+	/* Check the exit flag. */
+	exit_flag = 0;
+	get_vm_int("exitFlag", &exit_flag);
+	if (exit_flag) {
+		/* Exit the game loop. */
+		return false;
+	}
 
 	/* Clear input states. */
 	set_vm_int("isMouseLeftPressed", 0);
@@ -75,6 +98,9 @@ bool on_event_frame(void)
 
 void on_event_stop(void)
 {
+	/* Cleanup the API */
+	cleanup_api();
+
 	/* Destroy the VM. */
 	destroy_vm();
 }

@@ -74,8 +74,10 @@ endif()
 #
 
 set(BASE_SOURCES
-  src/main.c
   src/api.c
+  src/common.c
+  src/mainloop.c
+  src/tag.c
   src/vm.c
 )
 

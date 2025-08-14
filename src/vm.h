@@ -12,8 +12,9 @@
 bool create_vm(char **title, int *width, int *height);
 void destroy_vm(void);
 bool call_vm_function(const char *func_name);
-bool call_vm_tag_function(void);
+bool call_vm_tag_function(bool *tag_end);
 bool set_vm_int(const char *prop_name, int val);
+bool get_vm_int(const char *prop_name, int *val);
 size_t get_heap_usage(void);
 void fast_gc(void);
 void full_gc(void);

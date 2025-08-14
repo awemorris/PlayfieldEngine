@@ -25,7 +25,7 @@ extern const char *noct_lang_code;
  */
 void noct2d_init_locale(void)
 {
-	/* Initialize NoctLang's i18n system manually. */
+	/* Initialize the NoctLang's i18n system manually. */
 	noct_lang_code = get_system_language();
 }
 

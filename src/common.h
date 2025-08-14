@@ -5,15 +5,15 @@
  */
 
 /*
- * Top Level Header
+ * Common Routines
  */
 
-#ifndef NOCT2D_ENGINE_H
-#define NOCT2D_ENGINE_H
+#ifndef NOCT2D_COMMON_H
+#define NOCT2D_COMMON_H
 
 #include <noct2d/noct2d.h>
 
-/* The file name of the startup file. */
-#define STARTUP_FILE	"main.noct"
+/* Load a file content. */
+bool load_file(const char *file, char **buf, size_t *size);
 
 #endif
