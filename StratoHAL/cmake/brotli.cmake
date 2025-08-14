@@ -13,6 +13,7 @@ add_library(brotlicommon OBJECT
   ${CMAKE_BINARY_DIR}/brotli/c/common/shared_dictionary.c
   ${CMAKE_BINARY_DIR}/brotli/c/common/context.c
   ${CMAKE_BINARY_DIR}/brotli/c/common/platform.c
+  ${CMAKE_BINARY_DIR}/brotli/c/common/transform.c
 )
 
 add_library(brotlidec OBJECT

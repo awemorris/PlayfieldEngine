@@ -34,6 +34,7 @@ add_library(webp OBJECT
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/dec_sse41.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/dec_clip_tables.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc.c
+  ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc_sse2.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/filters.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/filters_neon.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/filters_sse2.c
@@ -97,6 +98,12 @@ add_library(webp OBJECT
   ${CMAKE_BINARY_DIR}/libwebp/src/utils/rescaler_utils.c
   ${CMAKE_BINARY_DIR}/libwebp/src/utils/thread_utils.c
   ${CMAKE_BINARY_DIR}/libwebp/src/utils/utils.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv_cpu.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv_dsp.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv_csp.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv_gamma.c
+  ${CMAKE_BINARY_DIR}/libwebp/sharpyuv/sharpyuv_sse2.c
 )
 
 target_include_directories(webp PRIVATE ${CMAKE_BINARY_DIR}/libwebp)

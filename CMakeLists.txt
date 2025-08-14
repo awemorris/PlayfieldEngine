@@ -12,6 +12,7 @@ option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
 option(ENABLE_BUNDLE "Enable macOS bundle"     ON)
 option(ENABLE_I18N   "Enable translation"      ON)
 option(ENABLE_SHARED "Enable shared libraries" OFF)
+option(ENABLE_UNITY  "Enable Unity plugin"     OFF)
 
 # Use "Release" build type by default.
 if(NOT CMAKE_BUILD_TYPE)
@@ -88,18 +89,58 @@ if(ENABLE_I18N)
   )
 endif()
 
-if(WIN32)
+if(WIN32 AND NOT_UNITY)
   set(RESOURCES
     resources/resource.rc
   )
 endif()
 
-add_executable(
-  noct2d
-  ${BASE_SOURCES}
-  ${I18N_SOURCES}
-  ${RESOURCES}
-)
+if(NOT ENABLE_UNITY)
+  add_executable(
+    noct2d
+    ${BASE_SOURCES}
+    ${I18N_SOURCES}
+    ${RESOURCES}
+  )
+elseif(ENABLE_SHARED)
+  add_library(
+    noct2d
+    SHARED
+    ${BASE_SOURCES}
+    ${I18N_SOURCES}
+    ${RESOURCES}
+    $<TARGET_OBJECTS:png>
+    $<TARGET_OBJECTS:jpeg>
+    $<TARGET_OBJECTS:webp>
+    $<TARGET_OBJECTS:vorbisfile>
+    $<TARGET_OBJECTS:vorbis>
+    $<TARGET_OBJECTS:ogg>
+    $<TARGET_OBJECTS:freetype>
+    $<TARGET_OBJECTS:brotlidec>
+    $<TARGET_OBJECTS:brotlicommon>
+    $<TARGET_OBJECTS:bz2>
+    $<TARGET_OBJECTS:z>
+  )
+else()
+  add_library(
+    noct2d
+    STATIC
+    ${BASE_SOURCES}
+    ${I18N_SOURCES}
+    ${RESOURCES}
+    $<TARGET_OBJECTS:png>
+    $<TARGET_OBJECTS:jpeg>
+    $<TARGET_OBJECTS:webp>
+    $<TARGET_OBJECTS:vorbisfile>
+    $<TARGET_OBJECTS:vorbis>
+    $<TARGET_OBJECTS:ogg>
+    $<TARGET_OBJECTS:freetype>
+    $<TARGET_OBJECTS:brotlidec>
+    $<TARGET_OBJECTS:brotlicommon>
+    $<TARGET_OBJECTS:bz2>
+    $<TARGET_OBJECTS:z>
+  )
+endif()
 
 target_link_libraries(noct2d PRIVATE
   noctlang
@@ -108,16 +149,20 @@ target_link_libraries(noct2d PRIVATE
 
 target_include_directories(noct2d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if(ENABLE_SHARED)
-  target_compile_definitions(noct2d PRIVATE USE_SHARED)
-endif()
-
 if(ENABLE_JIT)
   target_compile_definitions(noct2d PRIVATE USE_JIT)
 endif()
 
 if(ENABLE_I18N)
   target_compile_definitions(noct2d PRIVATE USE_TRANSLATION)
+endif()
+
+if(ENABLE_SHARED)
+  target_compile_definitions(noct2d PRIVATE USE_SHARED)
+endif()
+
+if(ENABLE_UNITY)
+  target_compile_definitions(noct2d PRIVATE USE_UNITY)
 endif()
 
 if(WIN32)
@@ -145,12 +190,13 @@ endif()
 # Packager
 #
 
-add_executable(
-  noct2dpack
-  src/noct2dpack.c
-)
-
-target_link_libraries(noct2dpack stratopack)
+if(NOT ENABLE_UNITY)
+  add_executable(
+    noct2dpack
+    src/noct2dpack.c
+  )
+  target_link_libraries(noct2dpack stratopack)
+endif()
 
 #
 # macOS Bundle

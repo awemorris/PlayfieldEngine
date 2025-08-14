@@ -8,15 +8,27 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment ve
 # Configuration
 #
 
-option(ENABLE_SHARED "Enable shared libraries" OFF)
 option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
 option(ENABLE_I18N   "Enable translation"      ON)
+option(ENABLE_SHARED "Enable shared libraries" OFF)
+option(ENABLE_OBJECT "Build object library"    OFF)
+option(ENABLE_UNITY  "Enable Unity plugin"     OFF)
 
 #
 # Dependency
 #
 
-if(ENABLE_SHARED)
+if(NOT ENABLE_SHARED OR ENABLE_OBJECT)
+  include(cmake/zlib.cmake)
+  include(cmake/libpng.cmake)
+  include(cmake/jpeg.cmake)
+  include(cmake/libwebp.cmake)
+  include(cmake/libogg.cmake)
+  include(cmake/libvorbis.cmake)
+  include(cmake/brotli.cmake)
+  include(cmake/bzip2.cmake)
+  include(cmake/freetype.cmake)
+else()
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
   find_package(PNG REQUIRED)
   find_package(JPEG REQUIRED)
@@ -27,16 +39,6 @@ if(ENABLE_SHARED)
   find_package(Brotli REQUIRED)
   find_package(BZip2 REQUIRED)
   find_package(ZLIB REQUIRED)
-else()
-  include(cmake/zlib.cmake)
-  include(cmake/libpng.cmake)
-  include(cmake/jpeg.cmake)
-  include(cmake/libwebp.cmake)
-  include(cmake/libogg.cmake)
-  include(cmake/libvorbis.cmake)
-  include(cmake/brotli.cmake)
-  include(cmake/bzip2.cmake)
-  include(cmake/freetype.cmake)
 endif()
 
 #
@@ -97,7 +99,7 @@ if(APPLE AND NOT IOS)
 endif()
 
 # For POSIX (X11).
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -112,6 +114,15 @@ if(UNIX AND NOT APPLE)
     src/bsdsound.c
     src/nosound.c
     src/gstplay.c
+  )
+endif()
+
+if(ENABLE_UNITY)
+  set(SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/halwrap.c
   )
 endif()
 
@@ -133,7 +144,23 @@ if(ENABLE_I18N)
   )
 endif()
 
-if(ENABLE_SHARED)
+if(ENABLE_OBJECT)
+  add_library(strato OBJECT
+    ${SOURCES}
+    ${I18N_SOURCES}
+    $<TARGET_OBJECTS:png>
+    $<TARGET_OBJECTS:jpeg>
+    $<TARGET_OBJECTS:webp>
+    $<TARGET_OBJECTS:vorbisfile>
+    $<TARGET_OBJECTS:vorbis>
+    $<TARGET_OBJECTS:ogg>
+    $<TARGET_OBJECTS:freetype>
+    $<TARGET_OBJECTS:brotlidec>
+    $<TARGET_OBJECTS:brotlicommon>
+    $<TARGET_OBJECTS:bz2>
+    $<TARGET_OBJECTS:z>
+  )
+elseif(ENABLE_SHARED)
   add_library(strato SHARED ${SOURCES})
 else()
   add_library(strato STATIC
@@ -174,17 +201,23 @@ if(ENABLE_I18N)
   target_compile_definitions(strato PRIVATE USE_TRANSLATION)
 endif()
 
+# For Unity
+if(ENABLE_UNITY)
+  target_compile_definitions(strato PRIVATE USE_UNITY)
+endif()
+
 #
 # Archiver
 #
 
-add_library(
-  stratopack
-  STATIC
-  src/archive.c
-)
-
-target_include_directories(stratopack PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+if(NOT ENABLE_UNITY)
+  add_library(
+    stratopack
+    STATIC
+    src/archive.c
+  )
+  target_include_directories(stratopack PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+endif()
 
 #
 # CPPFLAGS
