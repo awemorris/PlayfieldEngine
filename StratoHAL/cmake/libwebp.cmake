@@ -35,6 +35,7 @@ add_library(webp OBJECT
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/dec_clip_tables.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc_sse2.c
+  ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc_sse41.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/enc_neon.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/filters.c
   ${CMAKE_BINARY_DIR}/libwebp/src/dsp/filters_neon.c

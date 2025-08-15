@@ -175,7 +175,12 @@ if(TARGET_MACOS)
 endif()
 
 # For POSIX (X11).
-if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_HAIKU AND NOT TARGET_WASM AND NOT TARGET_UNITY)
+if(TARGET_POSIX
+   AND NOT TARGET_MACOS
+   AND NOT TARGET_ANDROID
+   AND NOT TARGET_WASM
+   AND NOT TARGET_UNITY
+   AND NOT TARGET_HAIKU)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -341,7 +346,12 @@ if(ENABLE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
-if(TARGET_POSIX AND NOT TARGET_HAIKU AND NOT TARGET_WASM)
+if(TARGET_POSIX
+   AND NOT TARGET_MACOS
+   AND NOT TARGET_ANDROID
+   AND NOT TARGET_WASM
+   AND NOT TARGET_UNITY
+   AND NOT TARGET_HAIKU)
   if(ENABLE_GLX)
     target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
   else()
@@ -427,7 +437,8 @@ if(ENABLE_SHARED)
 endif()
 
 # Windows link options.
-if(TARGET_WINDOWS)
+if(TARGET_WINDOWS
+   AND NOT TARGET_UNITY)
   # DLLs.
   target_link_libraries(strato PUBLIC
     gdi32
@@ -456,7 +467,8 @@ if(TARGET_WINDOWS)
 endif()
 
 # macOS link options.
-if(TARGET_MACOS)
+if(TARGET_MACOS
+   AND NOT TARGET_UNITY)
   target_compile_options(strato PRIVATE -fmodules)
   target_compile_options(strato PUBLIC  -fmodules)
 
@@ -472,18 +484,22 @@ if(TARGET_MACOS)
   )
 endif()
 
-# POSIX GLX: Add -lGL -lGLX
-if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_WASM)
+# POSIX
+if(TARGET_POSIX
+   AND NOT TARGET_MACOS
+   AND NOT TARGET_ANDROID
+   AND NOT TARGET_WASM
+   AND NOT TARGET_UNITY
+   AND NOT TARGET_HAIKU)
+  # Add -lm -lpthread -lXpm -lX11
+  target_link_libraries(strato PRIVATE m pthread Xpm X11)
+  target_link_libraries(strato PUBLIC  m pthread Xpm X11)
+
+  # Add -lGL -lGLX
   if(ENABLE_GLX)
     target_link_libraries(strato PRIVATE GL GLX)
     target_link_libraries(strato PUBLIC  GL GLX)
   endif()
-endif()
-
-# POSIX: Add -lm -lpthread -lXpm -lX11
-if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_WASM)
-  target_link_libraries(strato PRIVATE m pthread Xpm X11)
-  target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 endif()
 
 # Linux: Add -lasound
