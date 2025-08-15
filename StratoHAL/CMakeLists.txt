@@ -17,11 +17,7 @@ option(ENABLE_OBJECT  "Build object library"    OFF)
 # Target Detection
 #
 
-option(TARGET_WASM    "Emscripten"     OFF)
-option(TARGET_ANDROID "Android NDK"    OFF)
-option(TARGET_UNITY   "Unity plugin"   OFF)
-
-if(WIN32)
+if(WIN32 AND NOT TARGET_UNITY)
   set(TARGET_WINDOWS ON)
 endif()
 
@@ -49,13 +45,12 @@ if(UNIX)
   set(TARGET_POSIX ON)
 endif()
 
-# Haiku
 if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   set(TARGET_HAIKU ON)
 endif()
 
-# Wasm (Manual)
-if(TARGET_WASM)
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+ set(TARGET_WASM ON)
 endif()
 
 # Android (Manual)

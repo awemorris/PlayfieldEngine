@@ -49,14 +49,14 @@ if(UNIX)
   set(TARGET_POSIX ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  set(TARGET_HAIKU ON)
-endif()
-
-# Wasm (Manual)
-if(TARGET_WASM)
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  set(TARGET_WASM ON)
   set(ENABLE_JIT        OFF)
   set(ENABLE_I18N       OFF)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+  set(TARGET_HAIKU ON)
 endif()
 
 # Android (Manual)
