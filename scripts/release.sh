@@ -15,6 +15,82 @@ rm -rf dist Noct2D-latest.zip
 mkdir dist
 
 #
+# Android
+#
+
+mkdir dist/android
+
+./scripts/build-android.sh
+
+mkdir dist/android/app/src/main/assets
+cp -R projects/android/app               dist/android/
+cp -R projects/android/gradle.properties dist/android/
+cp -R projects/android/build.gradle      dist/android/
+cp -R projects/android/gradlew           dist/android/
+cp -R projects/android/settings.gradle   dist/android/
+cp -R projects/android/gradlew.bat       dist/android/
+cp -R projects/gradle                    dist/android/
+cp -R projects/build.bat                 dist/android/
+
+mkdir dist/android/app/src/main/java/com/noct2d/engineandroid
+cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
+
+mkdir dist/android/app/src/main/jniLibs/arm64-v8a
+cp build-android-aarch64/libnoct2d.so      dist/android/app/src/main/jniLibs/arm64-v8a/
+
+mkdir dist/android/app/src/main/jniLibs/armeabi-v7a
+cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
+
+mkdir dist/android/app/src/main/jniLibs/x86_64
+cp build-android-x86_64/libnoct2d.so     dist/android/app/src/main/jniLibs/x86_64/
+
+mkdir dist/android/app/src/main/jniLibs/x86
+cp build-android-x86/libnoct2d.so        dist/android/app/src/main/jniLibs/x86/
+
+rm -rf build-android-aarch64
+rm -rf build-android-armv7
+rm -rf build-android-x86_64
+rm -rf build-android-x86
+
+#
+# Unity
+#
+
+mkdir dist/unity
+
+./scripts/build-unity-win64.sh
+./scripts/build-unity-switch.sh
+./scripts/build-unity-ps5.sh
+./scripts/build-unity-xbox.sh
+
+mkdir dist/unity/Assets
+mkdir dist/unity/Assets/StreamingAssets
+mkdir dist/unity/Assets/Resources
+cp -v StratoHAL/src/Noct2D.cs dist/unity/Assets/
+cp -v StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
+cp -v StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
+mkdir dist/unity/Assets/Plugins
+mkdir dist/unity/Assets/Plugins/x86_64
+mkdir dist/unity/Assets/Plugins/Switch
+mkdir dist/unity/Assets/Plugins/PS5
+mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
+mkdir dist/unity/Assets/Plugins/Common
+cp -v build-unity-win64/libnoct2d.dll dist/unity/Assets/Plugins/x86_64/libnoct2d.dll
+cp -v build-unity-switch/libnoct2d.a dist/unity/Assets/Plugins/Switch/libnoct2d.a
+cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
+cp -v build-unity-xbox/noct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
+cp -v src/MainScene.unity dist/unity/Assets/
+cp -v docs/unity.md dist/unity/
+
+rm -rf build-unity-win64
+rm -rf build-unity-switch
+rm -rf build-unity-ps5
+rm -rf build-unity-xbox
+
+#
 # Windows x86_64
 #
 
@@ -102,85 +178,6 @@ mkdir dist/wasm
 
 cp build-wasm/index.html dist/wasm/
 cp docs/wasm.md dist/wasm
-
-#
-# Android
-#
-
-mkdir dist/android
-
-./scripts/build-android.sh
-
-mkdir dist/android
-mkdir dist/android/app/src/main/cpp
-mkdir dist/android/app/src/main/assets
-
-cp -R projects/android/app               dist/android/
-cp -R projects/android/gradle.properties dist/android/
-cp -R projects/android/build.gradle      dist/android/
-cp -R projects/android/gradlew           dist/android/
-cp -R projects/android/settings.gradle   dist/android/
-cp -R projects/android/gradlew.bat       dist/android/
-cp -R projects/gradle                    dist/android/
-cp -R projects/build.bat                 dist/android/
-
-mkdir dist/android/app/src/main/java/com/noct2d/engineandroid
-cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
-
-mkdir dist/android/app/src/main/jniLibs/arm64-v8a
-cp build-android-aarch64/libnoct2d.so      dist/android/app/src/main/jniLibs/arm64-v8a/
-
-mkdir dist/android/app/src/main/jniLibs/armeabi-v7a
-cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
-
-mkdir dist/android/app/src/main/jniLibs/x86_64
-cp build-android-x86_64/libnoct2d.so     dist/android/app/src/main/jniLibs/x86_64/
-
-mkdir dist/android/app/src/main/jniLibs/x86
-cp build-android-x86/libnoct2d.so        dist/android/app/src/main/jniLibs/x86/
-
-rm -rf build-android-aarch64
-rm -rf build-android-armv7
-rm -rf build-android-x86_64
-rm -rf build-android-x86
-
-#
-# Unity
-#
-
-mkdir dist/unity
-
-./scripts/build-unity-win64.sh
-./scripts/build-unity-switch.sh
-./scripts/build-unity-ps5.sh
-./scripts/build-unity-xbox.sh
-
-mkdir dist/unity/Assets
-mkdir dist/unity/Assets/StreamingAssets
-mkdir dist/unity/Assets/Resources
-cp -v StratoHAL/src/Noct2D.cs dist/unity/Assets/
-cp -v StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
-mkdir dist/unity/Assets/Plugins
-mkdir dist/unity/Assets/Plugins/x86_64
-mkdir dist/unity/Assets/Plugins/Switch
-mkdir dist/unity/Assets/Plugins/PS5
-mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
-mkdir dist/unity/Assets/Plugins/Common
-cp -v build-unity-win64/libnoct2d.dll dist/unity/Assets/Plugins/x86_64/libnoct2d.dll
-cp -v build-unity-switch/libnoct2d.a dist/unity/Assets/Plugins/Switch/libnoct2d.a
-cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
-cp -v build-unity-xbox/noct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
-cp -v src/MainScene.unity dist/unity/Assets/
-cp -v docs/unity.md dist/unity/
-
-rm -rf build-unity-win64
-rm -rf build-unity-switch
-rm -rf build-unity-ps5
-rm -rf build-unity-xbox
 
 #
 # Sample
