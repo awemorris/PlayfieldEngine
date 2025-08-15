@@ -358,14 +358,16 @@ func initNovel() {
         // Frame renderer.
         frame: (this) => {
             if (this.curTagFunc == 0) {
-                Engine.callTagFunction({});
+                if (!Engine.callTagFunction({})) {
+                    Engine.exitFlag = 1;
+                }
             } else {
                 this.curTagFunc({});
             }
 
             this->renderStage();
 
-	    return 0;
+	    return 1;
         },
 
         // Renders the stage.
