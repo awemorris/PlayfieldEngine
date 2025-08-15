@@ -156,6 +156,7 @@ Create at your pace, wherever you are in the world.
 |---------------|--------------------|------------------------------------------|
 |Desktop        |Windows             |DirectX 12/11/9                           |
 |               |macOS               |Metal                                     |
+|               |ChromeOS            |OpenGL                                    |
 |               |Linux               |OpenGL / Soft Renderer                    |
 |               |*BSD                |OpenGL / Soft Renderer                    |
 |               |Haiku               |Soft Renderer                             |
