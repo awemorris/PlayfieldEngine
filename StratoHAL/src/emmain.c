@@ -88,10 +88,10 @@ int main(void)
 
 	/* Mount IDBFS for save data. */
 	EM_ASM_({
-		FS.mkdir(window_title);
-		FS.mount(IDBFS, {}, window_title);
+		FS.mkdir(Module.UTF8ToString($0));
+		FS.mount(IDBFS, {}, Module.UTF8ToString($0));
 		FS.syncfs(true, function (err) { Module.ccall('main_continue', 'v'); });
-	});
+	}, window_title);
 
 	/* Continue to main_continue() (the above call is asynchronous) */
 	emscripten_exit_with_live_runtime();

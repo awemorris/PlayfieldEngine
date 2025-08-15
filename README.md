@@ -6,13 +6,14 @@ described as a "Game Engine" for Noct.
 
 It is designed to provide:
 
-- Graphics
-- Audio
+- Scripting (NoctLang)
+- Graphics (DirectX12, Metal, and OpenGL)
+- Audio (DirectSound, Audio Unit, ALSA, and OpenAL)
 - Input
-- Cross-platform deployment
+- Cross-platform (Windows, macOS, Linux, iOS, Android, Consoles, and WebAssembly)
 
-Originally developed under the name "Fuel" and "NoctVM", Noct2D
-was reimagined to meet the demands of modern, production-ready
+Originally developed under the name "Fuel" and "NoctVM", Noct2D was
+reimagined to meet the demands of modern, production-ready
 environments across diverse platforms.
 
 ---
@@ -52,7 +53,7 @@ environments across diverse platforms.
     - Built-in JIT compiler accelerates execution across architectures.
     - No native dependencies required.
 - **Cross-Platform**  
-    - Target Windows, macOS, Linux, iOS, Android, game consoles, and WebAssembly.
+    - Target Windows, macOS, Linux, iOS, Android, Consoles, and WebAssembly.
     - All from a single codebase.
     - On mobile platforms (iOS, Android), ahead-of-time (AOT) compilation is available as an alternative to JIT.
 - **Portable by Design**

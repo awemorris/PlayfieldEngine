@@ -14,6 +14,10 @@ option(ENABLE_SHARED "Enable shared libraries" OFF)
 option(ENABLE_OBJECT "Build object library"    OFF)
 option(ENABLE_UNITY  "Enable Unity plugin"     OFF)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  set(EMSCRIPTEN)
+endif()
+
 #
 # Dependency
 #
@@ -67,7 +71,7 @@ endif()
 #
 
 # For Windows.
-if(WIN32)
+if(WIN32 AND NOT EMSCRIPTEN)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -85,7 +89,7 @@ if(WIN32)
 endif()
 
 # For macOS.
-if(APPLE AND NOT IOS)
+if(APPLE AND NOT IOS AND NOT EMSCRIPTEN)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -99,7 +103,7 @@ if(APPLE AND NOT IOS)
 endif()
 
 # For POSIX (X11).
-if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY)
+if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY AND NOT EMSCRIPTEN)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -117,6 +121,20 @@ if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY)
   )
 endif()
 
+# For Emscripten.
+if(EMSCRIPTEN)
+  set(SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/stdfile.c
+    src/emmain.c
+    src/alsound.c
+    src/glrender.c
+  )
+endif()
+
+# For Unity.
 if(ENABLE_UNITY)
   set(SOURCES
     src/image.c
@@ -238,7 +256,7 @@ if(ENABLE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
-if(UNIX AND NOT Haiku)
+if(UNIX AND NOT Haiku AND NOT EMSCRIPTEN)
   if(ENABLE_GLX)
     target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
   else()
@@ -258,7 +276,7 @@ target_include_directories(strato PRIVATE ${BZIP2_INCLUDE_DIRS})
 target_include_directories(strato PRIVATE ${ZLIB_INCLUDE_DIRS})
 
 # Windows: Add -Ires -Idx12headers/include/directx -Idx12headers/include/fxguids
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT EMSCRIPTEN)
   target_include_directories(strato PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/res
     ${CMAKE_BINARY_DIR}/dx12headers/include/directx
@@ -267,19 +285,19 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 # FreeBSD: Add -I/usr/local/include
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" AND NOT EMSCRIPTEN)
   target_include_directories(strato PRIVATE /usr/local/include)
   target_include_directories(strato PUBLIC  /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD" AND NOT EMSCRIPTEN)
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R7/include)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" AND NOT EMSCRIPTEN)
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R6/include)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R6/include)
 endif()
@@ -395,7 +413,7 @@ if(APPLE AND NOT IOS)
 endif()
 
 # POSIX GLX: Add -lGL -lGLX
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
   if(ENABLE_GLX)
     target_link_libraries(strato PRIVATE GL GLX)
     target_link_libraries(strato PUBLIC  GL GLX)
@@ -403,37 +421,37 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # POSIX: Add -lm -lpthread -lXpm -lX11
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
   target_link_libraries(strato PRIVATE m pthread Xpm X11)
   target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 endif()
 
 # Linux: Add -lasound
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT EMSCRIPTEN)
   target_link_libraries(strato PRIVATE asound)
   target_link_libraries(strato PUBLIC  asound)
 endif()
 
 # FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" AND NOT EMSCRIPTEN)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
   target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD" AND NOT EMSCRIPTEN)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" AND NOT EMSCRIPTEN)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R6/lib)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R6/lib)
 endif()
 
 # Haiku: Add -lbe -lmedia
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+if(CMAKE_SYSTEM_NAME STREQUAL "Haiku" AND NOT EMSCRIPTEN)
   target_link_libraries(strato PRIVATE be media)
   target_link_libraries(strato PUBLIC  be media)
 endif()

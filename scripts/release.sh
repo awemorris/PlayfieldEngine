@@ -110,11 +110,9 @@ rm -rf build
 # Wasm
 #
 
-cd projects/wasm
-make clean
-make
-cp index.html index.js index.wasm ../../dist/wasm/
-cd ../..
+./scripts/build-wasm.sh
+cp build-wasm/index.html dist/wasm/
+cp docs/wasm.md dist/wasm
 
 #
 # Unity

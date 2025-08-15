@@ -11,6 +11,8 @@
 #include "vm.h"
 #include "i18n.h"
 
+#include <stdio.h>
+
 static uint64_t lap_origin;
 
 /*

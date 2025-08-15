@@ -3,10 +3,5 @@
 set -eu
 
 rm -rf build-wasm
-mkdir build-wasm
-cd build-wasm
-
-emcmake cmake ..
-cmake --build . -j
-
-cd ..
+emcmake cmake -S . -B build-wasm -DENABLE_I18N=OFF
+cmake --build build-wasm --parallel

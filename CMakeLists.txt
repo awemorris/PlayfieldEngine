@@ -39,6 +39,11 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU"
   set(CMAKE_OBJC_FLAGS_RELEASE "${CMAKE_OBJC_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+  set(EMSCRIPTEN)
+  set(ENABLE_EMSCRIPTEN ON)
+endif()
+
 #
 # Dependencies
 #
@@ -181,9 +186,28 @@ if(WIN32)
   endif()
 endif()
 
-# Change the bundle name.
+# macOS: Change the bundle name.
 if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
+endif()
+
+# Emscripten
+if (EMSCRIPTEN)
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  set_target_properties(noct2d PROPERTIES OUTPUT_NAME index)
+  target_compile_definitions(noct2d PRIVATE USE_EMSCRIPTEN)
+  target_link_options(noct2d PRIVATE
+    -o index.html
+    -sSINGLE_FILE=1
+    -sTOTAL_MEMORY=536870912
+    -sNO_EXIT_RUNTIME=1
+    -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString]
+    -lopenal
+    -lidbfs.js
+    --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shell.html"
+    --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/pre.js"
+    --use-preload-plugins
+  )
 endif()
 
 #
