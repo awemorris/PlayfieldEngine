@@ -17,10 +17,6 @@ option(ENABLE_SHARED  "Enable shared libraries" OFF)
 # Target Detection
 #
 
-option(TARGET_WASM    "Emscripten"     OFF)
-option(TARGET_ANDROID "Android NDK"    OFF)
-option(TARGET_UNITY   "Unity plugin"   OFF)
-
 if(WIN32 AND NOT TARGET_UNITY)
   set(TARGET_WINDOWS ON)
 endif()
@@ -49,18 +45,18 @@ if(UNIX)
   set(TARGET_POSIX ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-  set(TARGET_WASM ON)
-  set(ENABLE_JIT        OFF)
-  set(ENABLE_I18N       OFF)
-endif()
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   set(TARGET_HAIKU ON)
 endif()
 
+# Wasm (Manual)
+if(TARGET_WASM)
+  set(ENABLE_JIT        OFF)
+  set(ENABLE_I18N       OFF)
+endif()
+
 # Android (Manual)
-if(TARGET_ADNROID)
+if(TARGET_ANDROID)
   set(ENABLE_JIT        OFF)
   set(ENABLE_I18N       OFF)
   set(ENABLE_SHARED     ON)

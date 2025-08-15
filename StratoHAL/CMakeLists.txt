@@ -49,12 +49,12 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
   set(TARGET_HAIKU ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
- set(TARGET_WASM ON)
+# Wasm (Manual)
+if(TARGET_WASM)
 endif()
 
 # Android (Manual)
-if(TARGET_ADNROID)
+if(TARGET_ANDROID)
 endif()
 
 # Unity (Manual)
