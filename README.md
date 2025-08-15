@@ -160,6 +160,7 @@ Create at your pace, wherever you are in the world.
 |               |Linux               |OpenGL / Soft Renderer                    |
 |               |*BSD                |OpenGL / Soft Renderer                    |
 |               |Haiku               |Soft Renderer                             |
+|               |Qt                  |OpenGL                                    |
 |Mobile         |iOS                 |Metal, via Xcode project                  |
 |               |Android             |OpenGL, via Android Studio project        |
 |Web            |WebAssembly         |WebGL, via Emscripten                     |
