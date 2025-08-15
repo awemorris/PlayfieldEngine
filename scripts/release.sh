@@ -34,16 +34,16 @@ cp -R projects/android/build.bat         dist/android/
 mkdir -p dist/android/app/src/main/java/com/noct2d/engineandroid
 cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
 
-mkdir dist/android/app/src/main/jniLibs/arm64-v8a
+mkdir -p dist/android/app/src/main/jniLibs/arm64-v8a
 cp build-android-aarch64/libnoct2d.so    dist/android/app/src/main/jniLibs/arm64-v8a/
 
-mkdir dist/android/app/src/main/jniLibs/armeabi-v7a
+mkdir -p dist/android/app/src/main/jniLibs/armeabi-v7a
 cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
 
-mkdir dist/android/app/src/main/jniLibs/x86_64
+mkdir -p dist/android/app/src/main/jniLibs/x86_64
 cp build-android-x86_64/libnoct2d.so     dist/android/app/src/main/jniLibs/x86_64/
 
-mkdir dist/android/app/src/main/jniLibs/x86
+mkdir -p dist/android/app/src/main/jniLibs/x86
 cp build-android-x86/libnoct2d.so        dist/android/app/src/main/jniLibs/x86/
 
 rm -rf build-android-aarch64
