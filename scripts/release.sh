@@ -22,21 +22,20 @@ mkdir dist/android
 
 ./scripts/build-android.sh
 
-mkdir dist/android/app/src/main/assets
 cp -R projects/android/app               dist/android/
 cp -R projects/android/gradle.properties dist/android/
 cp -R projects/android/build.gradle      dist/android/
 cp -R projects/android/gradlew           dist/android/
 cp -R projects/android/settings.gradle   dist/android/
 cp -R projects/android/gradlew.bat       dist/android/
-cp -R projects/gradle                    dist/android/
-cp -R projects/build.bat                 dist/android/
+cp -R projects/android/gradle            dist/android/
+cp -R projects/android/build.bat         dist/android/
 
-mkdir dist/android/app/src/main/java/com/noct2d/engineandroid
+mkdir -p dist/android/app/src/main/java/com/noct2d/engineandroid
 cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
 
 mkdir dist/android/app/src/main/jniLibs/arm64-v8a
-cp build-android-aarch64/libnoct2d.so      dist/android/app/src/main/jniLibs/arm64-v8a/
+cp build-android-aarch64/libnoct2d.so    dist/android/app/src/main/jniLibs/arm64-v8a/
 
 mkdir dist/android/app/src/main/jniLibs/armeabi-v7a
 cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
