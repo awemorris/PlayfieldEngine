@@ -182,6 +182,7 @@ rm -rf build-unity-xbox
 # Sample
 #
 
+mkdir dist/sample
 cp -R sample/* dist/sample/
 
 #
@@ -201,3 +202,5 @@ gh release create $VERSION \
    dist/Noct2D-all-platforms.zip \
    --title "Noct2D $VERSION" \
    --notes "This is the latest version of Noct2D!"
+
+rm -rf dist
