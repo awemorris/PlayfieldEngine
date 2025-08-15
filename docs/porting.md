@@ -5,10 +5,11 @@ Porting Status
 
 ### Windows Variants
 
+x86, x86_64, ARM, and Arm64 are supported.
+
 |System                |Tested |2D |3D |Sound |Description                    |
 |----------------------|-------|---|---|------|-------------------------------|
-|Windows 11 x64        |v      |v  |v  |v     |Direct3D 12/11/9               |
-|Windows 11 Arm64      |v      |v  |v  |v     |Direct3D 12/11/9               |
+|Windows 11            |v      |v  |v  |v     |Direct3D 12/11/9               |
 |Windows 10            |v      |v  |v  |v     |Direct3D 12/11/9               |
 |Windows 8.1           |v      |v  |v  |v     |Direct3D 11/9                  |
 |Windows 8             |v      |v  |v  |v     |Direct3D 11/9                  |
@@ -16,9 +17,9 @@ Porting Status
 |Windows Vista         |v      |v  |v  |v     |Direct3D 11/9                  |
 |Windows XP            |v      |v  |v  |v     |Direct3D 9                     |
 |Windows 2000          |v      |v  |v  |v     |Direct3D 9                     |
-|Windows ME            |       |v  |v  |v     |Direct3D 9 / Not Tested        |
-|Windows 98            |       |v  |v  |v     |Direct3D 9 / Not Tested        |
-|Windows 95            |       |v  |   |v     |                               |
+|Windows ME            |       |v  |v  |v     |Direct3D 9                     |
+|Windows 98            |       |v  |v  |v     |Direct3D 9                     |
+|Windows 95            |       |v  |   |v     |Not Tested                     |
 
 ### macOS
 
@@ -34,6 +35,8 @@ Porting Status
 |macOS 10.13 High Sierra |v      |v  |v  |v     |                               |
 
 ### Linux
+
+Both OpenGL and framebuffer are supported.
 
 |System                             |Tested |2D |3D |Sound |Description                    |
 |-----------------------------------|-------|---|---|------|-------------------------------|
@@ -78,7 +81,6 @@ Porting Status
 |System                |Tested |2D |3D |Sound |Description                    |
 |----------------------|-------|---|---|------|-------------------------------|
 |Wine 10.0 macOS       |v      |v  |v  |v     |Direct3D 12                    |
-|React OS              |       |v  |   |v     |                               |
 
 ### BSD Variants
 
@@ -96,7 +98,6 @@ Porting Status
 |Solaris 10            |       |v  |   |v     |                               |
 |AIX                   |       |v  |   |      |Generic POSIX port             |
 |HP-UX                 |       |v  |   |      |Generic POSIX port             |
-|Darwin                |v      |v  |   |      |Generic POSIX port             |
 
 ### Niche
 

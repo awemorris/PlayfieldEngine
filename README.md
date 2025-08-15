@@ -1,20 +1,20 @@
 Noct2D
 ======
 
-**Noct2D** is a game scripting runtime for the Noct language, often
-described as a "Game Engine" for Noct.
+Noct2D is a go-anywhere game engine that uses [NoctLang](https://github.com/awemorris/NoctLang) for scripting.
 
-It is designed to provide:
+- Tiny: Core runtime ~3.0MB for instant downloads and startup.
+- Fast: Low-latency game loops via JIT-optimized NoctLang.
+- Portable: Desktop, mobile, Web, consoles — all from a single codebase.
 
-- Scripting (NoctLang)
-- Graphics (DirectX12, Metal, and OpenGL)
-- Audio (DirectSound, Audio Unit, ALSA, and OpenAL)
-- Input
-- Cross-platform (Windows, macOS, Linux, iOS, Android, Consoles, and WebAssembly)
+It provides:
 
-Originally developed under the name "Fuel" and "NoctVM", Noct2D was
-reimagined to meet the demands of modern, production-ready
-environments across diverse platforms.
+- Scripting: NoctLang, a fast, lightweight, game-oriented language
+- Graphics: DirectX12, Metal, OpenGL
+- Audio: DirectSound, Audio Unit, ALSA, OpenAL
+- Input: Keybaord, mouse, touch, and gamepad.
+
+**Noct2D aims to be the most portable 2D game engine in the world!**
 
 ---
 
@@ -24,9 +24,10 @@ environments across diverse platforms.
   Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
 
 2. Clone and build from the repository:
-  ```sh
-  git clone --recursive https://github.com/awemorris/Noct2D.git
+  ```
+  git clone https://github.com/awemorris/Noct2D.git
   cd Noct2D
+  git submodule update --init
   cmake -B build .
   cmake --build build
   ./build/noct2d
@@ -71,7 +72,6 @@ Here's a simple example that displays an image following the mouse
 cursor. This shows the basic lifecycle: `setup` (window config),
 `start` (asset loading), and `frame` (per-frame logic).
 
-
 ```
 func setup() {
     var config = {
@@ -115,8 +115,8 @@ It runs smoothly even on older or low-spec machines — if you have a computer,
 there's a place for you to create.
 
 And if you're using something more powerful, like a modern MacBook or
-iPhone, Noct2D adapts to draw out the full capabilities of your
-device.
+a powerful gaming PC, Noct2D adapts to draw out the full capabilities
+of your device.
 
 You don't need the latest or most expensive hardware. Noct2D helps you
 go beyond your environment. It's a helpful companion for creators
@@ -136,7 +136,7 @@ Create at your pace, wherever you are in the world.
 
 * **Scripting**:
   Integrates [NoctLang](https://github.com/awemorris/NoctLang), a
-  mighty language designed for game scripting.
+  tiny yet mighty language designed for game scripting.
 
 * **Rendering**:
   Supports DirectX 9/11/12, Metal, OpenGL, and a fallback software
@@ -147,7 +147,7 @@ Create at your pace, wherever you are in the world.
   ALSA, and other APIs.
 
 * **Small Footprint**:
-  The entire runtime fits within ~2MB, making it suitable for embedded
+  The entire runtime fits within ~3MB, making it suitable for embedded
   systems or constrained environments.
 
 ### Platform Support
@@ -156,14 +156,15 @@ Create at your pace, wherever you are in the world.
 |---------------|--------------------|------------------------------------------|
 |Desktop        |Windows             |DirectX 12/11/9                           |
 |               |macOS               |Metal                                     |
-|               |Linux               |OpenGL                                    |
-|               |FreeBSD             |OpenGL                                    |
+|               |Linux               |OpenGL / Soft Renderer                    |
+|               |*BSD                |OpenGL / Soft Renderer                    |
+|               |Haiku               |Soft Renderer                             |
 |Mobile         |iOS                 |Metal, via Xcode project                  |
 |               |Android             |OpenGL, via Android Studio project        |
 |Web            |WebAssembly         |WebGL, via Emscripten                     |
-|Console        |Nintendo Switch™   |Unity Plugin (C++ Native)                 |
-|               |PlayStation® 5     |Unity Plugin (C++ Native)                 |
-|               |Xbox Series X\|S    |Unity Plugin (C++ Native)                 |
+|Console        |Nintendo Switch™   |Unity Plugin (Native)                     |
+|               |PlayStation® 5     |Unity Plugin (Native)                     |
+|               |Xbox Series X\|S    |Unity Plugin (Native)                     |
 
 ### Noct Language
 
@@ -172,8 +173,7 @@ for Noct2D. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
-including: **x86, x86_64, Arm32, Arm64, PowerPC32, PowerPC64, MIPS32,
-and MIPS64.**
+including both 32-bit and 64-bit of: **Intel, Arm, RISC-V, PowerPC, MIPS.**
 
 For platforms where JIT is restricted (such as mobile or consoles),
 NoctLang can fall back to AOT (ahead-of-time) compilation using a C
@@ -193,7 +193,7 @@ It includes:
 - A seamless workflow between code, assets, and runtime behavior
 
 By separating the **core runtime (Noct2D)** from the **development
-environment (NoctScript)**, you can choose to use the IDE when
+environment (NoctScript IDE)**, you can choose to use the IDE when
 convenient — or embed Noct2D directly into your own tools and
 pipelines.
 
