@@ -150,7 +150,7 @@ mkdir dist/unity/Assets/Plugins/Common
 cp -v build-unity-win64/libnoct2d.dll dist/unity/Assets/Plugins/x86_64/libnoct2d.dll
 cp -v build-unity-switch/libnoct2d.a dist/unity/Assets/Plugins/Switch/libnoct2d.a
 cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
-cp -v build-unity-xbox/libnoct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
+cp -v build-unity-xbox/noct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
 cp -v src/MainScene.unity dist/unity/Assets/
 cp -v docs/unity.md dist/unity/
 
