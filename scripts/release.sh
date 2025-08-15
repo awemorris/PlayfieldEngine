@@ -21,8 +21,8 @@ mkdir dist
 mkdir dist/windows-x86_64
 
 ./scripts/build-win-x86_64.sh
-cp build-win-x86_64/noct2d.exe dist/windows/
-cp build-win-x86_64/noct2dpack.exe dist/windows/
+cp build-win-x86_64/noct2d.exe dist/windows-x86_64/
+cp build-win-x86_64/noct2dpack.exe dist/windows-x86_64/
 rm -rf build-win-x86_64
 
 #
