@@ -141,7 +141,7 @@ cp -v StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
 cp -v StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
 cp -v StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
 cp -v StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
-mkdir dist/unity-src/Assets/Plugins
+mkdir dist/unity/Assets/Plugins
 mkdir dist/unity/Assets/Plugins/x86_64
 mkdir dist/unity/Assets/Plugins/Switch
 mkdir dist/unity/Assets/Plugins/PS5
