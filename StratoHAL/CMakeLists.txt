@@ -8,14 +8,91 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment ve
 # Configuration
 #
 
-option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
-option(ENABLE_I18N   "Enable translation"      ON)
-option(ENABLE_SHARED "Enable shared libraries" OFF)
-option(ENABLE_OBJECT "Build object library"    OFF)
-option(ENABLE_UNITY  "Enable Unity plugin"     OFF)
+option(ENABLE_GLX     "Enable OpenGL on X11"    ON)
+option(ENABLE_I18N    "Enable translation"      ON)
+option(ENABLE_SHARED  "Enable shared libraries" OFF)
+option(ENABLE_OBJECT  "Build object library"    OFF)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-  set(EMSCRIPTEN)
+#
+# Target Detection
+#
+
+option(TARGET_WASM    "Emscripten"     OFF)
+option(TARGET_ANDROID "Android NDK"    OFF)
+option(TARGET_UNITY   "Unity plugin"   OFF)
+
+if(WIN32)
+  set(TARGET_WINDOWS ON)
+endif()
+
+if(APPLE AND NOT IOS AND NOT TARGET_UNITY)
+  set(TARGET_MACOS ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(TARGET_LINUX ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+  set(TARGET_FREEBSD ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+  set(TARGET_NETBSD ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+  set(TARGET_OPENBSD ON)
+endif()
+
+if(UNIX)
+  set(TARGET_POSIX ON)
+endif()
+
+# Haiku
+if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+  set(TARGET_HAIKU ON)
+endif()
+
+# Wasm (Manual)
+if(TARGET_WASM)
+endif()
+
+# Android (Manual)
+if(TARGET_ADNROID)
+endif()
+
+# Unity (Manual)
+if(TARGET_UNITY)
+endif()
+
+#
+# Build Type
+#
+
+# Use "Release" build type by default.
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug or Release)" FORCE)
+endif()
+
+# Debug Configuration
+if(MSVC)
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Od /Zi /DDEBUG /UNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi /DDEBUG /UNDEBUG")
+else()
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
+endif()
+
+# Release Configuration
+if(MSVC)
+  # MSVC
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /DNDEBUG")
+elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU")
+  # GCC/Clang
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
 endif()
 
 #
@@ -71,7 +148,7 @@ endif()
 #
 
 # For Windows.
-if(WIN32 AND NOT EMSCRIPTEN)
+if(TARGET_WINDOWS)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -89,7 +166,7 @@ if(WIN32 AND NOT EMSCRIPTEN)
 endif()
 
 # For macOS.
-if(APPLE AND NOT IOS AND NOT EMSCRIPTEN)
+if(TARGET_MACOS)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -103,7 +180,7 @@ if(APPLE AND NOT IOS AND NOT EMSCRIPTEN)
 endif()
 
 # For POSIX (X11).
-if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY AND NOT EMSCRIPTEN)
+if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_HAIKU AND NOT TARGET_WASM AND NOT TARGET_UNITY)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -122,7 +199,7 @@ if(UNIX AND NOT APPLE AND NOT ENABLE_UNITY AND NOT EMSCRIPTEN)
 endif()
 
 # For Emscripten.
-if(EMSCRIPTEN)
+if(TARGET_WASM)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -134,8 +211,21 @@ if(EMSCRIPTEN)
   )
 endif()
 
+# For Android.
+if(TARGET_ANDROID)
+  set(SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/glrender.c
+    src/slsound.c
+    src/ndkmain.c
+    src/ndkfile.c
+  )
+endif()
+
 # For Unity.
-if(ENABLE_UNITY)
+if(TARGET_UNITY)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -145,7 +235,7 @@ if(ENABLE_UNITY)
 endif()
 
 # For Haiku.
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+if(TARGET_HAIKU)
   set(SOURCES
     src/image.c
     src/glyph.c
@@ -199,7 +289,7 @@ else()
 endif()
 
 # Windows specific.
-if(WIN32)
+if(TARGET_WINDOWS)
   enable_language(RC)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -210,7 +300,7 @@ if(WIN32)
 endif()
 
 # macOS specific
-if(APPLE)
+if(TARGET_MACOS)
   enable_language(OBJC)
 endif()
 
@@ -220,7 +310,7 @@ if(ENABLE_I18N)
 endif()
 
 # For Unity
-if(ENABLE_UNITY)
+if(TARGET_UNITY)
   target_compile_definitions(strato PRIVATE USE_UNITY)
 endif()
 
@@ -228,7 +318,7 @@ endif()
 # Archiver
 #
 
-if(NOT ENABLE_UNITY)
+if(NOT TARGET_WASM AND NOT TARGET_ANDROID AND NOT TARGET_IOS AND NOT TARGET_UNITY)
   add_library(
     stratopack
     STATIC
@@ -256,7 +346,7 @@ if(ENABLE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
-if(UNIX AND NOT Haiku AND NOT EMSCRIPTEN)
+if(TARGET_POSIX AND NOT TARGET_HAIKU AND NOT TARGET_WASM)
   if(ENABLE_GLX)
     target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
   else()
@@ -276,7 +366,7 @@ target_include_directories(strato PRIVATE ${BZIP2_INCLUDE_DIRS})
 target_include_directories(strato PRIVATE ${ZLIB_INCLUDE_DIRS})
 
 # Windows: Add -Ires -Idx12headers/include/directx -Idx12headers/include/fxguids
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT EMSCRIPTEN)
+if(TARGET_WINDOWS)
   target_include_directories(strato PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/res
     ${CMAKE_BINARY_DIR}/dx12headers/include/directx
@@ -285,19 +375,19 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT EMSCRIPTEN)
 endif()
 
 # FreeBSD: Add -I/usr/local/include
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" AND NOT EMSCRIPTEN)
+if(TARGET_FREEBSD)
   target_include_directories(strato PRIVATE /usr/local/include)
   target_include_directories(strato PUBLIC  /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD" AND NOT EMSCRIPTEN)
+if(TARGET_NETBSD)
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R7/include)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" AND NOT EMSCRIPTEN)
+if(TARGET_OPENBSD)
   target_include_directories(strato PRIVATE /usr/local/include /usr/X11R6/include)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R6/include)
 endif()
@@ -306,33 +396,8 @@ endif()
 # CFLAGS
 #
 
-# Use "Release" build type by default.
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug or Release)" FORCE)
-endif()
-
-# Debug Configuration
-if(MSVC)
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Od /Zi /DDEBUG /UNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi /DDEBUG /UNDEBUG")
-else()
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -O0 -g3 -UNDEBUG")
-endif()
-
-# Release Configuration
-if(MSVC)
-  # MSVC
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /DNDEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /DNDEBUG")
-elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU")
-  # GCC/Clang
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
-endif()
-
 # Windows compile options.
-if(WIN32)
+if(TARGET_WINDOWS)
   # -municode
   if(MINGW)
     target_compile_options(strato PUBLIC -municode)
@@ -367,7 +432,7 @@ if(ENABLE_SHARED)
 endif()
 
 # Windows link options.
-if(WIN32)
+if(TARGET_WINDOWS)
   # DLLs.
   target_link_libraries(strato PUBLIC
     gdi32
@@ -396,7 +461,7 @@ if(WIN32)
 endif()
 
 # macOS link options.
-if(APPLE AND NOT IOS)
+if(TARGET_MACOS)
   target_compile_options(strato PRIVATE -fmodules)
   target_compile_options(strato PUBLIC  -fmodules)
 
@@ -413,7 +478,7 @@ if(APPLE AND NOT IOS)
 endif()
 
 # POSIX GLX: Add -lGL -lGLX
-if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
+if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_WASM)
   if(ENABLE_GLX)
     target_link_libraries(strato PRIVATE GL GLX)
     target_link_libraries(strato PUBLIC  GL GLX)
@@ -421,37 +486,42 @@ if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
 endif()
 
 # POSIX: Add -lm -lpthread -lXpm -lX11
-if(UNIX AND NOT APPLE AND NOT EMSCRIPTEN)
+if(TARGET_POSIX AND NOT TARGET_MACOS AND NOT TARGET_WASM)
   target_link_libraries(strato PRIVATE m pthread Xpm X11)
   target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 endif()
 
 # Linux: Add -lasound
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT EMSCRIPTEN)
+if(TARGET_LINUX AND NOT TARGET_UNITY)
   target_link_libraries(strato PRIVATE asound)
   target_link_libraries(strato PUBLIC  asound)
 endif()
 
 # FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" AND NOT EMSCRIPTEN)
+if(TARGET_FREEBSD)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
   target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD" AND NOT EMSCRIPTEN)
+if(TARGET_NETBSD)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" AND NOT EMSCRIPTEN)
+if(TARGET_OPENBSD)
   target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R6/lib)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R6/lib)
 endif()
 
+# Android: Add -lgles
+if(TARGET_ANDROID)
+  target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
+endif()
+
 # Haiku: Add -lbe -lmedia
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku" AND NOT EMSCRIPTEN)
+if(TARGET_HAIKU)
   target_link_libraries(strato PRIVATE be media)
   target_link_libraries(strato PUBLIC  be media)
 endif()

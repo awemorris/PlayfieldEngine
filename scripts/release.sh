@@ -13,56 +13,41 @@ fi
 
 rm -rf dist Noct2D-latest.zip
 mkdir dist
-mkdir dist/windows
-mkdir dist/windows-arm64
-mkdir dist/macos
-mkdir dist/linux-x86_64
-mkdir dist/linux-arm64
-mkdir dist/wasm
-mkdir dist/unity
-mkdir dist/sample
 
 #
-# Windows x86
+# Windows x86_64
 #
 
-rm -rf build
-mkdir build
-cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw-x86_64-toolchain.cmake
-cmake --build .
-cd ..
-cp build/noct2d.exe dist/windows/
-cp build/noct2dpack.exe dist/windows/
-rm -rf build
+mkdir dist/windows-x86_64
+
+./scripts/build-win-x86_64.sh
+cp build-win-x86_64/noct2d.exe dist/windows/
+cp build-win-x86_64/noct2dpack.exe dist/windows/
+rm -rf build-win-x86_64
 
 #
 # Windows arm64
 #
 
-rm -rf build
-mkdir build
-cd build
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw-arm64-toolchain.cmake
-cmake --build .
-cd ..
-cp build/noct2d.exe dist/windows-arm64/
-cp build/noct2dpack.exe dist/windows-arm64/
-rm -rf build
+mkdir dist/windows-arm64
+
+./scripts/build-win-arm64.sh
+cp build-win-arm64/noct2d.exe dist/windows-arm64/
+cp build-win-arm64/noct2dpack.exe dist/windows-arm64/
+rm -rf build-win-arm64
 
 #
 # macOS
 #
 
+mkdir dist/macos
+
 export MACOSX_DEPLOYMENT_TARGET=10.13
 
-rm -rf build
-mkdir build
-cd build
-
 # Build.
-cmake .. -G Ninja
-cmake --build .
+./scripts/build-macos.sh
+
+cd build-macos
 
 # Sign & Notarize.
 codesign --timestamp --options runtime --entitlements ../resources/macos.entitlements --deep --force --sign "Developer ID Application" Noct2D.app
@@ -78,58 +63,98 @@ hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname Noct2D Noct2D.dmg
 codesign --sign 'Developer ID Application' Noct2D.dmg
 
 cd ..
-cp build/Noct2D.dmg dist/macos/
-cp build/noct2dpack dist/macos/
-rm -rf build
+
+cp build-macos/Noct2D.dmg dist/macos/
+cp build-macos/noct2dpack dist/macos/
+rm -rf build-macos
 
 #
 # Linux x86_64
 #
 
+mkdir dist/linux-x86_64
+
 docker build --platform=linux/amd64 -t ubuntu22-x86_64 ./scripts
-mkdir build
-docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-x86_64 cmake .. -G Ninja
-docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-x86_64 cmake --build .
-cp build/noct2d dist/linux-x86_64/
-cp build/noct2dpack dist/linux-x86_64/
-rm -rf build
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 ./scripts/build-linux-x86_64.sh
+cp build-linux-x86_64/noct2d dist/linux-x86_64/
+cp build-linux-x86_64/noct2dpack dist/linux-x86_64/
+rm -rf build-linux-x86_64
 
 #
 # Linux arm64
 #
 
+mkdir dist/linux-arm64
+
 docker build --platform=linux/arm64 -t ubuntu22-arm64 ./scripts
-mkdir build
-docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-arm64 cmake .. -G Ninja
-docker run --rm -it -v "$PWD":/src -w /src/build ubuntu22-arm64 cmake --build .
-cp build/noct2d dist/linux-arm64/
-cp build/noct2dpack dist/linux-arm64/
-rm -rf build
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-arm64 ./scripts/build-linux-arm64.sh
+cp build-linux-arm64/noct2d dist/linux-arm64/
+cp build-linux-arm64/noct2dpack dist/linux-arm64/
+rm -rf build-linux-arm64
 
 #
 # Wasm
 #
 
+mkdir dist/wasm
+
 ./scripts/build-wasm.sh
+
 cp build-wasm/index.html dist/wasm/
 cp docs/wasm.md dist/wasm
+
+#
+# Android
+#
+
+mkdir dist/android
+
+./scripts/build-android.sh
+
+mkdir dist/android
+mkdir dist/android/app/src/main/cpp
+mkdir dist/android/app/src/main/assets
+
+cp -R projects/android/app               dist/android/
+cp -R projects/android/gradle.properties dist/android/
+cp -R projects/android/build.gradle      dist/android/
+cp -R projects/android/gradlew           dist/android/
+cp -R projects/android/settings.gradle   dist/android/
+cp -R projects/android/gradlew.bat       dist/android/
+cp -R projects/gradle                    dist/android/
+cp -R projects/build.bat                 dist/android/
+
+mkdir dist/android/app/src/main/java/com/noct2d/engineandroid
+cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
+
+mkdir dist/android/app/src/main/jniLibs/arm64-v8a
+cp build-android-aarch64/libnoct2d.so      dist/android/app/src/main/jniLibs/arm64-v8a/
+
+mkdir dist/android/app/src/main/jniLibs/armeabi-v7a
+cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
+
+mkdir dist/android/app/src/main/jniLibs/x86_64
+cp build-android-x86_64/libnoct2d.so     dist/android/app/src/main/jniLibs/x86_64/
+
+mkdir dist/android/app/src/main/jniLibs/x86
+cp build-android-x86/libnoct2d.so        dist/android/app/src/main/jniLibs/x86/
+
+rm -rf build-android-aarch64
+rm -rf build-android-armv7
+rm -rf build-android-x86_64
+rm -rf build-android-x86
 
 #
 # Unity
 #
 
-rm -rf dist/unity
-rm -rf build-unity-win64
-rm -rf build-unity-switch
-rm -rf build-unity-ps5
-rm -rf build-unity-xbox
+mkdir dist/unity
 
 ./scripts/build-unity-win64.sh
 ./scripts/build-unity-switch.sh
 ./scripts/build-unity-ps5.sh
 ./scripts/build-unity-xbox.sh
 
-mkdir dist/unity
 mkdir dist/unity/Assets
 mkdir dist/unity/Assets/StreamingAssets
 mkdir dist/unity/Assets/Resources
@@ -151,6 +176,11 @@ cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
 cp -v build-unity-xbox/noct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
 cp -v src/MainScene.unity dist/unity/Assets/
 cp -v docs/unity.md dist/unity/
+
+rm -rf build-unity-win64
+rm -rf build-unity-switch
+rm -rf build-unity-ps5
+rm -rf build-unity-xbox
 
 #
 # Sample

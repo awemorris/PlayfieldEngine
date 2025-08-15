@@ -443,6 +443,11 @@ bool log_error(const char *s, ...)
 	return true;
 }
 
+bool log_out_of_memory(void)
+{
+	log_error("Out of memory.");
+}
+
 void notify_image_update(struct image *img)
 {
 	opengl_notify_image_update(img);

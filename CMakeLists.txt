@@ -8,11 +8,75 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment ve
 # Configuration
 #
 
-option(ENABLE_GLX    "Enable OpenGL on X11"    ON)
-option(ENABLE_BUNDLE "Enable macOS bundle"     ON)
-option(ENABLE_I18N   "Enable translation"      ON)
-option(ENABLE_SHARED "Enable shared libraries" OFF)
-option(ENABLE_UNITY  "Enable Unity plugin"     OFF)
+option(ENABLE_GLX     "Enable OpenGL on X11"    ON)
+option(ENABLE_BUNDLE  "Enable macOS bundle"     ON)
+option(ENABLE_I18N    "Enable translation"      ON)
+option(ENABLE_SHARED  "Enable shared libraries" OFF)
+
+#
+# Target Detection
+#
+
+option(TARGET_WASM    "Emscripten"     OFF)
+option(TARGET_ANDROID "Android NDK"    OFF)
+option(TARGET_UNITY   "Unity plugin"   OFF)
+
+if(WIN32 AND NOT TARGET_UNITY)
+  set(TARGET_WINDOWS ON)
+endif()
+
+if(APPLE AND NOT IOS AND NOT TARGET_UNITY)
+  set(TARGET_MACOS ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(TARGET_LINUX ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+  set(TARGET_FREEBSD ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+  set(TARGET_NETBSD ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+  set(TARGET_OPENBSD ON)
+endif()
+
+if(UNIX)
+  set(TARGET_POSIX ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+  set(TARGET_HAIKU ON)
+endif()
+
+# Wasm (Manual)
+if(TARGET_WASM)
+  set(ENABLE_JIT        OFF)
+  set(ENABLE_I18N       OFF)
+endif()
+
+# Android (Manual)
+if(TARGET_ADNROID)
+  set(ENABLE_JIT        OFF)
+  set(ENABLE_I18N       OFF)
+  set(ENABLE_SHARED     ON)
+  set(ENABLE_OBJECT     ON)
+endif()
+
+# Unity (Manual)
+if(TARGET_UNITY)
+  set(ENABLE_JIT        OFF)
+  set(ENABLE_I18N       OFF)
+  set(ENABLE_OBJECT     ON)
+endif()
+
+#
+# Release/Debug
+#
 
 # Use "Release" build type by default.
 if(NOT CMAKE_BUILD_TYPE)
@@ -37,11 +101,6 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU"
   # GCC/Clang
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
   set(CMAKE_OBJC_FLAGS_RELEASE "${CMAKE_OBJC_FLAGS_RELEASE} -O2 -g0 -DNDEBUG")
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-  set(EMSCRIPTEN)
-  set(ENABLE_EMSCRIPTEN ON)
 endif()
 
 #
@@ -94,56 +153,58 @@ if(ENABLE_I18N)
   )
 endif()
 
-if(WIN32 AND NOT_UNITY)
+if(TARGET_WINDOWS AND NOT TARGET_UNITY)
   set(RESOURCES
     resources/resource.rc
   )
 endif()
 
-if(NOT ENABLE_UNITY)
+if(TARGET_WASM OR TARGET_ANDROID OR TARGET_UNITY)
+  if(ENABLE_SHARED)
+    add_library(
+      noct2d
+      SHARED
+      ${BASE_SOURCES}
+      ${I18N_SOURCES}
+      ${RESOURCES}
+      $<TARGET_OBJECTS:png>
+      $<TARGET_OBJECTS:jpeg>
+      $<TARGET_OBJECTS:webp>
+      $<TARGET_OBJECTS:vorbisfile>
+      $<TARGET_OBJECTS:vorbis>
+      $<TARGET_OBJECTS:ogg>
+      $<TARGET_OBJECTS:freetype>
+      $<TARGET_OBJECTS:brotlidec>
+      $<TARGET_OBJECTS:brotlicommon>
+      $<TARGET_OBJECTS:bz2>
+      $<TARGET_OBJECTS:z>
+    )
+  else()
+    add_library(
+      noct2d
+      STATIC
+      ${BASE_SOURCES}
+      ${I18N_SOURCES}
+      ${RESOURCES}
+      $<TARGET_OBJECTS:png>
+      $<TARGET_OBJECTS:jpeg>
+      $<TARGET_OBJECTS:webp>
+      $<TARGET_OBJECTS:vorbisfile>
+      $<TARGET_OBJECTS:vorbis>
+      $<TARGET_OBJECTS:ogg>
+      $<TARGET_OBJECTS:freetype>
+      $<TARGET_OBJECTS:brotlidec>
+      $<TARGET_OBJECTS:brotlicommon>
+      $<TARGET_OBJECTS:bz2>
+      $<TARGET_OBJECTS:z>
+    )
+  endif()
+else()
   add_executable(
     noct2d
     ${BASE_SOURCES}
     ${I18N_SOURCES}
     ${RESOURCES}
-  )
-elseif(ENABLE_SHARED)
-  add_library(
-    noct2d
-    SHARED
-    ${BASE_SOURCES}
-    ${I18N_SOURCES}
-    ${RESOURCES}
-    $<TARGET_OBJECTS:png>
-    $<TARGET_OBJECTS:jpeg>
-    $<TARGET_OBJECTS:webp>
-    $<TARGET_OBJECTS:vorbisfile>
-    $<TARGET_OBJECTS:vorbis>
-    $<TARGET_OBJECTS:ogg>
-    $<TARGET_OBJECTS:freetype>
-    $<TARGET_OBJECTS:brotlidec>
-    $<TARGET_OBJECTS:brotlicommon>
-    $<TARGET_OBJECTS:bz2>
-    $<TARGET_OBJECTS:z>
-  )
-else()
-  add_library(
-    noct2d
-    STATIC
-    ${BASE_SOURCES}
-    ${I18N_SOURCES}
-    ${RESOURCES}
-    $<TARGET_OBJECTS:png>
-    $<TARGET_OBJECTS:jpeg>
-    $<TARGET_OBJECTS:webp>
-    $<TARGET_OBJECTS:vorbisfile>
-    $<TARGET_OBJECTS:vorbis>
-    $<TARGET_OBJECTS:ogg>
-    $<TARGET_OBJECTS:freetype>
-    $<TARGET_OBJECTS:brotlidec>
-    $<TARGET_OBJECTS:brotlicommon>
-    $<TARGET_OBJECTS:bz2>
-    $<TARGET_OBJECTS:z>
   )
 endif()
 
@@ -166,33 +227,27 @@ if(ENABLE_SHARED)
   target_compile_definitions(noct2d PRIVATE USE_SHARED)
 endif()
 
-if(ENABLE_UNITY)
+if(TARGET_UNITY)
   target_compile_definitions(noct2d PRIVATE USE_UNITY)
 endif()
 
-if(WIN32)
+if(TARGET_WINDOWS)
   if(MSVC)
     target_compile_options(noctlang PRIVATE /utf-8)
-  else()
-    target_compile_options(noctlang PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
-  endif()
-endif()
-
-if(WIN32)
-  if(MSVC)
     target_link_options(noct2d PRIVATE /SUBSYSTEM:WINDOWS)
   else()
+    target_compile_options(noctlang PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
     target_link_options(noct2d PRIVATE -mwindows -static)
   endif()
 endif()
 
-# macOS: Change the bundle name.
-if (APPLE AND NOT IOS AND ENABLE_BUNDLE)
+# macOS: Make the bundle name capital.
+if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
 endif()
 
 # Emscripten
-if (EMSCRIPTEN)
+if(TARGET_WASM)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME index)
   target_compile_definitions(noct2d PRIVATE USE_EMSCRIPTEN)
@@ -214,7 +269,7 @@ endif()
 # Packager
 #
 
-if(NOT ENABLE_UNITY)
+if(NOT TARGET_WASM AND NOT TARGET_ANDROID AND NOT TARGET_UNITY)
   add_executable(
     noct2dpack
     src/noct2dpack.c
@@ -226,7 +281,7 @@ endif()
 # macOS Bundle
 #
 
-if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
+if(TARGET_MACOS)
   # Make an app bundle.
   set_target_properties(noct2d PROPERTIES
     MACOSX_BUNDLE TRUE

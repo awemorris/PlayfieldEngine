@@ -1,9 +1,5 @@
 #!/bin/sh
 
 rm -rf build-unity-xbox
-mkdir build-unity-xbox
-cd build-unity-xbox
-cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/unity-xbox.cmake
-ninja
-cd ..
-
+cmake -S . -B build-unity-xbox -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/unity-xbox.cmake
+cmake --build build-unity-xbox
