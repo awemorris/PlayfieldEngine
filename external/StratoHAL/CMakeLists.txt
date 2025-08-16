@@ -221,6 +221,20 @@ if(STRATO_TARGET_WASM)
   )
 endif()
 
+# For iOS.
+if(STRATO_TARGET_IOS)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/stdfile.c
+    src/uimain.m
+    src/aunit.c
+    src/GameRenderer.m
+    src/GameShaders.c
+  )
+endif()
+
 # For Android.
 if(STRATO_TARGET_ANDROID)
   set(STRATO_SOURCES

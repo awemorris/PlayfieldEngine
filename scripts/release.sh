@@ -90,7 +90,7 @@ cmake --build --preset macos
 cd build-macos
 
 # Sign & Notarize.
-codesign --timestamp --options runtime --entitlements ../resources/macos.entitlements --deep --force --sign "Developer ID Application" Noct2D.app
+codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" Noct2D.app
 ditto -c -k --sequesterRsrc --keepParent Noct2D.app Noct2D.zip
 source ../.credential
 xcrun notarytool submit Noct2D.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_PASSWORD" --wait
@@ -184,17 +184,17 @@ xcodebuild -create-xcframework \
 
 # Copy.
 mkdir                                             dist/ios
-cp -R projects/ios/Assets.xcassets                dist/ios/
-cp    projects/ios/entry.c                        dist/ios/
-cp    projects/ios/GameShaders.metal              dist/ios/
-cp    projects/ios/GameShaderTypes.h              dist/ios/
-cp    projects/ios/ios.entitlements               dist/ios/
-cp    projects/ios/Main.storyboard                dist/ios/
-cp -R Noct2D.xcframework                          dist/ios/
-mkdir                                             dist/ios/Resources/
-mkdir                                             dist/ios/Resources/video
 mkdir                                             dist/ios/ios.xcodeproj
 cp    projects/ios/ios.xcodeproj/project.pbxproj  dist/ios/ios.xcodeproj/
+mkdir                                             dist/ios/ios
+cp -R projects/ios/ios/Assets.xcassets            dist/ios/ios/
+cp    projects/ios/ios/entry.c                    dist/ios/ios/
+cp    projects/ios/ios/ios.entitlements           dist/ios/ios/
+cp    projects/ios/ios/LaunchScreen.storyboard    dist/ios/ios/
+cp -R Noct2D.xcframework                          dist/ios/ios/
+mkdir                                             dist/ios/Resources/
+cp    resources/ios/product.img                   dist/ios/Resources/
+mkdir                                             dist/ios/Resources/video
 
 rm -rf build-ios-device
 rm -rf build-ios-simulator

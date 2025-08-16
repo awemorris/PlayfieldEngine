@@ -17,13 +17,10 @@
 #import "GameViewControllerProtocol.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
+@property (strong, nonatomic) UIWindow *window;
 @end
 
 @interface ViewController : UIViewController <GameViewControllerProtocol>
-@end
-
-@interface SceneDelegate : UIResponder <UIWindowSceneDelegate>
-@property (strong, nonatomic) UIWindow * window;
 @end
 
 @interface GameView : MTKView

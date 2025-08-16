@@ -177,6 +177,17 @@
       }
     },
     {
+      "name":           "ios",
+      "displayName":    "iOS",
+      "generator":      "Xcode",
+      "binaryDir":      "${sourceDir}/build-ios",
+      "toolchainFile":  "${sourceDir}/cmake/toolchains/ios.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":              "Debug",
+        "NOCT2D_TARGET_IOS":             "ON"
+      }
+    },
+    {
       "name":           "ios-device",
       "displayName":    "iOS Device",
       "generator":      "Ninja",

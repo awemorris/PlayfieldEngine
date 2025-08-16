@@ -102,7 +102,6 @@ else()
   endif()
 
   # No automatic detection for:
-  #  - iOS
   #  - Android
   #  - Wasm (Emscripten)
   #  - Unity
@@ -425,15 +424,59 @@ if(NOCT2D_TARGET_MACOS AND NOCT2D_ENABLE_BUNDLE)
   )
 
   # Set an icon.
-  set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon512.png")
+  set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/icon512.png")
   target_sources(noct2d PRIVATE ${APP_ICON})
-  set_source_files_properties(${APP_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-  set_target_properties(noct2d PROPERTIES MACOSX_BUNDLE_ICON_FILE "icon512.png")
+  set_source_files_properties(${APP_ICON} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources"
+  )
+  set_target_properties(noct2d PROPERTIES
+    MACOSX_BUNDLE_ICON_FILE "icon512.png"
+  )
 
   # Copy the product.img file.
-  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/product.img")
+  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/product.img")
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
   target_sources(noct2d PRIVATE ${APP_GAME_DATA})
+endif()
+
+#
+# iOS
+#
+
+if(NOCT2D_TARGET_IOS)
+  # Make the "Noct2D" sceme only.
+  set(CMAKE_XCODE_GENERATE_SCHEME OFF)
+  set_target_properties(noct2d PROPERTIES
+    XCODE_GENERATE_SCHEME TRUE
+    XCODE_SCHEME_NAME "Noct2D"
+  )
+
+  # Use the "Info.plist.ios" file.
+  set_target_properties(noct2d PROPERTIES
+    MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/ios/Info.plist"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.ios-noct2d"
+  )
+
+  # Set an icon.
+  set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/icon512.png")
+  target_sources(noct2d PRIVATE ${APP_ICON})
+  set_source_files_properties(${APP_ICON} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources"
+  )
+  set_target_properties(noct2d PROPERTIES
+    MACOSX_BUNDLE_ICON_FILE "icon512.png"
+  )
+
+  # Copy the resource files.
+  set(resources
+    resources/ios/product.img
+    resources/ios/LaunchScreen.storyboard
+  )
+  set_source_files_properties(${resources} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources"
+  )
+  target_sources(noct2d PRIVATE ${resources})
 endif()

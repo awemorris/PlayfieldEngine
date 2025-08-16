@@ -38,13 +38,10 @@ static BOOL isContinuousSwipeEnabled;
 //
 
 int main2(int argc, char * argv[]) {
-    NSString * appDelegateClassName;
-    @autoreleasepool {
-        // Setup code that might create autoreleased objects goes here.
-        appDelegateClassName = NSStringFromClass([AppDelegate class]);
-    }
     setlocale(LC_NUMERIC, "C");
-    return UIApplicationMain(argc, argv, nil, appDelegateClassName);
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
 }
 
 //
@@ -56,23 +53,13 @@ int main2(int argc, char * argv[]) {
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application
+didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = [ViewController new];
+    [self.window makeKeyAndVisible];
     return YES;
-}
-
-#pragma mark - UISceneSession lifecycle
-
-- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
-    // Called when a new scene session is being created.
-    // Use this method to select a configuration to create the new scene with.
-    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
-}
-
-- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
-    // Called when the user discards a scene session.
-    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 }
 
 @end
@@ -103,18 +90,40 @@ int main2(int argc, char * argv[]) {
     BOOL _isVideoPlaying;
 }
 
+- (void)loadView {
+    self.view = [[GameView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    _view.frame = self.view.bounds;
+
+    CGFloat scale = UIScreen.mainScreen.nativeScale;
+    _view.contentScaleFactor = scale;
+    _view.autoResizeDrawable = YES;
+    _view.drawableSize = (CGSize){
+        _view.bounds.size.width  * scale,
+        _view.bounds.size.height * scale
+    };
+}
+
 // Called when the view is loaded.
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     // Initialize the file HAL.
     if(!init_file())
         exit(1);
-
+    
     // Do a boot callback to acquire a screen configuration.
     if (!on_event_boot(&window_title, &screen_width, &screen_height))
         exit(1);
-
+    
     // Initialize the sound HAL.
     if(!init_aunit())
         exit(1);
@@ -136,16 +145,17 @@ int main2(int argc, char * argv[]) {
     // Set multi-touch.
     self.view.multipleTouchEnabled = YES;
 
-    // Setup a rendering timer.
-    [NSTimer scheduledTimerWithTimeInterval:1.0/60.0
-                                     target:self
-                                   selector:@selector(timerFired:)
-                                   userInfo:nil
-                                    repeats:YES];
-
     // Do a start callback.
     if(!on_event_start())
         exit(1);
+
+    // Start rendering.
+    _view.backgroundColor = [UIColor blackColor];
+    _view.preferredFramesPerSecond = 60;
+    _view.enableSetNeedsDisplay = NO;
+    _view.paused = NO;
+    _view.delegate = _renderer;
+    gameRendererStartFlag = TRUE;
 }
 
 // Calculate the viewport size.
@@ -186,11 +196,6 @@ int main2(int argc, char * argv[]) {
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self updateViewport:_view.frame.size];
-}
-
-// Called every frame.
-- (void)timerFired:(NSTimer *)timer {
-    [_view setNeedsDisplay];
 }
 
 // Get the screen scale.
@@ -286,6 +291,17 @@ int main2(int argc, char * argv[]) {
     int _touchStartX;
     int _touchStartY;
     int _touchLastY;
+}
+
++ (Class)layerClass {
+    return [CAMetalLayer class];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if ((self = [super initWithFrame:frame])) {
+        // Init here.
+    }
+    return self;
 }
 
 // Called when touches began.
@@ -468,10 +484,10 @@ char *make_real_path(const char *fname)
         }
 
         // If an mp4 file:
-        if(strncmp(fname, "mov/", 4) == 0) {
+        if(strncmp(fname, "video/", 4) == 0) {
             // Return an bundle resource path.
             *strstr(fname, ".") = '\0';
-            NSString *basename = [NSString stringWithFormat:@"mov/%s", fname];
+            NSString *basename = [NSString stringWithFormat:@"video/%s", fname];
             NSString *path = [[NSBundle mainBundle] pathForResource:basename ofType:@"mp4"];
             const char *cstr = [path UTF8String];
             return strdup(cstr);
@@ -480,7 +496,7 @@ char *make_real_path(const char *fname)
         // If the package:
         if(strcmp(fname, PACKAGE_FILE) == 0) {
             // Return a bundle resource path.
-            NSString *path = [[NSBundle mainBundle] pathForResource:@"package" ofType:@"dat"];
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"product" ofType:@"img"];
             const char *cstr = [path UTF8String];
             return strdup(cstr);
         }

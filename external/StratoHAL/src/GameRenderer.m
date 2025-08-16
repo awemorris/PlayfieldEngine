@@ -102,13 +102,12 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     theViewController = controller;
 
     // Load shaders.
-#if defined(TARGET_MACOS)
     id<MTLLibrary> defaultLibrary = [theDevice newLibraryWithSource:[NSString stringWithUTF8String:gameShader] options:nil error:&error];
     id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
     if (!vertexFunction) {
         NSLog(@"vertexFunction not found!");
     }
-#else
+#if 0
     id<MTLLibrary> defaultLibrary = [theDevice newDefaultLibrary];
 #endif
     NSAssert(defaultLibrary, @"Failed to create library: %@", error);
@@ -209,6 +208,8 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 
 - (void)drawInMTKView:(nonnull MTKView *)view {
     if (!gameRendererStartFlag)
+        return;
+    if (gameRendererExitFlag)
         return;
     if (view.currentRenderPassDescriptor == nil)
         return;
