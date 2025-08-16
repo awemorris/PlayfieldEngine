@@ -1,64 +1,73 @@
 cmake_minimum_required(VERSION 3.16)
 project(StratoHAL LANGUAGES C CXX)
 
-set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
-
 #
 # Configuration
 #
 
-option(ENABLE_GLX     "Enable OpenGL on X11"    ON)
-option(ENABLE_I18N    "Enable translation"      ON)
-option(ENABLE_SHARED  "Enable shared libraries" OFF)
-option(ENABLE_OBJECT  "Build object library"    OFF)
+# Target
+option(STRATO_TARGET_WINDOWS       "Build for Windows"       OFF)
+option(STRATO_TARGET_MACOS         "Build for macOS"         OFF)
+option(STRATO_TARGET_LINUX         "Build for Linux"         OFF)
+option(STRATO_TARGET_IOS           "Build for iOS"           OFF)
+option(STRATO_TARGET_ANDROID       "Build for Android"       OFF)
+option(STRATO_TARGET_WASM          "Build for Emscripten"    OFF)
+option(STRATO_TARGET_UNITY         "Build for Unity"         OFF)
+option(STRATO_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
+option(STRATO_TARGET_NETBSD        "Build for NetBSD"        OFF)
+option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"       OFF)
+option(STRATO_TARGET_HAIKU         "Build for Haiku"         OFF)
+
+# Options
+option(STRATO_ENABLE_GLX           "Enable OpenGL on X11"    OFF)
+option(STRATO_ENABLE_I18N          "Enable translation"      OFF)
+option(STRATO_ENABLE_STATIC        "Build a static library"  OFF)
+option(STRATO_ENABLE_SHARED        "Build a dynamic library" OFF)
 
 #
-# Target Detection
+# Automatic Target Detection
 #
 
-if(WIN32 AND NOT TARGET_UNITY)
-  set(TARGET_WINDOWS ON)
-endif()
-
-if(APPLE AND NOT IOS AND NOT TARGET_UNITY)
-  set(TARGET_MACOS ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(TARGET_LINUX ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  set(TARGET_FREEBSD ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  set(TARGET_NETBSD ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  set(TARGET_OPENBSD ON)
-endif()
-
-if(UNIX)
-  set(TARGET_POSIX ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  set(TARGET_HAIKU ON)
-endif()
-
-# Wasm (Manual)
-if(TARGET_WASM)
-endif()
-
-# Android (Manual)
-if(TARGET_ANDROID)
-endif()
-
-# Unity (Manual)
-if(TARGET_UNITY)
+# For when a target is manually specified.
+if(   STRATO_TARGET_WINDOWS
+   OR STRATO_TARGET_MACOS
+   OR STRATO_TARGET_LINUX
+   OR STRATO_TARGET_IOS
+   OR STRATO_TARGET_ANDROID
+   OR STRATO_TARGET_WASM
+   OR STRATO_TARGET_UNITY
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD
+)
+  # A target and options are manually specified.
+else()   
+  if(WIN32)
+    set(STRATO_TARGET_WINDOWS    ON)
+  endif()
+  if(APPLE AND NOT IOS)
+    set(STRATO_TARGET_MACOS      ON)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(STRATO_TARGET_LINUX      ON)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    set(STRATO_TARGET_FREEBSD    ON)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+    set(STRATO_TARGET_NETBSD     ON)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    set(STRATO_TARGET_OPENBSD    ON)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+    set(STRATO_TARGET_HAIKU      ON)
+  endif()
+  # No automatic detection for:
+  #  - iOS
+  #  - Android
+  #  - Wasm (Emscripten)
+  #  - Unity
 endif()
 
 #
@@ -94,17 +103,8 @@ endif()
 # Dependency
 #
 
-if(NOT ENABLE_SHARED OR ENABLE_OBJECT)
-  include(cmake/zlib.cmake)
-  include(cmake/libpng.cmake)
-  include(cmake/jpeg.cmake)
-  include(cmake/libwebp.cmake)
-  include(cmake/libogg.cmake)
-  include(cmake/libvorbis.cmake)
-  include(cmake/brotli.cmake)
-  include(cmake/bzip2.cmake)
-  include(cmake/freetype.cmake)
-else()
+if(STRATO_ENABLE_SHARED)
+  # Use system installations.
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
   find_package(PNG REQUIRED)
   find_package(JPEG REQUIRED)
@@ -115,6 +115,17 @@ else()
   find_package(Brotli REQUIRED)
   find_package(BZip2 REQUIRED)
   find_package(ZLIB REQUIRED)
+else()
+  # Build the dependencies.
+  include(cmake/zlib.cmake)
+  include(cmake/libpng.cmake)
+  include(cmake/jpeg.cmake)
+  include(cmake/libwebp.cmake)
+  include(cmake/libogg.cmake)
+  include(cmake/libvorbis.cmake)
+  include(cmake/brotli.cmake)
+  include(cmake/bzip2.cmake)
+  include(cmake/freetype.cmake)
 endif()
 
 #
@@ -139,12 +150,12 @@ if(HAVE_SYS_TYPES_H)
 endif()
 
 #
-# Source Files
+# Main Target
 #
 
 # For Windows.
-if(TARGET_WINDOWS)
-  set(SOURCES
+if(STRATO_TARGET_WINDOWS)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -161,8 +172,8 @@ if(TARGET_WINDOWS)
 endif()
 
 # For macOS.
-if(TARGET_MACOS)
-  set(SOURCES
+if(STRATO_TARGET_MACOS)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -175,13 +186,12 @@ if(TARGET_MACOS)
 endif()
 
 # For POSIX (X11).
-if(TARGET_POSIX
-   AND NOT TARGET_MACOS
-   AND NOT TARGET_ANDROID
-   AND NOT TARGET_WASM
-   AND NOT TARGET_UNITY
-   AND NOT TARGET_HAIKU)
-  set(SOURCES
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD
+)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -199,8 +209,8 @@ if(TARGET_POSIX
 endif()
 
 # For Emscripten.
-if(TARGET_WASM)
-  set(SOURCES
+if(STRATO_TARGET_WASM)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -212,8 +222,8 @@ if(TARGET_WASM)
 endif()
 
 # For Android.
-if(TARGET_ANDROID)
-  set(SOURCES
+if(STRATO_TARGET_ANDROID)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -225,8 +235,8 @@ if(TARGET_ANDROID)
 endif()
 
 # For Unity.
-if(TARGET_UNITY)
-  set(SOURCES
+if(STRATO_TARGET_UNITY)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -235,8 +245,8 @@ if(TARGET_UNITY)
 endif()
 
 # For Haiku.
-if(TARGET_HAIKU)
-  set(SOURCES
+if(STRATO_TARGET_HAIKU)
+  set(STRATO_SOURCES
     src/image.c
     src/glyph.c
     src/wave.c
@@ -246,16 +256,20 @@ if(TARGET_HAIKU)
 endif()
 
 # For translation.
-if(ENABLE_I18N)
-  set(I18N_SOURCES
+if(STRATO_ENABLE_I18N)
+  set(STRATO_I18N_SOURCES
     src/translation.c
   )
 endif()
 
-if(ENABLE_OBJECT)
+if(STRATO_ENABLE_SHARED)
+  add_library(strato SHARED
+    ${STRATO_SOURCES}
+  )
+elseif(STRATO_ENABLE_OBJECT)
   add_library(strato OBJECT
-    ${SOURCES}
-    ${I18N_SOURCES}
+    ${STRATO_SOURCES}
+    ${STRATO_I18N_SOURCES}
     $<TARGET_OBJECTS:png>
     $<TARGET_OBJECTS:jpeg>
     $<TARGET_OBJECTS:webp>
@@ -268,12 +282,10 @@ if(ENABLE_OBJECT)
     $<TARGET_OBJECTS:bz2>
     $<TARGET_OBJECTS:z>
   )
-elseif(ENABLE_SHARED)
-  add_library(strato SHARED ${SOURCES})
 else()
   add_library(strato STATIC
-    ${SOURCES}
-    ${I18N_SOURCES}
+    ${STRATO_SOURCES}
+    ${STRATO_I18N_SOURCES}
     $<TARGET_OBJECTS:png>
     $<TARGET_OBJECTS:jpeg>
     $<TARGET_OBJECTS:webp>
@@ -289,7 +301,7 @@ else()
 endif()
 
 # Windows specific.
-if(TARGET_WINDOWS)
+if(STRATO_TARGET_WINDOWS)
   enable_language(RC)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -300,25 +312,29 @@ if(TARGET_WINDOWS)
 endif()
 
 # macOS specific
-if(TARGET_MACOS)
+if(STRATO_TARGET_MACOS)
   enable_language(OBJC)
 endif()
 
 # For translation.
-if(ENABLE_I18N)
+if(STRATO_ENABLE_I18N)
   target_compile_definitions(strato PRIVATE USE_TRANSLATION)
 endif()
 
 # For Unity
-if(TARGET_UNITY)
+if(STRATO_TARGET_UNITY)
   target_compile_definitions(strato PRIVATE USE_UNITY)
 endif()
 
 #
-# Archiver
+# Archiver Target
 #
 
-if(NOT TARGET_WASM AND NOT TARGET_ANDROID AND NOT TARGET_IOS AND NOT TARGET_UNITY)
+if(    NOT STRATO_TARGET_WASM
+   AND NOT STRATO_TARGET_ANDROID
+   AND NOT STRATO_TARGET_IOS
+   AND NOT STRATO_TARGET_UNITY
+)
   add_library(
     stratopack
     STATIC
@@ -331,28 +347,26 @@ endif()
 # CPPFLAGS
 #
 
-#-Dinclude
-target_include_directories(strato PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# -Dinclude
 target_include_directories(strato PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -DUSE_SHARED if we use dynamic linking.
-if(ENABLE_SHARED)
+if(STRATO_ENABLE_SHARED)
   target_compile_definitions(strato PRIVATE USE_SHARED)
 endif()
 
 # -DUSE_JIT if we use JIT.
-if(ENABLE_JIT)
+if(STRATO_ENABLE_JIT)
   target_compile_definitions(strato PRIVATE USE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
-if(TARGET_POSIX
-   AND NOT TARGET_MACOS
-   AND NOT TARGET_ANDROID
-   AND NOT TARGET_WASM
-   AND NOT TARGET_UNITY
-   AND NOT TARGET_HAIKU)
-  if(ENABLE_GLX)
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD
+)
+  if(STRATO_ENABLE_GLX)
     target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
   else()
     target_compile_definitions(strato PRIVATE USE_X11_SOFTRENDER)
@@ -371,7 +385,7 @@ target_include_directories(strato PRIVATE ${BZIP2_INCLUDE_DIRS})
 target_include_directories(strato PRIVATE ${ZLIB_INCLUDE_DIRS})
 
 # Windows: Add -Ires -Idx12headers/include/directx -Idx12headers/include/fxguids
-if(TARGET_WINDOWS)
+if(STRATO_TARGET_WINDOWS)
   target_include_directories(strato PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/res
     ${CMAKE_BINARY_DIR}/dx12headers/include/directx
@@ -380,20 +394,17 @@ if(TARGET_WINDOWS)
 endif()
 
 # FreeBSD: Add -I/usr/local/include
-if(TARGET_FREEBSD)
-  target_include_directories(strato PRIVATE /usr/local/include)
+if(STRATO_TARGET_FREEBSD)
   target_include_directories(strato PUBLIC  /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
-if(TARGET_NETBSD)
-  target_include_directories(strato PRIVATE /usr/local/include /usr/X11R7/include)
+if(STRATO_TARGET_NETBSD)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
-if(TARGET_OPENBSD)
-  target_include_directories(strato PRIVATE /usr/local/include /usr/X11R6/include)
+if(STRATO_TARGET_OPENBSD)
   target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R6/include)
 endif()
 
@@ -401,8 +412,13 @@ endif()
 # CFLAGS
 #
 
+# macOS and iOS
+if(STRATO_TARGET_MACOS OR STRATO_TARGET_IOS)
+  target_compile_options(strato PUBLIC -fmodules)
+endif()
+
 # Windows compile options.
-if(TARGET_WINDOWS)
+if(STRATO_TARGET_WINDOWS)
   # -municode
   if(MINGW)
     target_compile_options(strato PUBLIC -municode)
@@ -420,8 +436,8 @@ endif()
 #
 
 # Libraries.
-if(ENABLE_SHARED)
-  target_link_libraries(strato PRIVATE
+if(STRATO_ENABLE_SHARED)
+  target_link_libraries(strato PUBLIC
     ${PNG_LIBRARIES}
     ${JPEG_LIBRARIES}
     ${WEBP_LIBRARIES}
@@ -437,8 +453,7 @@ if(ENABLE_SHARED)
 endif()
 
 # Windows link options.
-if(TARGET_WINDOWS
-   AND NOT TARGET_UNITY)
+if(STRATO_TARGET_WINDOWS)
   # DLLs.
   target_link_libraries(strato PUBLIC
     gdi32
@@ -467,16 +482,7 @@ if(TARGET_WINDOWS
 endif()
 
 # macOS link options.
-if(TARGET_MACOS
-   AND NOT TARGET_UNITY)
-  target_compile_options(strato PRIVATE -fmodules)
-  target_compile_options(strato PUBLIC  -fmodules)
-
-  target_link_libraries(strato PRIVATE
-    "-framework AppKit"
-    "-framework MetalKit"
-    "-framework AVFoundation"
-  )
+if(STRATO_TARGET_MACOS)
   target_link_libraries(strato PUBLIC
     "-framework AppKit"
     "-framework MetalKit"
@@ -485,54 +491,46 @@ if(TARGET_MACOS
 endif()
 
 # POSIX
-if(TARGET_POSIX
-   AND NOT TARGET_MACOS
-   AND NOT TARGET_ANDROID
-   AND NOT TARGET_WASM
-   AND NOT TARGET_UNITY
-   AND NOT TARGET_HAIKU)
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD
+)
   # Add -lm -lpthread -lXpm -lX11
-  target_link_libraries(strato PRIVATE m pthread Xpm X11)
   target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 
   # Add -lGL -lGLX
   if(ENABLE_GLX)
-    target_link_libraries(strato PRIVATE GL GLX)
     target_link_libraries(strato PUBLIC  GL GLX)
   endif()
 endif()
 
 # Linux: Add -lasound
-if(TARGET_LINUX AND NOT TARGET_UNITY)
-  target_link_libraries(strato PRIVATE asound)
+if(STRATO_TARGET_LINUX)
   target_link_libraries(strato PUBLIC  asound)
 endif()
 
 # FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(TARGET_FREEBSD)
-  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
+if(STRATO_TARGET_FREEBSD)
   target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
-if(TARGET_NETBSD)
-  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R7/lib)
+if(STRATO_TARGET_NETBSD)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
-if(TARGET_OPENBSD)
-  target_link_directories(strato PRIVATE /usr/local/lib /usr/X11R6/lib)
+if(STRATO_TARGET_OPENBSD)
   target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R6/lib)
 endif()
 
 # Android: Add -lgles
-if(TARGET_ANDROID)
+if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
 endif()
 
 # Haiku: Add -lbe -lmedia
-if(TARGET_HAIKU)
-  target_link_libraries(strato PRIVATE be media)
-  target_link_libraries(strato PUBLIC  be media)
+if(STRATO_TARGET_HAIKU)
+  target_link_libraries(strato PUBLIC be media)
 endif()

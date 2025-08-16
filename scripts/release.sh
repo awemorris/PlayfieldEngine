@@ -15,37 +15,77 @@ rm -rf dist Noct2D-latest.zip
 mkdir dist
 
 #
+# Windows x86
+#
+
+mkdir dist/windows-x86
+
+# Build.
+rm -rf build-win-x86
+cmake --preset windows-x86
+cmake --build --preset windows-x86
+
+# Strip.
+i686-w64-mingw32-strip build-win-x86/noct2d.exe
+i686-w64-mingw32-strip build-win-x86/noct2dpack.exe
+
+# Copy.
+cp build-win-x86/noct2d.exe dist/windows-x86/
+cp build-win-x86/noct2dpack.exe dist/windows-x86/
+
+rm -rf build-win-x86
+
+#
 # Windows x86_64
 #
 
 mkdir dist/windows-x86_64
 
-./scripts/build-win-x86_64.sh
+# Build.
+rm -rf build-win-x86_64
+cmake --preset windows-x86_64
+cmake --build --preset windows-x86_64
+
+# Strip.
+x86_64-w64-mingw32-strip build-win-x86_64/noct2d.exe
+x86_64-w64-mingw32-strip build-win-x86_64/noct2dpack.exe
+
+# Copy.
 cp build-win-x86_64/noct2d.exe dist/windows-x86_64/
 cp build-win-x86_64/noct2dpack.exe dist/windows-x86_64/
+
 rm -rf build-win-x86_64
 
 #
 # Windows arm64
 #
 
-mkdir dist/windows-arm64
+# Build.
+rm -rf build-win-arm64
+cmake --preset windows-arm64
+cmake --build --preset windows-arm64
 
-./scripts/build-win-arm64.sh
+# Strip.
+aarch64-w64-mingw32-strip build-win-arm64/noct2d.exe
+aarch64-w64-mingw32-strip build-win-arm64/noct2dpack.exe
+
+# Copy.
+mkdir dist/windows-arm64
 cp build-win-arm64/noct2d.exe dist/windows-arm64/
 cp build-win-arm64/noct2dpack.exe dist/windows-arm64/
+
 rm -rf build-win-arm64
 
 #
 # macOS
 #
 
-mkdir dist/macos
-
 export MACOSX_DEPLOYMENT_TARGET=10.13
 
 # Build.
-./scripts/build-macos.sh
+rm -rf build-macos
+cmake --preset macos
+cmake --build --preset macos
 
 cd build-macos
 
@@ -64,78 +104,153 @@ codesign --sign 'Developer ID Application' Noct2D.dmg
 
 cd ..
 
+# Copy.
+mkdir dist/macos
 cp build-macos/Noct2D.dmg dist/macos/
 cp build-macos/noct2dpack dist/macos/
+
 rm -rf build-macos
 
 #
 # Linux x86_64
 #
 
-mkdir dist/linux-x86_64
-
+# Build.
+rm -rf build-linux
 docker build --platform=linux/amd64 -t ubuntu22-x86_64 ./scripts
-docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 ./scripts/build-linux-x86_64.sh
-cp build-linux-x86_64/noct2d dist/linux-x86_64/
-cp build-linux-x86_64/noct2dpack dist/linux-x86_64/
-rm -rf build-linux-x86_64
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 cmake --preset linux
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 cmake --build --preset linux
+
+# Copy.
+mkdir dist/linux-x86_64
+cp build-linux/noct2d dist/linux-x86_64/
+cp build-linux/noct2dpack dist/linux-x86_64/
+
+rm -rf build-linux
 
 #
 # Linux arm64
 #
 
-mkdir dist/linux-arm64
-
+# Build.
+rm -rf build-linux
 docker build --platform=linux/arm64 -t ubuntu22-arm64 ./scripts
-docker run --rm -it -v "$PWD":/src -w /src ubuntu22-arm64 ./scripts/build-linux-arm64.sh
-cp build-linux-arm64/noct2d dist/linux-arm64/
-cp build-linux-arm64/noct2dpack dist/linux-arm64/
-rm -rf build-linux-arm64
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-arm64 cmake --preset linux
+docker run --rm -it -v "$PWD":/src -w /src ubuntu22-arm64 cmake --build --preset linux
+
+# Copy.
+mkdir dist/linux-arm64
+cp build-linux/noct2d dist/linux-arm64/
+cp build-linux/noct2dpack dist/linux-arm64/
+
+rm -rf build-linux
 
 #
 # Wasm
 #
 
+# Build.
+rm -rf build-wasm
+cmake --preset wasm
+cmake --build --preset wasm
+
+# Copy.
 mkdir dist/wasm
-
-./scripts/build-wasm.sh
-
 cp build-wasm/index.html dist/wasm/
-cp docs/wasm.md dist/wasm
+cp docs/wasm.md dist/wasm/README.md
+
+rm -rf build-wasm
+
+#
+# iOS
+#
+
+# Build for devices.
+rm -rf build-ios-device
+cmake --preset ios-device
+cmake --build --preset ios-device
+
+# Build for the simulator.
+rm -rf build-ios-simulator 
+cmake --preset ios-simulator
+cmake --build --preset ios-simulator
+
+# Make a XCFramework.
+rm -rf Noct2D.xcframework
+xcodebuild -create-xcframework \
+  -library build-ios-device/libnoct2d.a -headers include \
+  -library build-ios-simulator/libnoct2d.a -headers include \
+  -output Noct2D.xcframework
+
+# Copy.
+mkdir                                             dist/ios
+cp -R projects/ios/Assets.xcassets                dist/ios/
+cp    projects/ios/entry.c                        dist/ios/
+cp    projects/ios/GameShaders.metal              dist/ios/
+cp    projects/ios/GameShaderTypes.h              dist/ios/
+cp    projects/ios/ios.entitlements               dist/ios/
+cp    projects/ios/Main.storyboard                dist/ios/
+cp -R Noct2D.xcframework                          dist/ios/
+mkdir                                             dist/ios/Resources/
+mkdir                                             dist/ios/Resources/video
+mkdir                                             dist/ios/ios.xcodeproj
+cp    projects/ios/ios.xcodeproj/project.pbxproj  dist/ios/ios.xcodeproj/
+
+rm -rf build-ios-device
+rm -rf build-ios-simulator
+rm -rf Noct2D.xcframework
 
 #
 # Android
 #
 
-mkdir dist/android
+# Build for Arm64.
+rm -rf build-android-arm64
+cmake --preset android-arm64
+cmake --build --preset android-arm64
 
-./scripts/build-android.sh
+# Build for armv7.
+rm -rf build-android-armv7
+cmake --preset android-armv7
+cmake --build --preset android-armv7
 
-cp -R projects/android/app               dist/android/
-cp -R projects/android/gradle.properties dist/android/
-cp -R projects/android/build.gradle      dist/android/
-cp -R projects/android/gradlew           dist/android/
-cp -R projects/android/settings.gradle   dist/android/
-cp -R projects/android/gradlew.bat       dist/android/
-cp -R projects/android/gradle            dist/android/
-cp -R projects/android/build.bat         dist/android/
+# Build for x86_64.
+rm -rf build-android-x86_64
+cmake --preset android-x86_64
+cmake --build --preset android-x86_64
+
+# Build for x86.
+rm -rf build-android-x86
+cmake --preset android-x86
+cmake --build --preset android-x86
+
+# Copy.
+mkdir                                        dist/android
+cp -R projects/android/app                   dist/android/
+cp -R projects/android/gradle.properties     dist/android/
+cp -R projects/android/build.gradle          dist/android/
+cp -R projects/android/gradlew               dist/android/
+cp -R projects/android/settings.gradle       dist/android/
+cp -R projects/android/gradlew.bat           dist/android/
+cp -R projects/android/gradle                dist/android/
+cp -R projects/android/build.bat             dist/android/
 
 mkdir -p dist/android/app/src/main/java/com/noct2d/engineandroid
-cp StratoHAL/src/MainActivity.java       dist/android/app/src/main/java/com/noct2d/engineandroid/
+cp external/StratoHAL/src/MainActivity.java  dist/android/app/src/main/java/com/noct2d/engineandroid/
 
 mkdir -p dist/android/app/src/main/jniLibs/arm64-v8a
-cp build-android-aarch64/libnoct2d.so    dist/android/app/src/main/jniLibs/arm64-v8a/
+cp build-android-arm64/libnoct2d.so          dist/android/app/src/main/jniLibs/arm64-v8a/
 
 mkdir -p dist/android/app/src/main/jniLibs/armeabi-v7a
-cp build-android-armv7/libnoct2d.so      dist/android/app/src/main/jniLibs/armeabi-v7a/
+cp build-android-armv7/libnoct2d.so          dist/android/app/src/main/jniLibs/armeabi-v7a/
 
 mkdir -p dist/android/app/src/main/jniLibs/x86_64
-cp build-android-x86_64/libnoct2d.so     dist/android/app/src/main/jniLibs/x86_64/
+cp build-android-x86_64/libnoct2d.so         dist/android/app/src/main/jniLibs/x86_64/
 
 mkdir -p dist/android/app/src/main/jniLibs/x86
-cp build-android-x86/libnoct2d.so        dist/android/app/src/main/jniLibs/x86/
+cp build-android-x86/libnoct2d.so            dist/android/app/src/main/jniLibs/x86/
 
-rm -rf build-android-aarch64
+rm -rf build-android-arm6464
 rm -rf build-android-armv7
 rm -rf build-android-x86_64
 rm -rf build-android-x86
@@ -144,34 +259,49 @@ rm -rf build-android-x86
 # Unity
 #
 
-mkdir dist/unity
+# Build for Win64.
+rm -rf build-unity-win64
+cmake --preset unity-win64
+cmake --build --preset unity-win64
 
-./scripts/build-unity-win64.sh
-./scripts/build-unity-switch.sh
-./scripts/build-unity-ps5.sh
-./scripts/build-unity-xbox.sh
+# Build for Switch.
+rm -rf build-unity-switch
+cmake --preset unity-switch
+cmake --build --preset unity-switch
 
-mkdir dist/unity/Assets
-mkdir dist/unity/Assets/StreamingAssets
-mkdir dist/unity/Assets/Resources
-cp -v StratoHAL/src/Noct2D.cs dist/unity/Assets/
-cp -v StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
-cp -v StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
-mkdir dist/unity/Assets/Plugins
-mkdir dist/unity/Assets/Plugins/x86_64
-mkdir dist/unity/Assets/Plugins/Switch
-mkdir dist/unity/Assets/Plugins/PS5
-mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
-mkdir dist/unity/Assets/Plugins/Common
-cp -v build-unity-win64/libnoct2d.dll dist/unity/Assets/Plugins/x86_64/libnoct2d.dll
-cp -v build-unity-switch/libnoct2d.a dist/unity/Assets/Plugins/Switch/libnoct2d.a
-cp -v build-unity-ps5/libnoct2d.a dist/unity/Assets/Plugins/PS5/libnoct2d.a
-cp -v build-unity-xbox/noct2d.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/libnoct2d.lib
-cp -v src/MainScene.unity dist/unity/Assets/
-cp -v docs/unity.md dist/unity/
+# Build for PS5.
+rm -rf build-unity-ps5
+cmake --preset unity-ps5
+cmake --build --preset unity-ps5
+
+# Build for Xbox.
+rm -rf build-unity-xbox
+cmake --preset unity-xbox
+cmake --build --preset unity-xbox
+
+# Copy.
+mkdir                                              dist/unity
+mkdir                                              dist/unity/Assets
+mkdir                                              dist/unity/Assets/StreamingAssets
+mkdir                                              dist/unity/Assets/Resources
+cp    external/StratoHAL/src/Noct2D.cs             dist/unity/Assets/
+cp    external/StratoHAL/src/NormalShader.shader   dist/unity/Assets/Resources/
+cp    external/StratoHAL/src/AddShader.shader      dist/unity/Assets/Resources/
+cp    external/StratoHAL/src/DimShader.shader      dist/unity/Assets/Resources/
+cp    external/StratoHAL/src/RuleShader.shader     dist/unity/Assets/Resources/
+cp    external/StratoHAL/src/MeltShader.shader     dist/unity/Assets/Resources/
+cp    external/StratoHAL/src/MainScene.unity       dist/unity/Assets/
+mkdir                                              dist/unity/Assets/Plugins
+mkdir                                              dist/unity/Assets/Plugins/x86_64
+mkdir                                              dist/unity/Assets/Plugins/Switch
+mkdir                                              dist/unity/Assets/Plugins/PS5
+mkdir                                              dist/unity/Assets/Plugins/GameCoreXboxSeries
+mkdir                                              dist/unity/Assets/Plugins/Common
+cp    build-unity-win64/libnoct2d.dll              dist/unity/Assets/Plugins/x86_64/
+cp    build-unity-switch/libnoct2d.a               dist/unity/Assets/Plugins/Switch/
+cp    build-unity-ps5/libnoct2d.a                  dist/unity/Assets/Plugins/PS5/
+cp    build-unity-xbox/noct2d.lib                  dist/unity/Assets/Plugins/GameCoreXboxSeries/
+cp    docs/unity.md                                dist/unity/
 
 rm -rf build-unity-win64
 rm -rf build-unity-switch

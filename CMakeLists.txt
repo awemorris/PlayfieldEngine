@@ -1,73 +1,201 @@
 cmake_minimum_required(VERSION 3.16)
 project(Noct2D LANGUAGES C CXX)
 
-set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
-
 #
 # Configuration
 #
 
-option(ENABLE_GLX     "Enable OpenGL on X11"    ON)
-option(ENABLE_BUNDLE  "Enable macOS bundle"     ON)
-option(ENABLE_I18N    "Enable translation"      ON)
-option(ENABLE_SHARED  "Enable shared libraries" OFF)
+# Target
+option(NOCT2D_TARGET_WINDOWS       "Build for Windows"       OFF)
+option(NOCT2D_TARGET_MACOS         "Build for macOS"         OFF)
+option(NOCT2D_TARGET_LINUX         "Build for Linux"         OFF)
+option(NOCT2D_TARGET_IOS           "Build for iOS"           OFF)
+option(NOCT2D_TARGET_ANDROID       "Build for Android"       OFF)
+option(NOCT2D_TARGET_WASM          "Build for Emscripten"    OFF)
+option(NOCT2D_TARGET_UNITY         "Build for Unity"         OFF)
+option(NOCT2D_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
+option(NOCT2D_TARGET_NETBSD        "Build for NetBSD"        OFF)
+option(NOCT2D_TARGET_OPENBSD       "Build for OpenBSD"       OFF)
+option(NOCT2D_TARGET_HAIKU         "Build for Haiku"         OFF)
+
+# Options
+option(NOCT2D_ENABLE_JIT           "Enable JIT"              OFF)
+option(NOCT2D_ENABLE_I18N          "Enable translation"      OFF)
+option(NOCT2D_ENABLE_GLX           "Enable OpenGL on X11"    OFF)
+option(NOCT2D_ENABLE_BUNDLE        "Enable macOS bundle"     OFF)
+option(NOCT2D_ENABLE_PACK          "Enable packager"         OFF)
+option(NOCT2D_ENABLE_STATIC        "Build a static library"  OFF)
+option(NOCT2D_ENABLE_SHARED        "Build a dynamic library" OFF)
+option(NOCT2D_ENABLE_DIST          "Build for packages"      OFF)
 
 #
-# Target Detection
+# Automatic Target Detection
 #
 
-if(WIN32 AND NOT TARGET_UNITY)
-  set(TARGET_WINDOWS ON)
+# For when a target is manually specified.
+if(   NOCT2D_TARGET_WINDOWS
+   OR NOCT2D_TARGET_MACOS
+   OR NOCT2D_TARGET_LINUX
+   OR NOCT2D_TARGET_IOS
+   OR NOCT2D_TARGET_ANDROID
+   OR NOCT2D_TARGET_WASM
+   OR NOCT2D_TARGET_UNITY
+   OR NOCT2D_TARGET_FREEBSD
+   OR NOCT2D_TARGET_NETBSD
+   OR NOCT2D_TARGET_OPENBSD
+)
+  # A target and options are manually specified.
+else()   
+  if(WIN32)
+    # Windows is detected.
+    set(NOCT2D_TARGET_WINDOWS    ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(APPLE AND NOT IOS)
+    # macOS is detected.
+    set(NOCT2D_TARGET_MACOS      ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_BUNDLE     ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # Linux is detected.
+    set(NOCT2D_TARGET_LINUX      ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_GLX        ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    set(NOCT2D_TARGET_FREEBSD    ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_GLX        ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+    set(NOCT2D_TARGET_NETBSD     ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_GLX        ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    set(NOCT2D_TARGET_OPENBSD    ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+    set(NOCT2D_TARGET_HAIKU      ON)
+    set(NOCT2D_ENABLE_JIT        ON)
+    set(NOCT2D_ENABLE_I18N       ON)
+    set(NOCT2D_ENABLE_PACK       ON)
+  endif()
+
+  # No automatic detection for:
+  #  - iOS
+  #  - Android
+  #  - Wasm (Emscripten)
+  #  - Unity
 endif()
 
-if(APPLE AND NOT IOS AND NOT TARGET_UNITY)
-  set(TARGET_MACOS ON)
+#
+# NoctLang Configuration
+#
+
+# Merge objects into libnoct2d.
+if(   NOCT2D_TARGET_IOS
+   OR NOCT2D_TARGET_ANDROID
+   OR NOCT2D_TARGET_UNITY
+)
+  set(NOCTLANG_ENABLE_OBJECT ON)
+else()
+  if(NOCT2D_ENABLE_DIST)
+    set(NOCTLANG_ENABLE_SHARED ON)
+  else()
+    set(NOCTLANG_ENABLE_STATIC ON)
+  endif()
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(TARGET_LINUX ON)
+# Emscripten
+if(NOCT2D_TARGET_WASM)
+  set(NOCTLANG_TARGET_WASM ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  set(TARGET_FREEBSD ON)
+# Unity
+if(NOCT2D_TARGET_UNITY)
+  set(NOCTLANG_TARGET_UNITY ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-  set(TARGET_NETBSD ON)
+# Use JIT.
+if(NOCT2D_ENABLE_JIT)
+  set(NOCTLANG_ENABLE_JIT ON)
+else()
+  set(NOCTLANG_ENABLE_JIT OFF)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-  set(TARGET_OPENBSD ON)
+# Use translation.
+if(NOCT2D_ENABLE_I18N)
+  set(NOCTLANG_ENABLE_I18N ON)
 endif()
 
-if(UNIX)
-  set(TARGET_POSIX ON)
+set(NOCTLANG_ENABLE_CLI OFF)
+
+#
+# Strato Configuration
+#
+
+# Set the target and its specific options.
+if(NOCT2D_TARGET_WINDOWS)
+  set(STRATO_TARGET_WINDOWS ON)
+elseif(NOCT2D_TARGET_MACOS)
+  set(STRATO_TARGET_MACOS ON)
+elseif(NOCT2D_TARGET_LINUX)
+  set(STRATO_TARGET_LINUX ON)
+elseif(NOCT2D_TARGET_IOS)
+  set(STRATO_TARGET_IOS ON)
+elseif(NOCT2D_TARGET_ANDROID)
+  set(STRATO_TARGET_ANDROID ON)
+elseif(NOCT2D_TARGET_WASM)
+  set(STRATO_TARGET_WASM ON)
+elseif(NOCT2D_TARGET_UNITY)
+  set(STRATO_TARGET_UNITY ON)
+elseif(NOCT2D_TARGET_FREEBSD)
+  set(STRATO_TARGET_FREEBSD ON)
+elseif(NOCT2D_TARGET_NETBSD)
+  set(STRATO_TARGET_NETBSD ON)
+elseif(NOCT2D_TARGET_OPENBSD)
+  set(STRATO_TARGET_OPENBSD ON)
+elseif(NOCT2D_TARGET_HAIKU)
+  set(STRATO_TARGET_HAIKU ON)
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-  set(TARGET_HAIKU ON)
+# Merge objects into libnoct2d.
+if(   NOCT2D_TARGET_IOS
+   OR NOCT2D_TARGET_ANDROID
+   OR NOCT2D_TARGET_UNITY
+)
+  set(STRATO_ENABLE_OBJECT ON)
+else()
+  if(NOCT2D_ENABLE_DIST)
+    set(STRATO_ENABLE_SHARED ON)
+  else()
+    set(STRATO_ENABLE_STATIC ON)
+  endif()
 endif()
 
-# Wasm (Manual)
-if(TARGET_WASM)
-  set(ENABLE_JIT        OFF)
-  set(ENABLE_I18N       OFF)
-endif()
-
-# Android (Manual)
-if(TARGET_ANDROID)
-  set(ENABLE_JIT        OFF)
-  set(ENABLE_I18N       OFF)
-  set(ENABLE_SHARED     ON)
-  set(ENABLE_OBJECT     ON)
-endif()
-
-# Unity (Manual)
-if(TARGET_UNITY)
-  set(ENABLE_JIT        OFF)
-  set(ENABLE_I18N       OFF)
-  set(ENABLE_OBJECT     ON)
+# Use translation.
+if(NOCT2D_ENABLE_I18N)
+  set(STRATO_ENABLE_I18N ON)
 endif()
 
 #
@@ -100,6 +228,14 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU"
 endif()
 
 #
+# Apple Quirks
+#
+
+if(NOCT2D_TARGET_MACOS)
+  set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
+endif()
+
+#
 # Dependencies
 #
 
@@ -107,7 +243,7 @@ endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/NoctLang)
 
 # StratoHAL
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/StratoHAL)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/StratoHAL)
 
 #
 # Checks
@@ -134,7 +270,8 @@ endif()
 # Main Target
 #
 
-set(BASE_SOURCES
+# Base Source
+set(NOCT2D_BASE_SOURCES
   src/api.c
   src/common.c
   src/mainloop.c
@@ -142,92 +279,91 @@ set(BASE_SOURCES
   src/vm.c
 )
 
-if(ENABLE_I18N)
-  set(I18N_SOURCES
+# I18N Source
+if(NOCT2D_ENABLE_I18N)
+  set(NOCT2D_I18N_SOURCES
     src/i18n.c
     src/translation.c
   )
 endif()
 
-if(TARGET_WINDOWS AND NOT TARGET_UNITY)
-  set(RESOURCES
+# Resource
+if(NOCT2D_TARGET_WINDOWS)
+  set(NOCT2D_RESOURCES
     resources/resource.rc
   )
 endif()
 
-if(TARGET_ANDROID OR TARGET_UNITY)
-  if(ENABLE_SHARED)
-    add_library(
-      noct2d
-      SHARED
-      ${BASE_SOURCES}
-      ${I18N_SOURCES}
-      ${RESOURCES}
-      $<TARGET_OBJECTS:png>
-      $<TARGET_OBJECTS:jpeg>
-      $<TARGET_OBJECTS:webp>
-      $<TARGET_OBJECTS:vorbisfile>
-      $<TARGET_OBJECTS:vorbis>
-      $<TARGET_OBJECTS:ogg>
-      $<TARGET_OBJECTS:freetype>
-      $<TARGET_OBJECTS:brotlidec>
-      $<TARGET_OBJECTS:brotlicommon>
-      $<TARGET_OBJECTS:bz2>
-      $<TARGET_OBJECTS:z>
-    )
+# Add Target
+if(   NOCT2D_TARGET_IOS
+   OR NOCT2D_TARGET_ANDROID
+   OR NOCT2D_TARGET_UNITY
+)
+  # Make a library.
+  if(NOCT2D_ENABLE_SHARED)
+    set(NOCT2D_LIB_TYPE SHARED)
   else()
-    add_library(
-      noct2d
-      STATIC
-      ${BASE_SOURCES}
-      ${I18N_SOURCES}
-      ${RESOURCES}
-      $<TARGET_OBJECTS:png>
-      $<TARGET_OBJECTS:jpeg>
-      $<TARGET_OBJECTS:webp>
-      $<TARGET_OBJECTS:vorbisfile>
-      $<TARGET_OBJECTS:vorbis>
-      $<TARGET_OBJECTS:ogg>
-      $<TARGET_OBJECTS:freetype>
-      $<TARGET_OBJECTS:brotlidec>
-      $<TARGET_OBJECTS:brotlicommon>
-      $<TARGET_OBJECTS:bz2>
-      $<TARGET_OBJECTS:z>
-    )
+    set(NOCT2D_LIB_TYPE STATIC)
   endif()
+  add_library(
+    noct2d
+    ${NOCT2D_LIB_TYPE}
+    ${NOCT2D_BASE_SOURCES}
+    ${NOCT2D_I18N_SOURCES}
+    ${NOCT2D_RESOURCES}
+    $<TARGET_OBJECTS:png>
+    $<TARGET_OBJECTS:jpeg>
+    $<TARGET_OBJECTS:webp>
+    $<TARGET_OBJECTS:vorbisfile>
+    $<TARGET_OBJECTS:vorbis>
+    $<TARGET_OBJECTS:ogg>
+    $<TARGET_OBJECTS:freetype>
+    $<TARGET_OBJECTS:brotlidec>
+    $<TARGET_OBJECTS:brotlicommon>
+    $<TARGET_OBJECTS:bz2>
+    $<TARGET_OBJECTS:z>
+  )
 else()
+  # Make an executable.
   add_executable(
     noct2d
-    ${BASE_SOURCES}
-    ${I18N_SOURCES}
-    ${RESOURCES}
+    ${NOCT2D_BASE_SOURCES}
+    ${NOCT2D_I18N_SOURCES}
+    ${NOCT2D_RESOURCES}
   )
 endif()
 
+# Link NoctLang and Strato
 target_link_libraries(noct2d PRIVATE
   noctlang
   strato
 )
 
+# -Iinclude
 target_include_directories(noct2d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if(ENABLE_JIT)
+# -DUSE_JIT
+if(NOCT2D_ENABLE_JIT)
   target_compile_definitions(noct2d PRIVATE USE_JIT)
 endif()
 
-if(ENABLE_I18N)
+# -DUSE_TRANSLATION
+if(NOCT2D_ENABLE_I18N)
   target_compile_definitions(noct2d PRIVATE USE_TRANSLATION)
 endif()
 
-if(ENABLE_SHARED)
+# -DUSE_SHARED
+if(NOCT2D_ENABLE_SHARED)
   target_compile_definitions(noct2d PRIVATE USE_SHARED)
 endif()
 
-if(TARGET_UNITY)
+# -DUSE_UNITY
+if(NOCT2D_TARGET_UNITY)
   target_compile_definitions(noct2d PRIVATE USE_UNITY)
 endif()
 
-if(TARGET_WINDOWS)
+# Windows quirks
+if(NOCT2D_TARGET_WINDOWS)
   if(MSVC)
     target_compile_options(noctlang PRIVATE /utf-8)
     target_link_options(noct2d PRIVATE /SUBSYSTEM:WINDOWS)
@@ -237,16 +373,16 @@ if(TARGET_WINDOWS)
   endif()
 endif()
 
-# macOS: Make the bundle name capital.
-if(APPLE AND NOT IOS AND ENABLE_BUNDLE)
-  set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
-endif()
-
 # Emscripten
-if(TARGET_WASM)
+if(NOCT2D_TARGET_WASM)
+  # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   set_target_properties(noct2d PROPERTIES OUTPUT_NAME index)
+
+  # -DUSE_EMSCRIPTEN
   target_compile_definitions(noct2d PRIVATE USE_EMSCRIPTEN)
+
+  # Link options.
   target_link_options(noct2d PRIVATE
     -o index.html
     -sSINGLE_FILE=1
@@ -262,10 +398,10 @@ if(TARGET_WASM)
 endif()
 
 #
-# Packager
+# Packager Target
 #
 
-if(NOT TARGET_WASM AND NOT TARGET_ANDROID AND NOT TARGET_UNITY)
+if(NOCT2D_ENABLE_PACK)
   add_executable(
     noct2dpack
     src/noct2dpack.c
@@ -277,7 +413,10 @@ endif()
 # macOS Bundle
 #
 
-if(TARGET_MACOS)
+if(NOCT2D_TARGET_MACOS AND NOCT2D_ENABLE_BUNDLE)
+  # Use capital name.
+  set_target_properties(noct2d PROPERTIES OUTPUT_NAME Noct2D)
+
   # Make an app bundle.
   set_target_properties(noct2d PROPERTIES
     MACOSX_BUNDLE TRUE
@@ -291,7 +430,7 @@ if(TARGET_MACOS)
   set_source_files_properties(${APP_ICON} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
   set_target_properties(noct2d PROPERTIES MACOSX_BUNDLE_ICON_FILE "icon512.png")
 
-  # product.img
+  # Copy the product.img file.
   set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/product.img")
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
