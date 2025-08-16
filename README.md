@@ -182,23 +182,6 @@ NoctLang can fall back to AOT (ahead-of-time) compilation using a C
 source backend — ensuring full compatibility even in tightly
 controlled environments.
 
-## NoctScript IDE
-
-**NoctScript** is the official IDE for Noct2D-based projects, designed
-to streamline development and testing.
-
-It includes:
-
-- A built-in editor with syntax highlighting for NoctLang
-- One-click run and debug support for Noct2D scripts
-- Integrated asset preview and configuration panels
-- A seamless workflow between code, assets, and runtime behavior
-
-By separating the **core runtime (Noct2D)** from the **development
-environment (NoctScript IDE)**, you can choose to use the IDE when
-convenient — or embed Noct2D directly into your own tools and
-pipelines.
-
 ---
 
 ## Why Noct2D?

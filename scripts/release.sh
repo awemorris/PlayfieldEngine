@@ -324,6 +324,12 @@ mkdocs build
 mv site dist/manual
 
 #
+# License and README
+#
+
+cp resources/readme.txt    dist/
+
+#
 # ZIP
 #
 
