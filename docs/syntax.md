@@ -1,38 +1,36 @@
-NoctScript Syntax
-=================
+NoctLang Syntax
+===============
 
-NoctScript is a simple scripting language.
+NoctLang is a simple scripting language.
 
 ## Assignments
 
-Variables in NoctScript are dynamically typed and don't require explicit
+Variables in NoctLang are dynamically typed and don't require explicit
 declaration. The assignment operator (`=`) is used to create and
 assign values to variables.
 
-As shown in the example below, NoctScript supports various data types
+As shown in the example below, NoctLang supports various data types
 including integers, floating-point numbers, and strings. Variables can
 be reassigned to different types at any time during execution.
 
 ```
 func main() {
-    a = 123;
+    var a = 123;
     print(a);
 
-    b = 1.0;
+    var b = 1.0;
     print(b);
 
-    c = "string";
+    var c = "string";
     print(c);
 }
 ```
 
-## Explicit Local Variables
+## Local Variables
 
-Using the `var` keyword allows you to explicitly declare a variable as
-local. This significantly reduces variable lookup time and can make
-your program run faster. Without `var`, assigning to a variable
-triggers a symbol lookup across both local and global scopes, which is
-less efficient.
+Using the `var` keyword allows you to declare a variable as
+local. Without `var` declaration, assigning to a variable may create a
+global variable.
 
 ```
 func main() {
@@ -49,7 +47,7 @@ iterate through each value directly.
 
 ```
 func main() {
-    array = [0, 1, 2];
+    var array = [0, 1, 2];
     for (value in array) {
         print(value);
     }
@@ -61,7 +59,7 @@ the dynamic typing system.
 
 ```
 func main() {
-    array [123, "string"];
+    var array = [123, "string"];
 }
 ```
 
@@ -70,7 +68,7 @@ the end of an array
 
 ```
 func main() {
-    array = []
+    var array = []
     push(array, 0);
     push(array, 1);
     push(array, 2);
@@ -86,7 +84,7 @@ the key and value can be accessed simultaneously.
 
 ```
 func main() {
-    dict = {key1: "value1", key2: "value2"};
+    var dict = {key1: "value1", key2: "value2"};
     for (key, value in dict) {
         print("key = " + key);
         print("value = " + value);
@@ -101,7 +99,7 @@ can be an array style which uses `[]`, or an object style which uses
 
 ```
 func main() {
-    dict = {};
+    var dict = {};
     dict["key1"] = "value1";
     dict.key2 = "value2";
 }
@@ -112,7 +110,7 @@ key.
 
 ```
 func main() {
-    dict = {key1: "value1", key2: "value2"};
+    var dict = {key1: "value1", key2: "value2"};
     remove(dict, "key1");
 }
 ```
@@ -151,7 +149,7 @@ Dictionaries can be iterated by the for-key-value syntax.
 
 ```
 func main() {
-    cit = {key1: "value1", key2: "value2"};
+    var dict = {key1: "value1", key2: "value2"};
     for (key, value in dict) {
         print(key + "=" + value);
     }
@@ -170,7 +168,7 @@ incrementing from 0 to 9.
 
 ```
 func main() {
-    i = 0;
+    var i = 0;
     while (i < 10) {
         print(i);
         i = i + 1;
@@ -186,7 +184,7 @@ conditions are evaluated in sequence.
 
 ```
 func main() {
-    a = readint();
+    var a = readint();
     if (a == 0) {
         print("0");
     } else if (a == 1) {
@@ -205,7 +203,7 @@ functions without names.
 
 ```
 func main() {
-    f = lambda (a, b) { return a + b; }
+    var f = (a, b) => { return a + b; }
     print(f(1, 2));
 }
 ```
@@ -221,7 +219,7 @@ in outer functions.
 ```
 func main() {
     var s1 = "ABCDEFG";
-    var s2 = substring(s1, 1, -1); // from the char 1, to the end
+    var s2 = s1.substring(1, -1); // from the char 1, to the end
 }
 ```
 
@@ -233,7 +231,7 @@ func main() {
     var slen = length(str);
 
     var array = [0, 1, 2];
-    var alen = length(array);
+    var alen = array.length();
 }
 ```
 
@@ -242,7 +240,7 @@ func main() {
 ```
 func main() {
     var array = [0, 1, 2];
-    push(array, 3);        // Add to the last.
+    array.push(3); // Add to the last.
 }
 ```
 
@@ -250,13 +248,19 @@ func main() {
 
 ```
 func main() {
-    var my_class = {
-        member: 0,
-        method: lambda (this, a) {
-            return this.member + a;
-        }
-    };
+    var cat = new_cat();
+    var color = cat->getColor();
+}
 
-    global("MyClass", my_class);
+func new_cat() {
+    return {
+        // Field
+        color: "orange",
+
+        // Method
+        getColor: lambda (this) => {
+            return this.color;
+        },
+    };
 }
 ```

@@ -251,7 +251,7 @@ cp build-android-x86_64/libnoct2d.so         dist/android/app/src/main/jniLibs/x
 mkdir -p dist/android/app/src/main/jniLibs/x86
 cp build-android-x86/libnoct2d.so            dist/android/app/src/main/jniLibs/x86/
 
-rm -rf build-android-arm6464
+rm -rf build-android-arm64
 rm -rf build-android-armv7
 rm -rf build-android-x86_64
 rm -rf build-android-x86
@@ -317,11 +317,18 @@ mkdir dist/sample
 cp -R sample/* dist/sample/
 
 #
+# mkdocs
+#
+
+mkdocs build
+mv site dist/manual
+
+#
 # ZIP
 #
 
 cd dist
-zip -r -9 Noct2D-all-platforms.zip *
+zip -r -9 Noct2D-SDK.zip *
 cd ..
 
 #
@@ -330,7 +337,7 @@ cd ..
 
 VERSION="$(date +%Y%m%d)-dev+$(git rev-parse --short HEAD)"
 gh release create $VERSION \
-   dist/Noct2D-all-platforms.zip \
+   dist/Noct2D-SDK.zip \
    --title "Noct2D $VERSION" \
    --notes "This is the latest version of Noct2D!"
 

@@ -26,7 +26,7 @@ Place the `product.img` file alongside the `noct2d.exe` file.
 
 ---
 
-## NoctVM Tutorial Game
+## Noct2D Tutorial Game
 
 We are looking for a small, fun example game that demonstrates what
 Noct2D can do. If you're interested in contributing, open an issue or

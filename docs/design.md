@@ -1,12 +1,12 @@
-NoctVM Design Overview
+Noct2D Design Overview
 ======================
 
 ## Porting Layer
 
-Did you know that NoctVM runs seamlessly on Windows, macOS, Linux, iPhone,
+Did you know that Noct2D runs seamlessly on Windows, macOS, Linux, iPhone,
 iPad, Android, Web browsers, — and even Solaris enterprise servers?
 
-The `src/platform` directory contains NoctVM's platform abstraction layer,
+The `src/platform` directory contains Noct2D's platform abstraction layer,
 which cleanly handles all platform-specific differences.
 
 ### Common Components
@@ -83,8 +83,8 @@ Only enabled on x86 and x86_64 Windows target.
 
 ## Language Layer
 
-NoctScript is a simple yet powerful scripting language that supports fast JIT
-compilation and seamless translation to C.
+NoctLang is a simple yet powerful scripting language that supports
+fast JIT compilation and seamless translation to C.
 
 ### Compilation Flow
 
@@ -117,7 +117,7 @@ which JIT compilation is prohibited by Apple.
 
 ## Main Layer
 
-The main layer consists of `src/*.c` files, which defines API for NoctScript.
+The main layer consists of `src/*.c` files, which defines API for Noct2D.
 
 ### Tag File
 
