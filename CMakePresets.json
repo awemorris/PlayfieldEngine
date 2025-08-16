@@ -112,7 +112,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-win-x86",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_WINDOWS":         "ON",
@@ -127,7 +126,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-win-x86_64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86_64.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_WINDOWS":         "ON",
