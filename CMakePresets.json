@@ -6,7 +6,7 @@
   "configurePresets": [
     {
       "name":           "windows-msvc-x86-debug",
-      "displayName":    "VS2022 MSVC x86 Debug",
+      "displayName":    "!VS2022 MSVC x86 Debug",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "x86",
       "toolset":        "v143",
@@ -14,11 +14,16 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Debug",
         "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-msvc-x86-release",
-      "displayName":    "VS2022 MSVC x86 Release",
+      "displayName":    "!VS2022 MSVC x86 Release",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "x86",
       "toolset":        "v143",
@@ -26,11 +31,16 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Release",
         "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-msvc-x64-debug",
-      "displayName":    "VS2022 MSVC x64 Debug",
+      "displayName":    "!VS2022 MSVC x64 Debug",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "x64",
       "toolset":        "v143",
@@ -38,11 +48,16 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Debug",
         "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-msvc-x64-release",
-      "displayName":    "VS2022 MSVC x64 Release",
+      "displayName":    "!VS2022 MSVC x64 Release",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "x64",
       "toolset":        "v143",
@@ -50,11 +65,16 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Release",
         "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-msvc-arm64-debug",
-      "displayName":    "VS2022 MSVC arm64 Debug",
+      "displayName":    "!VS2022 MSVC arm64 Debug",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "arm64",
       "toolset":        "v143",
@@ -62,11 +82,16 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Debug",
         "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-msvc-arm64-release",
-      "displayName":    "VS2022 MSVC arm64 Release",
+      "displayName":    "!VS2022 MSVC arm64 Release",
       "generator":      "Visual Studio 17 2022",
       "architecture":   "arm64",
       "toolset":        "v143",
@@ -74,12 +99,17 @@
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "Release",
         "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name":           "windows-x86",
       "displayName":    "MinGW x86",
-      "generator":      "Make",
+      "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-win-x86",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
       "hidden": true,
@@ -112,7 +142,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-win-arm64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-arm64.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_WINDOWS":         "ON",
@@ -127,7 +156,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-macos",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/macos.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_MACOS":           "ON",
@@ -142,7 +170,6 @@
       "displayName":    "Linux",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_LINUX":           "ON",
@@ -157,7 +184,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-ios-device",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-device.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_IOS":             "ON",
@@ -170,7 +196,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-ios-simulator",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-simulator.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_IOS":             "ON",
@@ -183,7 +208,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-x86",
       "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -198,7 +222,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-x86_64",
       "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -213,7 +236,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-armv7",
       "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -228,7 +250,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-arm64",
       "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -243,7 +264,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-wasm",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/wasm.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_WASM":            "ON"
@@ -255,7 +275,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-unity-win64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-win64.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
@@ -268,7 +287,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-unity-switch",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-switch.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
@@ -281,7 +299,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-unity-ps5",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-ps5.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
@@ -294,7 +311,6 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-unity-xbox",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-xbox.cmake",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
@@ -306,7 +322,6 @@
       "displayName":    "FreeBSD",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-freebsd",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_FREEBSD":         "ON",
@@ -319,7 +334,6 @@
       "displayName":    "NetBSD",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-netbsd",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_NETBSD":          "ON",
@@ -332,7 +346,6 @@
       "displayName":    "OpenBSD",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-openbsd",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_OPENBSD":         "ON",
@@ -344,7 +357,6 @@
       "displayName":    "Haiku",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-haiku",
-      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_HAIKU":           "ON",
