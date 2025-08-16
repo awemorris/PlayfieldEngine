@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 
+static bool is_running;
 static uint64_t lap_origin;
 
 /*
@@ -65,6 +66,8 @@ bool on_event_start(void)
 	if (!call_vm_function("start"))
 		return false;
 
+	is_running = true;
+
 	return true;
 }
 
@@ -105,54 +108,72 @@ void on_event_stop(void)
 
 	/* Destroy the VM. */
 	destroy_vm();
+
+	is_running = false;
 }
 
 void on_event_key_press(int key)
 {
 	UNUSED_PARAMETER(key);
+	if (is_running) {
+	}
 }
 
 void on_event_key_release(int key)
 {
 	UNUSED_PARAMETER(key);
+	if (is_running) {
+	}
 }
 
 void on_event_mouse_press(int button, int x, int y)
 {
-	set_vm_int("mousePosX", x);
-	set_vm_int("mousePosY", y);
+	if (is_running) {
+		set_vm_int("mousePosX", x);
+		set_vm_int("mousePosY", y);
 
-	if (button == MOUSE_LEFT)
-		set_vm_int("isMouseLeftPressed", 1);
-	else
-		set_vm_int("isMouseRightPressed", 1);
+		if (button == MOUSE_LEFT)
+			set_vm_int("isMouseLeftPressed", 1);
+		else
+			set_vm_int("isMouseRightPressed", 1);
+	}
 }
 
 void on_event_mouse_release(int button, int x, int y)
 {
-	set_vm_int("mousePosX", x);
-	set_vm_int("mousePosY", y);
+	if (is_running) {
+		set_vm_int("mousePosX", x);
+		set_vm_int("mousePosY", y);
 
-	if (button == MOUSE_LEFT)
-		set_vm_int("isMouseLeftPressed", 0);
-	else
-		set_vm_int("isMouseRightPressed", 0);
+		if (button == MOUSE_LEFT)
+			set_vm_int("isMouseLeftPressed", 0);
+		else
+			set_vm_int("isMouseRightPressed", 0);
+	}
 }
 
 void on_event_mouse_move(int x, int y)
 {
-	set_vm_int("mousePosX", x);
-	set_vm_int("mousePosY", y);
+	if (is_running) {
+		set_vm_int("mousePosX", x);
+		set_vm_int("mousePosY", y);
+	}
 }
 
 void on_event_touch_cancel(void)
 {
+	if (is_running) {
+	}
 }
 
 void on_event_swipe_down(void)
 {
+	if (is_running) {
+	}
 }
 
 void on_event_swipe_up(void)
 {
+	if (is_running) {
+	}
 }
