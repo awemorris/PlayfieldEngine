@@ -189,6 +189,7 @@ cp    projects/ios/ios.xcodeproj/project.pbxproj  dist/ios/ios.xcodeproj/
 mkdir                                             dist/ios/ios
 cp -R projects/ios/ios/Assets.xcassets            dist/ios/ios/
 cp    projects/ios/ios/entry.c                    dist/ios/ios/
+cp    projects/ios/ios/Info.plist                 dist/ios/ios/
 cp    projects/ios/ios/ios.entitlements           dist/ios/ios/
 cp    projects/ios/ios/LaunchScreen.storyboard    dist/ios/ios/
 cp -R Noct2D.xcframework                          dist/ios/ios/
