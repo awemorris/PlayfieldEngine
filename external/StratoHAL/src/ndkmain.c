@@ -91,10 +91,10 @@ static void init_locale(void);
 static void do_delayed_remove_rfile_ref(void);
 
 /*
- * com.noctvm.engineandroid.MainActivity.nativeInitGame()
+ * io.noctvm.android.MainActivity.nativeInitGame()
  */
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeInitGame(
+Java_io_noctvm_android_MainActivity_nativeInitGame(
 	JNIEnv *env,
 	jobject instance)
 {
@@ -174,7 +174,7 @@ static void init_locale(void)
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeReinitOpenGL(
+Java_io_noctvm_android_MainActivity_nativeReinitOpenGL(
         JNIEnv *env,
         jobject instance)
 {
@@ -195,7 +195,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeReinitOpenGL(
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeCleanup(
+Java_io_noctvm_android_MainActivity_nativeCleanup(
 	JNIEnv *env,
 	jobject instance)
 {
@@ -213,7 +213,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeCleanup(
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeRunFrame(
+Java_io_noctvm_android_MainActivity_nativeRunFrame(
 	JNIEnv *env,
 	jobject instance)
 {
@@ -222,7 +222,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeRunFrame(
 	/* Process a video playback. */
 	bool do_render = true;
 	if (state_video) {
-		jclass cls = (*jni_env)->FindClass(jni_env, "com/noctvm/engineandroid/MainActivity");
+		jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
 		jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeIsVideoPlaying", "()Z");
 		if ((*jni_env)->CallBooleanMethod(jni_env, main_activity, mid))
 			do_render = false;
@@ -283,7 +283,7 @@ static void do_delayed_remove_rfile_ref(void)
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeOnPause(
+Java_io_noctvm_android_MainActivity_nativeOnPause(
         JNIEnv *env,
         jobject instance)
 {
@@ -295,7 +295,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeOnPause(
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeOnResume(
+Java_io_noctvm_android_MainActivity_nativeOnResume(
         JNIEnv *env,
         jobject instance)
 {
@@ -307,7 +307,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeOnResume(
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeOnTouchStart(
+Java_io_noctvm_android_MainActivity_nativeOnTouchStart(
         JNIEnv *env,
         jobject instance,
         jint x,
@@ -325,7 +325,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeOnTouchStart(
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeOnTouchMove(
+Java_io_noctvm_android_MainActivity_nativeOnTouchMove(
 	JNIEnv *env,
 	jobject instance,
 	jint x,
@@ -352,7 +352,7 @@ Java_com_noctvm_engineandroid_MainActivity_nativeOnTouchMove(
 }
 
 JNIEXPORT void JNICALL
-Java_com_noctvm_engineandroid_MainActivity_nativeOnTouchEnd(
+Java_io_noctvm_android_MainActivity_nativeOnTouchEnd(
 	JNIEnv *env,
 	jobject instance,
 	jint x,
@@ -673,7 +673,7 @@ bool play_video(const char *fname, bool is_skippable)
 
 	jstring file = (*jni_env)->NewStringUTF(jni_env, fname);
 
-	jclass cls = (*jni_env)->FindClass(jni_env, "com/noctvm/engineandroid/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgePlayVideo", "(Ljava/lang/String;Z)V");
 	(*jni_env)->CallVoidMethod(jni_env,
 				   main_activity,
@@ -688,7 +688,7 @@ void stop_video(void)
 {
 	state_video = false;
 
-	jclass cls = (*jni_env)->FindClass(jni_env, "com/noctvm/engineandroid/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeStopVideo", "()V");
 	(*jni_env)->CallVoidMethod(jni_env, main_activity, mid);
 }
@@ -696,7 +696,7 @@ void stop_video(void)
 bool is_video_playing(void)
 {
 	if (state_video) {
-		jclass cls = (*jni_env)->FindClass(jni_env, "com/noctvm/engineandroid/MainActivity");
+		jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
 		jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeIsVideoPlaying", "()Z");
 		if (!(*jni_env)->CallBooleanMethod(jni_env, main_activity, mid)) {
 			state_video = false;
