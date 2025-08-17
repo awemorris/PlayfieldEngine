@@ -1,9 +1,9 @@
 Noct2D
 ======
 
-Noct2D is a go-anywhere game engine that uses [NoctLang](https://github.com/awemorris/NoctLang) for scripting.
+Noct2D is a crazy portable game engine that uses [NoctLang](https://github.com/awemorris/NoctLang) for scripting.
 
-- Tiny: Core runtime ~3.0MB for instant downloads and startup.
+- Tiny: Core runtime ~2.0MB for instant downloads and startup.
 - Fast: Low-latency game loops via JIT-optimized NoctLang.
 - Portable: Desktop, mobile, Web, consoles — all from a single codebase.
 
