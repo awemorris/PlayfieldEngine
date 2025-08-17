@@ -338,6 +338,14 @@ endif()
 # For Unity
 if(STRATO_TARGET_UNITY)
   target_compile_definitions(strato PRIVATE USE_UNITY)
+
+  if(STRATO_TARGET_UNITY_SWITCH)
+    target_compile_definitions(strato PRIVATE UNITY_SWITCH)
+  elseif(STRATO_TARGET_UNITY_PS5)
+    target_compile_definitions(strato PRIVATE UNITY_PS5)
+  elseif(STRATO_TARGET_UNITY_XBOX)
+    target_compile_definitions(strato PRIVATE UNITY_GAMECORE_XBOXSERIES)
+  endif()
 endif()
 
 #

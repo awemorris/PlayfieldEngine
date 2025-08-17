@@ -690,7 +690,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_init_hal_func_table))]
     static extern unsafe void init_hal_func_table(
@@ -734,7 +734,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_boot))]
     static extern unsafe int on_event_boot(byte *dummy1, byte *dummy2, byte *dummy3);
@@ -742,7 +742,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_start))]
     static extern unsafe int on_event_start();
@@ -750,7 +750,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_frame))]
     static extern unsafe int on_event_frame();
@@ -758,7 +758,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_press))]
     static extern unsafe void on_event_key_press(int key);
@@ -766,7 +766,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_release))]
     static extern unsafe void on_event_key_release(int key);
@@ -774,7 +774,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_press))]
     static extern unsafe void on_event_mouse_press(int button, int x, int y);
@@ -782,7 +782,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_release))]
     static extern unsafe void on_event_mouse_release(int button, int x, int y);
@@ -790,7 +790,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_move))]
     static extern unsafe void on_event_mouse_move(int x, int y);
@@ -798,7 +798,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_touch_cancel))]
     static extern unsafe void on_event_touch_cancel();
@@ -806,7 +806,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_down))]
     static extern unsafe void on_event_swipe_down();
@@ -814,7 +814,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_up))]
     static extern unsafe void on_event_swipe_up();
@@ -822,7 +822,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_get_wave_samples))]
     public static extern unsafe int get_wave_samples(byte *w, uint *buf, int samples);
@@ -830,7 +830,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoctvm")]
+    [DllImport("libnoct2d")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_is_wave_eos))]
     public static extern unsafe bool is_wave_eos(byte *w);

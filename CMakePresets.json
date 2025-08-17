@@ -291,6 +291,18 @@
       }
     },
     {
+      "name":           "unity-winarm64",
+      "displayName":    "Unity Win Arm64",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-unity-winarm64",
+      "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-winarm64.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":              "Debug",
+        "NOCT2D_TARGET_UNITY":           "ON",
+        "NOCT2D_ENABLE_SHARED":          "ON"
+      }
+    },
+    {
       "name":           "unity-switch",
       "displayName":    "Unity Switch",
       "generator":      "Ninja",
@@ -299,6 +311,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
+        "NOCT2D_TARGET_UNITY_SWITCH":    "ON",
         "NOCT2D_ENABLE_STATIC":          "ON"
       }
     },
@@ -311,6 +324,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
+        "NOCT2D_TARGET_UNITY_PS5":       "ON",
         "NOCT2D_ENABLE_STATIC":          "ON"
       }
     },
@@ -323,6 +337,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_UNITY":           "ON",
+        "NOCT2D_TARGET_UNITY_XBOX":      "ON",
         "NOCT2D_ENABLE_STATIC":          "ON"
       }
     },
