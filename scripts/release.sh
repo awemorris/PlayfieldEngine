@@ -160,6 +160,7 @@ cmake --build --preset wasm
 # Copy.
 mkdir                      dist/wasm
 cp build-wasm/index.html   dist/wasm/
+cp resources/product.img   dist/wasm/
 cp docs/wasm.md            dist/wasm/README.md
 
 rm -rf build-wasm
