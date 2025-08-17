@@ -216,7 +216,7 @@
       "displayName":    "Android x86",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-x86",
-      "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+      "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -230,7 +230,7 @@
       "displayName":    "Android x86_64",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-x86_64",
-      "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+      "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -244,7 +244,7 @@
       "displayName":    "Android ARMv7",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-armv7",
-      "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+      "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
@@ -258,7 +258,7 @@
       "displayName":    "Android Arm64",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-android-arm64",
-      "toolchainFile":  "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+      "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "ANDROID_PLATFORM":              "30",
