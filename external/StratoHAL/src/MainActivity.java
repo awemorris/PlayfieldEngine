@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 
     // Load an Android NDK library.
     static {
-        System.loadLibrary("noctvm");
+        System.loadLibrary("noct2d");
     }
 
     // These are the native methods implemented in ndk*.c
