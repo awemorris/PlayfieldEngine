@@ -337,7 +337,7 @@ endif()
 
 # For Unity
 if(STRATO_TARGET_UNITY)
-  target_compile_definitions(strato PRIVATE USE_UNITY)
+  target_compile_definitions(strato PRIVATE USE_UNITY USE_CSHARP)
 
   if(STRATO_TARGET_UNITY_SWITCH)
     target_compile_definitions(strato PRIVATE UNITY_SWITCH)
