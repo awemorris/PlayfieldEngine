@@ -21,6 +21,10 @@ static uint64_t lap_origin;
  */
 bool on_event_boot(char **title, int *width, int *height)
 {
+	char *title_ret;
+	int width_ret;
+	int height_ret;
+	
 #ifdef USE_TRANSLATION
 	/* Initialize the locale. */
 	noct2d_init_locale();
@@ -31,18 +35,25 @@ bool on_event_boot(char **title, int *width, int *height)
 		return false;
 
 	/* Create a VM, then call setup(). */
-	if (!create_vm(title, width, height))
+	if (!create_vm(&title_ret, &width_ret, &height_ret))
 		return false;
 
 	/* Save the window size. */
-	if (!set_vm_int("screenWidth", *width))
+	if (!set_vm_int("screenWidth", width_ret))
 		return false;
-	if (!set_vm_int("screenHeight", *height))
+	if (!set_vm_int("screenHeight", height_ret))
 		return false;
 
 	/* Make the exit flag. */
 	if (!set_vm_int("exitFlag", 0))
 		return false;
+
+	if (title != NULL)
+		*title = title_ret;
+	if (width != NULL)
+		*width = width_ret;
+	if (height != NULL)
+		*height = height_ret;
 
 	return true;
 }
