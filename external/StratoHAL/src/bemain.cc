@@ -10,7 +10,7 @@
 
 /* HAL */
 extern "C" {
-#include "stratohal/platform.h"	/* Public Interface */
+#include "stratohal/platform.h"		/* Public Interface */
 #include "stdfile.h"			/* Standard C File Implementation */
 };
 
@@ -49,7 +49,7 @@ BSoundPlayer *sound_player[SOUND_TRACKS];
 struct wave *wave[SOUND_TRACKS];
 bool is_finished[SOUND_TRACKS];
 
-void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_format& format);
+extern "C" void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_format& format);
 
 class NoctView : public BView
 {
@@ -192,6 +192,8 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+extern "C" {
+
 void notify_image_update(struct image *img)
 {
 }
@@ -318,11 +320,23 @@ render_image_3d_add(
 
 void reset_lap_timer(uint64_t *origin)
 {
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	*origin = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 uint64_t get_lap_timer_millisec(uint64_t *origin)
 {
-	return 0;
+	struct timeval tv;
+	uint64_t end;
+	
+	gettimeofday(&tv, NULL);
+
+	end = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+
+	return (uint64_t)(end - *origin);
 }
 
 bool play_video(const char *fname,	/* file name */
@@ -422,7 +436,7 @@ bool play_sound(int n, struct wave *w)
 	return true;
 }
 
-bool stop_sound(int n, struct wave *w)
+bool stop_sound(int n)
 {
 	wave[n] = NULL;
 	return true;
@@ -437,3 +451,5 @@ bool is_sound_finished(int n)
 {
 	return is_finished[n];
 }
+
+}; /* extern "C" */

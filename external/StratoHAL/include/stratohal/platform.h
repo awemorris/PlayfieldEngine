@@ -116,7 +116,6 @@ struct image {
         defined(TARGET_IOS) || \
         (defined(TARGET_POSIX) && defined(USE_X11_SOFTRENDER)) || \
         (defined(TARGET_LINUX) && defined(USE_LINUXFB)) || \
-        defined(TARGET_BEOS) || \
 	defined(TARGET_UNITY) \
     )
 #define ORDER_BGRA	/* Use RGBA on Direct3D and Metal */

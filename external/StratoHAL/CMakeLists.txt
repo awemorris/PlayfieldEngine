@@ -39,6 +39,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
+   OR STRATO_TARGET_HAIKU
 )
   # A target and options are manually specified.
 else()   

@@ -9,9 +9,9 @@ Noct2D is a crazy portable game engine that uses [NoctLang](https://github.com/a
 
 It provides:
 
-- Scripting: NoctLang, a fast, lightweight, game-oriented language
-- Graphics: DirectX12, Metal, OpenGL
-- Audio: DirectSound, Audio Unit, ALSA, OpenAL
+- Scripting: NoctLang, a fast, lightweight, game-oriented language.
+- Graphics: DirectX12, Metal, OpenGL, Software Renderer
+- Audio: DirectSound, Audio Unit, ALSA, OpenAL, etc
 - Input: Keybaord, mouse, touch, and gamepad.
 
 **Noct2D aims to be the most portable 2D game engine in the world!**
