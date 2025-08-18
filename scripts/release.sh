@@ -31,7 +31,7 @@ i686-w64-mingw32-strip build-win-x86/noct2dpack.exe
 mkdir                              dist/windows-x86
 cp build-win-x86/noct2d.exe        dist/windows-x86/
 cp build-win-x86/noct2dpack.exe    dist/windows-x86/
-cp sample/main.noct                dist/windows-x86/
+cp samples/bouncer/main.noct       dist/windows-x86/
 
 rm -rf build-win-x86
 
@@ -52,7 +52,7 @@ x86_64-w64-mingw32-strip build-win-x86_64/noct2dpack.exe
 mkdir                                dist/windows-x86_64
 cp build-win-x86_64/noct2d.exe       dist/windows-x86_64/
 cp build-win-x86_64/noct2dpack.exe   dist/windows-x86_64/
-cp sample/main.noct                  dist/windows-x86_64/
+cp samples/bouncer/main.noct         dist/windows-x86_64/
 
 rm -rf build-win-x86_64
 
@@ -73,7 +73,7 @@ aarch64-w64-mingw32-strip build-win-arm64/noct2dpack.exe
 mkdir                               dist/windows-arm64
 cp build-win-arm64/noct2d.exe       dist/windows-arm64/
 cp build-win-arm64/noct2dpack.exe   dist/windows-arm64/
-cp sample/main.noct                 dist/windows-arm64/
+cp samples/bouncer/main.noct        dist/windows-arm64/
 
 rm -rf build-win-arm64
 
@@ -106,10 +106,10 @@ codesign --sign 'Developer ID Application' Noct2D.dmg
 cd ..
 
 # Copy.
-mkdir                       dist/macos
-cp build-macos/Noct2D.dmg   dist/macos/
-cp build-macos/noct2dpack   dist/macos/
-cp sample/main.noct         dist/macos/
+mkdir                          dist/macos
+cp build-macos/Noct2D.dmg      dist/macos/
+cp build-macos/noct2dpack      dist/macos/
+cp samples/bouncer/main.noct   dist/macos/
 
 rm -rf build-macos
 
@@ -124,10 +124,10 @@ docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 cmake --preset linux
 docker run --rm -it -v "$PWD":/src -w /src ubuntu22-x86_64 cmake --build --preset linux
 
 # Copy.
-mkdir                       dist/linux-x86_64
-cp build-linux/noct2d       dist/linux-x86_64/
-cp build-linux/noct2dpack   dist/linux-x86_64/
-cp sample/main.noct         dist/linux-x86_64/
+mkdir                           dist/linux-x86_64
+cp build-linux/noct2d           dist/linux-x86_64/
+cp build-linux/noct2dpack       dist/linux-x86_64/
+cp samples/bouncer/main.noct    dist/linux-x86_64/
 
 rm -rf build-linux
 
@@ -241,7 +241,7 @@ cp -R projects/android/gradle                dist/android/
 cp -R projects/android/build.bat             dist/android/
 
 mkdir -p dist/android/app/src/main/assets
-cp sample/main.noct                          dist/android/app/src/main/assets/
+cp samples/bouncer/main.noct                 dist/android/app/src/main/assets/
 
 mkdir -p dist/android/app/src/main/java/com/noct2d/engineandroid
 cp external/StratoHAL/src/MainActivity.java  dist/android/app/src/main/java/com/noct2d/engineandroid/
@@ -291,7 +291,7 @@ cmake --build --preset unity-xbox
 mkdir                                              dist/unity
 mkdir                                              dist/unity/Assets
 mkdir                                              dist/unity/Assets/StreamingAssets
-cp    sample/main.noct                             dist/unity/Assets/StreamingAssets/
+cp    samples/bouncer/main.noct                    dist/unity/Assets/StreamingAssets/
 mkdir                                              dist/unity/Assets/Resources
 cp    external/StratoHAL/src/Noct2D.cs             dist/unity/Assets/
 cp    external/StratoHAL/src/NormalShader.shader   dist/unity/Assets/Resources/
@@ -316,6 +316,12 @@ rm -rf build-unity-win64
 rm -rf build-unity-switch
 rm -rf build-unity-ps5
 rm -rf build-unity-xbox
+
+#
+# Samples
+#
+
+cp -R samples dist/samples
 
 #
 # mkdocs
