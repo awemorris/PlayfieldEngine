@@ -193,7 +193,8 @@ static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 
 	w = (struct wave *)datasource;
 
-	read_rfile(w->rf, ptr, size * nmemb, &len);
+	if (!read_rfile(w->rf, ptr, size * nmemb, &len))
+		return 0;
 
 	return len / size;
 }

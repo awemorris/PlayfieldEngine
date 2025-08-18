@@ -940,6 +940,7 @@ bool create_image_with_png(const uint8_t *data, size_t size, struct image **img)
 
 	/* Cleanup. */
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	free(rows);
 
 	return true;
 }

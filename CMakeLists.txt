@@ -401,6 +401,7 @@ if(NOCT2D_TARGET_WASM)
     --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shell.html"
     --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/pre.js"
     --use-preload-plugins
+    --profiling-funcs
   )
 endif()
 

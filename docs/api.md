@@ -70,6 +70,32 @@ func update() {
 
 ## Rendering
 
+### Engine.createColorTexture()
+
+This API loads a texture from assets, and returns a texture.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|width               |Texture width.                                                |
+|height              |Texture height.                                               |
+|r                   |Red color.                                                    |
+|g                   |Green color.                                                  |
+|b                   |Blue color.                                                   |
+|a                   |Alpha color.                                                  |
+
+```
+func createBlockTexture() {
+    blockTex = Engine.createColorTexture({
+                   width:  16,
+                   height: 16,
+                   r:      255,
+                   g:      255,
+                   b:      255,
+                   a:      255
+               });
+}
+```
+
 ### Engine.loadTexture()
 
 This API loads a texture from assets, and returns a texture.
@@ -78,20 +104,30 @@ This API loads a texture from assets, and returns a texture.
 |--------------------|--------------------------------------------------------------|
 |file                |File name to load.                                            |
 
+```
+func loadPlayerTexture() {
+   playerTex = Engine.loadTexture({
+                   file: "player.png"
+               });
+
+   var width = playerTex.width;
+   var height = playerTex.height;
+}
+```
+
 ### Engine.destroyTexture()
 
 This API destroys a texture.
 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
-|tex                 |Texture.                                                      |
+|texture             |Texture.                                                      |
 
 ```
-func loadPlayerTexture() {
-    var tex = Engine.loadTexture({
-                  file: "player.png"
-              });
-    return tex;
+func destroyPlayerTexture() {
+    Engine.loadTexture({
+        texture: playerTex
+    });
 }
 ```
 
@@ -149,7 +185,7 @@ func renderPlayer() {
 }
 ```
 
-### Engine.loadFontSlot()
+### Engine.loadFont()
 
 This API loads an asset font file to a specified font slot.
 
@@ -157,6 +193,12 @@ This API loads an asset font file to a specified font slot.
 |--------------------|--------------------------------------------------------------|
 |slot                |Font slot index. (0-3)                                        |
 |file                |File name to load.                                            |
+
+```
+func loadNotoSansFont() {
+    Engine.loadFont({ slot: 0, file: "NotoSans.ttf" });
+}
+```
 
 ### Engine.createTextTexture()
 
@@ -167,7 +209,24 @@ This API creates a texture and draws a text on it.
 |slot                |Font slot index. (0-3)                                        |
 |text                |Glyph code point.                                             |
 |size                |Font size.                                                    |
-|color               |Color, e.g. "#ff0000" for red.                                |
+|r                   |Red color.                                                    |
+|g                   |Green color.                                                  |
+|b                   |Blue color.                                                   |
+|a                   |Alpha color.                                                  |
+
+```
+func createScoreTexture() {
+    scoreTex = Engine.createTextTexture({
+                   slot: 0,
+                   text: "Score: " + score,
+                   size: 32,
+                   r:    255,
+                   g:    255,
+                   b:    255,
+                   a:    255
+               });
+}
+```
 
 ## Sound
 
@@ -180,6 +239,12 @@ This API starts playing a sound asset file on a specified sound track.
 |stream              |Track index. (0-3)                                            |
 |file                |File to play.                                                 |
 
+```
+func playJumpSound() {
+    Engine.playSound({ stream: 0, file: "jump.ogg" });
+}
+```
+
 ### Engine.stopSound()
 
 This API stops a sound playback on a specified sound track.
@@ -187,6 +252,12 @@ This API stops a sound playback on a specified sound track.
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
 |stream              |Track index. (0-3)                                            |
+
+```
+func playJumpSound() {
+    Engine.stopSound({ stream: 0 });
+}
+```
 
 ### Engine.setSoundVolume()
 
@@ -196,3 +267,12 @@ This API sets a sound volume on a specified sound track.
 |--------------------|--------------------------------------------------------------|
 |stream              |Track index. (0-3)                                            |
 |volume              |Volume value. (0-1.0)                                         |
+
+```
+func playJumpSound() {
+    Engine.setSoundVolume({
+        stream: 0,
+        volume: 1.0
+    });
+}
+```

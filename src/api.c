@@ -120,7 +120,6 @@ bool noct2d_load_texture(const char *fname, int *ret, int *width, int *height)
 	free(data);
 
 	/* Fill alpha channel. */
-	fill_image_alpha(tex_tbl[index].img);
 	notify_image_update(tex_tbl[index].img);
 
 	/* Mark as used. */
@@ -181,6 +180,8 @@ static bool create_texture(int width, int height, int *ret, struct image **img)
 	if (!create_image(width, height, img))
 		return false;
 	
+	memset((*img)->pixels, 0, width * height * 4);
+
 	/* Mark as used. */
 	tex_tbl[index].is_used = true;
 	tex_tbl[index].img = *img;

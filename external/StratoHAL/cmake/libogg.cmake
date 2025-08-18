@@ -13,17 +13,22 @@ file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "#define INCLU
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "#define INCLUDE_STDINT_H    1\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "#define INCLUDE_SYS_TYPES_H 1\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "#include <stdint.h>\n")
+file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef int8_t ogg_int8_t;\n")
+file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef uint8_t ogg_uint8_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef int16_t ogg_int16_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef uint16_t ogg_uint16_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef int32_t ogg_int32_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef uint32_t ogg_uint32_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef int64_t ogg_int64_t;\n")
+file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "typedef uint64_t ogg_uint64_t;\n")
 file(APPEND ${CMAKE_BINARY_DIR}/libogg/include/ogg/config_types.h "#endif\n")
 
 add_library(ogg OBJECT
   ${CMAKE_BINARY_DIR}/libogg/src/bitwise.c
   ${CMAKE_BINARY_DIR}/libogg/src/framing.c
 )
+
+target_compile_definitions(ogg PUBLIC _FILE_OFFSET_BITS=64 _LARGEFILE_SOURCE _LARGEFILE64_SOURCE)
 
 target_include_directories(ogg PRIVATE ${CMAKE_BINARY_DIR}/libogg)
 target_include_directories(ogg PUBLIC  ${CMAKE_BINARY_DIR}/libogg/include)
