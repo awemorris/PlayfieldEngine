@@ -18,33 +18,9 @@ It provides:
 
 ---
 
-## Live Demo
+## Live Web Demo
 
 - [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)
-
----
-
-## Quick Start
-
-1. Download the latest release:
-  Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
-
-2. Clone and build from the repository:
-  ```
-  git clone https://github.com/awemorris/Noct2D.git
-  cd Noct2D
-  git submodule update --init
-  cmake -B build .
-  cmake --build build
-  ./build/noct2d
-  ```
-
-3. Run your first script
-  Follow the instructions in [Getting Started Guide](docs/gettingstarted.md)
-
-4. Explore more features
-  See the Full [Documentation](docs/index.md) for scripting, API
-  reference, and porting guides.
 
 ---
 
@@ -93,18 +69,57 @@ func start() {
 }
 
 func frame() {
-    Engine.renderTexture({
-	texture: myTexture
-	x: Engine.mousePosX,
-	y: Engine.mousePosY,
+    Engine.draw({
+        texture: myTexture
+        x: Engine.mousePosX,
+        y: Engine.mousePosY,
     });
 }
 ```
 
-📝 Note: setup() defines the window, start() loads resources, and
+**Note:** setup() defines the window, start() loads resources, and
 frame() is called each frame to render and update.
 
 For more examples, check the [Getting Started Guide](docs/gettingstarted.md)
+
+---
+
+## ChatGPT Support
+
+To generate game templates with ChatGPT, please let it load the
+following references:
+
+- [NoctLang Syntax Reference](https://noctvm.io/noctlang/syntax.html)
+- [Noct2D API Reference](https://noctvm.io/noct2d/api.html)
+
+ChatGPT can then create runnable Noct2D game samples directly.
+
+**Note:** In ChatGPT, you need to click the **"+"** button and enable
+**"Web Search"** so that it can read the above references.
+
+---
+
+## Quick Start
+
+1. Download the latest release:
+  Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
+
+2. Clone and build from the repository:
+  ```
+  git clone https://github.com/awemorris/Noct2D.git
+  cd Noct2D
+  git submodule update --init
+  cmake -B build .
+  cmake --build build
+  ./build/noct2d
+  ```
+
+3. Run your first script
+  Follow the instructions in [Getting Started Guide](docs/gettingstarted.md)
+
+4. Explore more features
+  See the Full [Documentation](docs/index.md) for scripting, API
+  reference, and porting guides.
 
 ---
 
@@ -174,7 +189,7 @@ Create at your pace, wherever you are in the world.
 |               |PlayStation® 5     |Unity Plugin (Native)                     |
 |               |Xbox Series X\|S    |Unity Plugin (Native)                     |
 
-### Noct Language
+### NoctLang
 
 **NoctLang** is a lightweight scripting language designed specifically
 for Noct2D. With a game-oriented syntax, it emphasizes clarity,
