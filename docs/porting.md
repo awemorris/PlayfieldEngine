@@ -103,8 +103,8 @@ Both OpenGL and framebuffer are supported.
 
 |System                |Tested |2D |3D |Sound |Description                    |
 |----------------------|-------|---|---|------|-------------------------------|
-|Haiku                 |v      |v  |v  |      |Sound not tested               |
-|BeOS                  |       |v  |v  |      |Sound not tested               |
+|Haiku                 |v      |v  |   |v     |Sound not tested               |
+|BeOS                  |       |v  |   |v     |Sound not tested               |
 
 ## How To Port
 
