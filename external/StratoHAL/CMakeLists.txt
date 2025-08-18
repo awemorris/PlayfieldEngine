@@ -453,6 +453,19 @@ if(STRATO_TARGET_WINDOWS)
   endif()
 endif()
 
+# OpenGL
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD
+)
+  if(STRATO_ENABLE_GLX)
+    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
+  else()
+    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
+  endif()
+endif()
+
 #
 # Link
 #
@@ -522,7 +535,7 @@ if(   STRATO_TARGET_LINUX
   target_link_libraries(strato PUBLIC  m pthread Xpm X11)
 
   # Add -lGL -lGLX
-  if(ENABLE_GLX)
+  if(STRATO_ENABLE_GLX)
     target_link_libraries(strato PUBLIC  GL GLX)
   endif()
 endif()

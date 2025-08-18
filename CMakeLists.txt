@@ -200,6 +200,17 @@ else()
   endif()
 endif()
 
+# OpenGL
+if(   NOCT2D_TARGET_LINUX
+   OR NOCT2D_TARGET_FREEBSD
+   OR NOCT2D_TARGET_NETBSD
+   OR NOCT2D_TARGET_OPENBSD
+)
+  if(NOCT2D_ENABLE_GLX)
+    set(STRATO_ENABLE_GLX ON)
+  endif()
+endif()
+
 # Use translation.
 if(NOCT2D_ENABLE_I18N)
   set(STRATO_ENABLE_I18N ON)
