@@ -197,6 +197,11 @@ Noct2D provides Unity Plugin binaries for platforms including Windows 64-bit, Ni
 - They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
 - For actual shipping builds, developers must re-compile using the official SDKs provided by each platform holder.
 - Platform names are listed solely to describe compatibility and do not imply endorsement or approval by the respective companiese.
+- Nintendo Switch™ is a trademark of Nintendo.
+- PlayStation® and PlayStation®5 are registered trademarks of Sony Interactive Entertainment Inc.
+- Xbox®, Xbox Series X|S are trademarks of Microsoft Corporation.
+- Unity® is a trademark of Unity Technologies.
+- All other company and product names are trademarks or registered trademarks of their respective owners.
 
 ### NoctLang
 
