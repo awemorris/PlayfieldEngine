@@ -36,8 +36,8 @@ It provides:
 
 ## Table of Contents
 
-- [Key Features](#-key-features)
-- [Example](#-example)
+- [Key Features](#key-features)
+- [Example](#example)
 - [ChatGPT Support](#chatgpt-support)
 - [Quick Start](#quick-start)
 - [What's Noct2D?](#whats-noct2d)
@@ -54,7 +54,7 @@ It provides:
 - [Samples](#samples)
 - [Noct Ecosystem](#noct-ecosystem)
 - [License](#license)
-- [Join Us](#-join-us)
+- [Join Us](#join-us)
 - [About the Author](#about-the-author)
 
 ---
