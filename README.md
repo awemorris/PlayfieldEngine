@@ -258,7 +258,7 @@ Create at your pace, wherever you are in the world.
 +-----------------------------------------------------+
          ||               ||                ||
 +-----------------+--------------+  +-----------------+
-|  Rendering HAL  |  Sound HAL   |  | Scriptiing Core |
+|  Rendering HAL  |  Sound HAL   |  | Scripting Core  |
 +-----------------+--------------+  +-----------------|
 ```
 
