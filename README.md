@@ -30,7 +30,7 @@ It provides:
 
 - [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)
 
-[!screenshot](https://noctvm.io/img/noct2d.png)
+![screenshot](https://noctvm.io/img/noct2d.png)
 
 ---
 
