@@ -185,9 +185,18 @@ Create at your pace, wherever you are in the world.
 |Mobile         |iOS                 |Metal, via Xcode project                  |
 |               |Android             |OpenGL, via Android Studio project        |
 |Web            |WebAssembly         |WebGL, via Emscripten                     |
-|Console        |Nintendo Switch™   |Unity Plugin (Native)                     |
-|               |PlayStation® 5     |Unity Plugin (Native)                     |
-|               |Xbox Series X\|S    |Unity Plugin (Native)                     |
+|Console        |Nintendo Switch™   |Unity Plugin                              |
+|               |PlayStation® 5     |Unity Plugin                              |
+|               |Xbox Series X\|S    |Unity Plugin                              |
+
+### Console Unity Plugin Notice
+
+Noct2D provides Unity Plugin binaries for platforms including Windows 64-bit, Nintendo Switch, PlayStation 5, and Xbox Series X|S.
+
+- These binaries are provided for demonstration purposes only.
+- They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
+- For actual shipping builds, developers must re-compile using the official SDKs provided by each platform holder.
+- Platform names are listed solely to describe compatibility and do not imply endorsement or approval by the respective companiese.
 
 ### NoctLang
 
