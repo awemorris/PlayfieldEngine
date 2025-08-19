@@ -136,75 +136,83 @@ ChatGPT can then create runnable Noct2D game samples directly.
 
 ## Quick Start
 
-1-a. Download the latest release:
-    - Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
+### 1-a. Download the latest release:
 
-1-b. ...Or, clone and build from the repository:
-    - Visual Studio 2022
-        - Install the [winflexbison](https://github.com/lexxmark/winflexbison).
-            - Add the installation folder to the PATH environment variable.
-            - Rename the exe files to `flex.exe` and `bison.exe`.
-        - Clone the repo.
-          ```
-          git clone --recursive https://github.com/awemorris/Noct2D.git
-          ```
-        - Open the folder by Visual Studio 2022.
-        - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
-        - Build and run.
-    - WSL2 (Ubuntu 22.04 or later, CMake >= 3.22)
-        - Type the following in the terminal.
-          ```
-          sudo apt-get install cmake mingw-w64 flex bison
-          
-          git clone --recursive https://github.com/awemorris/Noct2D.git
-          cd Noct2D
-          cmake --preset windows-x86_64
-          cmake --build --preset windows-x86_64
-          ```
-        - The file `noct2d.exe` will be generated in the `build-win-x86_64` directory.
-    - macOS (macOS 11 or later, brew, CMake >= 3.22)
-        - Type the following in the terminal.
-          ```
-          brew install cmake flex bison
-          
-          git clone --recursive https://github.com/awemorris/Noct2D.git
-          cd Noct2D
-          cmake -B build .
-          cmake --build build --parallel
-          ```
-        - The app bundle `Noct2D.app` will be generated in the `build` directory.
-        - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
-    - Linux (Ubuntu 22.04 or later, CMake >= 3.22)
-        - Type the following in the terminal.
-          ```
-          sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
-          
-          git clone --recursive https://github.com/awemorris/Noct2D.git
-          cd Noct2D
-          cmake -B build .
-          cmake --build build --parallel
-          ```
-        - The file `noct2d` will be generated in the `build` directory.
-        - The app uses X11 and OpenGL.
-    - Notes
-        - Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
-        - Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
-        - macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
-        - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
-        - Unity Plugin build is not included in this Quick Start. Use the CMake presets named `unity-*`.
-        - A full build takes 10 seconds using 10 cores.
+- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
 
-2. Run a game script
-    - Place the sample game files alongside the binary, i.e., `noct2d.exe`, `Noct2D.app`, or `noct2d`.
-        - E.g., `cp samples/rush/* build/`
-    - Run the app.
-        - Double click the `noct2d.exe` file on Windows.
-        - Double click the `Noct2D.app` bundle on macOS.
-        - Run `./noct2d` on Linux.
+### 1-b. ...Or, clone and build from the repository:
 
-3. Explore more features
-    - See the [Getting Started](docs/gettingstarted.md) page for the overview.
-    - See the [Full Documentation](docs/index.md) for the details.
+- Visual Studio 2022
+    - Install the [winflexbison](https://github.com/lexxmark/winflexbison).
+        - Add the installation folder to the PATH environment variable.
+        - Rename the exe files to `flex.exe` and `bison.exe`.
+    - Clone the repo.
+    ```
+    git clone --recursive https://github.com/awemorris/Noct2D.git
+    ```
+    - Open the folder by Visual Studio 2022.
+    - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
+    - Build and run.
+
+- WSL2 (Ubuntu 22.04 or later, CMake >= 3.22)
+    - Type the following in the terminal.
+    ```
+    sudo apt-get install cmake mingw-w64 flex bison
+    
+    git clone --recursive https://github.com/awemorris/Noct2D.git
+    cd Noct2D
+    cmake --preset windows-x86_64
+    cmake --build --preset windows-x86_64
+    ```
+    - The file `noct2d.exe` will be generated in the `build-win-x86_64` directory.
+
+- macOS (macOS 11 or later, brew, CMake >= 3.22)
+    - Type the following in the terminal.
+    ```
+    brew install cmake flex bison
+    
+    git clone --recursive https://github.com/awemorris/Noct2D.git
+    cd Noct2D
+    cmake -B build .
+    cmake --build build --parallel
+    ```
+    - The app bundle `Noct2D.app` will be generated in the `build` directory.
+    - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
+
+- Linux (Ubuntu 22.04 or later, CMake >= 3.22)
+    - Type the following in the terminal.
+    ```
+    sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
+    
+    git clone --recursive https://github.com/awemorris/Noct2D.git
+    cd Noct2D
+    cmake -B build .
+    cmake --build build --parallel
+    ```
+    - The file `noct2d` will be generated in the `build` directory.
+    - The app uses X11 and OpenGL.
+
+- Notes
+    - Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
+    - Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
+    - macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
+    - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
+    - Unity Plugin build is not included in this Quick Start. Use the CMake presets named `unity-*`.
+    - A full build takes 10 seconds using 10 cores.
+
+### 2. Run a game script
+
+- Place the sample game files alongside the binary, i.e., `noct2d.exe`, `Noct2D.app`, or `noct2d`.
+    - E.g., `cp samples/rush/* build/`
+- Run the app.
+    - Double click the `noct2d.exe` file on Windows.
+    - Double click the `Noct2D.app` bundle on macOS.
+    - Run `./noct2d` on Linux.
+
+### 3. Explore more features
+
+- See the [Getting Started](docs/gettingstarted.md) page for the overview.
+- See the [Full Documentation](docs/index.md) for the details.
 
 ---
 
