@@ -147,48 +147,48 @@ ChatGPT can then create runnable Noct2D game samples directly.
         - Add the installation folder to the PATH environment variable.
         - Rename the exe files to `flex.exe` and `bison.exe`.
     - Clone the repo.
-    ```
-    git clone --recursive https://github.com/awemorris/Noct2D.git
-    ```
+        ```
+        git clone --recursive https://github.com/awemorris/Noct2D.git
+        ```
     - Open the folder by Visual Studio 2022.
     - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
     - Build and run.
 
 - WSL2 (Ubuntu 22.04 or later, CMake >= 3.22)
     - Type the following in the terminal.
-    ```
-    sudo apt-get install cmake mingw-w64 flex bison
-    
-    git clone --recursive https://github.com/awemorris/Noct2D.git
-    cd Noct2D
-    cmake --preset windows-x86_64
-    cmake --build --preset windows-x86_64
-    ```
+        ```
+        sudo apt-get install cmake mingw-w64 flex bison
+        
+        git clone --recursive https://github.com/awemorris/Noct2D.git
+        cd Noct2D
+        cmake --preset windows-x86_64
+        cmake --build --preset windows-x86_64
+        ```
     - The file `noct2d.exe` will be generated in the `build-win-x86_64` directory.
 
 - macOS (macOS 11 or later, brew, CMake >= 3.22)
     - Type the following in the terminal.
-    ```
-    brew install cmake flex bison
-    
-    git clone --recursive https://github.com/awemorris/Noct2D.git
-    cd Noct2D
-    cmake -B build .
-    cmake --build build --parallel
-    ```
+        ```
+        brew install cmake flex bison
+        
+        git clone --recursive https://github.com/awemorris/Noct2D.git
+        cd Noct2D
+        cmake -B build .
+        cmake --build build --parallel
+        ```
     - The app bundle `Noct2D.app` will be generated in the `build` directory.
     - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
 
 - Linux (Ubuntu 22.04 or later, CMake >= 3.22)
     - Type the following in the terminal.
-    ```
-    sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
-    
-    git clone --recursive https://github.com/awemorris/Noct2D.git
-    cd Noct2D
-    cmake -B build .
-    cmake --build build --parallel
-    ```
+        ```
+        sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
+        
+        git clone --recursive https://github.com/awemorris/Noct2D.git
+        cd Noct2D
+        cmake -B build .
+        cmake --build build --parallel
+        ```
     - The file `noct2d` will be generated in the `build` directory.
     - The app uses X11 and OpenGL.
 
