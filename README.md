@@ -83,7 +83,7 @@ It provides:
 
 ---
 
-## 🧪 Example
+## Example
 
 Here's a simple example that displays an image following the mouse
 cursor. This shows the basic lifecycle: `setup` (window config),
