@@ -22,6 +22,7 @@ option(NOCT2D_TARGET_HAIKU         "Build for Haiku"         OFF)
 option(NOCT2D_ENABLE_JIT           "Enable JIT"              OFF)
 option(NOCT2D_ENABLE_I18N          "Enable translation"      OFF)
 option(NOCT2D_ENABLE_GLX           "Enable OpenGL on X11"    OFF)
+option(NOCT2D_ENABLE_FBDEV         "Enable fbdev on Linux"   OFF)
 option(NOCT2D_ENABLE_BUNDLE        "Enable macOS bundle"     OFF)
 option(NOCT2D_ENABLE_PACK          "Enable packager"         OFF)
 option(NOCT2D_ENABLE_STATIC        "Build a static library"  OFF)
@@ -208,6 +209,10 @@ if(   NOCT2D_TARGET_LINUX
 )
   if(NOCT2D_ENABLE_GLX)
     set(STRATO_ENABLE_GLX ON)
+  endif()
+
+  if(NOCT2D_ENABLE_FBDEV)
+    set(STRATO_ENABLE_FBDEV ON)
   endif()
 endif()
 

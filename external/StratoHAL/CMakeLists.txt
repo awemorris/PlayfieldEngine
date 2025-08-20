@@ -20,6 +20,7 @@ option(STRATO_TARGET_HAIKU         "Build for Haiku"         OFF)
 
 # Options
 option(STRATO_ENABLE_GLX           "Enable OpenGL on X11"    OFF)
+option(STRATO_ENABLE_FBDEV         "Enable fbdev on Linux"   OFF)
 option(STRATO_ENABLE_I18N          "Enable translation"      OFF)
 option(STRATO_ENABLE_STATIC        "Build a static library"  OFF)
 option(STRATO_ENABLE_SHARED        "Build a dynamic library" OFF)
@@ -192,21 +193,32 @@ if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
-  set(STRATO_SOURCES
-    src/image.c
-    src/glyph.c
-    src/wave.c
-    src/stdfile.c
-    src/x11main.c
-    src/x11opengl.c
-    src/x11softrender.c
-    src/icon.c
-    src/glrender.c
-    src/asound.c
-    src/bsdsound.c
-    src/nosound.c
-    src/gstplay.c
-  )
+  if(NOT STRATO_ENABLE_FBDEV)
+    set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/x11main.c
+      src/x11opengl.c
+      src/x11softrender.c
+      src/icon.c
+      src/glrender.c
+      src/asound.c
+      src/bsdsound.c
+      src/nosound.c
+      src/gstplay.c
+    )
+  else()
+    set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/fbmain.c
+      src/asound.c
+    )
+  endif()
 endif()
 
 # For Emscripten.
