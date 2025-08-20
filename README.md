@@ -10,7 +10,7 @@ Noct2D is a game engine built from scratch — and it's crazy portable!
 It uses [Noct](https://github.com/awemorris/NoctLang),
 a lightweight **C-like JIT-powered scripting language** designed in-house.
 
-With **ultra-compact binaries (~2 MB)**, it runs everywhere —
+With ~2 MB small binaries, it runs everywhere —
 **Windows, macOS, Linux, iOS, Android, WebAssembly, consoles**, and even retro systems & niche OSes.
 
 **Status:**
