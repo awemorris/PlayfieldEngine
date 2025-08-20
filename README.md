@@ -17,7 +17,7 @@ a lightweight C-like JIT-powered scripting language designed in-house.
 - iOS
 - Android
 - WebAssembly
-- Unity 6
+- Consoles
 
 ### Status
 
