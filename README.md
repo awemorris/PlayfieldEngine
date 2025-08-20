@@ -5,24 +5,14 @@ Noct2D
 [![GitHub release](https://img.shields.io/github/release/awemorris/Noct2D.svg)](https://github.com/awemorris/Noct2D/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/Noct2D/total.svg)](https://github.com/awemorris/Noct2D/releases)
 
-Noct2D is a crazy portable game engine that uses [NoctLang](https://github.com/awemorris/NoctLang) for scripting.
-
-- Tiny: Core runtime ~2.0MB for instant downloads and startup.
-- Fast: Low-latency game loops via JIT-optimized NoctLang.
-- Portable: Desktop, mobile, Web, consoles — all from a single codebase.
-
-It provides:
-
-- Scripting: NoctLang, a fast, lightweight, game-oriented language.
-- Graphics: DirectX12, Metal, OpenGL, Software Renderer
-- Audio: DirectSound, Audio Unit, ALSA, OpenAL, etc
-- Input: Keyboard, mouse, touch, and gamepad.
+Noct2D is a game engine that uses [Noct](https://github.com/awemorris/NoctLang), an original C-like language for scripting — and it's crazy portable!
+With binaries as small as ~2MB, it runs everywhere.
+**Windows, macOS, Linux, iOS, Android, WebAssembly, consoles**, and EVEN retro systems & niche OSes.
 
 **Status:**
 
-- Actively developed on the 0.1.x branch. Use the latest nightly.
-- No stable release available yet, 1.0.0 will be stable.
-- Actually runs on all the platforms described in this page.
+- Currently in active development on the 0.1.x branch. Stable 1.0.0 release planned.
+- Actually works on all the platforms described in this page.
 
 ---
 
