@@ -364,6 +364,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_FREEBSD":         "ON",
+        "NOCT2D_ENABLE_GLX":             "ON",
         "NOCT2D_ENABLE_JIT":             "ON",
         "NOCT2D_ENABLE_PACK":            "ON"
       }
