@@ -13,11 +13,6 @@ func setup() {
 }
 
 func start() {
-    // Constants.
-    true = 1;
-    false = 0;
-    null = 0;
-
     // baseline for the ground
     groundY = screenH - 20;
 
