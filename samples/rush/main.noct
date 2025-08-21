@@ -114,8 +114,8 @@ func update(dt) {
     }
 
     // Physics
-    player.vy = player.vy + gravity * dt;
-    player.y  = player.y + player.vy * dt;
+    player.vy += gravity * dt;
+    player.y  += player.vy * dt;
 
     // Ground clamp
     var floorY = groundY - player.h;
@@ -128,7 +128,7 @@ func update(dt) {
     // Spawn obstacles
     spawnTimer = spawnTimer + dt;
     if (spawnTimer >= spawnInterval) {
-        spawnTimer = spawnTimer - spawnInterval;
+        spawnTimer -= spawnInterval;
         spawnObstacle();
     }
 
@@ -140,7 +140,7 @@ func update(dt) {
         // score when fully passed player
         if (!ob.counted && (ob.x + ob.w) < player.x) {
             ob.counted = true;
-            score = score + 1;
+            score += 1;
             updateScoreTex();
         }
 
