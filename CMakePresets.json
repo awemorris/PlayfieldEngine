@@ -171,6 +171,21 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":              "Release",
         "NOCT2D_TARGET_LINUX":           "ON",
+        "NOCT2D_ENABLE_GLX":             "ON",
+        "NOCT2D_ENABLE_JIT":             "ON",
+        "NOCT2D_ENABLE_I18N":            "ON",
+        "NOCT2D_ENABLE_PACK":            "ON"
+      }
+    },
+    {
+      "name":           "linux-fbdev",
+      "displayName":    "Linux Framebuffer",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-linux-fbdev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":              "Release",
+        "NOCT2D_TARGET_LINUX":           "ON",
+        "NOCT2D_ENABLE_FBDEV":           "ON",
         "NOCT2D_ENABLE_JIT":             "ON",
         "NOCT2D_ENABLE_I18N":            "ON",
         "NOCT2D_ENABLE_PACK":            "ON"
@@ -409,6 +424,10 @@
     {
       "name": "linux",
       "configurePreset": "linux"
+    },
+    {
+      "name": "linux-fbdev",
+      "configurePreset": "linux-fbdev"
     },
     {
       "name": "ios-device",

@@ -9,7 +9,7 @@
  */
 
 /* HAL */
-#include "platform.h"		/* Public Interface */
+#include <stratohal/platform.h>	/* Public Interface */
 #include "stdfile.h"		/* Standard C File Implementation */
 #include "asound.h"		/* ALSA Sound Implemenatation */
 
@@ -56,18 +56,22 @@ static int screen_height;
 /* Input Info */
 #define EV_DEV_MAX	16
 static int ev_fd[EV_DEV_MAX];
-int ev_count;
+static int ev_count;
 static struct pollfd ev_fds[EV_DEV_MAX];
 static int mouse_x;
 static int mouse_y;
 
+/* Log */
+static FILE *log_fp;
+
 /* Forward Declaration */
-bool init_fb(void);
-void cleanup_fb(void);
-bool init_input(void);
-void cleanup_input(void);
-void process_input(void);
-void process_event(int index);
+static bool init_fb(void);
+static void cleanup_fb(void);
+static bool init_input(void);
+static void cleanup_input(void);
+static void process_input(void);
+static void process_event(int index);
+static bool open_log_file(void);
 
 int main(int argc, char *argv[])
 {
@@ -112,7 +116,7 @@ int main(int argc, char *argv[])
 
 }
 
-bool init_fb(void)
+static bool init_fb(void)
 {
 	fb_fd = open("/dev/fb0", O_RDWR);
 	if (fb_fd < 0) {
@@ -140,13 +144,13 @@ bool init_fb(void)
 	return true;
 }
 
-void cleanup_fb(void)
+static void cleanup_fb(void)
 {
 	munmap(fb_pixels, fb_size);
 	close(fb_fd);
 }
 
-bool init_input(void)
+static bool init_input(void)
 {
 	int i;
 
@@ -167,7 +171,7 @@ bool init_input(void)
 	return true;
 }
 
-void cleanup_input(void)
+static void cleanup_input(void)
 {
 	int i;
 
@@ -179,7 +183,7 @@ void cleanup_input(void)
 	}
 }
 
-void process_input(void)
+static void process_input(void)
 {
 	int i;
 	bool processed;
@@ -201,7 +205,7 @@ void process_input(void)
 	} while (processed);
 }
 
-void process_event(int index)
+static void process_event(int index)
 {
 	struct input_event e;
 
@@ -437,15 +441,31 @@ render_image_3d_add(
 	UNUSED_PARAMETER(alpha);
 }
 
-void reset_lap_timer(uint64_t *origin)
+/*
+ * Reset a timer.
+ */
+void reset_lap_timer(uint64_t *t)
 {
-	UNUSED_PARAMETER(origin);
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	*t = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+/*
+ * Get a timer lap.
+ */
+uint64_t get_lap_timer_millisec(uint64_t *t)
 {
-	UNUSED_PARAMETER(origin);
-	return 0;
+	struct timeval tv;
+	uint64_t end;
+	
+	gettimeofday(&tv, NULL);
+
+	end = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+
+	return (uint64_t)(end - *t);
 }
 
 bool play_video(const char *fname,	/* file name */
@@ -493,24 +513,88 @@ char *make_real_path(const char *fname)
 	return strdup(fname);
 }
 
+/*
+ * Put an INFO log.
+ */
 bool log_info(const char *s, ...)
 {
-	UNUSED_PARAMETER(s);
+	char buf[1024];
+	va_list ap;
+
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	open_log_file();
+	if (log_fp != NULL) {
+		fprintf(log_fp, "%s\n", buf);
+		fflush(log_fp);
+		if (ferror(log_fp))
+			return false;
+	}
+	printf("%s\n", buf);
 
 	return true;
 }
 
+/*
+ * Put a WARN log.
+ */
 bool log_warn(const char *s, ...)
 {
-	UNUSED_PARAMETER(s);
+	char buf[1024];
+	va_list ap;
+
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	open_log_file();
+	if (log_fp != NULL) {
+		fprintf(log_fp, "%s\n", buf);
+		fflush(log_fp);
+		if (ferror(log_fp))
+			return false;
+	}
+	printf("%s\n", buf);
 
 	return true;
 }
 
+/*
+ * Put an ERROR log.
+ */
 bool log_error(const char *s, ...)
 {
-	UNUSED_PARAMETER(s);
+	char buf[1024];
+	va_list ap;
 
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	open_log_file();
+	if (log_fp != NULL) {
+		fprintf(log_fp, "%s\n", buf);
+		fflush(log_fp);
+		if (ferror(log_fp))
+			return false;
+	}
+	printf("%s\n", buf);
+	
+	return true;
+}
+
+/* Open the log file. */
+static bool open_log_file(void)
+{
+	if (log_fp == NULL) {
+		log_fp = fopen(LOG_FILE, "w");
+		if (log_fp == NULL) {
+			printf("Can't open log file.\n");
+			return false;
+		}
+	}
 	return true;
 }
 

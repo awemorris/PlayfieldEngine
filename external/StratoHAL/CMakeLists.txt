@@ -396,15 +396,23 @@ if(STRATO_ENABLE_JIT)
 endif()
 
 # -DUSE_GLX if we use OpenGL on X11.
-if(   STRATO_TARGET_LINUX
-   OR STRATO_TARGET_FREEBSD
+if(   STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
   if(STRATO_ENABLE_GLX)
-    target_compile_definitions(strato PRIVATE USE_X11_OPENGL)
+    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
   else()
-    target_compile_definitions(strato PRIVATE USE_X11_SOFTRENDER)
+    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
+  endif()
+endif()
+if(STRATO_TARGET_LINUX)
+  if(STRATO_ENABLE_GLX)
+    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
+  elseif(STRATO_ENABLE_FBDEV)
+    target_compile_definitions(strato PUBLIC USE_LINUXFB)
+  else()
+    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
   endif()
 endif()
 
@@ -463,19 +471,6 @@ if(STRATO_TARGET_WINDOWS)
   if(MSVC)
     target_compile_options(strato PUBLIC /utf-8)
     target_compile_definitions(strato PUBLIC UNICODE _UNICODE)
-  endif()
-endif()
-
-# OpenGL
-if(   STRATO_TARGET_LINUX
-   OR STRATO_TARGET_FREEBSD
-   OR STRATO_TARGET_NETBSD
-   OR STRATO_TARGET_OPENBSD
-)
-  if(STRATO_ENABLE_GLX)
-    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
-  else()
-    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
   endif()
 endif()
 

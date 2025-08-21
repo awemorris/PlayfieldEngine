@@ -210,10 +210,11 @@ if(   NOCT2D_TARGET_LINUX
   if(NOCT2D_ENABLE_GLX)
     set(STRATO_ENABLE_GLX ON)
   endif()
+endif()
 
-  if(NOCT2D_ENABLE_FBDEV)
-    set(STRATO_ENABLE_FBDEV ON)
-  endif()
+# Linux Framebuffer
+if(NOCT2D_ENABLE_FBDEV)
+  set(STRATO_ENABLE_FBDEV ON)
 endif()
 
 # Use translation.
