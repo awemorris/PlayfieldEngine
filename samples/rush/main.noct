@@ -102,7 +102,7 @@ func update(dt) {
         if (Engine.isMouseLeftPressed) {
             resetGame();
         }
-        return 1;
+        return;
     }
 
     // Input: jump on mouse/tap
@@ -160,7 +160,7 @@ func update(dt) {
 
 func onGameOver() {
     if (gameOver) {
-        return 1;
+        return;
     }
 
     gameOver = true;
@@ -262,7 +262,7 @@ func rectOverlap(ax, ay, aw, ah, bx, by, bw, bh) {
 
 func updateScoreTex() {
     if (!fontReady) {
-        return 0;
+        return;
     }
 
     if (scoreTex != null) {
