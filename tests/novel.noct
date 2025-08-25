@@ -206,8 +206,8 @@ func initNovel() {
                     fromX:     0,
                     fromY:     0,
                     fromAlpha:  0,
-                    fromScaleX: 0,
-                    fromScaleY: 0,
+                    fromScaleX: 1.0,
+                    fromScaleY: 1.0,
                     fromRotate: 0.0,
                     toX:        0,
                     toY:        0,
@@ -377,18 +377,98 @@ func initNovel() {
 
             // Render the stage images.
             for (i in 0..this.STAGE_LAYERS) {
-                if (Novel.layerTex[i] != 0) {
-                    Engine.renderTexture({
-                        dstLeft:   this.layerX[i],
-                        dstTop:    this.layerY[i],
-                        dstWidth:  this.layerTex[i].width,
-                        dstHeight: this.layerTex[i].height,
-                        texture:   this.layerTex[i],
-                        srcLeft:   0,
-                        srcTop:    0,
-                        srcWidth:  this.layerTex[i].width,
-                        srcHeight: this.layerTex[i].height,
-                        alpha:     this.layerAlpha[i]
+                if (this.layerTex[i] != null) {
+                    var x1 = 0;
+                    var y1 = 0;
+                    var x2 = this.layerTex[i].width - 1.0;
+                    var y2 = 0;
+                    var x3 = 0;
+                    var y3 = this.layerTex[i].height - 1.0;
+                    var x4 = this.layerTex[i].width - 1.0;
+                    var y4 = this.layerTex[i].height - 1.0;
+                    var center_x = this.layerCenterX[i];
+                    var center_y = this.layerCenterY[i];
+                    var rad = this.layerRotate[i];
+
+                    // 1. Shift for the centering.
+                    x1 -= center_x;
+                    y1 -= center_y;
+                    x2 -= center_x;
+                    y2 -= center_y;
+                    x3 -= center_x;
+                    y3 -= center_y;
+                    x4 -= center_x;
+                    y4 -= center_y;
+
+                    // 2. Scale.
+                    x1 *= this.layerScaleX[i];
+                    y1 *= this.layerScaleY[i];
+                    x2 *= this.layerScaleX[i];
+                    y2 *= this.layerScaleY[i];
+                    x3 *= this.layerScaleX[i];
+                    y3 *= this.layerScaleY[i];
+                    x4 *= this.layerScaleX[i];
+                    y4 *= this.layerScaleY[i];
+
+                    // 3. Rotate.
+                    // if (rad != 0) {
+                    //     var tmp_x = x1;
+                    //     var tmp_y = y1;
+                    //     x1 = tmp_x * cos(rad) - tmp_y * sin(rad);
+                    //     y1 = tmp_x * sin(rad) + tmp_y * cos(rad);
+
+                    //     tmp_x = x2;
+                    //     tmp_y = y2;
+                    //     x2 = tmp_x * cos(rad) - tmp_y * sin(rad);
+                    //     y2 = tmp_x * sin(rad) + tmp_y * cos(rad);
+
+                    //     tmp_x = x3;
+                    //     tmp_y = y3;
+                    //     x3 = tmp_x * cos(rad) - tmp_y * sin(rad);
+                    //     y3 = tmp_x * sin(rad) + tmp_y * cos(rad);
+
+                    //     tmp_x = x4;
+                    //     tmp_y = y4;
+                    //     x4 = tmp_x * cos(rad) - tmp_y * sin(rad);
+                    //     y4 = tmp_x * sin(rad) + tmp_y * cos(rad);
+                    // }
+
+                    // 4. Shift again for the centering.
+                    x1 += center_x;
+                    y1 += center_y;
+                    x2 += center_x;
+                    y2 += center_y;
+                    x3 += center_x;
+                    y3 += center_y;
+                    x4 += center_x;
+                    y4 += center_y;
+
+                    // 5. Shift for the layer position.
+                    x1 += this.layerX[i];
+                    y1 += this.layerY[i];
+                    x2 += this.layerX[i];
+                    y2 += this.layerY[i];
+                    x3 += this.layerX[i];
+                    y3 += this.layerY[i];
+                    x4 += this.layerX[i];
+                    y4 += this.layerY[i];
+
+                    // Render.
+                    Engine.renderTexture3D({
+                        x1: x1,
+                        y1: y1,
+                        x2: x2,
+                        y2: y2,
+                        x3: x3,
+                        y3: y3,
+                        x4: x4,
+                        y4: y4,
+                        texture: this.layerTex[i],
+                        srcLeft: 0,
+                        srcTop:  0,
+                        srcWidth: this.layerTex[i].width,
+			srcHeight: this.layerTex[i].height,
+			alpha: this.layerAlpha[i]
                     });
                 }
             }
@@ -420,14 +500,22 @@ func Tag_background(param) {
                 layer:      Novel.LAYER_BG,
                 startTime:  0.0,
                 endTime:    float(param.time),
+                fromScaleX: 1.0,
+                fromScaleY: 1.0,
                 fromAlpha:  255,
+                toScaleX:   1.0,
+                toScaleY:   1.0,
                 toAlpha:    0
             },
             {
                 layer:      Novel.LAYER_BG_FI,
                 startTime:  0.0,
                 endTime:    float(param.time),
+                fromScaleX: 1.0,
+                fromScaleY: 1.0,
                 fromAlpha:  0,
+                toScaleX:   1.0,
+                toScaleY:   1.0,
                 toAlpha:    255
             }
         ]);
@@ -464,6 +552,69 @@ func Tag_background(param) {
 
         // Remove the tag workspace.
         Novel.tagWorkspace = 0;
+
+        // Move to the next tag.
+        Novel->moveToNextTag();
+    }
+
+    return 1;
+}
+
+func Tag_zoomin(param) {
+    //
+    // Initialize.
+    //
+    if (Novel.curTagFunc == 0) {
+        // Register the frame callback.
+        Novel.curTagFunc = Tag_zoomin;
+
+        // Create a tag workspace.
+        Novel.tagWorkspace = {};
+
+        // Start an anime.
+        Novel.tagWorkspace.animeLayers = Novel->startAnime([
+            {
+                layer:      Novel.LAYER_BG,
+                startTime:  0.0,
+                endTime:    float(param.time),
+                fromScaleX: 1.0,
+                fromScaleY: 1.0,
+                fromAlpha:  255,
+                toScaleX:   2.0,
+                toScaleY:   2.0,
+                toAlpha:    255
+            }
+        ]);
+    }
+
+    //
+    // Rendering.
+    //
+    Novel->renderStage();
+
+    //
+    // Completion.
+    //
+
+    // Check that the layer animes are running.
+    var notCompleted = 0;
+    for (layer in Novel.tagWorkspace.animeLayers) {
+        if (!Novel->isLayerAnimeCompleted(layer)) {
+            notCompleted = 1;
+            break;
+        }
+    }
+
+    // If the layer animes are completed.
+    if (!notCompleted) {
+        // Clear the layer animes.
+        Novel->clearAnimeForLayers(Novel.tagWorkspace.animeLayers);
+
+        // Unregister the frame callback.
+        Novel.curTagFunc = null;
+
+        // Remove the tag workspace.
+        Novel.tagWorkspace = null;
 
         // Move to the next tag.
         Novel->moveToNextTag();

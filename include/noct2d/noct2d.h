@@ -66,6 +66,26 @@ noct2d_render_texture(
  * Render a texture.
  */
 void
+noct2d_render_texture_3d(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture.
+ */
+void
 noct2d_draw(
 	int tex_id,
 	int x,

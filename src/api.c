@@ -259,6 +259,40 @@ noct2d_render_texture(
  * Render a texture.
  */
 void
+noct2d_render_texture_3d(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_3d_normal(x1, y1, x2, y2, x3, y3, x4, y4,
+			       t->img,
+			       src_left, src_top, src_width, src_height,
+			       alpha);
+}
+
+/*
+ * Render a texture.
+ */
+void
 noct2d_draw(
 	int tex_id,
 	int x,

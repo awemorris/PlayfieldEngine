@@ -620,6 +620,55 @@ static bool Engine_renderTexture(NoctEnv *env)
 	return true;
 }
 
+/* Engine.renderTexture3D() */
+static bool Engine_renderTexture3D(NoctEnv *env)
+{
+	int x1, y1, x2, y2, x3, y3, x4, y4;
+	int tex_id;
+	int src_left;
+	int src_top;
+	int src_width;
+	int src_height;
+	int alpha;
+
+	if (!get_int_param(env, "x1", &x1))
+		return false;
+	if (!get_int_param(env, "y1", &y1))
+		return false;
+	if (!get_int_param(env, "x2", &x2))
+		return false;
+	if (!get_int_param(env, "y2", &y2))
+		return false;
+	if (!get_int_param(env, "x3", &x3))
+		return false;
+	if (!get_int_param(env, "y3", &y3))
+		return false;
+	if (!get_int_param(env, "x4", &x4))
+		return false;
+	if (!get_int_param(env, "y4", &y4))
+		return false;
+	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
+		return false;
+	if (!get_int_param(env, "srcLeft", &src_left))
+		return false;
+	if (!get_int_param(env, "srcTop", &src_top))
+		return false;
+	if (!get_int_param(env, "srcWidth", &src_width))
+		return false;
+	if (!get_int_param(env, "srcHeight", &src_height))
+		return false;
+	if (!get_int_param(env, "alpha", &alpha))
+		return false;
+
+	noct2d_render_texture_3d(
+		x1, y1, x2, y2, x3, y3, x4, y4,
+		tex_id,
+		src_left, src_top, src_width, src_height,
+		alpha);
+
+	return true;
+}
+
 /* Engine.draw() */
 static bool Engine_draw(NoctEnv *env)
 {
@@ -958,6 +1007,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(loadTexture),
 		RTFUNC(destroyTexture),
 		RTFUNC(renderTexture),
+		RTFUNC(renderTexture3D),
 		RTFUNC(draw),
 		RTFUNC(destroyTexture),
 		RTFUNC(playSound),
