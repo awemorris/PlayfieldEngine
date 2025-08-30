@@ -29,9 +29,10 @@ a lightweight C-like JIT-powered scripting language designed in-house.
 
 ## Live Web Demo
 
-- [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)
-
-<img src="https://noctvm.io/img/noct2d.png" alt="Screenshot" width="200">
+- [Heartbeat Clock](https://noctvm.io/g/2)
+    - <img src="https://noctvm.io/img/screenshot-2.png" alt="Heartbeat Clock" width="200">
+- [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)  
+    - <img src="https://noctvm.io/img/screenshot-1.png" alt="DON'T RUSH IN COMIKET" width="200">
 
 ---
 
