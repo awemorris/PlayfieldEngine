@@ -74,7 +74,11 @@ func start() {
 func frame() {
     var now = Engine.millisec;
     var dt = (now - lastTime) * 0.001;
-    if (dt > 0.05) { dt = 0.05; } // clamp to avoid huge steps
+
+    // clamp to avoid huge steps
+    if (dt > 0.05)
+        dt = 0.05;
+
     lastTime = now;
 
     update(dt);
@@ -83,14 +87,19 @@ func frame() {
 
 func resetGame() {
     obstacles = [];
+
     player.x = 120;
     player.y = groundY - player.h;
     player.vy = 0;
     player.onGround = true;
+
     score = 0;
+
     spawnTimer = 0.0;
     gameOver = false;
+
     updateScoreTex();
+
     if (msgTex != null) {
         Engine.destroyTexture({ texture: msgTex });
         msgTex = 0;
@@ -99,9 +108,8 @@ func resetGame() {
 
 func update(dt) {
     if (gameOver) {
-        if (Engine.isMouseLeftPressed) {
+        if (Engine.isMouseLeftPressed)
             resetGame();
-        }
         return;
     }
 
@@ -146,22 +154,19 @@ func update(dt) {
 
         // AABB collision
         if (rectOverlap(player.x, player.y, player.w, player.h,
-                        ob.x, ob.y, ob.w, ob.h)) {
+                        ob.x, ob.y, ob.w, ob.h))
             onGameOver();
-        }
 
         // keep if on screen
-        if ((ob.x + ob.w) >= -64) {
+        if ((ob.x + ob.w) >= -64)
             newObs->push(ob);
-        }
     }
     obstacles = newObs;
 }
 
 func onGameOver() {
-    if (gameOver) {
+    if (gameOver)
         return;
-    }
 
     gameOver = true;
 
@@ -214,12 +219,10 @@ func render() {
     });
 
     if (fontReady) {
-        if (scoreTex != null) {
+        if (scoreTex != null)
             Engine.draw({ texture: scoreTex, x: 12, y: 10 });
-        }
-        if (gameOver && msgTex != null) {
+        if (gameOver && msgTex != null)
             Engine.draw({ texture: msgTex, x: (screenW - msgTex.width) / 2, y: 120 });
-        }
     }
 }
 
@@ -244,32 +247,24 @@ func rectOverlap(ax, ay, aw, ah, bx, by, bw, bh) {
     var aBottom = ay + ah;
     var bBottom = by + bh;
 
-    if (aRight <= bx) {
+    if (aRight <= bx)
         return false;
-    }
-    if (bRight <= ax) {
+    if (bRight <= ax)
         return false;
-    }
-    if (aBottom <= by) {
+    if (aBottom <= by)
         return false;
-    }
-    if (bBottom <= ay) {
+    if (bBottom <= ay)
         return false;
-    }
 
     return true;
 }
 
 func updateScoreTex() {
-    if (!fontReady) {
+    if (!fontReady)
         return;
-    }
 
-    if (scoreTex != null) {
-        Engine.destroyTexture({
-            texture: scoreTex
-        });
-    }
+    if (scoreTex != null)
+        Engine.destroyTexture({ texture: scoreTex });
 
     scoreTex = Engine.createTextTexture({
         slot: 0,
