@@ -935,7 +935,6 @@ void update_viewport_size(int width, int height)
 
 	/* Update the screen offset and scale for drawing subsystem. */
 	opengl_set_screen(orig_x, orig_y, viewport_width, viewport_height);
-	printf("%d %d %d %d\n", orig_x, orig_y, viewport_width, viewport_height);
 }
 
 /*
