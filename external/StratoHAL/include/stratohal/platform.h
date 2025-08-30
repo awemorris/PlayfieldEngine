@@ -693,6 +693,7 @@ enum key_code {
 	KEY_S,
 	KEY_L,
 	KEY_H,
+	KEY_MAX = KEY_H + 1,
 };
 
 /* Mouse button. */

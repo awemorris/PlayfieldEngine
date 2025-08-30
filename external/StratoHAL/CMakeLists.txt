@@ -16,11 +16,8 @@ option(STRATO_TARGET_UNITY         "Build for Unity"         OFF)
 option(STRATO_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
 option(STRATO_TARGET_NETBSD        "Build for NetBSD"        OFF)
 option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"       OFF)
-option(STRATO_TARGET_HAIKU         "Build for Haiku"         OFF)
 
 # Options
-option(STRATO_ENABLE_GLX           "Enable OpenGL on X11"    OFF)
-option(STRATO_ENABLE_FBDEV         "Enable fbdev on Linux"   OFF)
 option(STRATO_ENABLE_I18N          "Enable translation"      OFF)
 option(STRATO_ENABLE_STATIC        "Build a static library"  OFF)
 option(STRATO_ENABLE_SHARED        "Build a dynamic library" OFF)
@@ -40,7 +37,6 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
-   OR STRATO_TARGET_HAIKU
 )
   # A target and options are manually specified.
 else()   
@@ -61,9 +57,6 @@ else()
   endif()
   if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
     set(STRATO_TARGET_OPENBSD    ON)
-  endif()
-  if(CMAKE_SYSTEM_NAME STREQUAL "Haiku")
-    set(STRATO_TARGET_HAIKU      ON)
   endif()
   # No automatic detection for:
   #  - iOS
@@ -187,21 +180,18 @@ if(STRATO_TARGET_MACOS)
   )
 endif()
 
-# For POSIX (X11).
+# For Linux and *BSD.
 if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
-  if(NOT STRATO_ENABLE_FBDEV)
-    set(STRATO_SOURCES
+  set(STRATO_SOURCES
       src/image.c
       src/glyph.c
       src/wave.c
       src/stdfile.c
       src/x11main.c
-      src/x11opengl.c
-      src/x11softrender.c
       src/icon.c
       src/glrender.c
       src/asound.c
@@ -209,16 +199,6 @@ if(   STRATO_TARGET_LINUX
       src/nosound.c
       src/gstplay.c
     )
-  else()
-    set(STRATO_SOURCES
-      src/image.c
-      src/glyph.c
-      src/wave.c
-      src/stdfile.c
-      src/fbmain.c
-      src/asound.c
-    )
-  endif()
 endif()
 
 # For Emscripten.
@@ -268,17 +248,6 @@ if(STRATO_TARGET_UNITY)
     src/glyph.c
     src/wave.c
     src/halwrap.c
-  )
-endif()
-
-# For Haiku.
-if(STRATO_TARGET_HAIKU)
-  set(STRATO_SOURCES
-    src/image.c
-    src/glyph.c
-    src/wave.c
-    src/stdfile.c
-    src/bemain.cc
   )
 endif()
 
@@ -393,27 +362,6 @@ endif()
 # -DUSE_JIT if we use JIT.
 if(STRATO_ENABLE_JIT)
   target_compile_definitions(strato PRIVATE USE_JIT)
-endif()
-
-# -DUSE_GLX if we use OpenGL on X11.
-if(   STRATO_TARGET_FREEBSD
-   OR STRATO_TARGET_NETBSD
-   OR STRATO_TARGET_OPENBSD
-)
-  if(STRATO_ENABLE_GLX)
-    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
-  else()
-    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
-  endif()
-endif()
-if(STRATO_TARGET_LINUX)
-  if(STRATO_ENABLE_GLX)
-    target_compile_definitions(strato PUBLIC USE_X11_OPENGL)
-  elseif(STRATO_ENABLE_FBDEV)
-    target_compile_definitions(strato PUBLIC USE_LINUXFB)
-  else()
-    target_compile_definitions(strato PUBLIC USE_X11_SOFTRENDER)
-  endif()
 endif()
 
 # Add library header directories.
@@ -533,24 +481,19 @@ if(STRATO_TARGET_MACOS)
   )
 endif()
 
-# POSIX
+# Linux and *BSD.
 if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
   # Add -lm -lpthread -lXpm -lX11
-  target_link_libraries(strato PUBLIC  m pthread Xpm X11)
-
-  # Add -lGL -lGLX
-  if(STRATO_ENABLE_GLX)
-    target_link_libraries(strato PUBLIC  GL GLX)
-  endif()
+  target_link_libraries(strato PUBLIC m pthread Xpm X11 GL GLX)
 endif()
 
 # Linux: Add -lasound
 if(STRATO_TARGET_LINUX)
-  target_link_libraries(strato PUBLIC  asound)
+  target_link_libraries(strato PUBLIC asound)
 endif()
 
 # FreeBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
@@ -560,20 +503,15 @@ endif()
 
 # NetBSD: Add -L/usr/local/lib -L/usr/X11R7/lib
 if(STRATO_TARGET_NETBSD)
-  target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R7/lib)
+  target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R7/lib)
 endif()
 
 # OpenBSD: Add -L/usr/local/lib -L/usr/X11R6/lib
 if(STRATO_TARGET_OPENBSD)
-  target_link_directories(strato PUBLIC  /usr/local/lib /usr/X11R6/lib)
+  target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R6/lib)
 endif()
 
 # Android: Add -lgles
 if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
-endif()
-
-# Haiku: Add -lbe -lmedia
-if(STRATO_TARGET_HAIKU)
-  target_link_libraries(strato PUBLIC be media)
 endif()

@@ -11,7 +11,6 @@
 /* HAL */
 #include "stratohal/platform.h"	/* Public Interface */
 #include "stdfile.h"			/* Standard C File Implementation */
-#include "x11graphics.h"		/* X11 Graphics Implementation */
 #if defined(TARGET_LINUX)
 #include "asound.h"			/* ALSA Sound Implemenatation */
 #else
@@ -24,6 +23,11 @@
 #include <X11/xpm.h>
 #include <X11/Xatom.h>
 #include <X11/Xlocale.h>
+
+/* OpenGL */
+#include <GL/gl.h>			/* OpenGL */
+#include <GL/glx.h>			/* GLX */
+#include "glrender.h"			/* OpenGL Compatibility Helper */
 
 /* POSIX */
 #include <sys/types.h>
@@ -41,6 +45,10 @@
 /* Gstreamer Video HAL */
 #include "gstplay.h"
 
+/* Color Format */
+#define DEPTH		(24)
+#define BPP		(32)
+
 /* Log File */
 #define LOG_FILE	"log.txt"
 
@@ -51,10 +59,19 @@
 #define FRAME_MILLI	(16)	/* Millisec of a frame */
 #define SLEEP_MILLI	(5)	/* Millisec to sleep */
 
+/* Key code */
+enum {
+	KEY_F12 = KEY_MAX,
+};
+
 /* Window Config */
 static char *window_title;
-static int window_width;
-static int window_height;
+static int screen_width;
+static int screen_height;
+static int viewport_width;
+static int viewport_height;
+static float mouse_scale = 1.0f;
+static bool is_full_screen;
 
 /* X11 Objects */
 Display *display;
@@ -62,6 +79,10 @@ Window window = BadAlloc;
 static Pixmap icon = BadAlloc;
 static Pixmap icon_mask = BadAlloc;
 static Atom delete_message = BadAlloc;
+
+/* GLX Objects */
+static GLXWindow glx_window = None;
+static GLXContext glx_context = None;
 
 /* Frame Start Time */
 static struct timeval tv_start;
@@ -82,12 +103,73 @@ static bool is_gst_skippable;
 /* Icon */
 extern char *icon_xpm[35];
 
+/* OpenGL 3.0 API */
+GLuint (APIENTRY *glCreateShader)(GLenum type);
+void (APIENTRY *glShaderSource)(GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
+void (APIENTRY *glCompileShader)(GLuint shader);
+void (APIENTRY *glGetShaderiv)(GLuint shader, GLenum pname, GLint *params);
+void (APIENTRY *glGetShaderInfoLog)(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
+void (APIENTRY *glAttachShader)(GLuint program, GLuint shader);
+void (APIENTRY *glLinkProgram)(GLuint program);
+void (APIENTRY *glGetProgramiv)(GLuint program, GLenum pname, GLint *params);
+void (APIENTRY *glGetProgramInfoLog)(GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
+GLuint (APIENTRY *glCreateProgram)(void);
+void (APIENTRY *glUseProgram)(GLuint program);
+void (APIENTRY *glGenVertexArrays)(GLsizei n, GLuint *arrays);
+void (APIENTRY *glBindVertexArray)(GLuint array);
+void (APIENTRY *glGenBuffers)(GLsizei n, GLuint *buffers);
+void (APIENTRY *glBindBuffer)(GLenum target, GLuint buffer);
+GLint (APIENTRY *glGetAttribLocation)(GLuint program, const GLchar *name);
+void (APIENTRY *glVertexAttribPointer)(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+void (APIENTRY *glEnableVertexAttribArray)(GLuint index);
+GLint (APIENTRY *glGetUniformLocation)(GLuint program, const GLchar *name);
+void (APIENTRY *glUniform1i)(GLint location, GLint v0);
+void (APIENTRY *glBufferData)(GLenum target, GLsizeiptr size, const void *data, GLenum usage);
+void (APIENTRY *glDeleteShader)(GLuint shader);
+void (APIENTRY *glDeleteProgram)(GLuint program);
+void (APIENTRY *glDeleteVertexArrays)(GLsizei n, const GLuint *arrays);
+void (APIENTRY *glDeleteBuffers)(GLsizei n, const GLuint *buffers);
+struct API
+{
+	void **func;
+	const char *name;
+};
+static struct API api[] =
+{
+	{(void **)&glCreateShader, "glCreateShader"},
+	{(void **)&glShaderSource, "glShaderSource"},
+	{(void **)&glCompileShader, "glCompileShader"},
+	{(void **)&glGetShaderiv, "glGetShaderiv"},
+	{(void **)&glGetShaderInfoLog, "glGetShaderInfoLog"},
+	{(void **)&glAttachShader, "glAttachShader"},
+	{(void **)&glLinkProgram, "glLinkProgram"},
+	{(void **)&glGetProgramiv, "glGetProgramiv"},
+	{(void **)&glGetProgramInfoLog, "glGetProgramInfoLog"},
+	{(void **)&glCreateProgram, "glCreateProgram"},
+	{(void **)&glUseProgram, "glUseProgram"},
+	{(void **)&glGenVertexArrays, "glGenVertexArrays"},
+	{(void **)&glBindVertexArray, "glBindVertexArray"},
+	{(void **)&glGenBuffers, "glGenBuffers"},
+	{(void **)&glBindBuffer, "glBindBuffer"},
+	{(void **)&glGetAttribLocation, "glGetAttribLocation"},
+	{(void **)&glVertexAttribPointer, "glVertexAttribPointer"},
+	{(void **)&glEnableVertexAttribArray, "glEnableVertexAttribArray"},
+	{(void **)&glGetUniformLocation, "glGetUniformLocation"},
+	{(void **)&glUniform1i, "glUniform1i"},
+	{(void **)&glBufferData, "glBufferData"},
+	{(void **)&glDeleteShader, "glDeleteShader"},
+	{(void **)&glDeleteProgram, "glDeleteProgram"},
+	{(void **)&glDeleteVertexArrays, "glDeleteVertexArrays"},
+	{(void **)&glDeleteBuffers, "glDeleteBuffers"},
+};
+
 /* forward declaration */
 static void init_locale(void);
 static bool init_hal(int argc, char *argv[]);
 static bool open_log_file(void);
 static void close_log_file(void);
 static bool open_display(void);
+static bool create_glx_window(void);
 static bool set_window_title(void);
 static bool show_window(void);
 static void set_window_size(void);
@@ -109,6 +191,8 @@ static int get_key_code(XEvent *event);
 static void event_button_press(XEvent *event);
 static void event_button_release(XEvent *event);
 static void event_motion_notify(XEvent *event);
+static void update_viewport_size(int width, int height);
+static Bool want_configure(Display* d, XEvent* ev, XPointer arg);
 
 /*
  * Main
@@ -181,7 +265,7 @@ static bool init_hal(int argc, char *argv[])
 		return false;
 
 	/* Do a boot callback. */
-	if (!on_event_boot(&window_title, &window_width, &window_height))
+	if (!on_event_boot(&window_title, &screen_width, &screen_height))
 		return false;
 
 	/* Initialize the sound HAL. */
@@ -196,13 +280,13 @@ static bool init_hal(int argc, char *argv[])
 		return false;
 	}
 
-	/* Initialize graphics (OpenGL or XImage). */
-	if (!init_x11_graphics(window_width, window_height)) {
+	/* Create a GLX window. */
+	if (!create_glx_window()) {
 		log_error("Failed to initialize graphics.");
 		return false;
 	}
 
-	/* Setup the window created by init_x11_graphics(). */
+	/* Setup the window. */
 	if (!setup_window()) {
 		log_error("Failed to setup a window.");
 		return false;
@@ -228,6 +312,115 @@ static bool open_display(void)
 		log_error("XOpenDisplay() failed.");
 		return false;
 	}
+	return true;
+}
+
+bool create_glx_window(void)
+{
+	int pix_attr[] = {
+		GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+		GLX_RENDER_TYPE, GLX_RGBA_BIT,
+		GLX_DOUBLEBUFFER, True,
+		GLX_RED_SIZE, 1,
+		GLX_GREEN_SIZE, 1,
+		GLX_BLUE_SIZE, 1,
+		None
+	};
+	int ctx_attr[]= {
+		GLX_CONTEXT_MAJOR_VERSION_ARB, 2,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		GLX_CONTEXT_FLAGS_ARB, 0,
+		GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+		None
+	};
+	GLXContext (*glXCreateContextAttribsARB)(Display *dpy,
+						 GLXFBConfig config,
+						 GLXContext share_context,
+						 Bool direct,
+						 const int *attrib_list);
+	GLXFBConfig *config;
+	XVisualInfo *vi;
+	XSetWindowAttributes swa;
+	XEvent event;
+	int i, n;
+
+	viewport_width = screen_width;
+	viewport_height = screen_height;
+
+	/* Choose a framebuffer format. */
+	config = glXChooseFBConfig(display, DefaultScreen(display), pix_attr, &n);
+	if (config == NULL)
+		return false;
+	vi = glXGetVisualFromFBConfig(display, config[0]);
+
+	/* Create a window. */
+	swa.border_pixel = 0;
+	swa.event_mask = StructureNotifyMask;
+	swa.colormap = XCreateColormap(display,
+				       RootWindow(display, vi->screen),
+				       vi->visual,
+				       AllocNone);
+	window = XCreateWindow(display,
+			       RootWindow(display, vi->screen),
+			       0,
+			       0,
+			       (unsigned int)screen_width,
+			       (unsigned int)screen_height,
+			       0,
+			       vi->depth,
+			       InputOutput,
+			       vi->visual,
+			       CWBorderPixel | CWColormap | CWEventMask,
+			       &swa);
+	XFree(vi);
+
+	/* Create a GLX context. */
+	glXCreateContextAttribsARB = (void *)glXGetProcAddress((const unsigned char *)"glXCreateContextAttribsARB");
+	if (glXCreateContextAttribsARB == NULL) {
+		XDestroyWindow(display, window);
+		return false;
+	}
+	glx_context = glXCreateContextAttribsARB(display, config[0], 0, True, ctx_attr);
+	if (glx_context == NULL) {
+		XDestroyWindow(display, window);
+		return false;
+	}
+
+	/* Create a GLX window. */
+	glx_window = glXCreateWindow(display, config[0], window, NULL);
+	XFree(config);
+
+	/* Map the window to the screen, and wait for showing. */
+	XMapWindow(display, window);
+	XNextEvent(display, &event);
+
+	/* Bind the GLX context to the window. */
+	glXMakeContextCurrent(display, glx_window, glx_window, glx_context);
+
+	/* Get the API pointers. */
+	for (i = 0; i < (int)(sizeof(api)/sizeof(struct API)); i++) {
+		*api[i].func = (void *)glXGetProcAddress((const unsigned char *)api[i].name);
+		if(*api[i].func == NULL) {
+			log_info("Failed to get %s", api[i].name);
+			glXMakeContextCurrent(display, None, None, None);
+			glXDestroyContext(display, glx_context);
+			glXDestroyWindow(display, glx_window);
+			glx_context = None;
+			glx_window = None;
+			return false;
+		}
+	}
+
+	/* Initialize the OpenGL rendering subsystem. */
+	if (!init_opengl(screen_width, screen_height)) {
+		glXMakeContextCurrent(display, None, None, None);
+		glXDestroyContext(display, glx_context);
+		glXDestroyWindow(display, glx_window);
+		glx_context = None;
+		glx_window = None;
+		return false;
+	}
+
 	return true;
 }
 
@@ -293,10 +486,10 @@ static void set_window_size(void)
 
 	sh = XAllocSizeHints();
 	sh->flags = PMinSize | PMaxSize;
-	sh->min_width = window_width;
-	sh->min_height = window_height;
-	sh->max_width = window_width;
-	sh->max_height = window_height;
+	sh->min_width = screen_width;
+	sh->min_height = screen_height;
+	sh->max_width = screen_width;
+	sh->max_height = screen_height;
 	XSetWMSizeHints(display, window, sh, XA_WM_NORMAL_HINTS);
 	XFree(sh);
 }
@@ -383,9 +576,6 @@ static void cleanup_hal(void)
 	/* Cleanup sound. */
 	cleanup_sound();
 
-	/* Cleanup gprahics. */
-	cleanup_x11_graphics();
-
 	/* Destroy the window. */
 	destroy_window();
 
@@ -402,6 +592,20 @@ static void cleanup_hal(void)
 /* Destroy the window. */
 static void destroy_window(void)
 {
+	cleanup_opengl();
+
+	glXMakeContextCurrent(display, None, None, None);
+
+	if (glx_context != None) {
+		glXDestroyContext(display, glx_context);
+		glx_context = None;
+	}
+
+	if (glx_window != None) {
+		glXDestroyWindow(display, glx_window);
+		glx_window = None;
+	}
+
 	if (display != NULL) {
 		if (window != BadAlloc)
 			XDestroyWindow(display, window);
@@ -470,14 +674,16 @@ static bool run_frame(void)
 
 	/* Start rendering. */
 	if (!is_gst_playing)
-		start_x11_rendering();
+		opengl_start_rendering();
 
 	/* Call a frame event. */
 	cont = on_event_frame();
 
 	/* End rendering. */
-	if (!is_gst_playing)
-		end_x11_rendering();
+	if (!is_gst_playing) {
+		opengl_end_rendering();
+		glXSwapBuffers(display, glx_window);
+	}
 
 	return cont;
 }
@@ -563,6 +769,15 @@ static void event_key_press(XEvent *event)
 	if (key == -1)
 		return;
 
+	/* Detect Alt+Enter. */
+	if (key == KEY_F12) {
+		if (!is_full_screen)
+			enter_full_screen_mode();
+		else
+			leave_full_screen_mode();
+		return;
+	}
+
 	/* Call an event handler. */
 	on_event_key_press(key);
 }
@@ -621,6 +836,8 @@ static int get_key_code(XEvent *event)
 		return KEY_LEFT;
 	case XK_Right:
 		return KEY_RIGHT;
+	case XK_F12:
+		return KEY_F12;
 	default:
 		break;
 	}
@@ -678,6 +895,42 @@ static void event_motion_notify(XEvent *event)
 {
 	/* Call an event handler. */
 	on_event_mouse_move(event->xmotion.x, event->xmotion.y);
+}
+
+/*
+ * Sets the window size.
+ */
+void update_viewport_size(int width, int height)
+{
+	float aspect, use_width, use_height, mouse_scale;
+	int orig_x, orig_y;
+	int viewport_width, viewport_height;
+
+	/* Calc the aspect ratio of the game. */
+	aspect = (float)screen_height / (float)screen_width;
+
+	/* Calc the height. (temporarily with "width-first") */
+	use_width = (float)screen_width;
+	use_height = use_width * aspect;
+	mouse_scale = (float)screen_height / (float)width;
+
+	/* If height is not enough, calc the width. (with "height-first") */
+	if(use_height > (float)screen_width) {
+		use_height = (float)screen_height;
+		use_width = (float)screen_height / aspect;
+		mouse_scale = (float)screen_height / (float)height;
+	}
+
+	/* Calc the viewport origin. */
+	orig_x = (int)((((float)screen_width - use_width) / 2.0f) + 0.5);
+	orig_y = (int)((((float)screen_height - use_height) / 2.0f) + 0.5);
+
+	/* Calc the viewport size. */
+	viewport_width = (int)use_width;
+	viewport_height = (int)use_height;
+
+	/* Update the screen offset and scale for drawing subsystem. */
+	opengl_set_screen(orig_x, orig_y, viewport_width, viewport_height);
 }
 
 /*
@@ -841,48 +1094,180 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 }
 
 /*
- * Show a exit dialog.
+ * Notify an image update.
  */
-bool exit_dialog(void)
+void notify_image_update(struct image *img)
 {
-	/* stub */
-	return true;
+	opengl_notify_image_update(img);
 }
 
 /*
- * Show a back-to-title dialog.
+ * Notify an image free.
  */
-bool title_dialog(void)
+void notify_image_free(struct image *img)
 {
-	/* stub */
-	return true;
+	opengl_notify_image_free(img);
 }
 
 /*
- * Show a delete confirmation dialog.
+ * Render an image. (alpha blend)
  */
-bool delete_dialog(void)
+void render_image_normal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	/* stub */
-	return true;
+	opengl_render_image_normal(
+		dst_left,
+		dst_top,
+		dst_width,
+		dst_height,
+		src_image,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
+		alpha
+	);
 }
 
 /*
- * Show an overwrite confirmation dialog.
+ * Render an image. (add blend)
  */
-bool overwrite_dialog(void)
+void render_image_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	/* stub */
-	return true;
+	opengl_render_image_add(
+		dst_left,
+		dst_top,
+		dst_width,
+		dst_height,
+		src_image,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
+		alpha
+	);
 }
 
 /*
- * Show a reset-to-default dialog.
+ * Render an image. (dim blend)
  */
-bool default_dialog(void)
+void render_image_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	/* stub */
-	return true;
+	opengl_render_image_dim(
+		dst_left,
+		dst_top,
+		dst_width,
+		dst_height,
+		src_image,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
+		alpha
+	);
+}
+
+/*
+ * Render an image. (rule universal transition)
+ */
+void render_image_rule(
+	struct image *src_img,
+	struct image *rule_img,
+	int threshold)
+{
+	opengl_render_image_rule(src_img, rule_img, threshold);
+}
+
+/*
+ * Render an image. (melt universal transition)
+ */
+void render_image_melt(
+	struct image *src_img,
+	struct image *rule_img,
+	int progress)
+{
+	opengl_render_image_melt(src_img, rule_img, progress);
+}
+
+/*
+ * Render an image. (3d transform, alpha blending)
+ */
+void
+render_image_3d_normal(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_normal(
+		x1, y1, x2, y2, x3, y3, x4, y4,
+		src_image, src_left, src_top, src_width, src_height,
+		alpha);
+}
+
+/*
+ * Render an image. (3d transform, alpha blending)
+ */
+void
+render_image_3d_add(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_add(
+		x1, y1, x2, y2, x3, y3, x4, y4,
+		src_image, src_left, src_top, src_width, src_height,
+		alpha);
 }
 
 /*
@@ -943,7 +1328,45 @@ bool is_full_screen_mode(void)
  */
 void enter_full_screen_mode(void)
 {
-	/* stub */
+        Atom NET_WM_STATE;
+        Atom NET_WM_STATE_FULLSCREEN;
+        XEvent e = {0};
+	XEvent ev, last;
+
+	/* Maximize. */
+        NET_WM_STATE = XInternAtom(display, "_NET_WM_STATE", False);
+        NET_WM_STATE_FULLSCREEN = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
+        e.xclient.type = ClientMessage;
+        e.xclient.window = window;
+        e.xclient.message_type = NET_WM_STATE;
+        e.xclient.format = 32;
+        e.xclient.data.l[0] = 1; /* _NET_WM_STATE_ADD */
+        e.xclient.data.l[1] = NET_WM_STATE_FULLSCREEN;
+        e.xclient.data.l[2] = 0;
+        e.xclient.data.l[3] = 1;
+        e.xclient.data.l[4] = 0;
+        XSendEvent(display,
+                   DefaultRootWindow(display),
+                   False,
+                   SubstructureRedirectMask | SubstructureNotifyMask,
+                   &e);
+	XFlush(display);
+
+	/* Get the new window size. */
+	XIfEvent(display, &ev, want_configure, (XPointer)window);
+	last = ev;
+	while (XCheckTypedWindowEvent(display, window, ConfigureNotify, &ev))
+		last = ev;
+
+	/* Update the viewport size. */
+	update_viewport_size(last.xconfigure.width, last.xconfigure.height);
+
+	is_full_screen = true;
+}
+
+static Bool want_configure(Display* d, XEvent* ev, XPointer arg)
+{
+    return ev->type == ConfigureNotify && ev->xconfigure.window == (Window)arg;
 }
 
 /*
@@ -960,14 +1383,6 @@ void leave_full_screen_mode(void)
 const char *get_system_language(void)
 {
 	return noct2d_lang_code;
-}
-
-/*
- * Text-to-speach.
- */
-void speak_text(const char *msg)
-{
-	UNUSED_PARAMETER(msg);
 }
 
 /*

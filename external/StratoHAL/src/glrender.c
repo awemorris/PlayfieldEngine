@@ -8,8 +8,6 @@
  * OpenGL Rendering
  */
 
-#if !defined(USE_X11_SOFTRENDER)
-
 /* HAL */
 #include "stratohal/platform.h"
 #include "glrender.h"
@@ -1152,5 +1150,3 @@ void opengl_set_screen(int x, int y, int w, int h)
 {
 	glViewport(x, y, w, h);
 }
-
-#endif /* !defined(USE_X11_SOFTRENDER) */
