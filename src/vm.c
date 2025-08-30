@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <assert.h>
 
 /* Bytecode File Header */
@@ -827,6 +828,41 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	return true;
 }
 
+/* Engine.getDate() */
+static bool Engine_getDate(NoctEnv *env)
+{
+	NoctValue ret;
+	NoctValue val;
+	time_t t;
+	struct tm *tm_info;
+
+	if (!noct_pin_local(env, 2, &ret, &val))
+		return false;
+
+	if (!noct_make_empty_dict(env, &ret))
+		return false;
+
+	time(&t);
+	tm_info = localtime(&t);
+	if (!noct_set_dict_elem_make_int(env, &ret, "year", &val, tm_info->tm_year + 1900))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "month", &val, tm_info->tm_mon + 1))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "day", &val, tm_info->tm_mday))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "hour", &val, tm_info->tm_hour))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "minute", &val, tm_info->tm_min))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "second", &val, tm_info->tm_sec))
+		return false;
+	
+	if (!noct_set_return(env, &ret))
+		return false;
+
+	return true;
+}
+
 /*
  * Helpers
  */
@@ -1014,6 +1050,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(stopSound),
 		RTFUNC(loadFont),
 		RTFUNC(createTextTexture),
+		RTFUNC(getDate),
 	};
 	const int tbl_size = sizeof(funcs) / sizeof(struct func);
 	struct rt_value dict;

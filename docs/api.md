@@ -47,6 +47,23 @@ func frame() {
 }
 ```
 
+### Engine.getDate()
+
+Returns a date dictionary.
+
+```
+func frame() {
+    var date = Engine.getDate({});
+
+    var year  = date.year;
+    var month = date.month;
+    var day   = date.day;
+    var hour  = date.hour;
+    var min   = date.minute;
+    var sec   = date.second;
+}
+```
+
 ## Input
 
 ### Mouse Positions
@@ -181,6 +198,44 @@ func renderPlayer() {
         texture: playerTex,
         x:       playerPos.x,
         y:       playerPos.y
+    });
+}
+```
+
+### Engine.renderTexture3D()
+
+This API renders a texture to the screen.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|x1                  |Screen coordinate X1.                                         |
+|y1                  |Screen coordinate Y1.                                         |
+|x2                  |Screen coordinate X2.                                         |
+|y2                  |Screen coordinate Y2.                                         |
+|x3                  |Screen coordinate X3.                                         |
+|y3                  |Screen coordinate Y3.                                         |
+|x4                  |Screen coordinate X4.                                         |
+|y4                  |Screen coordinate Y4.                                         |
+|texture             |Texture ID.                                                   |
+|srcLeft             |Texture top left X.                                           |
+|srcTop              |Texture top left Y.                                           |
+|srcWidth            |Texture rectangle width.                                      |
+|srcHeight           |Texture rectangle height.                                     |
+|alpha               |Alpha value (0-255)                                           |
+
+```
+func renderPlayer() {
+    Engine.renderTexture({
+        dstLeft:   playerPos.x,
+        dstTop:    playerPos.y,
+        dstWidth:  playerTex.width,
+	dstHeight: playerTex.height,
+        texture:   playerTex,
+        srcLeft:   0,
+        srcTop:    0,
+        srcWidth:  playerTex.width,
+        srcHeight: playerTex.height,
+        alpha:     255
     });
 }
 ```
