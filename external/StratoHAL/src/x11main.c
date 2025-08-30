@@ -191,6 +191,7 @@ static int get_key_code(XEvent *event);
 static void event_button_press(XEvent *event);
 static void event_button_release(XEvent *event);
 static void event_motion_notify(XEvent *event);
+static void event_resize(XEvent *event);
 static void update_viewport_size(int width, int height);
 static Bool want_configure(Display* d, XEvent* ev, XPointer arg);
 
@@ -482,6 +483,7 @@ static bool show_window(void)
 /* Set the fixed window size. */
 static void set_window_size(void)
 {
+#if 0
 	XSizeHints *sh;
 
 	sh = XAllocSizeHints();
@@ -492,6 +494,7 @@ static void set_window_size(void)
 	sh->max_height = screen_height;
 	XSetWMSizeHints(display, window, sh, XA_WM_NORMAL_HINTS);
 	XFree(sh);
+#endif
 }
 
 /* Set the event mask. */
@@ -506,7 +509,8 @@ static bool set_event_mask(void)
 			   ButtonPressMask |
 			   ButtonReleaseMask |
 			   KeyReleaseMask |
-			   PointerMotionMask);
+			   PointerMotionMask |
+			   StructureNotifyMask);
 	if (ret == BadWindow) {
 		log_error("XSelectInput() failed.");
 		return false;
@@ -750,6 +754,9 @@ static bool next_event(void)
 	case MappingNotify:
 		XRefreshKeyboardMapping(&event.xmapping);
 		break;
+	case ConfigureNotify:
+		event_resize(&event);
+		break;
 	case ClientMessage:
 		/* Close button was pressed. */
 		if ((Atom)event.xclient.data.l[0] == delete_message)
@@ -768,15 +775,6 @@ static void event_key_press(XEvent *event)
 	key = get_key_code(event);
 	if (key == -1)
 		return;
-
-	/* Detect Alt+Enter. */
-	if (key == KEY_F12) {
-		if (!is_full_screen)
-			enter_full_screen_mode();
-		else
-			leave_full_screen_mode();
-		return;
-	}
 
 	/* Call an event handler. */
 	on_event_key_press(key);
@@ -897,6 +895,12 @@ static void event_motion_notify(XEvent *event)
 	on_event_mouse_move(event->xmotion.x, event->xmotion.y);
 }
 
+/* Process a ConfigureNotify event. */
+static void event_resize(XEvent *event)
+{
+	update_viewport_size(event->xconfigure.width, event->xconfigure.height);
+}
+
 /*
  * Sets the window size.
  */
@@ -910,20 +914,20 @@ void update_viewport_size(int width, int height)
 	aspect = (float)screen_height / (float)screen_width;
 
 	/* Calc the height. (temporarily with "width-first") */
-	use_width = (float)screen_width;
+	use_width = (float)width;
 	use_height = use_width * aspect;
-	mouse_scale = (float)screen_height / (float)width;
+	mouse_scale = (float)screen_width / (float)width;
 
 	/* If height is not enough, calc the width. (with "height-first") */
 	if(use_height > (float)screen_width) {
-		use_height = (float)screen_height;
-		use_width = (float)screen_height / aspect;
+		use_height = (float)height;
+		use_width = (float)use_height / aspect;
 		mouse_scale = (float)screen_height / (float)height;
 	}
 
 	/* Calc the viewport origin. */
-	orig_x = (int)((((float)screen_width - use_width) / 2.0f) + 0.5);
-	orig_y = (int)((((float)screen_height - use_height) / 2.0f) + 0.5);
+	orig_x = (int)((((float)width - use_width) / 2.0f) + 0.5);
+	orig_y = (int)((((float)height - use_height) / 2.0f) + 0.5);
 
 	/* Calc the viewport size. */
 	viewport_width = (int)use_width;
@@ -931,6 +935,7 @@ void update_viewport_size(int width, int height)
 
 	/* Update the screen offset and scale for drawing subsystem. */
 	opengl_set_screen(orig_x, orig_y, viewport_width, viewport_height);
+	printf("%d %d %d %d\n", orig_x, orig_y, viewport_width, viewport_height);
 }
 
 /*
@@ -1328,45 +1333,7 @@ bool is_full_screen_mode(void)
  */
 void enter_full_screen_mode(void)
 {
-        Atom NET_WM_STATE;
-        Atom NET_WM_STATE_FULLSCREEN;
-        XEvent e = {0};
-	XEvent ev, last;
-
-	/* Maximize. */
-        NET_WM_STATE = XInternAtom(display, "_NET_WM_STATE", False);
-        NET_WM_STATE_FULLSCREEN = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
-        e.xclient.type = ClientMessage;
-        e.xclient.window = window;
-        e.xclient.message_type = NET_WM_STATE;
-        e.xclient.format = 32;
-        e.xclient.data.l[0] = 1; /* _NET_WM_STATE_ADD */
-        e.xclient.data.l[1] = NET_WM_STATE_FULLSCREEN;
-        e.xclient.data.l[2] = 0;
-        e.xclient.data.l[3] = 1;
-        e.xclient.data.l[4] = 0;
-        XSendEvent(display,
-                   DefaultRootWindow(display),
-                   False,
-                   SubstructureRedirectMask | SubstructureNotifyMask,
-                   &e);
-	XFlush(display);
-
-	/* Get the new window size. */
-	XIfEvent(display, &ev, want_configure, (XPointer)window);
-	last = ev;
-	while (XCheckTypedWindowEvent(display, window, ConfigureNotify, &ev))
-		last = ev;
-
-	/* Update the viewport size. */
-	update_viewport_size(last.xconfigure.width, last.xconfigure.height);
-
-	is_full_screen = true;
-}
-
-static Bool want_configure(Display* d, XEvent* ev, XPointer arg)
-{
-    return ev->type == ConfigureNotify && ev->xconfigure.window == (Window)arg;
+	/* stub */
 }
 
 /*
