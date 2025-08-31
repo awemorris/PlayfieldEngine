@@ -8,10 +8,10 @@
  * Top Level Header
  */
 
-#ifndef NOCT2D_ENGINE_H
-#define NOCT2D_ENGINE_H
+#ifndef PICOPICO_ENGINE_H
+#define PICOPICO_ENGINE_H
 
-#include <noct2d/noct2d.h>
+#include <picopico/picopico.h>
 
 /* The file name of the startup file. */
 #define STARTUP_FILE	"main.noct"

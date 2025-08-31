@@ -5,6 +5,11 @@ use_directory_urls: false
 nav:
   - Home: index.md
   - Getting Started: gettingstarted.md
+  - PicoPico Script Syntax: syntax.md
+  - PicoPico Script API: api.md
+  - How To Build: build.md
+  - Porting: porting.md
+  - Design: design.md
 
 theme:
   name: material

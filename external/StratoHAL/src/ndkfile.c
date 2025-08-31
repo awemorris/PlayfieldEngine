@@ -67,7 +67,7 @@ bool check_file_exist(const char *file)
 	snprintf(path, sizeof(path), "%s", file);
 
 	/* Get a file content. */
-	cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeCheckFileExists", "(Ljava/lang/String;)Z");
 	ret = (*jni_env)->CallBooleanMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, path));
 	if (ret) {
@@ -93,7 +93,7 @@ bool open_rfile(const char *file, struct rfile **rf)
 	snprintf(path, sizeof(path), "%s", file);
 
 	/* Get a file content. */
-	cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeGetFileContent", "(Ljava/lang/String;)[B");
 	ret = (*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, path));
 	if (ret == NULL) {
@@ -239,7 +239,7 @@ bool open_wfile(const char *file, struct wfile **wf)
 	}
 
 	/* Open a file. */
-	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeOpenSaveFile", "(Ljava/lang/String;)Ljava/io/OutputStream;");
 	jobject ret = (*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, file));
 	if (ret == NULL) {
@@ -257,7 +257,7 @@ bool open_wfile(const char *file, struct wfile **wf)
  */
 bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 {
-	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeWriteSaveFile", "(Ljava/io/OutputStream;I)Z");
 
 	size_t i;
@@ -280,7 +280,7 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
  */
 void close_wfile(struct wfile *wf)
 {
-	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeCloseSaveFile", "(Ljava/io/OutputStream;)V");
 	(*jni_env)->CallVoidMethod(jni_env, main_activity, mid, wf->os);
 	(*jni_env)->DeleteGlobalRef(jni_env, wf->os);
@@ -292,7 +292,7 @@ void close_wfile(struct wfile *wf)
  */
 void remove_file(const char *file)
 {
-	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/android/MainActivity");
+	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/picopico/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeRemoveSaveFile", "(Ljava/lang/String;)V;");
 	(*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, file));
 }

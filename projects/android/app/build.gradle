@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'io.noctvm.android'
+    namespace 'io.noctvm.picopico.engineandroid'
     compileSdk 35
     defaultConfig {
-        applicationId "io.noctvm.android"
+        applicationId "io.noctvm.picopico.engineandroid"
         minSdkVersion 28
         versionCode 1
         versionName "1.0.0"

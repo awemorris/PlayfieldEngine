@@ -1,5 +1,5 @@
-How To Build Noct2D
-===================
+How To Build PicoPico Script
+============================
 
 ## Windows (WSL2)
 
@@ -15,7 +15,7 @@ sudo apt-get install mingw-w64
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPico Script` direcotry, then type the following.
 
 ```
 ./configure --enable-cross=windows
@@ -38,7 +38,7 @@ codes in the SYSV calling convention, not the Microsoft one.
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -57,7 +57,7 @@ codes in the SYSV calling convention, not the Microsoft one.
 * A `Windows 11` PC with an Intel, AMD, or Arm64 processor
 * `Visual Studio 2022 Community` installed
 * `Git for Windows` installed
-* `Noct2D` source tree downloaded
+* `PicoPico Script` source tree downloaded
 
 ### Steps
 
@@ -89,7 +89,7 @@ sudo dnf install patch libX11-devel libXpm-devel alsa-lib-devel mesa-libGL-devel
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -107,7 +107,7 @@ sudo make install
 
 ### Steps
 
-First, open a terminal and enter a Noct2D direcotry, then type the following.
+First, open a terminal and enter th `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -125,7 +125,7 @@ sudo make install
 
 ### Steps
 
-First, open a terminal and enter a Noct2D direcotry, then type the following.
+First, open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 cd projects/macos-dmg
@@ -144,7 +144,7 @@ Then, open the Xcode project at `projects/macos-dmg`, and build the project on X
 
 ### Steps
 
-First, open a terminal and enter a Noct2D direcotry, then type the following.
+First, open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 cd projects/ios-src
@@ -168,7 +168,7 @@ Note that you need to copy game files into `Resources` folder.
 
 ### Steps
 
-First, open a terminal and enter a Noct2D direcotry, then type the following.
+First, open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 cd projects/android-src
@@ -187,7 +187,7 @@ Note that you need to copy game files into `assets` folder.
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -203,7 +203,7 @@ sudo make install
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -222,7 +222,7 @@ Note that `gtar` and `gmake` are build dependencies and not needed for a run.
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure
@@ -239,7 +239,7 @@ sudo make install
 
 ### Steps
 
-Open a terminal and enter a Noct2D direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure

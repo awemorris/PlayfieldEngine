@@ -1,12 +1,14 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Copyright (c) 2025, PicoPicoP. All rights reserved.
  */
 
 /*
  * C API
  */
+
+#include <picopico/picopico.h>
 
 #include "engine.h"
 #include "common.h"
@@ -42,7 +44,8 @@ static bool create_texture(int width, int height, int *ret, struct image **img);
 /*
  * Initialize the API.
  */
-bool init_api(void)
+bool
+init_api(void)
 {
 	return true;
 }
@@ -50,7 +53,8 @@ bool init_api(void)
 /*
  * Cleanup the API.
  */
-void cleanup_api(void)
+void
+cleanup_api(void)
 {
 	int i;
 
@@ -70,7 +74,12 @@ void cleanup_api(void)
 /*
  * Load a texture.
  */
-bool noct2d_load_texture(const char *fname, int *ret, int *width, int *height)
+bool
+picopico_load_texture(
+	const char *fname,
+	int *ret,
+	int *width,
+	int *height)
 {
 	int index;
 	const char *ext;
@@ -135,7 +144,15 @@ bool noct2d_load_texture(const char *fname, int *ret, int *width, int *height)
 /*
  * Create a color texture.
  */
-bool noct2d_create_color_texture(int width, int height, int r, int g, int b, int a, int *ret)
+bool
+picopico_create_color_texture(
+	int width,
+	int height,
+	int r,
+	int g,
+	int b,
+	int a,
+	int *ret)
 {
 	int index;
 
@@ -165,7 +182,12 @@ bool noct2d_create_color_texture(int width, int height, int r, int g, int b, int
 }
 
 /* Create a texture. (for font drawing) */
-static bool create_texture(int width, int height, int *ret, struct image **img)
+static bool
+create_texture(
+	int width,
+	int height,
+	int *ret,
+	struct image **img)
 {
 	int index;
 
@@ -193,7 +215,8 @@ static bool create_texture(int width, int height, int *ret, struct image **img)
 }
 
 /* Search a free texture index. */
-static int search_free_entry(void)
+static int
+search_free_entry(void)
 {
 	int i;
 
@@ -207,7 +230,9 @@ static int search_free_entry(void)
 /*
  * Destroy a texture.
  */
-void noct2d_destroy_texture(int tex_id)
+void
+picopico_destroy_texture(
+	int tex_id)
 {
 	assert(tex_id >= 0);
 	assert(tex_id < TEXTURE_COUNT);
@@ -223,7 +248,7 @@ void noct2d_destroy_texture(int tex_id)
  * Render a texture.
  */
 void
-noct2d_render_texture(
+picopico_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -259,7 +284,7 @@ noct2d_render_texture(
  * Render a texture.
  */
 void
-noct2d_render_texture_3d(
+picopico_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -293,7 +318,7 @@ noct2d_render_texture_3d(
  * Render a texture.
  */
 void
-noct2d_draw(
+picopico_draw(
 	int tex_id,
 	int x,
 	int y)
@@ -325,7 +350,10 @@ noct2d_draw(
 /*
  * Load a font file to a font slot.
  */
-bool noct2d_load_font(int slot, const char *file)
+bool
+picopico_load_font(
+	int slot,
+	const char *file)
 {
 	uint8_t *data;
 	size_t len;
@@ -376,7 +404,15 @@ pixel_t color_code_to_pixel_value(const char *code)
 /*
  * Create a text texture.
  */
-bool noct2d_create_text_texture(int slot, const char *text, int size, pixel_t color, int *tex_id, int *width, int *height)
+bool
+picopico_create_text_texture(
+	int slot,
+	const char *text,
+	int size,
+	pixel_t color,
+	int *tex_id,
+	int *width,
+	int *height)
 {
 	struct image *img;
 	int w, h;
@@ -441,7 +477,10 @@ bool noct2d_create_text_texture(int slot, const char *text, int size, pixel_t co
 /*
  * Play a sound file on a stream.
  */
-bool noct2d_play_sound(int stream, const char *file)
+bool
+picopico_play_sound(
+	int stream,
+	const char *file)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
 		log_error("Invalid stream index.");
@@ -461,7 +500,9 @@ bool noct2d_play_sound(int stream, const char *file)
 /*
  * Stop the sound on a stream.
  */
-bool noct2d_stop_sound(int stream)
+bool
+picopico_stop_sound(
+	int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
 		log_error("Invalid stream index.");
@@ -479,7 +520,10 @@ bool noct2d_stop_sound(int stream)
 /*
  * Set the sound volume on a stream.
  */
-bool noct2d_set_sound_volue(int stream, float vol)
+bool
+picopico_set_sound_volue(
+	int stream,
+	float vol)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
 		log_error("Invalid stream index.");
@@ -498,7 +542,9 @@ bool noct2d_set_sound_volue(int stream, float vol)
 /*
  * Load a tag file and move to it.
  */
-bool noct2d_move_to_tag_file(const char *file)
+bool
+picopico_move_to_tag_file(
+	const char *file)
 {
 	/* Load the tag file. */
 	if (!load_tag_file(file))
@@ -510,7 +556,8 @@ bool noct2d_move_to_tag_file(const char *file)
 /*
  * Move to a next tag.
  */
-void noct2d_move_to_next_tag(void)
+void
+picopico_move_to_next_tag(void)
 {
 	move_to_next_tag();
 }

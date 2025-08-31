@@ -1,0 +1,34 @@
+PicoPico Script
+===============
+
+PicoPico Script は2Dゲームスクリプティングエンジンです。
+
+中身
+----
+
+- windows-x86/ :    Windows 32-bit 実行ファイル (Windows XP以降)
+- windows-x86_64/ : Windows 64-bit 実行ファイル (Windows 7以降)
+- windows-arm64/ :  Windows Arm64  実行ファイル (Windows 11以降)
+- macos/ :          macOS アプリ (macOS 10.13以降)
+- ios/ :            iOS プロジェクト (iOS 13.0以降)
+- android/ :        Android プロジェクト (Android 10以降)
+- unity/ :          家庭用ゲーム機向け Unity Plugin
+- wasm/ :           ブラウザ用 WebAssembly
+- DOCS/ :           ドキュメント
+- SAMPLES/ :        サンプルゲーム
+
+利用規約
+--------
+
+PicoPico Script
+Copyright (C) 2025, PicoPicoP. All rights reserved.
+
+本ソフトウェアはMITライセンスの下で配布されています。
+著作権表示を行えば、再配布、改変が自由です。
+サポートはありません。
+
+連絡先
+------
+
+メール: PicoPicoP (Awe Morris) <awe@noctvm.io>
+Web:    https://noctvm.io/picopico-script/

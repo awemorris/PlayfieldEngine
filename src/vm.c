@@ -1,10 +1,14 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Copyright (c) 2025, PicoPicoP. All rights reserved.
  */
 
-#include <noct2d/noct2d.h>
+/*
+ * Virtrual Machine
+ */
+
+#include <picopico/picopico.h>
 
 #include "engine.h"
 #include "vm.h"
@@ -61,7 +65,7 @@ bool create_vm(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -98,7 +102,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -160,7 +164,7 @@ static bool call_setup(char **title, int *width, int *height)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -182,7 +186,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -217,7 +221,7 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
+		log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line());
 		return false;
@@ -227,13 +231,13 @@ bool call_vm_tag_function(bool *tag_end)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			log_error(N2D_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
@@ -245,14 +249,14 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		log_error(N2D_TR("%s:%d: Tag \"%s\" not found.\n"),
+		log_error(PPS_TR("%s:%d: Tag \"%s\" not found.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		log_error(N2D_TR("%s:%d: \"tag_%s\" is not a function.\n"),
+		log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -265,7 +269,7 @@ bool call_vm_tag_function(bool *tag_end)
 		int line;
 		const char *msg;
 
-		log_error(N2D_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
+		log_error(PPS_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -273,7 +277,7 @@ bool call_vm_tag_function(bool *tag_end)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -364,7 +368,7 @@ static bool debug(NoctEnv *env)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(N2D_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
 		return false;
 	}
 
@@ -423,7 +427,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(N2D_TR("%s:%d: Error: %s\n"), file, line, msg);
+			log_error(PPS_TR("%s:%d: Error: %s\n"), file, line, msg);
 			return false;
 		}
 	} else {
@@ -434,7 +438,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(N2D_TR("%s:%d: Error: %s\n"), file, line, msg);
+			log_error(PPS_TR("%s:%d: Error: %s\n"), file, line, msg);
 			return false;
 		}
 	}
@@ -452,7 +456,7 @@ static bool Engine_moveToTagFile(NoctEnv *env)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!noct2d_move_to_tag_file(file))
+	if (!picopico_move_to_tag_file(file))
 		return false;
 
 	return true;
@@ -463,7 +467,7 @@ static bool Engine_moveToNextTag(NoctEnv *env)
 {
 	UNUSED_PARAMETER(env);
 
-	noct2d_move_to_next_tag();
+	picopico_move_to_next_tag();
 
 	return true;
 }
@@ -508,7 +512,7 @@ static bool Engine_createColorTexture(NoctEnv *env)
 	if (!get_int_param(env, "a", &a))
 		return false;
 
-	if (!noct2d_create_color_texture(width, height, r, g, b, a, &tex_id))
+	if (!picopico_create_color_texture(width, height, r, g, b, a, &tex_id))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))
@@ -535,12 +539,12 @@ static bool Engine_loadTexture(NoctEnv *env)
 	NoctValue ret, tmp;
 
 	if (!get_string_param(env, "file", &file)) {
-		noct_error(env, N2D_TR("file parameter is not set."));
+		noct_error(env, PPS_TR("file parameter is not set."));
 		return false;
 	}
 
-	if (!noct2d_load_texture(file, &tex_id, &tex_width, &tex_height)) {
-		noct_error(env, N2D_TR("Failed to load a texture."));
+	if (!picopico_load_texture(file, &tex_id, &tex_width, &tex_height)) {
+		noct_error(env, PPS_TR("Failed to load a texture."));
 		return false;
 	}
 
@@ -566,7 +570,7 @@ static bool Engine_destroyTexture(NoctEnv *env)
 	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
 		return false;
 
-	noct2d_destroy_texture(tex_id);
+	picopico_destroy_texture(tex_id);
 
 	return true;
 }
@@ -606,7 +610,7 @@ static bool Engine_renderTexture(NoctEnv *env)
 	if (!get_int_param(env, "alpha", &alpha))
 		return false;
 
-	noct2d_render_texture(
+	picopico_render_texture(
 		dst_left,
 		dst_top,
 		dst_width,
@@ -661,7 +665,7 @@ static bool Engine_renderTexture3D(NoctEnv *env)
 	if (!get_int_param(env, "alpha", &alpha))
 		return false;
 
-	noct2d_render_texture_3d(
+	picopico_render_texture_3d(
 		x1, y1, x2, y2, x3, y3, x4, y4,
 		tex_id,
 		src_left, src_top, src_width, src_height,
@@ -682,7 +686,7 @@ static bool Engine_draw(NoctEnv *env)
 	if (!get_int_param(env, "y", &y))
 		return false;
 
-	noct2d_draw(tex_id, x, y);
+	picopico_draw(tex_id, x, y);
 
 	return true;
 }
@@ -699,7 +703,7 @@ static bool Engine_playSound(NoctEnv *env)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!noct2d_play_sound(stream, file))
+	if (!picopico_play_sound(stream, file))
 		return false;
 
 	noct_make_int(env, &ret, 1);
@@ -718,7 +722,7 @@ static bool Engine_stopSound(NoctEnv *env)
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
-	if (!noct2d_stop_sound(stream))
+	if (!picopico_stop_sound(stream))
 		return false;
 
 	noct_make_int(env, &ret, 1);
@@ -737,7 +741,7 @@ static bool Engine_setSoundVolume(NoctEnv *env)
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
-	if (!noct2d_stop_sound(stream))
+	if (!picopico_stop_sound(stream))
 		return false;
 
 	noct_make_int(env, &ret, 1);
@@ -759,7 +763,7 @@ static bool Engine_loadFont(NoctEnv *rt)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!noct2d_load_font(slot, file))
+	if (!picopico_load_font(slot, file))
 		return false;
 
 	noct_make_int(env, &ret, 1);
@@ -798,7 +802,7 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	if (!get_int_param(env, "a", &a))
 		return false;
 
-	if (!noct2d_create_text_texture(slot,
+	if (!picopico_create_text_texture(slot,
 					text,
 					size,
 					make_pixel(a, r, g, b),
@@ -875,12 +879,12 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	const char *s;
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, N2D_TR("Parameter is not set."));
+		noct_error(env, PPS_TR("Parameter is not set."));
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, N2D_TR("Parameter %s is not set."), name);
+		noct_error(env, PPS_TR("Parameter %s is not set."), name);
 		return false;
 	}
 
@@ -911,12 +915,12 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 	NoctValue param, elem;
 
 	if (!rt_get_arg(env, 0, &param)) {
-		noct_error(env, N2D_TR("Parameter is not set."));
+		noct_error(env, PPS_TR("Parameter is not set."));
 		return false;
 	}
 
 	if (!rt_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, N2D_TR("Parameter %s is not set."), name);
+		noct_error(env, PPS_TR("Parameter %s is not set."), name);
 		return false;
 	}
 
@@ -931,7 +935,7 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 		*ret = (float)atof(elem.val.str->s);
 		break;
 	default:
-		rt_error(env, N2D_TR("Unexpected parameter value for %s."), name);
+		rt_error(env, PPS_TR("Unexpected parameter value for %s."), name);
 		return false;
 	}
 
@@ -946,12 +950,12 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	static char buf[128];
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, N2D_TR("Parameter is not set."));
+		noct_error(env, PPS_TR("Parameter is not set."));
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, N2D_TR("Parameter %s is not set."), name);
+		noct_error(env, PPS_TR("Parameter %s is not set."), name);
 		return false;
 	}
 
@@ -976,7 +980,7 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		noct_get_string(env, &elem, ret);
 		break;
 	default:
-		noct_error(env, N2D_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
 		return false;
 	}
 
@@ -989,27 +993,27 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 	NoctValue param, elem, ival;
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, N2D_TR("Parameter is not set."));
+		noct_error(env, PPS_TR("Parameter is not set."));
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, N2D_TR("Parameter %s is not set."), name);
+		noct_error(env, PPS_TR("Parameter %s is not set."), name);
 		return false;
 	}
 
 	if (elem.type != NOCT_VALUE_DICT) {
-		noct_error(env, N2D_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &elem, key, &ival)) {
-		noct_error(env, N2D_TR("Parameter %s doesn't have the key %s."), name, key);
+		noct_error(env, PPS_TR("Parameter %s doesn't have the key %s."), name, key);
 		return false;
 	}
 
 	if (ival.type != NOCT_VALUE_INT) {
-		noct_error(env, N2D_TR("Unexpected parameter value for %s.%s."), name, key);
+		noct_error(env, PPS_TR("Unexpected parameter value for %s.%s."), name, key);
 		return false;
 	}
 

@@ -92,7 +92,7 @@ static struct timeval tv_start;
 static FILE *log_fp;
 
 /* Locale */
-const char *noct2d_lang_code;
+const char *picopico_lang_code;
 
 /* Flag to indicate whether we are playing a video or not */
 static bool is_gst_playing;
@@ -228,29 +228,29 @@ static void init_locale(void)
 	locale = setlocale(LC_ALL, "");
 
 	if (locale == NULL || locale[0] == '\0' || locale[1] == '\0')
-		noct2d_lang_code = "en";
+		picopico_lang_code = "en";
 	else if (strncmp(locale, "en", 2) == 0)
-		noct2d_lang_code = "en";
+		picopico_lang_code = "en";
 	else if (strncmp(locale, "fr", 2) == 0)
-		noct2d_lang_code = "fr";
+		picopico_lang_code = "fr";
 	else if (strncmp(locale, "de", 2) == 0)
-		noct2d_lang_code = "de";
+		picopico_lang_code = "de";
 	else if (strncmp(locale, "it", 2) == 0)
-		noct2d_lang_code = "it";
+		picopico_lang_code = "it";
 	else if (strncmp(locale, "es", 2) == 0)
-		noct2d_lang_code = "es";
+		picopico_lang_code = "es";
 	else if (strncmp(locale, "el", 2) == 0)
-		noct2d_lang_code = "el";
+		picopico_lang_code = "el";
 	else if (strncmp(locale, "ru", 2) == 0)
-		noct2d_lang_code = "ru";
+		picopico_lang_code = "ru";
 	else if (strncmp(locale, "zh_CN", 5) == 0)
-		noct2d_lang_code = "zh";
+		picopico_lang_code = "zh";
 	else if (strncmp(locale, "zh_TW", 5) == 0)
-		noct2d_lang_code = "tw";
+		picopico_lang_code = "tw";
 	else if (strncmp(locale, "ja", 2) == 0)
-		noct2d_lang_code = "ja";
+		picopico_lang_code = "ja";
 	else
-		noct2d_lang_code = "en";
+		picopico_lang_code = "en";
 
 	setlocale(LC_ALL, "C");
 }
@@ -1348,7 +1348,7 @@ void leave_full_screen_mode(void)
  */
 const char *get_system_language(void)
 {
-	return noct2d_lang_code;
+	return picopico_lang_code;
 }
 
 /*

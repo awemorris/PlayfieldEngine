@@ -1,15 +1,15 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Copyright (c) 2025, PicoPicoP. All rights reserved.
  */
 
 /*
  * C89 Compatibility
  */
 
-#ifndef C89COMPAT_H
-#define C89COMPAT_H
+#ifndef PICOPICO_C89COMPAT_H
+#define PICOPICO_C89COMPAT_H
 
 /*
  * Here, we define two macros that indicates the target architecture
@@ -377,12 +377,12 @@ typedef unsigned long long uint64_t;
 /*
  * Message Translation
  */
-#if !defined(N2D_TR)
+#if !defined(PPS_TR)
 #if defined(USE_TRANSLATION)
-#define N2D_TR(s)	noct2d_gettext(s)
-const char *noct2d_gettext(const char *msg);
+#define PPS_TR(s)	picopico_gettext(s)
+const char *picopico_gettext(const char *msg);
 #else
-#define N2D_TR(s)	(s)
+#define PPS_TR(s)	(s)
 #endif
 #endif
 

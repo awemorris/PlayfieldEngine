@@ -113,11 +113,11 @@
       "binaryDir":      "${sourceDir}/build-win-x86",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_WINDOWS":         "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_WINDOWS":         "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -127,11 +127,11 @@
       "binaryDir":      "${sourceDir}/build-win-x86_64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86_64.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_WINDOWS":         "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_WINDOWS":         "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -141,11 +141,11 @@
       "binaryDir":      "${sourceDir}/build-win-arm64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-arm64.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_WINDOWS":         "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_WINDOWS":         "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -155,12 +155,12 @@
       "binaryDir":      "${sourceDir}/build-macos",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/macos.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_MACOS":           "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON",
-        "NOCT2D_ENABLE_BUNDLE":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_MACOS":           "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON",
+        "PICO_ENABLE_BUNDLE":          "ON"
       }
     },
     {
@@ -169,12 +169,12 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_LINUX":           "ON",
-        "NOCT2D_ENABLE_GLX":             "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_LINUX":           "ON",
+        "PICO_ENABLE_GLX":             "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -183,12 +183,12 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-fbdev",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_LINUX":           "ON",
-        "NOCT2D_ENABLE_FBDEV":           "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_I18N":            "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_LINUX":           "ON",
+        "PICO_ENABLE_FBDEV":           "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_I18N":            "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -198,8 +198,8 @@
       "binaryDir":      "${sourceDir}/build-ios",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Debug",
-        "NOCT2D_TARGET_IOS":             "ON"
+        "CMAKE_BUILD_TYPE":            "Debug",
+        "PICO_TARGET_IOS":             "ON"
       }
     },
     {
@@ -209,9 +209,9 @@
       "binaryDir":      "${sourceDir}/build-ios-device",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-device.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_IOS":             "ON",
-        "NOCT2D_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_IOS":             "ON",
+        "PICO_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -221,9 +221,9 @@
       "binaryDir":      "${sourceDir}/build-ios-simulator",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-simulator.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_IOS":             "ON",
-        "NOCT2D_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_IOS":             "ON",
+        "PICO_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -233,11 +233,11 @@
       "binaryDir":      "${sourceDir}/build-android-x86",
       "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "ANDROID_PLATFORM":              "30",
-        "ANDROID_ABI":                   "arm64-v8a",
-        "NOCT2D_TARGET_ANDROID":         "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "ANDROID_PLATFORM":            "30",
+        "ANDROID_ABI":                 "arm64-v8a",
+        "PICO_TARGET_ANDROID":         "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -247,11 +247,11 @@
       "binaryDir":      "${sourceDir}/build-android-x86_64",
       "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "ANDROID_PLATFORM":              "30",
-        "ANDROID_ABI":                   "arm64-v8a",
-        "NOCT2D_TARGET_ANDROID":         "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "ANDROID_PLATFORM":            "30",
+        "ANDROID_ABI":                 "arm64-v8a",
+        "PICO_TARGET_ANDROID":         "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -261,11 +261,11 @@
       "binaryDir":      "${sourceDir}/build-android-armv7",
       "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "ANDROID_PLATFORM":              "30",
-        "ANDROID_ABI":                   "arm64-v8a",
-        "NOCT2D_TARGET_ANDROID":         "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "ANDROID_PLATFORM":            "30",
+        "ANDROID_ABI":                 "arm64-v8a",
+        "PICO_TARGET_ANDROID":         "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -275,11 +275,11 @@
       "binaryDir":      "${sourceDir}/build-android-arm64",
       "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "ANDROID_PLATFORM":              "30",
-        "ANDROID_ABI":                   "arm64-v8a",
-        "NOCT2D_TARGET_ANDROID":         "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "ANDROID_PLATFORM":            "30",
+        "ANDROID_ABI":                 "arm64-v8a",
+        "PICO_TARGET_ANDROID":         "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -289,8 +289,8 @@
       "binaryDir":      "${sourceDir}/build-wasm",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/wasm.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_WASM":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_WASM":            "ON"
       }
     },
     {
@@ -300,9 +300,9 @@
       "binaryDir":      "${sourceDir}/build-unity-win64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-win64.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_UNITY":           "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_UNITY":           "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -312,9 +312,9 @@
       "binaryDir":      "${sourceDir}/build-unity-winarm64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-winarm64.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Debug",
-        "NOCT2D_TARGET_UNITY":           "ON",
-        "NOCT2D_ENABLE_SHARED":          "ON"
+        "CMAKE_BUILD_TYPE":            "Debug",
+        "PICO_TARGET_UNITY":           "ON",
+        "PICO_ENABLE_SHARED":          "ON"
       }
     },
     {
@@ -324,10 +324,10 @@
       "binaryDir":      "${sourceDir}/build-unity-switch",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-switch.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_UNITY":           "ON",
-        "NOCT2D_TARGET_UNITY_SWITCH":    "ON",
-        "NOCT2D_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_UNITY":           "ON",
+        "PICO_TARGET_UNITY_SWITCH":    "ON",
+        "PICO_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -337,10 +337,10 @@
       "binaryDir":      "${sourceDir}/build-unity-ps5",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-ps5.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_UNITY":           "ON",
-        "NOCT2D_TARGET_UNITY_PS5":       "ON",
-        "NOCT2D_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_UNITY":           "ON",
+        "PICO_TARGET_UNITY_PS5":       "ON",
+        "PICO_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -350,10 +350,10 @@
       "binaryDir":      "${sourceDir}/build-unity-xbox",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-xbox.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_UNITY":           "ON",
-        "NOCT2D_TARGET_UNITY_XBOX":      "ON",
-        "NOCT2D_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_UNITY":           "ON",
+        "PICO_TARGET_UNITY_XBOX":      "ON",
+        "PICO_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -362,11 +362,11 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-freebsd",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_FREEBSD":         "ON",
-        "NOCT2D_ENABLE_GLX":             "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_FREEBSD":         "ON",
+        "PICO_ENABLE_GLX":             "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -375,10 +375,10 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-netbsd",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_NETBSD":          "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_NETBSD":          "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -387,9 +387,9 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-openbsd",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_OPENBSD":         "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_OPENBSD":         "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     },
     {
@@ -398,10 +398,10 @@
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-haiku",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":              "Release",
-        "NOCT2D_TARGET_HAIKU":           "ON",
-        "NOCT2D_ENABLE_JIT":             "ON",
-        "NOCT2D_ENABLE_PACK":            "ON"
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PICO_TARGET_HAIKU":           "ON",
+        "PICO_ENABLE_JIT":             "ON",
+        "PICO_ENABLE_PACK":            "ON"
       }
     }
   ],

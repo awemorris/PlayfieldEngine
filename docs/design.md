@@ -1,12 +1,12 @@
-Noct2D Design Overview
-======================
+PicoPico Script Design Overview
+===============================
 
 ## Porting Layer
 
-Did you know that Noct2D runs seamlessly on Windows, macOS, Linux, iPhone,
-iPad, Android, Web browsers, — and even Solaris enterprise servers?
+Did you know that `PicoPico Script` runs seamlessly on Windows, macOS, Linux, iPhone,
+iPad, Android, Web browsers, — and even game consoles?
 
-The `src/platform` directory contains Noct2D's platform abstraction layer,
+The `extern/StratoHAL` directory contains its platform abstraction layer,
 which cleanly handles all platform-specific differences.
 
 ### Common Components
@@ -39,13 +39,11 @@ which cleanly handles all platform-specific differences.
 |GameRenderer.m |Metal rendering                     |
 |aunit.c        |Audio Unit audio                    |
 
-### Linux, BSD and Unix Layer
+### Linux and BSD Layer
 
 |File           |Description                         |
 |---------------|------------------------------------|
 |x11main.c      |X11 main                            |
-|x11opengl.c    |OpenGL backend for X11              |
-|x11softrender.c|XImage backend for X11              |
 |glrender.c     |OpenGL rendering                    |
 |asound.c       |ALSA audio                          |
 |bsdsound.c     |/dev/dsp and /dev/audio audio       |
@@ -81,43 +79,9 @@ Only enabled on x86 and x86_64 Windows target.
 |sse2.c         |SSE2                                |
 |sse.c          |SSE                                 |
 
-## Language Layer
-
-NoctLang is a simple yet powerful scripting language that supports
-fast JIT compilation and seamless translation to C.
-
-### Compilation Flow
-
-```
-Text -> AST -> HIR -> LIR
-```
-
-Script text is first translated to an AST (Anstract Syntax Tree) by the
-parser. Then the AST is transformed to HIR (High-Level Intermediate
-Representaion) which is suited for optimizations. Nex, the HIR is translated
-to LIR (Low-Level Intermediate Representation), also known as
-"bytecode". Bytecode may be directly interpreted by the interpreter.
-
-```
-LIR -> Native
-```
-
-On platforms which is specially supported by engine, bytecode is translated to
-native machine code and the native code runs. This JIT compilation is
-currently supported on x86, x86_64, Arm32, Arm64, PowerPC 32, PowerPC 64,
-MIPS32, and MIPS64. This will be expanded to RISC-V and SPARC in the near
-future.
-
-```
-LIR -> C
-```
-
-In addition, LIR-to-C backend is available. This is useful for iOS platform
-which JIT compilation is prohibited by Apple.
-
 ## Main Layer
 
-The main layer consists of `src/*.c` files, which defines API for Noct2D.
+The main layer consists of `src/*.c` files, which defines API for `PicoPico Script`.
 
 ### Tag File
 

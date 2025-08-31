@@ -9,7 +9,7 @@
  * (See also ndkmain.c and ndkfile.c for the C language part.)
  */
 
-package io.noctvm.android;
+package io.noctvm.picopico.engineandroid;
 
 import static android.opengl.GLSurfaceView.RENDERMODE_CONTINUOUSLY;
 import static android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY;
@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 
     // Load an Android NDK library.
     static {
-        System.loadLibrary("noct2d");
+        System.loadLibrary("picopico");
     }
 
     // These are the native methods implemented in ndk*.c

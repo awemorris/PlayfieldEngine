@@ -4,10 +4,10 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-#ifndef NOCT2D_NOCT2D_H
-#define NOCT2D_NOCT2D_H
+#ifndef PICOPICO_NOCT2D_H
+#define PICOPICO_NOCT2D_H
 
-#include <noct2d/c89compat.h>
+#include <picopico/c89compat.h>
 #include <stratohal/platform.h>
 
 /*
@@ -20,7 +20,7 @@ struct image;
  * Create a color texture.
  */
 bool
-noct2d_create_color_texture(
+picopico_create_color_texture(
 	int width,
 	int height,
 	int r,
@@ -33,7 +33,7 @@ noct2d_create_color_texture(
  * Load a texture.
  */
 bool
-noct2d_load_texture(
+picopico_load_texture(
 	const char *fname,
 	int *ret,
 	int *width,
@@ -43,14 +43,14 @@ noct2d_load_texture(
  * Destroy a texture.
  */
 void
-noct2d_destroy_texture(
+picopico_destroy_texture(
 	int tex_id);
 
 /*
  * Render a texture.
  */
 void
-noct2d_render_texture(
+picopico_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -66,7 +66,7 @@ noct2d_render_texture(
  * Render a texture.
  */
 void
-noct2d_render_texture_3d(
+picopico_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -86,7 +86,7 @@ noct2d_render_texture_3d(
  * Render a texture.
  */
 void
-noct2d_draw(
+picopico_draw(
 	int tex_id,
 	int x,
 	int y);
@@ -95,7 +95,7 @@ noct2d_draw(
  * Load a font.
  */
 bool
-noct2d_load_font(
+picopico_load_font(
 	int slot,
 	const char *file);
 
@@ -103,7 +103,7 @@ noct2d_load_font(
  * Create a text texture.
  */
 bool
-noct2d_create_text_texture(
+picopico_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
@@ -116,7 +116,7 @@ noct2d_create_text_texture(
  * Play a sound on a stream.
  */
 bool
-noct2d_play_sound(
+picopico_play_sound(
 	int stream,
 	const char *file);
 
@@ -124,14 +124,14 @@ noct2d_play_sound(
  * Stop a sound on a stream.
  */
 bool
-noct2d_stop_sound(
+picopico_stop_sound(
 	int stream);
 
 /*
  * Set a sound volume on a stream.
  */
 bool
-noct2d_set_volume(
+picopico_set_volume(
 	int stream,
 	float val);
 
@@ -139,13 +139,13 @@ noct2d_set_volume(
  * Move to a tag file.
  */
 bool
-noct2d_move_to_tag_file(
+picopico_move_to_tag_file(
 	const char *file);
 
 /*
  * Move to a next tag.
  */
 void
-noct2d_move_to_next_tag(void);
+picopico_move_to_next_tag(void);
 
 #endif

@@ -18,7 +18,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
 
-public class Noct2D : MonoBehaviour
+public class PicoPicoScript : MonoBehaviour
 {
     //
     // For Rendering
@@ -75,10 +75,10 @@ public class Noct2D : MonoBehaviour
         camera.AddCommandBuffer(CameraEvent.BeforeForwardAlpha, _commandBuffer);
 
 		// Make sound streams.
-		_audio1 = new GameObject("audio1", typeof(NoctAudio));
-		_audio2 = new GameObject("audio2", typeof(NoctAudio));
-		_audio3 = new GameObject("audio3", typeof(NoctAudio));
-		_audio4 = new GameObject("audio4", typeof(NoctAudio));
+		_audio1 = new GameObject("audio1", typeof(PicoPicoAudio));
+		_audio2 = new GameObject("audio2", typeof(PicoPicoAudio));
+		_audio3 = new GameObject("audio3", typeof(PicoPicoAudio));
+		_audio4 = new GameObject("audio4", typeof(PicoPicoAudio));
 
         InitNativeCode();
     }
@@ -177,7 +177,7 @@ public class Noct2D : MonoBehaviour
     //
     // The Sole Instance
     //
-    private static Noct2D _instance;
+    private static PicoPicoScript _instance;
 
     //
     // Delegate types for calling C# from C.
@@ -690,7 +690,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_init_hal_func_table))]
     static extern unsafe void init_hal_func_table(
@@ -734,7 +734,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_boot))]
     static extern unsafe int on_event_boot(byte *dummy1, byte *dummy2, byte *dummy3);
@@ -742,7 +742,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_start))]
     static extern unsafe int on_event_start();
@@ -750,7 +750,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_frame))]
     static extern unsafe int on_event_frame();
@@ -758,7 +758,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_press))]
     static extern unsafe void on_event_key_press(int key);
@@ -766,7 +766,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_release))]
     static extern unsafe void on_event_key_release(int key);
@@ -774,7 +774,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_press))]
     static extern unsafe void on_event_mouse_press(int button, int x, int y);
@@ -782,7 +782,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_release))]
     static extern unsafe void on_event_mouse_release(int button, int x, int y);
@@ -790,7 +790,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_move))]
     static extern unsafe void on_event_mouse_move(int x, int y);
@@ -798,7 +798,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_touch_cancel))]
     static extern unsafe void on_event_touch_cancel();
@@ -806,7 +806,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_down))]
     static extern unsafe void on_event_swipe_down();
@@ -814,7 +814,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_up))]
     static extern unsafe void on_event_swipe_up();
@@ -822,7 +822,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_get_wave_samples))]
     public static extern unsafe int get_wave_samples(byte *w, uint *buf, int samples);
@@ -830,7 +830,7 @@ public class Noct2D : MonoBehaviour
 #if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libnoct2d")]
+    [DllImport("libpicopico")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_is_wave_eos))]
     public static extern unsafe bool is_wave_eos(byte *w);
@@ -1359,26 +1359,26 @@ public class Noct2D : MonoBehaviour
     static unsafe void play_sound(int stream, byte *wave)
     {
         if (stream == 0)
-            GameObject.Find("audio1").GetComponent<NoctAudio>().SetSource(wave);
+            GameObject.Find("audio1").GetComponent<PicoPicopAudio>().SetSource(wave);
         else if (stream == 1)
-            GameObject.Find("audio2").GetComponent<NoctAudio>().SetSource(wave);
+            GameObject.Find("audio2").GetComponent<PicoPicopAudio>().SetSource(wave);
         else if (stream == 2)
-            GameObject.Find("audio3").GetComponent<NoctAudio>().SetSource(wave);
+            GameObject.Find("audio3").GetComponent<PicoPicopAudio>().SetSource(wave);
         else
-            GameObject.Find("audio4").GetComponent<NoctAudio>().SetSource(wave);
+            GameObject.Find("audio4").GetComponent<PicoPicopAudio>().SetSource(wave);
     }
 
     [AOT.MonoPInvokeCallback(typeof(delegate_stop_sound))]
     static unsafe void stop_sound(int stream)
     {
         if (stream == 0)
-            GameObject.Find("audio1").GetComponent<NoctAudio>().SetSource(null);
+            GameObject.Find("audio1").GetComponent<PicoPicopAudio>().SetSource(null);
         else if (stream == 1)
-            GameObject.Find("audio2").GetComponent<NoctAudio>().SetSource(null);
+            GameObject.Find("audio2").GetComponent<PicoPicopAudio>().SetSource(null);
         else if (stream == 2)
-            GameObject.Find("audio3").GetComponent<NoctAudio>().SetSource(null);
+            GameObject.Find("audio3").GetComponent<PicoPicopAudio>().SetSource(null);
         else
-            GameObject.Find("audio4").GetComponent<NoctAudio>().SetSource(null);
+            GameObject.Find("audio4").GetComponent<PicoPicopAudio>().SetSource(null);
     }
 
     [AOT.MonoPInvokeCallback(typeof(delegate_set_sound_volume))]
@@ -1617,7 +1617,7 @@ public class Noct2D : MonoBehaviour
 	// Audio
 	//
 	[RequireComponent(typeof(AudioSource))]
-    public class NoctAudio : MonoBehaviour
+    public class PicoPicopAudio : MonoBehaviour
 	{
 	    unsafe byte *wave;
 
@@ -1642,7 +1642,7 @@ public class Noct2D : MonoBehaviour
             short[] intData = new short[samples * 2];
             fixed(short *unsafePointer = intData)
             {
-                Noct2D.get_wave_samples(wave, (uint *)unsafePointer, samples);
+                PicoPicoScript.get_wave_samples(wave, (uint *)unsafePointer, samples);
                 if (channels == 2)
                 {
                     for (int i = 0; i < samples * 2; i++)
@@ -1656,7 +1656,7 @@ public class Noct2D : MonoBehaviour
             }
 
             // Stop if we reached to an end-of-stream.
-            if (Noct2D.is_wave_eos(wave))
+            if (PicoPicoScript.is_wave_eos(wave))
                 wave = null;
         }
     }

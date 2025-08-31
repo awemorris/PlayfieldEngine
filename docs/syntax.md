@@ -1,7 +1,7 @@
-NoctLang Syntax
-===============
+PicoPico Script Syntax
+======================
 
-NoctLang is a simple scripting language.
+`PicoPico Script` uses `NoctLang` as a scripting language.
 
 ## Assignments
 
@@ -39,7 +39,7 @@ func main() {
 }
 ```
 
-### Array
+## Array
 
 Arrays are ordered collections of values, accessed by index. Arrays
 support iteration through the `for` loop construct, allowing you to
@@ -75,7 +75,7 @@ func main() {
 }
 ```
 
-### Dictionary
+## Dictionary
 
 Dictionaries store key-value pairs, similar to hash maps or objects in
 other languages. They are defined using curly braces with key-value
@@ -115,7 +115,7 @@ func main() {
 }
 ```
 
-### For-loop
+## For-loop
 
 The for-loop construct provides a concise syntax for iterating through
 sequences such as ranges, arrays, and dictionaries.
@@ -156,7 +156,7 @@ func main() {
 }
 ```
 
-### While Loops
+## While Loops
 
 The while-loop provides a traditional iteration mechanism that
 continues execution as long as a specified condition remains
@@ -176,7 +176,7 @@ func main() {
 }
 ```
 
-### If and Else Blocks
+## If and Else Blocks
 
 Control flows allow for conditional executions based on evaluated
 expressions. The if-else construct follows a familiar syntax where
@@ -195,7 +195,7 @@ func main() {
 }
 ```
 
-### Lambda Functions
+## Lambda Functions
 
 Functions are first-class objects in the language. Anonymous
 functions, also known as `lambda` expressions, allow you to create
@@ -211,6 +211,61 @@ func main() {
 Lambda functions are simply translated to named functions in the
 compilation process. Therefore, they can't capture variables declared
 in outer functions.
+
+## Increment/Decrement (+=, -=, ++, --)
+
+```
+func main() {
+    var a = 123;
+    a += 321;
+    a++;
+
+    var b = 123;
+    b -= 321;
+    b--;
+}
+```
+
+`++` and `--` are supported only as standalone statements (`a++;`, `b--;`).
+Using them inside expressions is disallowed to avoid complex side-effects.
+
+## OOP in NoctLang
+
+The object-oriented model in NoctLang is a lightweight variation of prototype-based OOP.
+
+- Classes are simply dictionary templates
+- Inheritance and instantiation are realized by dictionary merging
+- There is no prototype chain, and modifying a class does not affect existing instances
+
+This design treats dictionaries as first-class objects, and the author refers to it as Dictionary-based OOP (D-OOP).
+
+```
+func main() {
+    // The base class definition. (A class is just a dictionary.)
+    Animal = class {
+        name: "Animal",
+        cry: (this) => {
+        }
+    };
+
+    // The subclass definition. (Just a dictionary merging.)
+    Cat = extend Animal {
+        name: "Cat",
+        voice: "meow",
+        cry: (this) => {
+            print(this.name + " cries like " + this.voice);
+        }
+    };
+
+    // Instantiation. (Just a dictionary merging.)
+    var myCat = new Cat {
+        voice: "neee"
+    };
+
+    // This-call uses -> () syntax. (Equal to myCat.cry(myCat))
+    myCat->cry();
+}
+```
 
 ## Intrinsics
 
@@ -241,26 +296,5 @@ func main() {
 func main() {
     var array = [0, 1, 2];
     array.push(3); // Add to the last.
-}
-```
-
-### global
-
-```
-func main() {
-    var cat = new_cat();
-    var color = cat->getColor();
-}
-
-func new_cat() {
-    return {
-        // Field
-        color: "orange",
-
-        // Method
-        getColor: lambda (this) => {
-            return this.color;
-        },
-    };
 }
 ```

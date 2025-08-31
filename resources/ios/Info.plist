@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
   <key>CFBundleIdentifier</key>
-  <string>io.noctvm.ios-noct2d</string>
+  <string>io.noctvm.ios-picopico</string>
   <key>CFBundleName</key>
-  <string>Noct2D</string>
+  <string>PicoPico</string>
   <key>CFBundleShortVersionString</key>
   <string>1.0.0</string>
   <key>CFBundleVersion</key>

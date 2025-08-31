@@ -1,30 +1,38 @@
-Noct2D
-======
+PicoPico Script by PicoPicoP
+============================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/release/awemorris/Noct2D.svg)](https://github.com/awemorris/Noct2D/releases)
-[![Downloads](https://img.shields.io/github/downloads/awemorris/Noct2D/total.svg)](https://github.com/awemorris/Noct2D/releases)
+[![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
+[![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 
-Noct2D is a game engine built from scratch — and it's crazy portable!
+`PicoPico Script` is a game engine fueled by your dreams!
 
-It uses [Noct](https://github.com/awemorris/NoctLang),
-a lightweight C-like JIT-powered scripting language designed in-house.
+Built completely from scratch, it provides:
+- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang),  
+  a lightweight C-like JIT-powered language designed in-house.
+- **Rendering & Audio:** Driven by StratoHAL,  
+  a hardware abstraction layer also designed in-house.
+
+"PicoPico" is a Japanese onomatopoeia that represents the cute beeping sounds of retro video games.
 
 ### Current Working Platforms
-- Windows
-- macOS
-- Linux
-- FreeBSD
-- iOS
-- Android
-- WebAssembly
-- Consoles
+
+- Desktop
+    - Windows
+    - macOS
+    - Linux / FreeBSD
+- Mobile
+    - iOS
+    - Android
+- Others
+    - WebAssembly
+    - Consoles
 
 ### Status
 
-- Currently in active development on the 0.1.x branch. Stable 1.0.0 release planned.
+- Currently in active development on the 0.8.x branch. Stable 1.0.0 release planned.
 - Latest nightly builds already run across all listed platforms.
-- Built on its own tiny runtime (not based on SDL or LuaJIT).
+- Built on its own technologies (not based on SDL or Lua).
 
 ---
 
@@ -44,14 +52,14 @@ a lightweight C-like JIT-powered scripting language designed in-house.
 - [Example](#example)
 - [ChatGPT Support](#chatgpt-support)
 - [Quick Start](#quick-start)
-- [What's Noct2D?](#whats-noct2d)
+- [What's PicoPico Script?](#whats-picopico-script)
 - [Technical Overview](#technical-overview)
   - [Core Architecture](#core-architecture)
   - [Platform Support](#platform-support)
   - [Console Unity Plugin Notice](#console-unity-plugin-notice)
   - [NoctLang](#noctlang)
   - [Script Execution Mode](#script-execution-mode)
-- [Why Noct2D?](#why-noct2d)
+- [Why PicoPico Script?](#why-picopico-script)
 - [Tests](#tests)
 - [CMake Presets](#cmake-presets)
   - [Runtime Footprint](#runtime-footprint)
@@ -79,7 +87,7 @@ a lightweight C-like JIT-powered scripting language designed in-house.
     - All from a single codebase.
     - On mobile platforms (iOS, Android), ahead-of-time (AOT) compilation is available as an alternative to JIT.
 - **Portable by Design**
-    - Noct2D runs on nearly any computer made after the year 2000.
+    - `PicoPico Script` runs on nearly any computer made after the year 2000.
     - See the [Platform Guide](docs/porting.md)
 - **Console-Ready**
     - Build for platforms you don't physically own,
@@ -129,9 +137,9 @@ To generate game templates with ChatGPT, please let it load the
 following references:
 
 - [NoctLang Syntax Reference](https://noctvm.io/noctlang/syntax.html)
-- [Noct2D API Reference](https://noctvm.io/noct2d/api.html)
+- [PicoPico Script API Reference](https://noctvm.io/picopicoscript/api.html)
 
-ChatGPT can then create runnable Noct2D game samples directly.
+ChatGPT can then create runnable `PicoPico Script` game samples directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -142,7 +150,7 @@ ChatGPT can then create runnable Noct2D game samples directly.
 
 ### 1-a. Download the latest release:
 
-- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/Noct2D/releases)
+- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PicoPicoScript/releases)
 
 ### 1-b. ...Or, clone and build from the repository:
 
@@ -152,7 +160,7 @@ ChatGPT can then create runnable Noct2D game samples directly.
         - Rename the exe files to `flex.exe` and `bison.exe`.
     - Clone the repo.
         ```
-        git clone --recursive https://github.com/awemorris/Noct2D.git
+        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
         ```
     - Open the folder by Visual Studio 2022.
     - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
@@ -163,24 +171,24 @@ ChatGPT can then create runnable Noct2D game samples directly.
         ```
         sudo apt-get install cmake mingw-w64 flex bison
         
-        git clone --recursive https://github.com/awemorris/Noct2D.git
-        cd Noct2D
+        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
+        cd PicoPicoScript
         cmake --preset windows-x86_64
         cmake --build --preset windows-x86_64
         ```
-    - The file `noct2d.exe` will be generated in the `build-win-x86_64` directory.
+    - The file `picopico.exe` will be generated in the `build-win-x86_64` directory.
 
 - macOS (macOS 11 or later, brew, CMake >= 3.22)
     - Type the following in the terminal.
         ```
         brew install cmake flex bison
         
-        git clone --recursive https://github.com/awemorris/Noct2D.git
-        cd Noct2D
+        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
+        cd PicoPicoScript
         cmake -B build .
         cmake --build build --parallel
         ```
-    - The app bundle `Noct2D.app` will be generated in the `build` directory.
+    - The app bundle `PicoPico.app` will be generated in the `build` directory.
     - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
 
 - Linux (Ubuntu 22.04 or later, CMake >= 3.22)
@@ -188,12 +196,12 @@ ChatGPT can then create runnable Noct2D game samples directly.
         ```
         sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
         
-        git clone --recursive https://github.com/awemorris/Noct2D.git
-        cd Noct2D
+        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
+        cd PicoPicoScript
         cmake -B build .
         cmake --build build --parallel
         ```
-    - The file `noct2d` will be generated in the `build` directory.
+    - The file `picopico` will be generated in the `build` directory.
     - The app uses X11 and OpenGL.
 
 - Notes
@@ -206,12 +214,12 @@ ChatGPT can then create runnable Noct2D game samples directly.
 
 ### 2. Run a game script
 
-- Place the sample game files alongside the binary, i.e., `noct2d.exe`, `Noct2D.app`, or `noct2d`.
+- Place the sample game files alongside the binary, i.e., `picopico.exe`, `PicoPico.app`, or `picopico`.
     - E.g., `cp samples/rush/* build/`
 - Run the app.
-    - Double click the `noct2d.exe` file on Windows.
-    - Double click the `Noct2D.app` bundle on macOS.
-    - Run `./noct2d` on Linux.
+    - Windows: Double click the `picopico.exe` file.
+    - macOS: Double click the `PicoPico.app` icon.
+    - Linux: Run `./picopico` on the terminal.
 
 ### 3. Explore more features
 
@@ -220,23 +228,23 @@ ChatGPT can then create runnable Noct2D game samples directly.
 
 ---
 
-## What's Noct2D?
+## What's PicoPico Script?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-Noct2D was born from this single question.
+`PicoPico Script` was born from this single question.
 
-Noct2D is a lightweight and flexible game engine written in C89,
+`PicoPico Script` is a lightweight and flexible game engine written in C89,
 designed to support creators across desktop, mobile, and console platforms.
 
 It runs smoothly even on older or low-spec machines — if you have a computer,
 there's a place for you to create.
 
 And if you're using something more powerful, like a modern MacBook or
-a powerful gaming PC, Noct2D adapts to draw out the full capabilities
+a powerful gaming PC, `PicoPico Script` adapts to draw out the full capabilities
 of your device.
 
-You don't need the latest or most expensive hardware. Noct2D helps you
+You don't need the latest or most expensive hardware. `PicoPico Script` helps you
 go beyond your environment. It's a helpful companion for creators
 everywhere — especially in places with fewer resources.
 
@@ -258,12 +266,12 @@ Create at your pace, wherever you are in the world.
 +-----------------------------------------------------+
                           ||
 +-----------------------------------------------------+
-|                      Noct2D Core                    |
+|                    PicoPico Core                    |
 +-----------------------------------------------------+
-         ||               ||                ||
-+-----------------+--------------+  +-----------------+
-|  Rendering HAL  |  Sound HAL   |  | Scripting Core  |
-+-----------------+--------------+  +-----------------|
+                ||                          ||
++--------------------------------+  +-----------------+
+|  Strato HAL (Rendering/Audio)  |  |    NoctLang     |
++--------------------------------+  +-----------------|
 ```
 
 * **Scripting**:
@@ -295,28 +303,20 @@ Create at your pace, wherever you are in the world.
 |Mobile         |iOS                 |Metal, Audio Unit                         |
 |               |Android             |OpenGL, OpenSL ES, NDK                    |
 |Web            |WebAssembly         |WebGL, OpenAL, via Emscripten             |
-|Console        |Nintendo Switch™   |Unity Native Plugin                       |
-|               |PlayStation® 5     |Unity Native Plugin                       |
-|               |Xbox Series X\|S    |Unity Native Plugin                       |
+|Console        |Unity               |Unity Plugin                              |
 
 ### Console Unity Plugin Notice
 
-Noct2D provides Unity Plugin binaries for platforms including Windows 64-bit, Nintendo Switch, PlayStation 5, and Xbox Series X|S.
+`PicoPico Script` provides Unity Plugin binaries for platforms including Windows 64-bit and game consoles.
 
 - These binaries are provided for demonstration purposes only.
 - They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
 - For actual shipping builds, developers must re-compile using the official SDKs provided by each platform holder.
-- Platform names are listed solely to describe compatibility and do not imply endorsement or approval by the respective companiese.
-- Nintendo Switch™ is a trademark of Nintendo.
-- PlayStation® and PlayStation®5 are registered trademarks of Sony Interactive Entertainment Inc.
-- Xbox®, Xbox Series X|S are trademarks of Microsoft Corporation.
-- Unity® is a trademark of Unity Technologies.
-- All other company and product names are trademarks or registered trademarks of their respective owners.
 
 ### NoctLang
 
 **NoctLang** is a lightweight scripting language designed specifically
-for Noct2D. With a game-oriented syntax, it emphasizes clarity,
+for `PicoPico Script`. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
@@ -348,21 +348,21 @@ even in tightly controlled environments.
 
 ---
 
-## Why Noct2D?
+## Why PicoPico Script?
 
-Noct2D is for those who quietly hold a dream, and wish to share it, one
+`PicoPico Script` is for those who quietly hold a dream, and wish to share it, one
 small step at a time.
 
 Creativity shouldn't depend on the power of your computer, where you
 live, or what tools you have.
 
-Noct2D was created with the belief that every creator deserves space
+`PicoPico Script` was created with the belief that every creator deserves space
 to explore, no matter their surroundings.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, Noct2D offers gentle
+UN-issued Chromebook in a temporary shelter, `PicoPico Script` offers gentle
 tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own. If you have something to make, Noct2D will
+thoughtful, and your own. If you have something to make, `PicoPico Script` will
 be here to walk with you.
 
 **Dreams fuel it — and they're the only requirement.**
@@ -371,7 +371,7 @@ be here to walk with you.
 
 ## Tests
 
-Noct2D is tested on the following environments in the development.
+`PicoPico Script` is tested on the following environments in the development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -394,29 +394,29 @@ Noct2D is tested on the following environments in the development.
 
 |Preset                       |Platform            |Compiler       |Directory           |Target           |
 |-----------------------------|--------------------|---------------|--------------------|-----------------|
-|windows-x86                  |Windows             |MINGW          |build-win-x86       |noct2d.exe       |
-|windows-x86_64               |Windows             |MINGW          |build-win-x86_64    |noct2d.exe       |
-|windows-arm64                |Windows             |MINGW (LLVM)   |build-win-arm64     |noct2d.exe       |
-|macos                        |macOS               |Clang          |build-macos         |Noct2D.app       |
-|linux                        |Linux               |GCC            |build-linux         |noct2d           |
-|ios-device                   |iOS Device          |Clang          |build-ios-device    |libnoct2d.a      |
-|ios-simulator                |iOS Simulator       |Clang          |build-ios-simulator |libnoct2d.a      |
-|android-x86                  |Android x86         |Clang          |build-android-x86   |libnoct2d.so     |
-|android-x86_64               |Android x86_64      |Clang          |build-android-x86_64|libnoct2d.so     |
-|android-armv7                |Android armv7       |Clang          |build-android-armv7 |libnoct2d.so     |
-|android-arm64                |Android arm64       |Clang          |build-android-arm64 |libnoct2d.so     |
+|windows-x86                  |Windows             |MINGW          |build-win-x86       |picopico.exe     |
+|windows-x86_64               |Windows             |MINGW          |build-win-x86_64    |picopico.exe     |
+|windows-arm64                |Windows             |MINGW (LLVM)   |build-win-arm64     |picopico.exe     |
+|macos                        |macOS               |Clang          |build-macos         |PicoPico.app     |
+|linux                        |Linux               |GCC            |build-linux         |picopico         |
+|ios-device                   |iOS Device          |Clang          |build-ios-device    |libpicopico.a    |
+|ios-simulator                |iOS Simulator       |Clang          |build-ios-simulator |libpicopico.a    |
+|android-x86                  |Android x86         |Clang          |build-android-x86   |libpicopico.so   |
+|android-x86_64               |Android x86_64      |Clang          |build-android-x86_64|libpicopico.so   |
+|android-armv7                |Android armv7       |Clang          |build-android-armv7 |libpicopico.so   |
+|android-arm64                |Android arm64       |Clang          |build-android-arm64 |libpicopico.so   |
 |wasm                         |WebAssembly         |Emscripten     |build-wasm          |index.html       |
-|unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libnoct2d.dll    |
-|unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libnoct2d.a      |
-|unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libnoct2d.a      |
-|unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libnoct2d.a      |
-|freebsd                      |FreeBSD             |Clang          |build-freebsd       |noct2d           |
-|windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
-|windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
-|windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
-|windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
-|windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
-|windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
+|unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libpicopico.dll  |
+|unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libpicopico.a    |
+|unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libpicopico.a    |
+|unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libpicopico.a    |
+|freebsd                      |FreeBSD             |Clang          |build-freebsd       |picopico         |
+|windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
 
 ---
 
@@ -443,35 +443,35 @@ Samples are added timely.
 
 ## Noct Ecosystem
 
-Noct2D is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+`PicoPico Script` is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **Noct2D** — go-anywhere 2D game engine (this project)
+- **PicoPico Script** — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-Noct2D is one of the runtimes that embeds and extends the NoctLang core.
+`PicoPico Script` is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
-Noct2D is available as open-source software under the **MIT License**.
+`PicoPico Script` is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
 ## Join Us
 
-Noct2D is still in its early stages. We're building the game engine
+`PicoPico Script` is still in its early stages. We're building the game engine
 with care, hoping it will inspire and empower creators around the
 world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what Noct2D can become. You're welcome to
+Every small step helps shape what `PicoPico Script` can become. You're welcome to
 join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

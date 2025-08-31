@@ -1,11 +1,11 @@
 /* -*- coding: utf-8; indent-tabs-mode: t; tab-width: 4; c-basic-offset: 4; -*- */
 
 /*
- * Copyright (C) 2025, Awe Morris. All rights reserved.
+ * Copyright (C) 2025, PicoPicoP. All rights reserved.
  */
 
 /*
- * A simple HTTP server specialized for Noct2D.
+ * A simple HTTP server specialized for PicoPico Script.
  */
 
 #include <stdio.h>
