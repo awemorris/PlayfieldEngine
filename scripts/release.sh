@@ -160,7 +160,7 @@ cmake --build --preset wasm
 # Copy.
 mkdir                      dist/wasm
 cp build-wasm/index.html   dist/wasm/
-cp resources/product.img   dist/wasm/
+cp resources/assets.pak    dist/wasm/
 cp docs/wasm.md            dist/wasm/README.md
 
 rm -rf build-wasm
@@ -198,7 +198,7 @@ cp    projects/ios/ios/ios.entitlements           dist/ios/ios/
 cp    projects/ios/ios/LaunchScreen.storyboard    dist/ios/ios/
 cp -R Noct2D.xcframework                          dist/ios/ios/
 mkdir                                             dist/ios/Resources/
-cp    resources/product.img                       dist/ios/Resources/
+cp    resources/assets.pak                        dist/ios/Resources/
 mkdir                                             dist/ios/Resources/video
 
 rm -rf build-ios-device

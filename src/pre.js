@@ -1,3 +1,3 @@
 Module['preRun'] = function () {
-    FS.createPreloadedFile('/', 'product.img', 'product.img', true, false);
+    FS.createPreloadedFile('/', 'assets.pak', 'assets.pak', true, false);
 };

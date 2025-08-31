@@ -459,8 +459,8 @@ if(NOCT2D_TARGET_MACOS AND NOCT2D_ENABLE_BUNDLE)
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
-  # Copy the product.img file.
-  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/product.img")
+  # Copy the assets.pak file.
+  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/assets.pak.")
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )

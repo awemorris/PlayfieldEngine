@@ -17,7 +17,7 @@
  *************************/
 
 /* Package file name */
-#define PACKAGE_FILE		"product.img"
+#define PACKAGE_FILE		"assets.pak"
 
 /*************
  * File Read *

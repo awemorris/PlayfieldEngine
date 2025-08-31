@@ -18,9 +18,9 @@ Open the `main.noct` file.
 ## Export the Game
 
 Select your game files on Explorer and drop them to the `noct2dpack.exe` file,
-then the `product.img` file will be created.
+then the `assets.pak` file will be created.
 
-Place the `product.img` file alongside the `noct2d.exe` file.
+Place the `assets.pak` file alongside the `noct2d.exe` file.
 
 ---
 
