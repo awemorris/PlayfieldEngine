@@ -12,7 +12,9 @@ Built completely from scratch, `PicoPicoScript` provides:
 - **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
 - **Rendering & Audio:** Driven by StratoHAL, a portable game library also designed in-house.
 
-### Live Web Demo
+---
+
+## Live Web Demo
 
 - [Heartbeat Clock](https://noctvm.io/g/2)
 <img src="https://noctvm.io/img/screenshot-2.png" alt="Heartbeat Clock" width="200">
@@ -20,19 +22,9 @@ Built completely from scratch, `PicoPicoScript` provides:
 - [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)  
 <img src="https://noctvm.io/img/screenshot-1.png" alt="DON'T RUSH IN COMIKET" width="200">
 
-### Key Features
+---
 
-- **Crazy Minimal**
-    - Runtime is just a ~2MB EXE.
-    - Write a script and run it instantly — **Jot and Run!**
-- **Lightning Fast**
-    - Native performance with a built-in JIT compiler.
-    - **Casual, yet the real thing.**
-- **Ultra Portable**
-    - Ship for platforms you don't physically own,
-    - With nothing but your own machine — **Go Far, Stay Close!**
-
-### Status
+## Status
 
 Currently in active development on the 0.8.x branch. Stable 1.0.0 release planned.
 
@@ -51,27 +43,17 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 
 ---
 
-## Table of Contents
+## Key Features
 
-- [Example](#example)
-- [Quick Start](#quick-start)
-- [What's PicoPicoScript?](#whats-picopico-script)
-- [Technical Overview](#technical-overview)
-  - [Core Architecture](#core-architecture)
-  - [Platform Support](#platform-support)
-  - [Console Unity Plugin Notice](#console-unity-plugin-notice)
-  - [NoctLang](#noctlang)
-  - [Script Execution Mode](#script-execution-mode)
-- [Why PicoPicoScript?](#why-picopico-script)
-- [Tests](#tests)
-- [CMake Presets](#cmake-presets)
-  - [Runtime Footprint](#runtime-footprint)
-- [Samples](#samples)
-- [ChatGPT Support](#chatgpt-support)
-- [Noct Ecosystem](#noct-ecosystem)
-- [License](#license)
-- [Join Us](#join-us)
-- [About the Author](#about-the-author)
+- **Crazy Minimal**
+    - Runtime is just a ~2MB EXE.
+    - Write a script and run it instantly — **Jot and Run!**
+- **Lightning Fast**
+    - Native performance with a built-in JIT compiler.
+    - **Casual, yet the real thing.**
+- **Ultra Portable**
+    - Ship for platforms you don't physically own,
+    - With nothing but your own machine — **Go Far, Stay Close!**
 
 ---
 
