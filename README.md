@@ -7,8 +7,6 @@ PicoPicoScript
 
 `PicoPicoScript` is a 2D game scripting engine fueled by your dreams!
 
-### Built From Scratch
-
 Built completely from scratch, `PicoPicoScript` provides:
 
 - **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like script designed in-house.
