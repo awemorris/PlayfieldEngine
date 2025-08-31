@@ -34,7 +34,7 @@ cp build-win-x86/noct2d.exe        dist/windows-x86/
 cp build-win-x86/noct2dpack.exe    dist/windows-x86/
 cp samples/bouncer/main.noct       dist/windows-x86/
 mkdir                              dist/wasm
-build-win-x86/web.exe              dist/wasm/
+cp build-win-x86/web.exe           dist/wasm/
 
 rm -rf build-win-x86
 
