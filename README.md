@@ -1,11 +1,11 @@
-PicoPico Script by PicoPicoP
-============================
+PicoPicoScript by PicoPicoP
+===========================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 
-`PicoPico Script` is a game engine fueled by your dreams!
+`PicoPicoScript` is a game engine fueled by your dreams!
 
 Built completely from scratch, it provides:
 - **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang),  
@@ -52,14 +52,14 @@ Built completely from scratch, it provides:
 - [Example](#example)
 - [ChatGPT Support](#chatgpt-support)
 - [Quick Start](#quick-start)
-- [What's PicoPico Script?](#whats-picopico-script)
+- [What's PicoPicoScript?](#whats-picopico-script)
 - [Technical Overview](#technical-overview)
   - [Core Architecture](#core-architecture)
   - [Platform Support](#platform-support)
   - [Console Unity Plugin Notice](#console-unity-plugin-notice)
   - [NoctLang](#noctlang)
   - [Script Execution Mode](#script-execution-mode)
-- [Why PicoPico Script?](#why-picopico-script)
+- [Why PicoPicoScript?](#why-picopico-script)
 - [Tests](#tests)
 - [CMake Presets](#cmake-presets)
   - [Runtime Footprint](#runtime-footprint)
@@ -87,7 +87,7 @@ Built completely from scratch, it provides:
     - All from a single codebase.
     - On mobile platforms (iOS, Android), ahead-of-time (AOT) compilation is available as an alternative to JIT.
 - **Portable by Design**
-    - `PicoPico Script` runs on nearly any computer made after the year 2000.
+    - `PicoPicoScript` runs on nearly any computer made after the year 2000.
     - See the [Platform Guide](docs/porting.md)
 - **Console-Ready**
     - Build for platforms you don't physically own,
@@ -137,9 +137,9 @@ To generate game templates with ChatGPT, please let it load the
 following references:
 
 - [NoctLang Syntax Reference](https://noctvm.io/noctlang/syntax.html)
-- [PicoPico Script API Reference](https://noctvm.io/picopicoscript/api.html)
+- [PicoPicoScript API Reference](https://noctvm.io/picopicoscript/api.html)
 
-ChatGPT can then create runnable `PicoPico Script` game samples directly.
+ChatGPT can then create runnable `PicoPicoScript` game samples directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -228,23 +228,23 @@ ChatGPT can then create runnable `PicoPico Script` game samples directly.
 
 ---
 
-## What's PicoPico Script?
+## What's PicoPicoScript?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-`PicoPico Script` was born from this single question.
+`PicoPicoScript` was born from this single question.
 
-`PicoPico Script` is a lightweight and flexible game engine written in C89,
+`PicoPicoScript` is a lightweight and flexible game engine written in C89,
 designed to support creators across desktop, mobile, and console platforms.
 
 It runs smoothly even on older or low-spec machines — if you have a computer,
 there's a place for you to create.
 
 And if you're using something more powerful, like a modern MacBook or
-a powerful gaming PC, `PicoPico Script` adapts to draw out the full capabilities
+a powerful gaming PC, `PicoPicoScript` adapts to draw out the full capabilities
 of your device.
 
-You don't need the latest or most expensive hardware. `PicoPico Script` helps you
+You don't need the latest or most expensive hardware. `PicoPicoScript` helps you
 go beyond your environment. It's a helpful companion for creators
 everywhere — especially in places with fewer resources.
 
@@ -307,7 +307,7 @@ Create at your pace, wherever you are in the world.
 
 ### Console Unity Plugin Notice
 
-`PicoPico Script` provides Unity Plugin binaries for platforms including Windows 64-bit and game consoles.
+`PicoPicoScript` provides Unity Plugin binaries for platforms including Windows 64-bit and game consoles.
 
 - These binaries are provided for demonstration purposes only.
 - They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
@@ -316,7 +316,7 @@ Create at your pace, wherever you are in the world.
 ### NoctLang
 
 **NoctLang** is a lightweight scripting language designed specifically
-for `PicoPico Script`. With a game-oriented syntax, it emphasizes clarity,
+for `PicoPicoScript`. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
@@ -348,21 +348,21 @@ even in tightly controlled environments.
 
 ---
 
-## Why PicoPico Script?
+## Why PicoPicoScript?
 
-`PicoPico Script` is for those who quietly hold a dream, and wish to share it, one
+`PicoPicoScript` is for those who quietly hold a dream, and wish to share it, one
 small step at a time.
 
 Creativity shouldn't depend on the power of your computer, where you
 live, or what tools you have.
 
-`PicoPico Script` was created with the belief that every creator deserves space
+`PicoPicoScript` was created with the belief that every creator deserves space
 to explore, no matter their surroundings.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, `PicoPico Script` offers gentle
+UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers gentle
 tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own. If you have something to make, `PicoPico Script` will
+thoughtful, and your own. If you have something to make, `PicoPicoScript` will
 be here to walk with you.
 
 **Dreams fuel it — and they're the only requirement.**
@@ -371,7 +371,7 @@ be here to walk with you.
 
 ## Tests
 
-`PicoPico Script` is tested on the following environments in the development.
+`PicoPicoScript` is tested on the following environments in the development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -443,35 +443,35 @@ Samples are added timely.
 
 ## Noct Ecosystem
 
-`PicoPico Script` is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+`PicoPicoScript` is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **PicoPico Script** — go-anywhere 2D game engine (this project)
+- **PicoPicoScript** — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-`PicoPico Script` is one of the runtimes that embeds and extends the NoctLang core.
+`PicoPicoScript` is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
-`PicoPico Script` is available as open-source software under the **MIT License**.
+`PicoPicoScript` is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
 ## Join Us
 
-`PicoPico Script` is still in its early stages. We're building the game engine
+`PicoPicoScript` is still in its early stages. We're building the game engine
 with care, hoping it will inspire and empower creators around the
 world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what `PicoPico Script` can become. You're welcome to
+Every small step helps shape what `PicoPicoScript` can become. You're welcome to
 join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

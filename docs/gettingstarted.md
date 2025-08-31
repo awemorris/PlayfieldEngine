@@ -1,11 +1,11 @@
-PicoPico Script Getting Started
+PicoPicoScript Getting Started
 ===============================
 
 Follow the steps below to run your first game.
 
 ## Download the Binary
 
-Download the latest `PicoPico Script` binary from the [Releases Page](https://github.com/awemorris/PicoPicoScript/releases).
+Download the latest `PicoPicoScript` binary from the [Releases Page](https://github.com/awemorris/PicoPicoScript/releases).
 
 ## Run the Game
 

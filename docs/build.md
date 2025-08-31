@@ -1,5 +1,5 @@
-How To Build PicoPico Script
-============================
+How To Build PicoPicoScript
+===========================
 
 ## Windows (WSL2)
 
@@ -15,7 +15,7 @@ sudo apt-get install mingw-w64
 
 ### Steps
 
-Open a terminal and enter the `PicoPico Script` direcotry, then type the following.
+Open a terminal and enter the `PicoPicoScript` direcotry, then type the following.
 
 ```
 ./configure --enable-cross=windows
@@ -57,7 +57,7 @@ codes in the SYSV calling convention, not the Microsoft one.
 * A `Windows 11` PC with an Intel, AMD, or Arm64 processor
 * `Visual Studio 2022 Community` installed
 * `Git for Windows` installed
-* `PicoPico Script` source tree downloaded
+* `PicoPicoScript` source tree downloaded
 
 ### Steps
 

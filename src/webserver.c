@@ -5,7 +5,7 @@
  */
 
 /*
- * A simple HTTP server specialized for PicoPico Script.
+ * A simple HTTP server specialized for PicoPicoScript.
  */
 
 #include <stdio.h>

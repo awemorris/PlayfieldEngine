@@ -1,7 +1,7 @@
-PicoPico Script
+PicoPicoScript
 ===============
 
-"PicoPico Script" is a game scripting engine for 2D games.
+"PicoPicoScript" is a game scripting engine for 2D games.
 
 Contents
 --------
@@ -20,7 +20,7 @@ Contents
 License
 -------
 
-PicoPico Script
+PicoPicoScript
 Copyright (C) 2025, PicoPicoP. All rights reserved.
 
 This software is licensed under the MIT License.

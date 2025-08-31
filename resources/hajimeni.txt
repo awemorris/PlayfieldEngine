@@ -1,7 +1,7 @@
-PicoPico Script
+PicoPicoScript
 ===============
 
-PicoPico Script は2Dゲームスクリプティングエンジンです。
+PicoPicoScript は2Dゲームスクリプティングエンジンです。
 
 中身
 ----
@@ -20,7 +20,7 @@ PicoPico Script は2Dゲームスクリプティングエンジンです。
 利用規約
 --------
 
-PicoPico Script
+PicoPicoScript
 Copyright (C) 2025, PicoPicoP. All rights reserved.
 
 本ソフトウェアはMITライセンスの下で配布されています。

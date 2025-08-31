@@ -1,4 +1,4 @@
-PicoPico Script API
+PicoPicoScript API
 ===================
 
 Every API function takes one parameter. The parameter must be a dictionary and

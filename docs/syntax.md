@@ -1,7 +1,7 @@
-PicoPico Script Syntax
+PicoPicoScript Syntax
 ======================
 
-`PicoPico Script` uses `NoctLang` as a scripting language.
+`PicoPicoScript` uses `NoctLang` as a scripting language.
 
 ## Assignments
 

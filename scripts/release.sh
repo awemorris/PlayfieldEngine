@@ -321,7 +321,7 @@ cd ..
 VERSION="$(date +%Y%m%d)-dev+$(git rev-parse --short HEAD)"
 gh release create $VERSION \
    dist/PicoPicoScript.zip \
-   --title "PicoPico Script $VERSION" \
-   --notes "This is the latest version of PicoPico Script!"
+   --title "PicoPicoScript $VERSION" \
+   --notes "This is the latest version of PicoPicoScript!"
 
 rm -rf dist

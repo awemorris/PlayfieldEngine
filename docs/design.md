@@ -1,9 +1,9 @@
-PicoPico Script Design Overview
+PicoPicoScript Design Overview
 ===============================
 
 ## Porting Layer
 
-Did you know that `PicoPico Script` runs seamlessly on Windows, macOS, Linux, iPhone,
+Did you know that `PicoPicoScript` runs seamlessly on Windows, macOS, Linux, iPhone,
 iPad, Android, Web browsers, — and even game consoles?
 
 The `extern/StratoHAL` directory contains its platform abstraction layer,
@@ -81,7 +81,7 @@ Only enabled on x86 and x86_64 Windows target.
 
 ## Main Layer
 
-The main layer consists of `src/*.c` files, which defines API for `PicoPico Script`.
+The main layer consists of `src/*.c` files, which defines API for `PicoPicoScript`.
 
 ### Tag File
 

@@ -1,14 +1,14 @@
-PicoPico Script by PicoPicoP
+PicoPicoScript by PicoPicoP
 ============================
 
-Welcome to `PicoPico Script`, a game engine fueled by your dreams.
+Welcome to `PicoPicoScript`, a game engine fueled by your dreams.
 
 ---
 
 * For Beginners
     * [Getting Started](gettingstarted.md)
-    * [PicoPico Script Syntax](syntax.md)
-    * [PicoPico Script API](api.md)
+    * [PicoPicoScript Syntax](syntax.md)
+    * [PicoPicoScript API](api.md)
 
 * For Contributors
     * [How To Build](build.md)
