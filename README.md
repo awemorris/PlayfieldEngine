@@ -5,38 +5,16 @@ PicoPicoScript
 [![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 
-`PicoPicoScript` is a game engine fueled by your dreams!
+`PicoPicoScript` is a 2D game scripting engine fueled by your dreams!
 
-Built completely from scratch, it provides:
-- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang),  
-  a lightweight C-like JIT-powered language designed in-house.
-- **Rendering & Audio:** Driven by StratoHAL,  
-  a hardware abstraction layer also designed in-house.
+### Built From Scratch
 
-"PicoPico" is a Japanese onomatopoeia that represents the cute beeping sounds of retro video games.
+Built completely from scratch, `PicoPicoScript` provides:
 
-### Current Working Platforms
+- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like script designed in-house.
+- **Rendering & Audio:** Driven by StratoHAL, a hardware abstraction layer also designed in-house.
 
-- Desktop
-    - Windows
-    - macOS
-    - Linux / FreeBSD
-- Mobile
-    - iOS
-    - Android
-- Others
-    - WebAssembly
-    - Consoles
-
-### Status
-
-- Currently in active development on the 0.8.x branch. Stable 1.0.0 release planned.
-- Latest nightly builds already run across all listed platforms.
-- Built on its own technologies (not based on SDL or Lua).
-
----
-
-## Live Web Demo
+### Live Web Demo
 
 - [Heartbeat Clock](https://noctvm.io/g/2)
 <img src="https://noctvm.io/img/screenshot-2.png" alt="Heartbeat Clock" width="200">
@@ -44,13 +22,40 @@ Built completely from scratch, it provides:
 - [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)  
 <img src="https://noctvm.io/img/screenshot-1.png" alt="DON'T RUSH IN COMIKET" width="200">
 
+### Key Features
+
+- **Crazy Minimal**
+    - Runtime is just a ~2MB EXE.
+    - Write a script and run it instantly — *Jot and Run!*
+- **Lightning Fast**
+    - Native performance with a built-in JIT compiler.
+    - **Casual, yet the real thing.**
+- **Ultra Portable**
+    - Ship for platforms you don't physically own,
+    - With nothing but your own machine — *Go Far, Stay Close!*
+
+### Status
+
+Currently in active development on the 0.8.x branch. Stable 1.0.0 release planned.
+
+**Nightly Works On**
+
+|Type       |OS         |Status             |
+|-----------|-----------|-------------------|
+|Desktop    |Windows    |Works              |
+|           |macOS      |Works              |
+|           |Linux      |Works              |
+|           |FreeBSD    |Works              |
+|Mobile     |iOS        |Works              |
+|           |Android    |Works              |
+|Others     |WebAssembly|Works              |
+|           |Unity      |Works              |
+
 ---
 
 ## Table of Contents
 
-- [Key Features](#key-features)
 - [Example](#example)
-- [ChatGPT Support](#chatgpt-support)
 - [Quick Start](#quick-start)
 - [What's PicoPicoScript?](#whats-picopico-script)
 - [Technical Overview](#technical-overview)
@@ -64,34 +69,11 @@ Built completely from scratch, it provides:
 - [CMake Presets](#cmake-presets)
   - [Runtime Footprint](#runtime-footprint)
 - [Samples](#samples)
+- [ChatGPT Support](#chatgpt-support)
 - [Noct Ecosystem](#noct-ecosystem)
 - [License](#license)
 - [Join Us](#join-us)
 - [About the Author](#about-the-author)
-
----
-
-## Key Features
-
-- **Minimal Setup**
-    - No boilerplate required.
-    - Write a script and run it immediately — *Jot and Run!*
-- **Lightweight Runtime**
-    - Optimized for low-spec and embedded devices.
-    - Runs smoothly even on mobile platforms.
-- **High Performance**
-    - Built-in JIT compiler accelerates execution across architectures.
-    - No native dependencies required.
-- **Cross-Platform**  
-    - Target Windows, macOS, Linux, iOS, Android, Consoles, and WebAssembly.
-    - All from a single codebase.
-    - On mobile platforms (iOS, Android), ahead-of-time (AOT) compilation is available as an alternative to JIT.
-- **Portable by Design**
-    - `PicoPicoScript` runs on nearly any computer made after the year 2000.
-    - See the [Platform Guide](docs/porting.md)
-- **Console-Ready**
-    - Build for platforms you don't physically own,
-    - With nothing but your own machine — *Go Far, Stay Close!*
 
 ---
 
@@ -131,28 +113,13 @@ For more examples, check the [Getting Started Guide](docs/gettingstarted.md)
 
 ---
 
-## ChatGPT Support
-
-To generate game templates with ChatGPT, please let it load the
-following references:
-
-- [NoctLang Syntax Reference](https://noctvm.io/noctlang/syntax.html)
-- [PicoPicoScript API Reference](https://noctvm.io/picopicoscript/api.html)
-
-ChatGPT can then create runnable `PicoPicoScript` game samples directly.
-
-**Note:** In ChatGPT, you need to click the **"+"** button and enable
-**"Web Search"** so that it can read the above references.
-
----
-
 ## Quick Start
 
 ### 1-a. Download the latest release:
 
 - Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PicoPicoScript/releases)
 
-### 1-b. ...Or, clone and build from the repository:
+### 1-b. Clone and build from the repository:
 
 - Visual Studio 2022
     - Install the [winflexbison](https://github.com/lexxmark/winflexbison).
@@ -438,10 +405,26 @@ Samples are added timely.
 |--------------|---------------------|---------------------------------|
 |bouncer       |samples/bouncer      |A block bounce demo.             |
 |rush          |samples/rush         |A jumping game demo.             |
+|heartbeatclock|samples/hearbeatclock|A clock.                         |
 
 ---
 
-## Noct Ecosystem
+## ChatGPT Support
+
+To generate game templates with ChatGPT, please let it load the
+following references:
+
+- [PicoPicoScript Syntax](docs/syntax.html)
+- [PicoPicoScript API](docs/api.html)
+
+ChatGPT can then create runnable `PicoPicoScript` games directly.
+
+**Note:** In ChatGPT, you need to click the **"+"** button and enable
+**"Web Search"** so that it can read the above references.
+
+---
+
+## NoctVM Ecosystem
 
 `PicoPicoScript` is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
