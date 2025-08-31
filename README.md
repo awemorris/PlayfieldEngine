@@ -9,7 +9,7 @@ PicoPicoScript
 
 Built completely from scratch, `PicoPicoScript` provides:
 
-- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like script designed in-house.
+- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
 - **Rendering & Audio:** Driven by StratoHAL, a hardware abstraction layer also designed in-house.
 
 ### Live Web Demo
