@@ -14,6 +14,7 @@ a lightweight C-like JIT-powered scripting language designed in-house.
 - Windows
 - macOS
 - Linux
+- FreeBSD
 - iOS
 - Android
 - WebAssembly
@@ -288,9 +289,8 @@ Create at your pace, wherever you are in the world.
 |Desktop        |Windows             |DirectX 12/11/9, DirectSound              |
 |               |macOS               |Metal, Audio Unit                         |
 |               |ChromeOS            |OpenGL, ALSA                              |
-|               |Linux               |OpenGL / Soft Renderer, ALSA              |
-|               |*BSD                |OpenGL / Soft Renderer, /dev/dsp          |
-|               |Haiku               |Soft Renderer                             |
+|               |Linux               |OpenGL, ALSA                              |
+|               |*BSD                |OpenGL, /dev/dsp                          |
 |               |Qt                  |Qt OpenGL                                 |
 |Mobile         |iOS                 |Metal, Audio Unit                         |
 |               |Android             |OpenGL, OpenSL ES, NDK                    |
@@ -329,21 +329,22 @@ even in tightly controlled environments.
 
 ### Script Execution Mode
 
-|Platform      |Mode               |
-|--------------|-------------------|
-|Windows x86   |JIT                |
-|Windows x64   |JIT                |
-|Windows arm64 |JIT                |
-|macOS x86_64  |JIT                |
-|macOS arm64   |JIT                |
-|Linux x86     |JIT                |
-|Linux x86_64  |JIT                |
-|Linux armv7   |JIT                |
-|Linux arm64   |JIT                |
-|iOS           |Interpreter or AOT |
-|Android       |Interpreter or AOT |
-|WebAssembly   |Interpreter or AOT |
-|Unity Plugin  |Interpreter or AOT |
+|Platform       |Mode               |
+|---------------|-------------------|
+|Windows x86    |JIT                |
+|Windows x64    |JIT                |
+|Windows arm64  |JIT                |
+|macOS x86_64   |JIT                |
+|macOS arm64    |JIT                |
+|Linux x86      |JIT                |
+|Linux x86_64   |JIT                |
+|Linux armv7    |JIT                |
+|Linux arm64    |JIT                |
+|FreeBSD x86_64 |JIT                |
+|iOS            |Interpreter or AOT |
+|Android        |Interpreter or AOT |
+|WebAssembly    |Interpreter or AOT |
+|Unity Plugin   |Interpreter or AOT |
 
 ---
 
@@ -372,18 +373,20 @@ be here to walk with you.
 
 Noct2D is tested on the following environments in the development.
 
-- Windows 11 x64
-- Windows 11 arm64
-- macOS 15 arm64
-- Ubuntu 24.04 aarch64 (both X11 and Wayland)
-- Ubuntu 24.04 x86_64 (both X11 and wayland)
-- Google Chrome (WebAssembly)
-- Safari (WebAssembly)
-- iOS Simulator (Xcode, tested on iOS 18)
-- Android Simulator (Android Studio, tested on the API level 28 and 35)
-- Unity 6 Windows 11 x86_64
-
-Sometimes checked on Windows XP. It runs but texture stretching is not working without Direct3D 9.
+|Type       |OS              |Version |Architecture    |
+|-----------|----------------|--------|----------------|
+|Desktop    |Windows         |11      |x64             |
+|           |                |        |arm64           |
+|           |macOS           |15      |arm64           |
+|           |                |13      |x86_64          |
+|           |Ubuntu          |24.04   |x86_64          |
+|           |                |        |arm64           |
+|           |Kubuntu         |25.04   |x86_64          |
+|Browser    |Chrome          |139     |WebAssembly     |
+|           |Safari          |18.6    |WebAssembly     |
+|Smartphone |iOS             |18      |Simulator       |
+|           |Android         |15      |Simulator       |
+|Console    |Unity           |6       |                |
 
 ---
 
@@ -408,7 +411,6 @@ Sometimes checked on Windows XP. It runs but texture stretching is not working w
 |unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libnoct2d.a      |
 |unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libnoct2d.a      |
 |freebsd                      |FreeBSD             |Clang          |build-freebsd       |noct2d           |
-|haiku                        |Haiku               |GCC            |build-haiku         |noct2d           |
 |windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
 |windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |
 |windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |noct2d.exe       |

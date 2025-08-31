@@ -27,8 +27,8 @@
 #include <signal.h>
 
 /* msvcrt  */
-#include <io.h> /* _access() */
-#include <locale.h> /* setlocale() */
+#include <io.h>				/* _access() */
+#include <locale.h>			/* setlocale() */
 
 /* A macro to check whether a file exists. */
 #define FILE_EXISTS(fname)	(_access(fname, 0) != -1)
