@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 			printf("Error: Cannot allocate memory.\n");
 			return 1;
 		}
-		printf("File-size: %u\n", fsize);
+		printf("File-size: %zu\n", fsize);
 		if (fread(fdata, fsize, 1, fp) != 1) {
 			printf("Error: Cannot read file %s\n", fname);
 			return 1;
@@ -148,10 +148,10 @@ int main(int argc, char *argv[])
 		printf("Sending response header...\n");
 		char send_buf[4096];
 		if (strcmp(fname, "index.html") == 0) {
-			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: no-cache\nContent-Length: %u\n\n", fsize);
+			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_index_sent = 1;
 		} else if (strcmp(fname, "assets.pak") == 0) {
-			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: application/octet-stream\nCache-Control: no-cache\nContent-Length: %u\n\n", fsize);
+			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: application/octet-stream\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_data_sent = 1;
 		}
 		send(accept_sock, send_buf, strlen(send_buf), 0);
