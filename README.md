@@ -5,7 +5,7 @@ PicoPicoScript
 [![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 
-`PicoPicoScript` is a 2D game scripting engine fueled by your dreams!
+`PicoPicoScript` is an indie game engine fueled by your dreams!
 
 Built completely from scratch, `PicoPicoScript` provides:
 
