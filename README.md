@@ -24,13 +24,13 @@ Built completely from scratch, `PicoPicoScript` provides:
 
 - **Crazy Minimal**
     - Runtime is just a ~2MB EXE.
-    - Write a script and run it instantly — *Jot and Run!*
+    - Write a script and run it instantly — **Jot and Run!**
 - **Lightning Fast**
     - Native performance with a built-in JIT compiler.
     - **Casual, yet the real thing.**
 - **Ultra Portable**
     - Ship for platforms you don't physically own,
-    - With nothing but your own machine — *Go Far, Stay Close!*
+    - With nothing but your own machine — **Go Far, Stay Close!**
 
 ### Status
 
