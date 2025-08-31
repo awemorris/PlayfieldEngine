@@ -1,5 +1,5 @@
-PicoPicoScript by PicoPicoP
-===========================
+PicoPicoScript
+==============
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
@@ -457,6 +457,11 @@ NoctLang itself is just the core language engine with no complex runtime.
 
 ## License
 
+```
+PicoPicoScript
+Copyright (C) 2025, PicoPicoP. All rights reserved.
+```
+
 `PicoPicoScript` is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
@@ -475,12 +480,3 @@ Every small step helps shape what `PicoPicoScript` can become. You're welcome to
 join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)
-
----
-
-## About the Author
-
-Awe (/aːwe/, "ah-weh") is a seasoned programmer living in a remote,
-small house, surrounded by fields. They love writing code — it feels
-simple and clear. Understanding people's feelings takes time, but
-tools can be kind.
