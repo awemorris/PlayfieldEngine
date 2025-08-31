@@ -496,7 +496,7 @@ char *make_real_path(const char *fname)
         // If the package:
         if(strcmp(fname, PACKAGE_FILE) == 0) {
             // Return a bundle resource path.
-            NSString *path = [[NSBundle mainBundle] pathForResource:@"product" ofType:@"img"];
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"assets" ofType:@"pak"];
             const char *cstr = [path UTF8String];
             return strdup(cstr);
         }
