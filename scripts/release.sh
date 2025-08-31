@@ -26,12 +26,15 @@ cmake --build --preset windows-x86
 # Strip.
 i686-w64-mingw32-strip build-win-x86/noct2d.exe
 i686-w64-mingw32-strip build-win-x86/noct2dpack.exe
+i686-w64-mingw32-strip build-win-x86/web.exe
 
 # Copy.
 mkdir                              dist/windows-x86
 cp build-win-x86/noct2d.exe        dist/windows-x86/
 cp build-win-x86/noct2dpack.exe    dist/windows-x86/
 cp samples/bouncer/main.noct       dist/windows-x86/
+mkdir                              dist/wasm
+build-win-x86/web.exe              dist/wasm/
 
 rm -rf build-win-x86
 
@@ -158,7 +161,7 @@ cmake --preset wasm
 cmake --build --preset wasm
 
 # Copy.
-mkdir                      dist/wasm
+mkdir -p                   dist/wasm
 cp build-wasm/index.html   dist/wasm/
 cp resources/assets.pak    dist/wasm/
 cp docs/wasm.md            dist/wasm/README.md

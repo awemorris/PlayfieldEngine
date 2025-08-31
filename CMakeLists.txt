@@ -435,6 +435,18 @@ if(NOCT2D_ENABLE_PACK)
 endif()
 
 #
+# Web Server target
+#
+
+if(NOCT2D_TARGET_WINDOWS)
+  add_executable(
+    web
+    src/webserver.c
+  )
+  target_link_libraries(web wsock32 ws2_32)
+endif()
+
+#
 # macOS Bundle
 #
 
