@@ -155,19 +155,19 @@ xcodebuild -create-xcframework \
   -output PicoPico.xcframework
 
 # Copy.
-mkdir                                             dist/ios
-mkdir                                             dist/ios/ios.xcodeproj
-cp    projects/ios/ios.xcodeproj/project.pbxproj  dist/ios/ios.xcodeproj/
-mkdir                                             dist/ios/ios
-cp -R projects/ios/ios/Assets.xcassets            dist/ios/ios/
-cp    projects/ios/ios/entry.c                    dist/ios/ios/
-cp    projects/ios/ios/Info.plist                 dist/ios/ios/
-cp    projects/ios/ios/ios.entitlements           dist/ios/ios/
-cp    projects/ios/ios/LaunchScreen.storyboard    dist/ios/ios/
-cp -R PicoPico.xcframework                        dist/ios/ios/
-mkdir                                             dist/ios/Resources/
-cp    resources/assets.pak                        dist/ios/Resources/
-mkdir                                             dist/ios/Resources/video
+mkdir                                                       dist/ios
+mkdir                                                       dist/ios/ios.xcodeproj
+cp    resources/projects/ios/ios.xcodeproj/project.pbxproj  dist/ios/ios.xcodeproj/
+mkdir                                                       dist/ios/ios
+cp -R resources/projects/ios/ios/Assets.xcassets            dist/ios/ios/
+cp    resources/projects/ios/ios/entry.c                    dist/ios/ios/
+cp    resources/projects/ios/ios/Info.plist                 dist/ios/ios/
+cp    resources/projects/ios/ios/ios.entitlements           dist/ios/ios/
+cp    resources/projects/ios/ios/LaunchScreen.storyboard    dist/ios/ios/
+cp -R PicoPico.xcframework                                  dist/ios/ios/
+mkdir                                                       dist/ios/Resources/
+cp    resources/assets.pak                                  dist/ios/Resources/
+mkdir                                                       dist/ios/Resources/video
 
 rm -rf build-ios-device
 rm -rf build-ios-simulator
@@ -198,33 +198,33 @@ cmake --preset android-x86
 cmake --build --preset android-x86
 
 # Copy.
-mkdir                                        dist/android
-cp -R projects/android/app                   dist/android/
-cp -R projects/android/gradle.properties     dist/android/
-cp -R projects/android/build.gradle          dist/android/
-cp -R projects/android/gradlew               dist/android/
-cp -R projects/android/settings.gradle       dist/android/
-cp -R projects/android/gradlew.bat           dist/android/
-cp -R projects/android/gradle                dist/android/
-cp -R projects/android/build.bat             dist/android/
+mkdir                                                  dist/android
+cp -R resources/projects/android/app                   dist/android/
+cp -R resources/projects/android/gradle.properties     dist/android/
+cp -R resources/projects/android/build.gradle          dist/android/
+cp -R resources/projects/android/gradlew               dist/android/
+cp -R resources/projects/android/settings.gradle       dist/android/
+cp -R resources/projects/android/gradlew.bat           dist/android/
+cp -R resources/projects/android/gradle                dist/android/
+cp -R resources/projects/android/build.bat             dist/android/
 
-mkdir -p dist/android/app/src/main/assets
-cp SAMPLES/bouncer/main.noct                 dist/android/app/src/main/assets/
+mkdir -p                                               dist/android/app/src/main/assets
+cp SAMPLES/bouncer/main.noct                           dist/android/app/src/main/assets/
 
-mkdir -p dist/android/app/src/main/java/io/noctvm/picopico/engineandroid
-cp external/StratoHAL/src/MainActivity.java  dist/android/app/src/main/java/io/noctvm/picopico/engineandroid/
+mkdir -p                                               dist/android/app/src/main/java/io/noctvm/picopico/engineandroid
+cp external/StratoHAL/src/MainActivity.java            dist/android/app/src/main/java/io/noctvm/picopico/engineandroid/
 
-mkdir -p dist/android/app/src/main/jniLibs/arm64-v8a
-cp build-android-arm64/libpicopico.so        dist/android/app/src/main/jniLibs/arm64-v8a/
+mkdir -p                                               dist/android/app/src/main/jniLibs/arm64-v8a
+cp build-android-arm64/libpicopico.so                  dist/android/app/src/main/jniLibs/arm64-v8a/
 
-mkdir -p dist/android/app/src/main/jniLibs/armeabi-v7a
-cp build-android-armv7/libpicopico.so        dist/android/app/src/main/jniLibs/armeabi-v7a/
+mkdir -p                                               dist/android/app/src/main/jniLibs/armeabi-v7a
+cp build-android-armv7/libpicopico.so                  dist/android/app/src/main/jniLibs/armeabi-v7a/
 
-mkdir -p dist/android/app/src/main/jniLibs/x86_64
-cp build-android-x86_64/libpicopico.so       dist/android/app/src/main/jniLibs/x86_64/
+mkdir -p                                               dist/android/app/src/main/jniLibs/x86_64
+cp build-android-x86_64/libpicopico.so                 dist/android/app/src/main/jniLibs/x86_64/
 
-mkdir -p dist/android/app/src/main/jniLibs/x86
-cp build-android-x86/libpicopico.so          dist/android/app/src/main/jniLibs/x86/
+mkdir -p                                               dist/android/app/src/main/jniLibs/x86
+cp build-android-x86/libpicopico.so                    dist/android/app/src/main/jniLibs/x86/
 
 rm -rf build-android-arm64
 rm -rf build-android-armv7
@@ -296,8 +296,10 @@ cp -R samples dist/SAMPLES
 # mkdocs
 #
 
+cd docs/mkdocs-en
 mkdocs build
-mv site dist/DOCS
+mv site ../../dist/DOCS
+cd ../..
 
 #
 # License and README
