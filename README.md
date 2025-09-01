@@ -203,6 +203,27 @@ Create at your pace, wherever you are in the world.
 
 ---
 
+## Why PicoPicoScript?
+
+`PicoPicoScript` is for those who quietly hold a dream, and wish to share it, one
+small step at a time.
+
+Creativity shouldn't depend on the power of your computer, where you
+live, or what tools you have.
+
+`PicoPicoScript` was created with the belief that every creator deserves space
+to explore, no matter their surroundings.
+
+Whether you're using a Raspberry Pi in a classroom, or using a
+UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers gentle
+tools to help bring your ideas to life — in a way that feels simple,
+thoughtful, and your own. If you have something to make, `PicoPicoScript` will
+be here to walk with you.
+
+**Dreams fuel it — and they're the only requirement.**
+
+---
+
 ## Technical Overview
 
 ### Core Architecture
@@ -217,7 +238,7 @@ Create at your pace, wherever you are in the world.
 +-----------------------------------------------------+
                 ||                          ||
 +--------------------------------+  +-----------------+
-|  Strato HAL (Rendering/Audio)  |  |    NoctLang     |
+|  StratoHAL (Rendering/Audio)   |  |    NoctLang     |
 +--------------------------------+  +-----------------|
 ```
 
@@ -292,27 +313,6 @@ even in tightly controlled environments.
 |Android        |Interpreter or AOT |
 |WebAssembly    |Interpreter or AOT |
 |Unity Plugin   |Interpreter or AOT |
-
----
-
-## Why PicoPicoScript?
-
-`PicoPicoScript` is for those who quietly hold a dream, and wish to share it, one
-small step at a time.
-
-Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.
-
-`PicoPicoScript` was created with the belief that every creator deserves space
-to explore, no matter their surroundings.
-
-Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers gentle
-tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own. If you have something to make, `PicoPicoScript` will
-be here to walk with you.
-
-**Dreams fuel it — and they're the only requirement.**
 
 ---
 
