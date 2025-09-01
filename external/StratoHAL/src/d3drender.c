@@ -94,18 +94,18 @@ VOID D3DCleanup(void)
 	}
 }
 
-BOOL D3DResizeWindow(int nOffsetX, int nOffsetY, float scale)
+BOOL D3DResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
 {
 	switch (nGraphicsMode)
 	{
 	case MODE_D3D12:
-		D3D12ResizeWindow(nOffsetX, nOffsetY, scale);
+		D3D12ResizeWindow(nScreenWidth, nScreenHeight, nOffsetX, nOffsetY, nViewportWidth, nViewportHeight, scale);
 		break;
 	case MODE_D3D11:
-		D3D11ResizeWindow(nOffsetX, nOffsetY, scale);
+		D3D11ResizeWindow(nScreenWidth, nScreenHeight, nOffsetX, nOffsetY, nViewportWidth, nViewportHeight, scale);
 		break;
 	case MODE_D3D9:
-		D3D9ResizeWindow(nOffsetX, nOffsetY, scale);
+		D3D9ResizeWindow(nScreenWidth, nScreenHeight, nOffsetX, nOffsetY, nViewportWidth, nViewportHeight, scale);
 		break;
 	case MODE_GDI:
 		break;

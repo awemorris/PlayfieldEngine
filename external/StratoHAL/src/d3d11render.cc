@@ -637,14 +637,39 @@ VOID D3D11Cleanup(void)
     }
 }
 
-BOOL D3D11ResizeWindow(int nOffsetX, int nOffsetY, float scale)
+BOOL D3D11ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
 {
     UNUSED_PARAMETER(nOffsetX);
     UNUSED_PARAMETER(nOffsetY);
     UNUSED_PARAMETER(scale);
 
-    g_fDisplayWidth = (float)g_nWindowWidth * scale;
-    g_fDisplayHeight = (float)g_nWindowHeight * scale;
+    g_fDisplayWidth = (float)nScreenWidth;
+    g_fDisplayHeight = (float)nScreenHeight;
+
+    float ratioX = (float)g_nWindowWidth / g_fDisplayWidth;
+    float ratioY = (float)g_nWindowHeight / g_fDisplayHeight;
+
+    D3D11_VIEWPORT vp;
+    vp.TopLeftX = (float)nOffsetX * ratioX;
+    vp.TopLeftY = (float)nOffsetY * ratioY;
+    vp.Width = (float)nViewportWidth * ratioX;
+    vp.Height = (float)nViewportHeight * ratioY;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+
+    g_pImmediateContext->RSSetViewports(1, &vp);
+
+    RECT sci;
+    sci.left = 0;
+    sci.top = 0;
+    sci.right = g_nWindowWidth - (int)((float)nOffsetX / ratioX);
+    sci.bottom = g_nWindowHeight - (int)((float)nOffsetY / ratioY);
+
+    g_pImmediateContext->RSSetScissorRects(1, &sci);
+
+#if 0
+    g_fDisplayWidth = (float)nScreenWidth;
+    g_fDisplayHeight = (float)nScreenHeight;
 
     float ratioX = (float)g_nWindowWidth / (g_fDisplayWidth + (float)nOffsetX * 2.0f);
     float ratioY = (float)g_nWindowHeight / (g_fDisplayHeight + (float)nOffsetY * 2.0f);
@@ -666,6 +691,7 @@ BOOL D3D11ResizeWindow(int nOffsetX, int nOffsetY, float scale)
     sci.bottom = g_nWindowHeight - (int)((float)nOffsetY / ratioY);
 
     g_pImmediateContext->RSSetScissorRects(1, &sci);
+#endif
 
     return TRUE;
 }

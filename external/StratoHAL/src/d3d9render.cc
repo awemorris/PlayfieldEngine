@@ -314,7 +314,7 @@ VOID D3D9Cleanup(void)
 //
 // Resize the window.
 //
-BOOL D3D9ResizeWindow(int nOffsetX, int nOffsetY, float scale)
+BOOL D3D9ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
 {
 	fDisplayOffsetX = (float)nOffsetX;
 	fDisplayOffsetY = (float)nOffsetY;

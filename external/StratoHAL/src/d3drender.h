@@ -18,7 +18,7 @@
 /* Public */
 BOOL D3DInitialize(HWND hWnd, int nWidth, int nHeight, BOOL bForceD3D9);
 VOID D3DCleanup(void);
-BOOL D3DResizeWindow(int nOffsetX, int nOffsetY, float scale);
+BOOL D3DResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale);
 VOID D3DStartFrame(void);
 VOID D3DEndFrame(void);
 BOOL D3DRedraw(void);
@@ -33,9 +33,9 @@ VOID D3D12Cleanup(void);
 VOID D3D11Cleanup(void);
 VOID D3D9Cleanup(void);
 VOID GDICleanup(void);
-BOOL D3D12ResizeWindow(int nOffsetX, int nOffsetY, float scale);
-BOOL D3D11ResizeWindow(int nOffsetX, int nOffsetY, float scale);
-BOOL D3D9ResizeWindow(int nOffsetX, int nOffsetY, float scale);
+BOOL D3D12ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale);
+BOOL D3D11ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale);
+BOOL D3D9ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale);
 BOOL GDIResizeWindow(int nOffsetX, int nOffsetY, float scale);
 VOID D3D12StartFrame(void);
 VOID D3D11StartFrame(void);

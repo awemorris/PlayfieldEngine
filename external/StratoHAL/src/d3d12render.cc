@@ -725,23 +725,23 @@ VOID D3D12Cleanup(void)
     CloseHandle(g_fenceEvent);
 }
 
-BOOL D3D12ResizeWindow(int nOffsetX, int nOffsetY, float scale)
+BOOL D3D12ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
 {
-    g_fDisplayWidth = (float)g_nWindowWidth * scale;
-    g_fDisplayHeight = (float)g_nWindowHeight * scale;
+    g_fDisplayWidth = (float)nScreenWidth;
+    g_fDisplayHeight = (float)nScreenHeight;
 
-    float ratioX = g_fDisplayWidth / (g_fDisplayWidth + (float)nOffsetX * 2.0f);
-    float ratioY = g_fDisplayHeight / (g_fDisplayHeight + (float)nOffsetY * 2.0f);
+    float ratioX = (float)g_nWindowWidth / g_fDisplayWidth;
+    float ratioY = (float)g_nWindowHeight / g_fDisplayHeight;
 
-    g_viewport.TopLeftX = (float)nOffsetX / 2.0f;
-    g_viewport.TopLeftY = (float)nOffsetY / 2.0f;
-    g_viewport.Width = g_fDisplayWidth * ratioX;
-    g_viewport.Height = g_fDisplayHeight * ratioY;
+    g_viewport.TopLeftX = nOffsetX * ratioX;
+    g_viewport.TopLeftY = nOffsetY * ratioY;
+    g_viewport.Width = nViewportWidth;
+    g_viewport.Height = nViewportHeight;
 
     g_scissorRect.left = 0;
     g_scissorRect.top = 0;
-    g_scissorRect.right = g_nWindowWidth - nOffsetX / 2;
-    g_scissorRect.bottom = g_nWindowHeight - nOffsetY / 2;
+    g_scissorRect.right = nViewportWidth;
+    g_scissorRect.bottom = nViewportHeight;
 
     return TRUE;
 }

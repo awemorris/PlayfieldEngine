@@ -1026,7 +1026,7 @@ static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
 	nViewportHeight = (int)fUseHeight;
 
 	/* Update the screen offset and scale for drawing subsystem. */
-	D3DResizeWindow(nViewportOffsetX, nViewportOffsetY, fMouseScale);
+	D3DResizeWindow(nClientWidth, nClientHeight, nViewportOffsetX, nViewportOffsetY, nViewportWidth, nViewportHeight, fMouseScale);
 }
 
 /*
