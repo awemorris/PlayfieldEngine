@@ -1,0 +1,61 @@
+:root {
+  --font-body: "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+  --line: 1.9;
+  --measure: 72ch;
+}
+
+html, body {
+  margin: 1.0em;
+  padding: 0;
+  background: #fafafa;
+  color: #111;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: var(--line);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  line-break: strict;
+  text-justify: inter-character;
+}
+
+body.horizontal {
+  writing-mode: horizontal-tb;
+}
+
+body.vertical {
+  writing-mode: vertical-rl;
+  ruby-position: inter-character;
+}
+
+/* 版面風だけどページ境界なし */
+main {
+  max-width: var(--measure);
+  margin: 2rem auto;
+  padding: 0 1rem;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+  border-radius: 8px;
+}
+
+/* 段落・見出し */
+p {
+  margin: 0.8em 0;
+  text-indent: 1em;
+}
+h1, h2, h3 {
+  margin: 1.2em 0 .6em;
+  text-indent: 0;
+  font-weight: 700;
+}
+h2 { border-bottom: 1px solid #ccc; padding-bottom: .25em; }
+
+/* ルビ */
+ruby { ruby-position: over; }
+body.vertical ruby { ruby-position: inter-character; }
+
+/* 表・図版 */
+figure { margin: 1.2em 0; }
+figure img { max-width: 100%; border: 1px solid #ccc; border-radius: 6px; }
+figcaption { font-size: .9em; text-align: center; color: #555; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+td, th { border: 1px solid #ccc; padding: .5em; }
