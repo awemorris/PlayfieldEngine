@@ -129,7 +129,7 @@ cmake --build --preset wasm
 mkdir -p                           dist/wasm
 cp build-wasm/index.html           dist/wasm/
 cp resources/assets.pak            dist/wasm/
-cp docs/mkdocs-en/docs/wasm.md     dist/wasm/readme.txt
+cp docs/readme/wasm.md             dist/wasm/readme.txt
 
 rm -rf build-wasm
 
@@ -278,7 +278,7 @@ cp    build-unity-win64/libpicopico.dll            dist/unity/Assets/Plugins/x86
 cp    build-unity-switch/libpicopico.a             dist/unity/Assets/Plugins/Switch/
 cp    build-unity-ps5/libpicopico.a                dist/unity/Assets/Plugins/PS5/
 cp    build-unity-xbox/picopico.lib                dist/unity/Assets/Plugins/GameCoreXboxSeries/
-cp    docs/mkdocs-en/docs/unity.md                 dist/unity/
+cp    docs/readme/unity.md                         dist/unity/
 
 rm -rf build-unity-win64
 rm -rf build-unity-switch

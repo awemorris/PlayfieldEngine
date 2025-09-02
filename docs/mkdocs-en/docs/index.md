@@ -1,5 +1,5 @@
-PicoPicoScript by PicoPicoP
-============================
+PicoPicoScript
+==============
 
 Welcome to `PicoPicoScript`, a game engine fueled by your dreams.
 

@@ -1,5 +1,12 @@
 web:
-	pandoc -f gfm -t html5 --standalone --toc --css screen.css -o index.html 01-intro.md
+	pandoc \
+		-f gfm \
+		-t html5 \
+		--standalone \
+		--toc \
+		--css screen.css \
+		-o index.html \
+		index.md
 
 pdf:
 	pandoc \
@@ -12,7 +19,7 @@ pdf:
 		-V geometry:a4paper \
 		-V geometry:margin=25mm \
 		--toc \
-		-o body.pdf 01-intro.md
+		-o body.pdf index.md
 	qpdf \
 		--empty \
 		--pages cover.pdf body.pdf \
