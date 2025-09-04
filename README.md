@@ -89,7 +89,7 @@ func frame() {
 **Note:** setup() defines the window, start() loads resources, and
 frame() is called each frame to render and update.
 
-For more examples, check the [Getting Started Guide](docs/gettingstarted.md)
+For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/gettingstarted.md)
 
 ---
 
@@ -170,8 +170,8 @@ For more examples, check the [Getting Started Guide](docs/gettingstarted.md)
 
 ### 3. Explore more features
 
-- See the [Getting Started](docs/gettingstarted.md) page for the overview.
-- See the [Full Documentation](docs/index.md) for the details.
+- See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
+- See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
 
 ---
 
@@ -394,8 +394,8 @@ Samples are added timely.
 To generate game templates with ChatGPT, please let it load the
 following references:
 
-- [PicoPicoScript Syntax](docs/syntax.html)
-- [PicoPicoScript API](docs/api.html)
+- [PicoPicoScript Syntax](docs/mkdocs-en/docs/syntax.html)
+- [PicoPicoScript API](docs/mkdocs-en/docs/api.html)
 
 ChatGPT can then create runnable `PicoPicoScript` games directly.
 
