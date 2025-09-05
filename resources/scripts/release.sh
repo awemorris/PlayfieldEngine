@@ -298,7 +298,12 @@ cp -R samples dist/SAMPLES
 
 cd docs/mkdocs-en
 mkdocs build
-mv site ../../dist/DOCS
+mv site ../../dist/DOCS-english
+cd ../..
+
+cd docs/mkdocs-ja
+mkdocs build
+mv site ../../dist/DOCS-nihongo
 cd ../..
 
 #

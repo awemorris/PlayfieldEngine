@@ -1,34 +1,35 @@
-PicoPicoScript Getting Started
-===============================
+PicoPicoScript スタートガイド
+=============================
 
-Follow the steps below to run your first game.
+入門として最初のゲームを動かしてみる手順は、以下の通りです。
 
-## Download the Binary
+## 実行ファイルのダウンロード
 
-Download the latest `PicoPicoScript` binary from the [Releases Page](https://github.com/awemorris/PicoPicoScript/releases).
+最新の `PicoPicoScript` 実行ファイルを [リリースページ](https://github.com/awemorris/PicoPicoScript/releases) からダウンロードしてください。
 
-## Run the Game
+## ゲームを実行する
 
-Double-click the `picopico.exe` file to start the game.
+`picopico.exe` ファイルをダブルクリックするとゲームが起動します。
 
-## Edit the Game
+## ゲームを編集する
 
-Open the `main.noct` file.
+`main.noct` ファイルを開いて編集してください。
 
-## Export the Game
+## ゲームを配布用にエクスポートする
 
-Select your game files on Explorer and drop them to the `picopico-pack.exe` file,
-then the `assets.pak` file will be created.
+エクスプーラでゲームのファイルを選択肢、それを `picopico-pack.exe` のアイコンにドロップしてください。
+すると、`assets.pak` fileが作成されます。
 
-Place the `assets.pak` file alongside the `picopico.exe` file.
+作成された `assets.pak` ファイルを `picopico.exe` ファイルと同じフォルダに置いてください。
 
 ---
 
-## PicoPicoScript Tutorial Game
+## PicoPicoScript チュートリアルゲーム
 
-### Bouncer
+### Bounder (飛び跳ね)
 
-This is the simplest sample. See the `SAMPLES/bouncer` folder in the SDK.
+これは一番シンプルなサンプルです。
+`SAMPLES/bouncer` フォルダを参照してください。
 
 ```
 //

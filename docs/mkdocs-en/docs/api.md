@@ -89,7 +89,7 @@ func update() {
 
 ### Engine.createColorTexture()
 
-This API loads a texture from assets, and returns a texture.
+This API creates a texture with the specified color, and returns a texture.
 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
@@ -158,7 +158,7 @@ This API renders a texture to the screen.
 |dstTop              |Screen coordinate Y.                                          |
 |dstWidth            |Width in screen.                                              |
 |dstHeight           |Height in screen.                                             |
-|texture             |Texture ID.                                                   |
+|texture             |Texture.                                                      |
 |srcLeft             |Texture top left X.                                           |
 |srcTop              |Texture top left Y.                                           |
 |srcWidth            |Texture rectangle width.                                      |
@@ -188,7 +188,7 @@ This API renders a texture to the screen, a simple version of `Engine.renderText
 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
-|texture             |Texture ID.                                                   |
+|texture             |Texture.                                                      |
 |x                   |Screen coordinate X.                                          |
 |y                   |Screen coordinate Y.                                          |
 
@@ -216,7 +216,7 @@ This API renders a texture to the screen.
 |y3                  |Screen coordinate Y3.                                         |
 |x4                  |Screen coordinate X4.                                         |
 |y4                  |Screen coordinate Y4.                                         |
-|texture             |Texture ID.                                                   |
+|texture             |Texture.                                                      |
 |srcLeft             |Texture top left X.                                           |
 |srcTop              |Texture top left Y.                                           |
 |srcWidth            |Texture rectangle width.                                      |
@@ -262,7 +262,7 @@ This API creates a texture and draws a text on it.
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
 |slot                |Font slot index. (0-3)                                        |
-|text                |Glyph code point.                                             |
+|text                |Text to draw.                                                 |
 |size                |Font size.                                                    |
 |r                   |Red color.                                                    |
 |g                   |Green color.                                                  |
@@ -320,7 +320,7 @@ This API sets a sound volume on a specified sound track.
 
 |Argument Name       |Description                                                   |
 |--------------------|--------------------------------------------------------------|
-|stream              |Track index. (0-3)                                            |
+|stream              |Track index. (0-3, -1 for master)                             |
 |volume              |Volume value. (0-1.0)                                         |
 
 ```
