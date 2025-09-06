@@ -18,7 +18,7 @@ PicoPicoScript スタートガイド
 ## ゲームを配布用にエクスポートする
 
 エクスプーラでゲームのファイルを選択肢、それを `picopico-pack.exe` のアイコンにドロップしてください。
-すると、`assets.pak` fileが作成されます。
+すると、`assets.pak` ファイルが作成されます。
 
 作成された `assets.pak` ファイルを `picopico.exe` ファイルと同じフォルダに置いてください。
 

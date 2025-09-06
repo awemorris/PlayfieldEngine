@@ -1,5 +1,5 @@
-PicoPicoScript Syntax
-======================
+PicoPicoScript の文法
+=====================
 
 `PicoPicoScript` はスクリプト言語として `Noct` を使用します。
 
