@@ -214,15 +214,15 @@ jobs:
 
       - name: Make documents
         run: |
-          mv dist "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
-          zip -r -9 "PicoPicoScript-nightly-$DATE-$SHORT_SHA.zip" "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
+          mv dist "PicoPicoScript-$DATE-$SHORT_SHA"
+          zip -r -9 "PicoPicoScript-$DATE-$SHORT_SHA.zip" "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          name: PicoPicoScript-nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PicoPicoScript-nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+          name: PicoPicoScript-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          files: PicoPicoScript-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
           body: |
             This is an automated relase.
         env:
