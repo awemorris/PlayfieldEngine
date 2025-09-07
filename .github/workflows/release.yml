@@ -226,7 +226,7 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ github.sha }}
           name: Nightly Build ${{ env.DATE }}-${{ github.sha }}
-          files: artifacts/**/*
+          files: dist/PicoPicoScript.zip
           body: |
             This is an automated nightly build.
         env:
