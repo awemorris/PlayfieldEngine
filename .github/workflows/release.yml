@@ -162,34 +162,34 @@ jobs:
         run: |
           cmake --preset unity-win64
           cmake --build --preset unity-win64
-          echo cmake --preset unity-switch
-          echo cmake --build --preset unity-switch
-          echo cmake --preset unity-ps5
-          echo cmake --build --preset unity-ps5
-          echo cmake --preset unity-xbox
-          echo cmake --build --preset unity-xbox
-          echo mkdir dist/misc/unity/Assets
-          echo mkdir dist/misc/unity/Assets/StreamingAssets
-          echo cp samples/bouncer/main.noct dist/misc/unity/Assets/StreamingAssets/
-          echo mkdir dist/misc/unity/Assets/Resources
-          echo cp external/StratoHAL/src/PicoPicoScript.cs dist/misc/unity/Assets/
-          echo cp external/StratoHAL/src/NormalShader.shader dist/misc/unity/Assets/Resources/
-          echo cp external/StratoHAL/src/AddShader.shader dist/misc/unity/Assets/Resources/
-          echo cp external/StratoHAL/src/DimShader.shader dist/misc/unity/Assets/Resources/
-          echo cp external/StratoHAL/src/RuleShader.shader dist/misc/unity/Assets/Resources/
-          echo cp external/StratoHAL/src/MeltShader.shader dist/misc/unity/Assets/Resources/
-          echo cp external/StratoHAL/src/MainScene.unity dist/misc/unity/Assets/
-          echo mkdir dist/misc/unity/Assets/Plugins
-          echo mkdir dist/misc/unity/Assets/Plugins/x86_64
-          echo mkdir dist/misc/unity/Assets/Plugins/Switch
-          echo mkdir dist/misc/unity/Assets/Plugins/PS5
-          echo mkdir dist/misc/unity/Assets/Plugins/GameCoreXboxSeries
-          echo mkdir dist/misc/unity/Assets/Plugins/Common
-          echo cp build-unity-win64/libpicopico.dll dist/misc/unity/Assets/Plugins/x86_64/
-          echo cp build-unity-switch/libpicopico.a dist/misc/unity/Assets/Plugins/Switch/
-          echo cp build-unity-ps5/libpicopico.a dist/misc/unity/Assets/Plugins/PS5/
-          echo cp build-unity-xbox/picopico.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
-          echo cp docs/readme/unity.md dist/misc/unity/
+          cmake --preset unity-switch
+          cmake --build --preset unity-switch
+          cmake --preset unity-ps5
+          cmake --build --preset unity-ps5
+          cmake --preset unity-xbox
+          cmake --build --preset unity-xbox
+          mkdir dist/misc/unity/Assets
+          mkdir dist/misc/unity/Assets/StreamingAssets
+          cp samples/bouncer/main.noct dist/misc/unity/Assets/StreamingAssets/
+          mkdir dist/misc/unity/Assets/Resources
+          cp external/StratoHAL/src/PicoPicoScript.cs dist/misc/unity/Assets/
+          cp external/StratoHAL/src/NormalShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/AddShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/DimShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/RuleShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/MeltShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/MainScene.unity dist/misc/unity/Assets/
+          mkdir dist/misc/unity/Assets/Plugins
+          mkdir dist/misc/unity/Assets/Plugins/x86_64
+          mkdir dist/misc/unity/Assets/Plugins/Switch
+          mkdir dist/misc/unity/Assets/Plugins/PS5
+          mkdir dist/misc/unity/Assets/Plugins/GameCoreXboxSeries
+          mkdir dist/misc/unity/Assets/Plugins/Common
+          cp build-unity-win64/libpicopico.dll dist/misc/unity/Assets/Plugins/x86_64/
+          cp build-unity-switch/libpicopico.a dist/misc/unity/Assets/Plugins/Switch/
+          cp build-unity-ps5/libpicopico.a dist/misc/unity/Assets/Plugins/PS5/
+          cp build-unity-xbox/picopico.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp docs/readme/unity.md dist/misc/unity/
 
       - name: Make documents
         run: |
