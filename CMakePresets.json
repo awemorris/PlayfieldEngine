@@ -171,7 +171,6 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "PICO_TARGET_LINUX":           "ON",
-        "PICO_ENABLE_GLX":             "ON",
         "PICO_ENABLE_JIT":             "ON",
         "PICO_ENABLE_I18N":            "ON",
         "PICO_ENABLE_PACK":            "ON"
@@ -364,7 +363,6 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "PICO_TARGET_FREEBSD":         "ON",
-        "PICO_ENABLE_GLX":             "ON",
         "PICO_ENABLE_JIT":             "ON",
         "PICO_ENABLE_PACK":            "ON"
       }
