@@ -1,13 +1,6 @@
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
-
-set(CMAKE_C_COMPILER       "clang-cl")
-set(CMAKE_CXX_COMPILER     "clang-cl")
-set(CMAKE_AR               "llvm-lib")
-set(CMAKE_C_FLAGS          "/nologo /c /MT /O2 /I${CMAKE_CURRENT_SOURCE_DIR}/include/msvc-include")
-
-set(CMAKE_C_COMPILER_TARGET "x86_64-w64-windows-gnu")
-set(CMAKE_CXX_COMPILER_TARGET "x86_64-w64-windows-gnu")
+set(CMAKE_C_COMPILER "x86_64-w64-mingw32-gcc")
 
 # Magic
 set(CMAKE_C_FLAGS_INIT "" CACHE STRING "" FORCE)
