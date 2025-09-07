@@ -217,18 +217,17 @@ jobs:
           name: PicoPicoScript.zip
           path: dist/PicoPicoScript.zip
 
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: nightly-${{ github.run_number }}
-          name: Nightly Build ${{ github.run_number }}
+          tag_name: nightly-${{ env.DATE }}-${{ github.sha }}
+          name: Nightly Build ${{ env.DATE }}-${{ github.sha }}
           files: artifacts/**/*
           body: |
             This is an automated nightly build.
-
-            Includes:
-            - mac
-            - Windows (MinGW)
-            - macOS
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
