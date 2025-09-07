@@ -165,8 +165,8 @@ jobs:
         run: |
           cmake --preset unity-win64
           cmake --build --preset unity-win64
-          echo cmake --preset unity-switch
-          echo cmake --build --preset unity-switch
+          cmake --preset unity-switch
+          cmake --build --preset unity-switch
           echo cmake --preset unity-ps5
           echo cmake --build --preset unity-ps5
           echo cmake --preset unity-xbox
