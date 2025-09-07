@@ -156,13 +156,14 @@ jobs:
           mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
           echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
           echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
+          clang --version
 
       - name: Build for Unity
         run: |
           cmake --preset unity-win64
           cmake --build --preset unity-win64
-          cmake --preset unity-switch
-          cmake --build --preset unity-switch
+          echo cmake --preset unity-switch
+          echo cmake --build --preset unity-switch
           echo cmake --preset unity-ps5
           echo cmake --build --preset unity-ps5
           echo cmake --preset unity-xbox
