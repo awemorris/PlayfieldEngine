@@ -4,10 +4,10 @@ How To Use The Wasm Version
 ## Files
 
 - Game Data
-    - index.html ... Wasm File
-    - assets.pak ... Asset File (replace this by your own)
+    - index.html       ... Wasm File
+    - assets.pak       ... Asset File (replace this by your own)
 - Other
-    - web.exe ... Launcher for Windows
+    - picopico-web.exe ... Launcher for Windows
 
 ## On Windows
 

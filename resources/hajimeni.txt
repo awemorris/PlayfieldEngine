@@ -1,9 +1,9 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 【ソフト名】PicoPicoScript（ピコスク） 【Ver】0.8.0
-【著作権者】ピコピコP                  【制作日】2025-09-06
+【著作権者】ピコピコP                  【制作日】2025-09-08
 【種　　別】MIT ライセンス OSS
 【登 録 名】PPS080.ZIP                 【圧縮】ZIP
-【動作環境】Windows XP 以降, DirectX 9.0c 以上 (Windows 11, DirectX 12 推奨)
+【動作環境】Windows 10 以降
 【必要機器】キーボード, マウス
 【配 布 元】GitHub 等
 【連 絡 先】E-mail : awe@noctvm.io
@@ -14,45 +14,40 @@
 　PicoPicoScript（ピコスク）はゲームスクリプトの実行エンジンです。Noct という
 言語で記述されたスクリプトを読み込んで画面表示や音声再生を行うことができるた
 め、ピコスクを使ってゲームを開発することができます。
-　令和の最新環境で N88-BASIC のように気軽にゲームを開発できます。キッズにも、
-また、あの頃 BASIC でゲームを作ったことがある方にも、最新のパソコンでゲーム作
-りを楽しんでいただけるはずです。
+
+　2020年代の最新環境で N88-BASIC のように気軽にゲームを開発できます。キッズに
+も、また、あの頃 BASIC でゲームを作ったことがある方にも、最新のパソコンでゲー
+ム作りを楽しんでいただけるはずです。
 
 ■ ファイル構成
 
-  hajimeni.txt        ... 本書
-  readme.txt          ... 英語版README
-  DOCS-nihongo/       ... 日本語ドキュメント
-  DOCS-english/       ... 英語ドキュメント
-  SAMPLES/            ... サンプルゲーム
-  windows-x86/
-    picopico.exe      ... 32-bit Windows 版実行ファイル (Windows XP 以降)
-    picopico-pack.exe ... 32-bit Windows 版パッケージャ (Windows XP 以降)
-    main.noct         ... 動作確認用スクリプト
-  windows-x86_64/
-    picopico.exe      ... 64-bit Windows 版実行ファイル (Windows 7 以降)
-    picopico-pack.exe ... 64-bit Windows 版パッケージャ (Windows 7 以降)
-    main.noct         ... 動作確認用スクリプト
-  windows-arm64/
-    picopico.exe      ... Arm64 Windows 版実行ファイル (Windows 7 以降)
-    picopico-pack.exe ... Arm64 Windows 版パッケージャ (Windows 7 以降)
-    main.noct         ... 動作確認用スクリプト
-  macos/
-    picopico.dmg      ... macOS 版アプリ (macOS 10.13 以降)
-    main.noct         ... 動作確認用スクリプト
-  wasm/
-    index.html        ... ブラウザ用 WebAssembly
-    picopico-web.exe  ... ブラウザ動作確認アプリ
-    assets.pak        ... 動作確認用アセット
-  ios/                ... iOS Xcode プロジェクト (iOS 13.0 以降)
-  android/            ... Android Studio プロジェクト (Android 10 以降)
-  unity/              ... 家庭用ゲーム機向け Unity Plugin
+  picopico.exe          ... ゲームエンジン本体の実行ファイル
+  main.noct             ... 動作確認用スクリプト
+  hajimeni.txt          ... 本書
+  readme.txt            ... 英語版README
+  documents-japanese/   ... 日本語ドキュメント
+  documents-english/    ... 英語ドキュメント
+  sapmles/              ... サンプルゲーム
+  misc/
+    windows/
+      picopico-pack.exe ... assets.pak を作成するパッケージャ
+    macos/
+      picopico.dmg      ... macOS 版アプリ (macOS 10.13 以降)
+      picopico-pack.exe ... パッケージャ
+    wasm/
+      index.html        ... ブラウザ用 WebAssembly ファイル
+      assets.pak        ... 動作確認用のアセット
+      picopico-web.exe  ... 動作確認用のブラウザ立ち上げアプリ
+      readme.txt        ... 説明書
+    ios/                ... iOS Xcode プロジェクト (iOS 13.0 以降)
+    android/            ... Android Studio プロジェクト (Android 10 以降)
+    unity/              ... 家庭用ゲーム機向け Unity Plugin
 
 ■ インストール
 
 任意のフォルダに展開してください。
 
-■ 使い方
+■ 使い方 (Windows)
 
 picopico.exe をダブルクリックして実行してください。同じフォルダにある main.noct
 スクリプトが起動します。
@@ -61,6 +56,48 @@ picopico.exe をダブルクリックして実行してください。同じフ�
 とめることができます。まとめたいファイルを選択して picopico-pack.exe にドロッ
 プしてください。パッケージファイルがある場合、picopico.exe はパッケージ内のファイル
 を優先します。
+
+■ 使い方 (macOS)
+
+　picopico.dmg を開き、中身の PicoPico アプリを適当な場所にコピーします。
+コピーしたアプリを main.noct や assets.pak のあるフォルダに入れて、アプリを起動
+することで、ゲームを実行できます。
+
+■ 使い方 (Wasm)
+
+　作成した assets.pak と index.html を Web サーバにアップロードすること
+で、ゲームを公開できます。また、試しに手元のパソコンで起動してみるには、
+picopico-web.exe を実行すれば、ブラウザでゲームが表示されます。
+
+■ 使い方 (iOS)
+
+　作成した assets.pak を Resources/ に入れてから、Xcode でプロジェクトを開きま
+す。iPhone や iPad などにアプリを転送することでゲームを起動できます。Mac 上で
+動作確認する場合、シミュレータが利用できます。
+
+■ 使い方 (Android)
+
+　まず、すべてのアセット を app/src/main/assets にコピーします。
+
+  ○ かんたんな方法
+
+    - android フォルダを D: ドライブ直下などの短い名前の場所にコピーします
+    - build.bat をダブルクリックして実行すると、黒いウィンドウが表示されます
+    - 途中、(y/N)? と表示されたら、 y キーを押してから、改行キーを押します
+    - ビルドが完了すると、黒いウィンドウが消えます
+    - Android アプリの app-debug.apk が作成されます
+    - OneDrive などを経由して Android スマートフォンで開きます
+
+  ○ 本格的な方法
+
+    - android フォルダを Android Studio で開きます
+    - アプリをビルドします
+    - パソコン上で動作確認したり、接続した Android で実行したりできます
+
+■ 使い方 (Unity)
+
+　すべてのアセットを Streaming Assets フォルダにコピーしてから、unity フォルダ
+を Unity Editor で開きます。
 
 ■ 免責
 
