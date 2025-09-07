@@ -152,14 +152,10 @@ jobs:
 
       - name: Setup for Unity
         run: |
-          brew install llvm
-          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
-          echo "LDFLAGS=-L/opt/homebrew/opt/llvm/lib" >> $GITHUB_ENV
-          echo "CPPFLAGS=-I/opt/homebrew/opt/llvm/include" >> $GITHUB_ENV
-          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
-          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
-          clang --version
-          llvm-config --version || true
+          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-macOS-ARM64.tar.xz
+          mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
+          echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
+          echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
 
       - name: Build for Unity
         run: |
