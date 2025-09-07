@@ -37,6 +37,7 @@ jobs:
           mkdir dist/misc/wasm
           mkdir dist/misc/ios
           mkdir dist/misc/android
+          mkdir dist/misc/unity
 
       - name: Build for Windows.
         run: |
@@ -77,16 +78,16 @@ jobs:
           hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname PicoPico PicoPico.dmg
           codesign --sign "Developer ID Application" PicoPico.dmg
           cd ..
-          echo cp build-macos/PicoPico.dmg dist/macos/
-          echo cp build-macos/picopico-pack dist/macos/
+          cp build-macos/PicoPico.dmg dist/misc/macos/
+          cp build-macos/picopico-pack dist/misc/macos/
 
       - name: Build for Wasm
         run: |
           cmake --preset wasm
           cmake --build --preset wasm
-          cp build-wasm/index.html dist/wasm/
-          cp resources/assets.pak dist/wasm/
-          cp docs/readme/wasm.md dist/wasm/readme.txt
+          cp build-wasm/index.html dist/misc/wasm/
+          cp resources/assets.pak dist/misc/wasm/
+          cp docs/readme/wasm.md dist/misc/wasm/readme.txt
 
       - name: Build for iOS
         run: |
@@ -98,15 +99,15 @@ jobs:
           mkdir dist/ios/ios.xcodeproj
           cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/ios/ios.xcodeproj/
           mkdir dist/ios/ios
-          cp -R resources/projects/ios/ios/Assets.xcassets dist/ios/ios/
-          cp resources/projects/ios/ios/entry.c dist/ios/ios/
-          cp resources/projects/ios/ios/Info.plist dist/ios/ios/
-          cp resources/projects/ios/ios/ios.entitlements dist/ios/ios/
-          cp resources/projects/ios/ios/LaunchScreen.storyboard dist/ios/ios/
-          cp -R PicoPico.xcframework dist/ios/ios/
-          mkdir dist/ios/Resources/
-          cp resources/assets.pak dist/ios/Resources/
-          mkdir dist/ios/Resources/video
+          cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
+          cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
+          cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
+          cp resources/projects/ios/ios/ios.entitlements dist/misc/ios/ios/
+          cp resources/projects/ios/ios/LaunchScreen.storyboard dist/misc/ios/ios/
+          cp -R PicoPico.xcframework dist/misc/ios/ios/
+          mkdir dist/misc/ios/Resources/
+          cp resources/assets.pak dist/misc/ios/Resources/
+          mkdir dist/misc/ios/Resources/video
 
       - name: Setup for Android
         uses: nttld/setup-ndk@v1
@@ -123,26 +124,26 @@ jobs:
           cmake --build --preset android-x86_64
           cmake --preset android-x86
           cmake --build --preset android-x86
-          cp -R resources/projects/android/app dist/android/
-          cp -R resources/projects/android/gradle.properties dist/android/
-          cp -R resources/projects/android/build.gradle dist/android/
-          cp -R resources/projects/android/gradlew dist/android/
-          cp -R resources/projects/android/settings.gradle dist/android/
-          cp -R resources/projects/android/gradlew.bat dist/android/
-          cp -R resources/projects/android/gradle dist/android/
-          cp -R resources/projects/android/build.bat dist/android/
-          mkdir -p dist/android/app/src/main/assets
-          cp samples/bouncer/main.noct dist/android/app/src/main/assets/
-          mkdir -p dist/android/app/src/main/java/io/noctvm/picopico/engineandroid
-          cp external/StratoHAL/src/MainActivity.java dist/android/app/src/main/java/io/noctvm/picopico/engineandroid/
-          mkdir -p dist/android/app/src/main/jniLibs/arm64-v8a
-          cp build-android-arm64/libpicopico.so dist/android/app/src/main/jniLibs/arm64-v8a/
-          mkdir -p dist/android/app/src/main/jniLibs/armeabi-v7a
-          cp build-android-armv7/libpicopico.so dist/android/app/src/main/jniLibs/armeabi-v7a/
-          mkdir -p dist/android/app/src/main/jniLibs/x86_64
-          cp build-android-x86_64/libpicopico.so dist/android/app/src/main/jniLibs/x86_64/
-          mkdir -p dist/android/app/src/main/jniLibs/x86
-          cp build-android-x86/libpicopico.so dist/android/app/src/main/jniLibs/x86/
+          cp -R resources/projects/android/app dist/misc/android/
+          cp -R resources/projects/android/gradle.properties dist/misc/android/
+          cp -R resources/projects/android/build.gradle dist/misc/android/
+          cp -R resources/projects/android/gradlew dist/misc/android/
+          cp -R resources/projects/android/settings.gradle dist/misc/android/
+          cp -R resources/projects/android/gradlew.bat dist/misc/android/
+          cp -R resources/projects/android/gradle dist/misc/android/
+          cp -R resources/projects/android/build.bat dist/misc/android/
+          mkdir -p dist/misc/android/app/src/main/assets
+          cp samples/bouncer/main.noct dist/misc/android/app/src/main/assets/
+          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid
+          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
+          cp build-android-arm64/libpicopico.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/armeabi-v7a
+          cp build-android-armv7/libpicopico.so dist/misc/android/app/src/main/jniLibs/armeabi-v7a/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/x86_64
+          cp build-android-x86_64/libpicopico.so dist/misc/android/app/src/main/jniLibs/x86_64/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/x86
+          cp build-android-x86/libpicopico.so dist/misc/android/app/src/main/jniLibs/x86/
 
       - name: Setup for Unity
         run: |
@@ -165,39 +166,38 @@ jobs:
           cmake --build --preset unity-ps5
           cmake --preset unity-xbox
           cmake --build --preset unity-xbox
-          mkdir dist/unity
-          mkdir dist/unity/Assets
-          mkdir dist/unity/Assets/StreamingAssets
-          cp samples/bouncer/main.noct dist/unity/Assets/StreamingAssets/
-          mkdir dist/unity/Assets/Resources
-          cp external/StratoHAL/src/PicoPicoScript.cs dist/unity/Assets/
-          cp external/StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
-          cp external/StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
-          cp external/StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
-          cp external/StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
-          cp external/StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
-          cp external/StratoHAL/src/MainScene.unity dist/unity/Assets/
-          mkdir dist/unity/Assets/Plugins
-          mkdir dist/unity/Assets/Plugins/x86_64
-          mkdir dist/unity/Assets/Plugins/Switch
-          mkdir dist/unity/Assets/Plugins/PS5
-          mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
-          mkdir dist/unity/Assets/Plugins/Common
-          cp build-unity-win64/libpicopico.dll dist/unity/Assets/Plugins/x86_64/
-          cp build-unity-switch/libpicopico.a dist/unity/Assets/Plugins/Switch/
-          cp build-unity-ps5/libpicopico.a dist/unity/Assets/Plugins/PS5/
-          cp build-unity-xbox/picopico.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/
-          cp docs/readme/unity.md dist/unity/
+          mkdir dist/misc/unity/Assets
+          mkdir dist/misc/unity/Assets/StreamingAssets
+          cp samples/bouncer/main.noct dist/misc/unity/Assets/StreamingAssets/
+          mkdir dist/misc/unity/Assets/Resources
+          cp external/StratoHAL/src/PicoPicoScript.cs dist/misc/unity/Assets/
+          cp external/StratoHAL/src/NormalShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/AddShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/DimShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/RuleShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/MeltShader.shader dist/misc/unity/Assets/Resources/
+          cp external/StratoHAL/src/MainScene.unity dist/misc/unity/Assets/
+          mkdir dist/misc/unity/Assets/Plugins
+          mkdir dist/misc/unity/Assets/Plugins/x86_64
+          mkdir dist/misc/unity/Assets/Plugins/Switch
+          mkdir dist/misc/unity/Assets/Plugins/PS5
+          mkdir dist/misc/unity/Assets/Plugins/GameCoreXboxSeries
+          mkdir dist/misc/unity/Assets/Plugins/Common
+          cp build-unity-win64/libpicopico.dll dist/misc/unity/Assets/Plugins/x86_64/
+          cp build-unity-switch/libpicopico.a dist/misc/unity/Assets/Plugins/Switch/
+          cp build-unity-ps5/libpicopico.a dist/misc/unity/Assets/Plugins/PS5/
+          cp build-unity-xbox/picopico.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp docs/readme/unity.md dist/misc/unity/
 
       - name: Make documents
         run: |
           cd docs/mkdocs-en
           mkdocs build
-          mv site ../../dist/DOCS-english
+          mv site ../../dist/documents-english
           cd ../..
           cd docs/mkdocs-ja
           mkdocs build
-          mv site ../../dist/DOCS-nihongo
+          mv site ../../dist/documents-japanese
           cd ../..
           cp -R samples dist/samples
           cp resources/readme.txt dist/
