@@ -101,9 +101,9 @@ jobs:
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
           xcodebuild -create-xcframework -library build-ios-device/libpicopico.a -headers include -library build-ios-simulator/libpicopico.a -headers include -output PicoPico.xcframework
-          mkdir dist/ios/ios.xcodeproj
-          cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/ios/ios.xcodeproj/
-          mkdir dist/ios/ios
+          mkdir dist/misc/ios/ios.xcodeproj
+          cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
+          mkdir dist/misc/ios/ios
           cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
           cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
           cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
