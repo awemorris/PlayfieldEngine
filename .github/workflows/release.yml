@@ -75,7 +75,7 @@ jobs:
           mkdir tmp
           cp -Rv PicoPico.app tmp/PicoPico.app
           hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname PicoPico PicoPico.dmg
-          echo codesign --sign "Developer ID Application" PicoPico.dmg
+          codesign --sign "Developer ID Application" PicoPico.dmg
           echo cd ..
           echo cp build-macos/PicoPico.dmg dist/macos/
           echo cp build-macos/picopico-pack dist/macos/
