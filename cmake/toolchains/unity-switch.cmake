@@ -2,8 +2,8 @@ set(CMAKE_SYSTEM_NAME      nx)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 
 # Please update the following.
-set(CMAKE_C_COMPILER       "$ENV{HOME}/opt/LLVM/bin/clang")
-set(CMAKE_AR               "$ENV{HOME}/opt/LLVM/bin/llvm-ar")
+set(CMAKE_C_COMPILER       "clang")
+set(CMAKE_AR               "llvm-ar")
 set(CMAKE_C_FLAGS          "-target aarch64-none-elf -mcpu=cortex-a57 -ffreestanding -nostdinc -nostdlib -I${CMAKE_CURRENT_SOURCE_DIR}/include/clang-include -O2 -g0")
 
 # Magic

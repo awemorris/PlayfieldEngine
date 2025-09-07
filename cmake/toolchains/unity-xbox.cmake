@@ -2,9 +2,9 @@ set(CMAKE_SYSTEM_NAME      Windows)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
 # Please update the following.
-set(CMAKE_C_COMPILER       "$ENV{HOME}/opt/LLVM/bin/clang-cl")
-set(CMAKE_CXX_COMPILER     "$ENV{HOME}/opt/LLVM/bin/clang-cl")
-set(CMAKE_AR               "$ENV{HOME}/opt/LLVM/bin/llvm-lib")
+set(CMAKE_C_COMPILER       "clang-cl")
+set(CMAKE_CXX_COMPILER     "clang-cl")
+set(CMAKE_AR               "llvm-lib")
 set(CMAKE_C_FLAGS          "/nologo /c /MT /O2 /I${CMAKE_CURRENT_SOURCE_DIR}/include/msvc-include")
 
 set(ENABLE_UNITY  ON)
