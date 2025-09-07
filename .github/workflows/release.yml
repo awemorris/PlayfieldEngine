@@ -67,11 +67,11 @@ jobs:
           cmake --preset macos
           echo "BBBBBBBBBBBB"
           cmake --build --preset macos
-          echo cd build-macos
-          echo codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" PicoPico.app
-          echo ditto -c -k --sequesterRsrc --keepParent PicoPico.app PicoPico.zip
-          echo xcrun notarytool submit PicoPico.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_SECRET" --wait
-          echo xcrun stapler staple PicoPico.app
+          cd build-macos
+          codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" PicoPico.app
+          ditto -c -k --sequesterRsrc --keepParent PicoPico.app PicoPico.zip
+          xcrun notarytool submit PicoPico.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_SECRET" --wait
+          xcrun stapler staple PicoPico.app
           echo mkdir tmp
           echo cp -Rv PicoPico.app tmp/PicoPico.app
           echo hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname PicoPico PicoPico.dmg
