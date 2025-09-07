@@ -215,7 +215,7 @@ jobs:
       - name: Make documents
         run: |
           mv dist "PicoPicoScript-$DATE-$SHORT_SHA"
-          zip -r -9 "PicoPicoScript-$DATE-$SHORT_SHA.zip" "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
+          zip -r -9 "PicoPicoScript-$DATE-$SHORT_SHA.zip" "PicoPicoScript-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
