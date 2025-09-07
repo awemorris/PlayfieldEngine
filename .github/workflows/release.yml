@@ -205,29 +205,25 @@ jobs:
           cp resources/readme.txt dist/
           cp resources/hajimeni.txt dist/
 
-      - name: Make documents
-        run: |
-          cd dist
-          zip -r -9 PicoPicoScript.zip *
-          cd ..
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: PicoPicoScript.zip
-          path: dist/PicoPicoScript.zip
-
       - name: Get current date
         id: date
         run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
 
+      - name: Short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Make documents
+        run: |
+          mv dist "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
+          zip -r -9 "PicoPicoScript-nightly-$DATE-$SHORT_SHA.zip" "PicoPicoScript-nightly-$DATE-$SHORT_SHA"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: nightly-${{ env.DATE }}-${{ github.sha }}
-          name: Nightly Build ${{ env.DATE }}-${{ github.sha }}
-          files: dist/PicoPicoScript.zip
+          tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          name: PicoPicoScript-nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          files: PicoPicoScript-nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
           body: |
-            This is an automated nightly build.
+            This is an automated relase.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
