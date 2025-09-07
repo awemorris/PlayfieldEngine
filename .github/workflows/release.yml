@@ -81,6 +81,13 @@ jobs:
           cp build-macos/PicoPico.dmg dist/misc/macos/
           cp build-macos/picopico-pack dist/misc/macos/
 
+      - name: Setup for Wasm
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+          emcc -v
+          em++ --version
+
       - name: Build for Wasm
         run: |
           cmake --preset wasm
