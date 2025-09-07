@@ -1,0 +1,224 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up dependencies
+        run: |
+          brew update
+          brew install mingw-w64 bison flex mkdocs-material
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
+
+      - name: Verify versions
+        run: |
+          which bison
+          bison --version
+          which flex
+          flex --version
+
+      - name: Make the target directory.
+        run: |
+          mkdir dist
+          mkdir dist/misc
+          mkdir dist/misc/windows
+          mkdir dist/misc/macos
+          mkdir dist/misc/wasm
+          mkdir dist/misc/ios
+          mkdir dist/misc/android
+
+      - name: Build for Windows.
+        run: |
+          cmake --preset windows-x86
+          cmake --build --preset windows-x86
+          x86_64-w64-mingw32-strip build-win-x86_64/picopico.exe
+          x86_64-w64-mingw32-strip build-win-x86_64/picopico-pack.exe
+          x86_64-w64-mingw32-strip build-win-x86_64/picopico-web.exe
+          cp build-win-x86_64/picopico.exe dist/
+          cp build-win-x86_64/picopico-pack.exe dist/misc/windows/
+          cp build-win-x86_64/picopico-web.exe dist/misc/wasm/
+          cp samples/bouncer/main.noct dist/
+
+      - name: Setup for macOS
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATE_FILE_BASE64 }}
+          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+
+      - name: Build for macOS
+        run: |
+          cmake --preset macos
+          cmake --build --preset macos
+          cd build-macos
+          codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" PicoPico.app
+          ditto -c -k --sequesterRsrc --keepParent PicoPico.app PicoPico.zip
+          source ../.credential
+          xcrun notarytool submit PicoPico.zip --apple-id "${{ secrets.APPLE_ID }}" --team-id "${{ secrets.TEAM_ID }}" --password "${{ secrets.APP_PASSWORD }}" --wait
+          xcrun stapler staple PicoPico.app
+          mkdir tmp
+          cp -Rv PicoPico.app tmp/PicoPico.app
+          hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname PicoPico PicoPico.dmg
+          codesign --sign "Developer ID Application" PicoPico.dmg
+          cd ..
+          cp build-macos/PicoPico.dmg dist/macos/
+          cp build-macos/picopico-pack dist/macos/
+
+      - name: Build for Wasm
+        run: |
+          cmake --preset wasm
+          cmake --build --preset wasm
+          cp build-wasm/index.html dist/wasm/
+          cp resources/assets.pak dist/wasm/
+          cp docs/readme/wasm.md dist/wasm/readme.txt
+
+      - name: Build for iOS
+        run: |
+          cmake --preset ios-device
+          cmake --build --preset ios-device
+          cmake --preset ios-simulator
+          cmake --build --preset ios-simulator
+          xcodebuild -create-xcframework -library build-ios-device/libpicopico.a -headers include -library build-ios-simulator/libpicopico.a -headers include -output PicoPico.xcframework
+          mkdir dist/ios/ios.xcodeproj
+          cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/ios/ios.xcodeproj/
+          mkdir dist/ios/ios
+          cp -R resources/projects/ios/ios/Assets.xcassets dist/ios/ios/
+          cp resources/projects/ios/ios/entry.c dist/ios/ios/
+          cp resources/projects/ios/ios/Info.plist dist/ios/ios/
+          cp resources/projects/ios/ios/ios.entitlements dist/ios/ios/
+          cp resources/projects/ios/ios/LaunchScreen.storyboard dist/ios/ios/
+          cp -R PicoPico.xcframework dist/ios/ios/
+          mkdir dist/ios/Resources/
+          cp resources/assets.pak dist/ios/Resources/
+          mkdir dist/ios/Resources/video
+
+      - name: Setup for Android
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r28c
+
+      - name: Build for Android
+        run: |
+          cmake --preset android-arm64
+          cmake --build --preset android-arm64
+          cmake --preset android-armv7
+          cmake --build --preset android-armv7
+          cmake --preset android-x86_64
+          cmake --build --preset android-x86_64
+          cmake --preset android-x86
+          cmake --build --preset android-x86
+          cp -R resources/projects/android/app dist/android/
+          cp -R resources/projects/android/gradle.properties dist/android/
+          cp -R resources/projects/android/build.gradle dist/android/
+          cp -R resources/projects/android/gradlew dist/android/
+          cp -R resources/projects/android/settings.gradle dist/android/
+          cp -R resources/projects/android/gradlew.bat dist/android/
+          cp -R resources/projects/android/gradle dist/android/
+          cp -R resources/projects/android/build.bat dist/android/
+          mkdir -p dist/android/app/src/main/assets
+          cp samples/bouncer/main.noct dist/android/app/src/main/assets/
+          mkdir -p dist/android/app/src/main/java/io/noctvm/picopico/engineandroid
+          cp external/StratoHAL/src/MainActivity.java dist/android/app/src/main/java/io/noctvm/picopico/engineandroid/
+          mkdir -p dist/android/app/src/main/jniLibs/arm64-v8a
+          cp build-android-arm64/libpicopico.so dist/android/app/src/main/jniLibs/arm64-v8a/
+          mkdir -p dist/android/app/src/main/jniLibs/armeabi-v7a
+          cp build-android-armv7/libpicopico.so dist/android/app/src/main/jniLibs/armeabi-v7a/
+          mkdir -p dist/android/app/src/main/jniLibs/x86_64
+          cp build-android-x86_64/libpicopico.so dist/android/app/src/main/jniLibs/x86_64/
+          mkdir -p dist/android/app/src/main/jniLibs/x86
+          cp build-android-x86/libpicopico.so dist/android/app/src/main/jniLibs/x86/
+
+      - name: Setup for Unity
+        run: |
+          brew install llvm
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          echo "LDFLAGS=-L/opt/homebrew/opt/llvm/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/opt/homebrew/opt/llvm/include" >> $GITHUB_ENV
+          echo "CC=/opt/homebrew/opt/llvm/bin/clang" >> $GITHUB_ENV
+          echo "CXX=/opt/homebrew/opt/llvm/bin/clang++" >> $GITHUB_ENV
+          clang --version
+          llvm-config --version || true
+
+      - name: Build for Unity
+        run: |
+          cmake --preset unity-win64
+          cmake --build --preset unity-win64
+          cmake --preset unity-switch
+          cmake --build --preset unity-switch
+          cmake --preset unity-ps5
+          cmake --build --preset unity-ps5
+          cmake --preset unity-xbox
+          cmake --build --preset unity-xbox
+          mkdir dist/unity
+          mkdir dist/unity/Assets
+          mkdir dist/unity/Assets/StreamingAssets
+          cp samples/bouncer/main.noct dist/unity/Assets/StreamingAssets/
+          mkdir dist/unity/Assets/Resources
+          cp external/StratoHAL/src/PicoPicoScript.cs dist/unity/Assets/
+          cp external/StratoHAL/src/NormalShader.shader dist/unity/Assets/Resources/
+          cp external/StratoHAL/src/AddShader.shader dist/unity/Assets/Resources/
+          cp external/StratoHAL/src/DimShader.shader dist/unity/Assets/Resources/
+          cp external/StratoHAL/src/RuleShader.shader dist/unity/Assets/Resources/
+          cp external/StratoHAL/src/MeltShader.shader dist/unity/Assets/Resources/
+          cp external/StratoHAL/src/MainScene.unity dist/unity/Assets/
+          mkdir dist/unity/Assets/Plugins
+          mkdir dist/unity/Assets/Plugins/x86_64
+          mkdir dist/unity/Assets/Plugins/Switch
+          mkdir dist/unity/Assets/Plugins/PS5
+          mkdir dist/unity/Assets/Plugins/GameCoreXboxSeries
+          mkdir dist/unity/Assets/Plugins/Common
+          cp build-unity-win64/libpicopico.dll dist/unity/Assets/Plugins/x86_64/
+          cp build-unity-switch/libpicopico.a dist/unity/Assets/Plugins/Switch/
+          cp build-unity-ps5/libpicopico.a dist/unity/Assets/Plugins/PS5/
+          cp build-unity-xbox/picopico.lib dist/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp docs/readme/unity.md dist/unity/
+
+      - name: Make documents
+        run: |
+          cd docs/mkdocs-en
+          mkdocs build
+          mv site ../../dist/DOCS-english
+          cd ../..
+          cd docs/mkdocs-ja
+          mkdocs build
+          mv site ../../dist/DOCS-nihongo
+          cd ../..
+          cp -R samples dist/samples
+          cp resources/readme.txt dist/
+          cp resources/hajimeni.txt dist/
+
+      - name: Make documents
+        run: |
+          cd dist
+          zip -r -9 PicoPicoScript.zip *
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PicoPicoScript.zip
+          path: dist/PicoPicoScript.zip
+
+      - naame: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly-${{ github.run_number }}
+          name: Nightly Build ${{ github.run_number }}
+          files: artifacts/**/*
+          body: |
+            This is an automated nightly build.
+
+            Includes:
+            - mac
+            - Windows (MinGW)
+            - macOS
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
