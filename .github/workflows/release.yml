@@ -40,8 +40,8 @@ jobs:
 
       - name: Build for Windows.
         run: |
-          cmake --preset windows-x86
-          cmake --build --preset windows-x86
+          cmake --preset windows-x86_64
+          cmake --build --preset windows-x86_64
           x86_64-w64-mingw32-strip build-win-x86_64/picopico.exe
           x86_64-w64-mingw32-strip build-win-x86_64/picopico-pack.exe
           x86_64-w64-mingw32-strip build-win-x86_64/picopico-web.exe
