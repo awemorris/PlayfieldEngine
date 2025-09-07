@@ -7,12 +7,6 @@ set(CMAKE_CXX_COMPILER     "clang-cl")
 set(CMAKE_AR               "llvm-lib")
 set(CMAKE_C_FLAGS          "/nologo /c /MT /O2 /I${CMAKE_CURRENT_SOURCE_DIR}/include/msvc-include")
 
-set(ENABLE_UNITY  ON)
-set(ENABLE_JIT    OFF)
-set(ENABLE_I18N   OFF)
-set(ENABLE_CLI    OFF)
-set(ENABLE_OBJECT ON)
-
 # Magic
 set(CMAKE_C_FLAGS_INIT "" CACHE STRING "" FORCE)
 set(CMAKE_EXE_LINKER_FLAGS_INIT "" CACHE STRING "" FORCE)
