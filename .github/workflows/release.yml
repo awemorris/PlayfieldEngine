@@ -155,7 +155,7 @@ jobs:
           curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-macOS-ARM64.tar.xz
           mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
           echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
-          echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
+          #echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
           clang --version
 
       - name: Build for Unity
