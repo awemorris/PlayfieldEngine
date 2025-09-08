@@ -122,7 +122,9 @@ if(PICO_ENABLE_I18N)
   set(NOCTLANG_ENABLE_I18N ON)
 endif()
 
-set(NOCTLANG_ENABLE_CLI OFF)
+set(NOCTLANG_ENABLE_CLI)
+  set(NOCTLANG_ENABLE_CLI OFF)
+endif()
 
 #
 # Strato Configuration
