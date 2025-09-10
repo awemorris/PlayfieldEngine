@@ -7,10 +7,18 @@ PicoPicoScript
 
 `PicoPicoScript` is a 2D game engine which runs everywhere.
 
-Built completely from scratch, `PicoPicoScript` provides:
+Built completely from scratch, `PicoPicoScript` features:
 
-- **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
-- **Rendering & Audio:** Driven by StratoHAL, a portable game library also designed in-house.
+- **Comfortable Scripting:**
+    - Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
+    - Native performance with a built-in JIT compiler.
+    - Write a script and run it instantly — **Jot and Run!**
+- **Portable Rendering & Audio:**
+    - Driven by StratoHAL, a portable game library also designed in-house.
+    - Runs almost everywhere: Windows, macOS, Linux, iOS, Android, WebAssembly, and even consoles.
+    - Ship for platforms you don't physically own — **Go Far, Stay Close!**
+- **Minimal Runtime**
+    - Runtime fits within just ~1.4MB on Windows.
 
 ## What's PicoPicoScript?
 
@@ -68,20 +76,6 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 |           |Android    |Works              |
 |Others     |WebAssembly|Works              |
 |           |Unity      |Works              |
-
----
-
-## Key Features
-
-- **Crazy Minimal**
-    - Runtime is just a ~2MB EXE.
-    - Write a script and run it instantly — **Jot and Run!**
-- **Lightning Fast**
-    - Native performance with a built-in JIT compiler.
-    - **Casual, yet the real thing.**
-- **Ultra Portable**
-    - Ship for platforms you don't physically own,
-    - With nothing but your own machine — **Go Far, Stay Close!**
 
 ---
 
