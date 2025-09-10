@@ -16,6 +16,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Set up dependencies
+        run: git submodule update --init
+
       - name: Configure (CMake - VS2022 x64)
         run: cmake --preset windows-msvc-x64-release
 
