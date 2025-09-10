@@ -60,7 +60,7 @@ jobs:
           git submodule update --init
 
           brew update
-          brew install bison flex mkdocs-material
+          brew install mingw-w64 bison flex mkdocs-material
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
 
