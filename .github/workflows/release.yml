@@ -36,7 +36,7 @@ jobs:
         with:
           name: windows-binaries
           path: |
-            out/build/windows-msvc-x64-release/*.exe
+            out/**/*.exe
           if-no-files-found: error
           retention-days: 7
 
