@@ -5,12 +5,40 @@ PicoPicoScript
 [![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
 
-`PicoPicoScript` is an indie game engine fueled by your dreams!
+`PicoPicoScript` is a 2D game engine which runs everywhere.
 
 Built completely from scratch, `PicoPicoScript` provides:
 
 - **Scripting:** Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
 - **Rendering & Audio:** Driven by StratoHAL, a portable game library also designed in-house.
+
+## What's PicoPicoScript?
+
+_"If a game engine could run anywhere, how would the world change?"_
+
+`PicoPicoScript` was born from this single question.
+
+Creativity shouldn't depend on the power of your computer, where you
+live, or what tools you have.  `PicoPicoScript` was created with the
+belief that every creator deserves space to explore, no matter their
+surroundings.
+
+It runs smoothly even on older or low-spec machines — if you have a
+computer, there's a place for you to create.  It's a helpful companion
+for creators everywhere — especially in places with fewer resources.
+If you have something to make, `PicoPicoScript` will be here to walk
+with you.
+
+Whether you're using a Raspberry Pi in a classroom, or using
+a UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers
+gentle tools to help bring your ideas to life — in a way that feels
+simple, thoughtful, and your own.
+
+The goal is simple:
+**To make game development accessible, thoughtful, and within reach
+for everyone.**
+
+**Dreams fuel it — and they're the only requirement.**
 
 ---
 
@@ -172,55 +200,6 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 - See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
 - See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
-
----
-
-## What's PicoPicoScript?
-
-_"If a game engine could run anywhere, how would the world change?"_
-
-`PicoPicoScript` was born from this single question.
-
-`PicoPicoScript` is a lightweight and flexible game engine written in C89,
-designed to support creators across desktop, mobile, and console platforms.
-
-It runs smoothly even on older or low-spec machines — if you have a computer,
-there's a place for you to create.
-
-And if you're using something more powerful, like a modern MacBook or
-a powerful gaming PC, `PicoPicoScript` adapts to draw out the full capabilities
-of your device.
-
-You don't need the latest or most expensive hardware. `PicoPicoScript` helps you
-go beyond your environment. It's a helpful companion for creators
-everywhere — especially in places with fewer resources.
-
-The goal is simple:
-**To make game development accessible, thoughtful, and within reach
-for everyone.**
-
-Create at your pace, wherever you are in the world.
-
----
-
-## Why PicoPicoScript?
-
-`PicoPicoScript` is for those who quietly hold a dream, and wish to share it, one
-small step at a time.
-
-Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.
-
-`PicoPicoScript` was created with the belief that every creator deserves space
-to explore, no matter their surroundings.
-
-Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers gentle
-tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own. If you have something to make, `PicoPicoScript` will
-be here to walk with you.
-
-**Dreams fuel it — and they're the only requirement.**
 
 ---
 
