@@ -84,9 +84,9 @@ jobs:
 
       - name: Build for Windows.
         run: |
-          cp windows/picopico.exe dist/
-          cp windows/picopico-pack.exe dist/misc/windows/
-          cp windows/picopico-web.exe dist/misc/wasm/
+          cp windows/build/windows-msvc-x64-release/Release/picopico.exe dist/
+          cp windows/build/windows-msvc-x64-release/Release/picopico-pack.exe dist/misc/windows/
+          cp windows/build/windows-msvc-x64-release/Release/picopico-web.exe dist/misc/wasm/
           cp samples/bouncer/main.noct dist/
 
       - name: Setup for macOS
