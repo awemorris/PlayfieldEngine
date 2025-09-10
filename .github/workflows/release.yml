@@ -7,11 +7,49 @@ on:
     branches: [ main ]
 
 jobs:
-  release:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Configure (CMake - VS2022 x64)
+        run: cmake --preset windows-msvc-x64-release
+
+      - name: Build (Release)
+        run: cmake --build --preset windows-msvc-x64-release
+
+      - name: Upload Windows EXEs
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: |
+            out/build/windows-msvc-x64-release/*.exe
+          if-no-files-found: error
+          retention-days: 7
+
+  build_macos:
+    needs: [build_windows_msvc]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-binaries
+          path: windows
+
       - name: Set up dependencies
         run: |
           git submodule update --init
@@ -41,14 +79,9 @@ jobs:
 
       - name: Build for Windows.
         run: |
-          cmake --preset windows-x86_64
-          cmake --build --preset windows-x86_64
-          #x86_64-w64-mingw32-strip build-win-x86_64/picopico.exe
-          #x86_64-w64-mingw32-strip build-win-x86_64/picopico-pack.exe
-          #x86_64-w64-mingw32-strip build-win-x86_64/picopico-web.exe
-          cp build-win-x86_64/picopico.exe dist/
-          cp build-win-x86_64/picopico-pack.exe dist/misc/windows/
-          cp build-win-x86_64/picopico-web.exe dist/misc/wasm/
+          cp windows/picopico.exe dist/
+          cp windows/picopico-pack.exe dist/misc/windows/
+          cp windows/picopico-web.exe dist/misc/wasm/
           cp samples/bouncer/main.noct dist/
 
       - name: Setup for macOS

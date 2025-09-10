@@ -366,44 +366,13 @@
         "PICO_ENABLE_JIT":             "ON",
         "PICO_ENABLE_PACK":            "ON"
       }
-    },
-    {
-      "name":           "netbsd",
-      "displayName":    "NetBSD",
-      "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-netbsd",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_NETBSD":          "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_PACK":            "ON"
-      }
-    },
-    {
-      "name":           "openbsd",
-      "displayName":    "OpenBSD",
-      "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-openbsd",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_OPENBSD":         "ON",
-        "PICO_ENABLE_PACK":            "ON"
-      }
-    },
-    {
-      "name":           "haiku",
-      "displayName":    "Haiku",
-      "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-haiku",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_HAIKU":           "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_PACK":            "ON"
-      }
     }
   ],
   "buildPresets": [
+    {
+      "name": "windows-msvc-x64-release",
+      "configurePreset": "windows-msvc-x64-release"
+    },
     {
       "name": "windows-x86",
       "configurePreset": "windows-x86"
@@ -475,18 +444,6 @@
     {
       "name": "freebsd",
       "configurePreset": "freebsd"
-    },
-    {
-      "name": "netbsd",
-      "configurePreset": "netbsd"
-    },
-    {
-      "name": "openbsd",
-      "configurePreset": "openbsd"
-    },
-    {
-      "name": "haiku",
-      "configurePreset": "haiku"
     }
   ]
 }
