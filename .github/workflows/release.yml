@@ -13,12 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-  build_windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
