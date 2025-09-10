@@ -16,11 +16,17 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Install flex & bison (Chocolatey)
+        run: choco install -y winflexbison3
+
       - name: Set up dependencies
         run: git submodule update --init
 
       - name: Configure (CMake - VS2022 x64)
-        run: cmake --preset windows-msvc-x64-release
+        run: >
+          cmake --preset windows-msvc-x64-release
+          -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
+          -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
       - name: Build (Release)
         run: cmake --build --preset windows-msvc-x64-release
