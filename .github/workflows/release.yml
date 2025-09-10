@@ -32,7 +32,7 @@ jobs:
           retention-days: 7
 
   build_macos:
-    needs: [build_windows_msvc]
+    needs: [build_windows]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
