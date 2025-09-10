@@ -15,4 +15,4 @@ Contact
 -------
 
 Mail: PicoPicoP (Awe Morris) <awe@noctvm.io>
-Web:  https://noctvm.io/picopico-script/
+Web:  https://picopicoscript.com/doku.php?id=en:start

@@ -43,9 +43,9 @@ jobs:
         run: |
           cmake --preset windows-x86_64
           cmake --build --preset windows-x86_64
-          x86_64-w64-mingw32-strip build-win-x86_64/picopico.exe
-          x86_64-w64-mingw32-strip build-win-x86_64/picopico-pack.exe
-          x86_64-w64-mingw32-strip build-win-x86_64/picopico-web.exe
+          #x86_64-w64-mingw32-strip build-win-x86_64/picopico.exe
+          #x86_64-w64-mingw32-strip build-win-x86_64/picopico-pack.exe
+          #x86_64-w64-mingw32-strip build-win-x86_64/picopico-web.exe
           cp build-win-x86_64/picopico.exe dist/
           cp build-win-x86_64/picopico-pack.exe dist/misc/windows/
           cp build-win-x86_64/picopico-web.exe dist/misc/wasm/
