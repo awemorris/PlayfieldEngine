@@ -36,7 +36,9 @@ jobs:
         with:
           name: windows-binaries
           path: |
-            out/**/*.exe
+            out/**/picopico.exe
+            out/**/picopico-pack.exe
+            out/**/picopico-web.exe
           if-no-files-found: error
           retention-days: 7
 
@@ -58,7 +60,7 @@ jobs:
           git submodule update --init
 
           brew update
-          brew install mingw-w64 bison flex mkdocs-material
+          brew install bison flex mkdocs-material
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
 
