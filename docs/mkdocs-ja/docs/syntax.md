@@ -60,13 +60,16 @@ func main() {
 ```
 
 Noct には配列の末尾に要素を追加するための組み込み関数 `push()` が用意されています。
+また、末尾の要素は `pop()` で削除できます。
 
 ```
 func main() {
     var array = []
-    push(array, 0);
-    push(array, 1);
-    push(array, 2);
+    array->push(0);
+    array->push(1);
+    array->push(2);
+
+    var last = array->pop();
 }
 ```
 

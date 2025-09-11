@@ -64,14 +64,16 @@ func main() {
 ```
 
 The language provides a built-in function `push()` to add elements to
-the end of an array
+the end of an array.  Also, `pop()` removes the final element.
 
 ```
 func main() {
     var array = []
-    push(array, 0);
-    push(array, 1);
-    push(array, 2);
+    array->push(0);
+    array->push(1);
+    array->push(2);
+
+    var last = array->pop();
 }
 ```
 
