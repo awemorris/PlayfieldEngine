@@ -234,7 +234,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
-        "ANDROID_ABI":                 "arm64-v8a",
+        "ANDROID_ABI":                 "x86",
         "PICO_TARGET_ANDROID":         "ON",
         "PICO_ENABLE_SHARED":          "ON"
       }
@@ -248,7 +248,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
-        "ANDROID_ABI":                 "arm64-v8a",
+        "ANDROID_ABI":                 "x86_64",
         "PICO_TARGET_ANDROID":         "ON",
         "PICO_ENABLE_SHARED":          "ON"
       }
@@ -262,7 +262,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
-        "ANDROID_ABI":                 "arm64-v8a",
+        "ANDROID_ABI":                 "armv7eabi",
         "PICO_TARGET_ANDROID":         "ON",
         "PICO_ENABLE_SHARED":          "ON"
       }
