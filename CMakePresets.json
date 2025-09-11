@@ -262,7 +262,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
-        "ANDROID_ABI":                 "armv7eabi",
+        "ANDROID_ABI":                 "arm7eabi",
         "PICO_TARGET_ANDROID":         "ON",
         "PICO_ENABLE_SHARED":          "ON"
       }
