@@ -74,6 +74,8 @@ func main() {
     array->push(2);
 
     var last = array->pop();
+
+    print("Length = " + array.length);
 }
 ```
 
@@ -92,6 +94,7 @@ func main() {
         print("value = " + value);
     }
 
+    print("Length = " + dict.length);
 }
 ```
 
@@ -271,32 +274,93 @@ func main() {
 
 ## Intrinsics
 
-### substring()
+### int()
 
 ```
-func main() {
-    var s1 = "ABCDEFG";
-    var s2 = s1.substring(1, -1); // from the char 1, to the end
-}
+var i = int(1.23);
 ```
 
-### length()
+### float()
 
 ```
-func main() {
-    var str = "ABCDEFG";
-    var slen = length(str);
+var f = float(123);
+```
 
-    var array = [0, 1, 2];
-    var alen = array.length();
-}
+### newArray()
+
+```
+var array = newArray(10);
 ```
 
 ### push()
 
 ```
-func main() {
-    var array = [0, 1, 2];
-    array.push(3); // Add to the last.
+var array = [1, 2, 3];
+array->push(4);
+```
+
+### pop()
+
+```
+var array = [1, 2, 3];
+var last = array->pop();
+```
+
+### resize()
+
+```
+var array = [1, 2, 3];
+array->resize(2);
+```
+
+### substring()
+
+```
+var s1 = "ABCDEFG";
+var s2 = s1.substring(1, -1); // from the char 1, to the end "BCDEFG"
 }
+```
+
+### charAt()
+
+```
+var s = "ABC";
+for (i in 0 .. s.length) {
+   var c = s->charAt(i);
+   print(c);
+}
+```
+
+### sin(), cos(), tan()
+
+```
+var s = sin(x);
+var c = cos(x);
+var t = tan(x);
+```
+
+### random()
+
+```
+var r = random(); // 0 .. 1.0
+```
+
+### fast_gc(), full_gc(), compact_gc()
+
+```
+// Do young GC.
+fast_gc();
+
+// Do young + old GC.
+full_gc();
+
+// Do young + old + compact GC.
+compact_gc();
+```
+
+### unset()
+
+```
+var dic = {key1: "ABC"};
+dic->unset("key1");
 ```
