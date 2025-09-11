@@ -87,7 +87,7 @@ jobs:
           cp windows/build/windows-msvc-x64-release/Release/picopico.exe dist/
           cp windows/build/windows-msvc-x64-release/Release/picopico-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x64-release/Release/picopico-web.exe dist/misc/wasm/
-          cp samples/bouncer/main.noct dist/
+          cp samples/shoot/main.noct dist/
 
       - name: Setup for macOS
         uses: apple-actions/import-codesign-certs@v3
@@ -176,7 +176,7 @@ jobs:
           cp -R resources/projects/android/gradle dist/misc/android/
           cp -R resources/projects/android/build.bat dist/misc/android/
           mkdir -p dist/misc/android/app/src/main/assets
-          cp samples/bouncer/main.noct dist/misc/android/app/src/main/assets/
+          cp samples/shoot/main.noct dist/misc/android/app/src/main/assets/
           mkdir -p dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid
           cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid/
           mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
@@ -208,7 +208,7 @@ jobs:
           cmake --build --preset unity-xbox
           mkdir dist/misc/unity/Assets
           mkdir dist/misc/unity/Assets/StreamingAssets
-          cp samples/bouncer/main.noct dist/misc/unity/Assets/StreamingAssets/
+          cp samples/shoot/main.noct dist/misc/unity/Assets/StreamingAssets/
           mkdir dist/misc/unity/Assets/Resources
           cp external/StratoHAL/src/PicoPicoScript.cs dist/misc/unity/Assets/
           cp external/StratoHAL/src/NormalShader.shader dist/misc/unity/Assets/Resources/
