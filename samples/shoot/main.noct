@@ -22,7 +22,7 @@ func start() {
 	score = 0;
 
     // Put initial emenies.
-    for (i in 0..3) {
+    for (i in 0..7) {
         var ex = 40 + i*70;
         enemies->push({ x: ex, y: 40, vy: 40, w:16, h:16 });
     }
@@ -77,6 +77,9 @@ func update(dt) {
 
         // Wave.
         e.x += sin(Engine.millisec * 0.003 + e.y*0.05) * 20 * dt;
+
+        if (e.y > 480)
+            e.y = 0;
 
         aliveEnemies->push(e);
     }
