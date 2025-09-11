@@ -55,6 +55,9 @@ for everyone.**
 - [Heartbeat Clock](https://noctvm.io/g/2)
 <img src="https://noctvm.io/img/screenshot-2.png" alt="Heartbeat Clock" width="200">
 
+- [Mini Shoot](https://noctvm.io/g/3)
+<img src="https://noctvm.io/img/screenshot-3.png" alt="Mini Shoot" width="200">
+
 - [DON'T RUSH IN COMIKET](https://noctvm.io/g/1)  
 <img src="https://noctvm.io/img/screenshot-1.png" alt="DON'T RUSH IN COMIKET" width="200">
 
