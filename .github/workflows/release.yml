@@ -177,8 +177,8 @@ jobs:
           cp -R resources/projects/android/build.bat dist/misc/android/
           mkdir -p dist/misc/android/app/src/main/assets
           cp samples/shoot/main.noct dist/misc/android/app/src/main/assets/
-          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfieldvm/engineandroid
-          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/playfieldvm/engineandroid/
+          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid
+          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid/
           mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
           cp build-android-arm64/libplayfield.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
           mkdir -p dist/misc/android/app/src/main/jniLibs/armeabi-v7a
@@ -252,15 +252,15 @@ jobs:
 
       - name: Make documents
         run: |
-          mv dist "PlayfieldVM-$DATE-$SHORT_SHA"
-          zip -r -9 "PlayfieldVM-$DATE-$SHORT_SHA.zip" "PlayfieldVM-$DATE-$SHORT_SHA"
+          mv dist "PlayfieldEngine-$DATE-$SHORT_SHA"
+          zip -r -9 "PlayfieldEngine-$DATE-$SHORT_SHA.zip" "PlayfieldEngine-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          name: PlayfieldVM-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PlayfieldVM-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+          name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
           body: |
             This is an automated relase.
         env:

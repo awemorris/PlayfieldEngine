@@ -1,5 +1,5 @@
-Playfield VM  のビルド方法
-==========================
+Playfield Engine のビルド方法
+=============================
 
 ## Windows (WSL2)
 
@@ -15,7 +15,7 @@ sudo apt-get install mingw-w64
 
 ### 手順
 
-WSL2 のターミナルを起動し、`PlayfieldVM` ディレクトリに入り、次のコマンドをタイプする。
+WSL2 のターミナルを起動し、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
 cmake --preset windows-x86_64
@@ -31,7 +31,7 @@ cmake --build --preset windows-x86_64
 
 ### 手順
 
-MSYS2 のターミナルを起動し、`PlayfieldVM` ディレクトリに入り、次のコマンドをタイプする。
+MSYS2 のターミナルを起動し、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
 cmake --preset windows-x86_64
@@ -45,7 +45,7 @@ cmake --build --preset windows-x86_64
 * Intel, AMD, Arm64 のいずれかの `Windows 11` PC であること
 * `Visual Studio 2022 Community` がインストールされていること (C++, CMake)
 * `Git for Windows` がインストールされていること
-* `PlayfieldVM` ソースツリーが展開されていること
+* `Playfield Engine` ソースツリーが展開されていること
 
 ### 手順
 
@@ -73,7 +73,7 @@ sudo dnf install patch libX11-devel libXpm-devel alsa-lib-devel mesa-libGL-devel
 
 ### 手順
 
-ターミナルを開き、`PlayfieldVM` ディレクトリに入り、次のコマンドをタイプする。
+ターミナルを開き、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
 cmake --preset linux
@@ -90,7 +90,7 @@ cmake --build --preset linux
 
 ### 手順
 
-ターミナルを開き、`PlayfieldVM` ディレクトリに入り、次のコマンドをタイプする。
+ターミナルを開き、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
 cmake --preset macos
@@ -126,7 +126,7 @@ cmake --build --preset macos
 - 配布 SDK の `android/app/src/main/assets` フォルダにアセットをコピーする
 - 配布 SDK の `android` フォルダを Android Studio で開く
 
-First, open a terminal and enter the `PlayfieldVM` direcotry, then type the following.
+First, open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
 cd projects/android-src
@@ -145,7 +145,7 @@ Note that you need to copy game files into `assets` folder.
 
 ### 手順
 
-ターミナルで `PlayfieldVM` ディレクトリに入り、次のコマンドをタイプする。
+ターミナルで `Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
 cmake --preset freebsd

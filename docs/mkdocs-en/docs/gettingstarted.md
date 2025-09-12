@@ -1,11 +1,11 @@
-Playfield VM Getting Started
-============================
+Playfield Engine Getting Started
+================================
 
 Follow the steps below to run your first game.
 
 ## Download the Binary
 
-Download the latest `PlayfieldVM` binary from the [Releases Page](https://github.com/awemorris/PlayfieldVM/releases).
+Download the latest `Playfield Engine` binary from the [Releases Page](https://github.com/awemorris/PlayfieldEngine/releases).
 
 ## Run the Game
 
@@ -13,7 +13,7 @@ Double-click the `playfield.exe` file to start the game.
 
 ## Edit the Game
 
-Open the `main.noct` file.
+Open the `main.pf` file.
 
 ## Export the Game
 

@@ -1,14 +1,14 @@
-Playfield VM
-============
+Playfield Engine
+================
 
-Welcome to `Playfield VM`, a game engine fueled by your dreams.
+Welcome to `Playfield Engine`.
 
 ---
 
 * For Beginners
     * [Getting Started](gettingstarted.md)
-    * [PlayfieldVM Script Syntax](syntax.md)
-    * [PlayfieldVM Engine API](api.md)
+    * [Playfield Script Syntax](syntax.md)
+    * [Playfield Script API](api.md)
 
 * For Contributors
     * [How To Build](build.md)

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'io.noctvm.playfieldvm.engineandroid'
+    namespace 'io.noctvm.playfield.engineandroid'
     compileSdk 35
     defaultConfig {
         applicationId "io.noctvm.playfield.engineandroid"

@@ -9,7 +9,7 @@
  * (See also ndkmain.c and ndkfile.c for the C language part.)
  */
 
-package io.noctvm.playfieldvm.engineandroid;
+package io.noctvm.playfield.engineandroid;
 
 import static android.opengl.GLSurfaceView.RENDERMODE_CONTINUOUSLY;
 import static android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY;

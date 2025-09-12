@@ -1,11 +1,11 @@
-Playfield VM スタートガイド
-===========================
+Playfield Engine スタートガイド
+===============================
 
 入門として最初のゲームを動かしてみる手順は、以下の通りです。
 
 ## 実行ファイルのダウンロード
 
-最新の `Playfield VM` 実行ファイルを [リリースページ](https://github.com/awemorris/PlayfieldVM/releases) からダウンロードしてください。
+最新の `Playfield Engine` 実行ファイルを [リリースページ](https://github.com/awemorris/PlayfieldEngine/releases) からダウンロードしてください。
 
 ## ゲームを実行する
 
@@ -13,7 +13,7 @@ Playfield VM スタートガイド
 
 ## ゲームを編集する
 
-`main.noct` ファイルを開いて編集してください。
+`main.pf` ファイルを開いて編集してください。
 
 ## ゲームを配布用にエクスポートする
 

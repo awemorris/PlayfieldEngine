@@ -1,12 +1,12 @@
-PlayfieldVM
-===========
+Playfield Engine
+================
 
-"PlayfieldVM" is a game scripting engine for 2D games.
+"Playfield Engine" is a 2D game scripting runtime.
 
 License
 -------
 
-PlayfieldVM
+Playfield Engine
 Copyright (C) 2025, Awe Morris. All rights reserved.
 
 This software is licensed under the MIT License.
@@ -15,4 +15,4 @@ Contact
 -------
 
 Mail: Awe Morris <awe@noctvm.io>
-Web:  https://github.com/awemorris/PlayfieldVM
+Web:  https://github.com/awemorris/PlayfieldEngine

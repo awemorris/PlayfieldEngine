@@ -1,16 +1,15 @@
-Playfield VM / PicoPicoScript
-============================
+Playfield Engine
+================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/release/awemorris/PlayfieldVM.svg)](https://github.com/awemorris/PlayfieldVM/releases)
-[![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldVM/total.svg)](https://github.com/awemorris/PlayfieldVM/releases)
+[![GitHub release](https://img.shields.io/github/release/awemorris/PlayfieldEngine.svg)](https://github.com/awemorris/PlayfieldEngine/releases)
+[![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldEngine/total.svg)](https://github.com/awemorris/PlayfieldEngine/releases)
 
-`Playfield VM` is a 2D game engine that runs everywhere.
+`Playfield Engine` is a 2D game scripting runtime that works everywhere.
 With scripts written in the [Noct](https://github.com/awemorris/NoctLang) language,
 it can render graphics and play sounds seamlessly across platforms.
-For education and beginners, the engine is also nicknamed **PicoPicoScript**.
 
-Built completely from scratch, Playfield VM features:
+Built completely from scratch, Playfield Engine features:
 
 - **Comfortable Scripting:**
     - Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
@@ -23,25 +22,25 @@ Built completely from scratch, Playfield VM features:
 - **Minimal Runtime:**
     - Runtime fits within just ~1.4MB on Windows.
 
-## Why Playfield VM?
+## Why Playfield Engine?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-Playfield VM was born from this single question.
+Playfield Engine was born from this single question.
 
 Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.  Playfield VM was created with the belief
+live, or what tools you have.  Playfield Engine was created with the belief
 that every creator deserves space to explore, no matter their
 surroundings.
 
 It runs smoothly even on older or low-spec machines — if you have a
 computer, there's a place for you to create.  It's a helpful companion
 for creators everywhere — especially in places with fewer resources.
-If you have something to make, Playfield VM will be here to walk with
+If you have something to make, Playfield Engine will be here to walk with
 you.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, Playfield VM offers gentle
+UN-issued Chromebook in a temporary shelter, Playfield Engine offers gentle
 tools to help bring your ideas to life — in a way that feels simple,
 thoughtful, and your own.
 
@@ -125,7 +124,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### 1-a. Download the latest release:
 
-- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldVM/releases)
+- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldEngine/releases)
 
 ### 1-b. Clone and build from the repository:
 
@@ -135,7 +134,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         - Rename the exe files to `flex.exe` and `bison.exe`.
     - Clone the repo.
         ```
-        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
+        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
         ```
     - Open the folder by Visual Studio 2022.
     - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
@@ -146,8 +145,8 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         ```
         sudo apt-get install cmake mingw-w64 flex bison
         
-        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
-        cd PlayfieldVM
+        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+        cd PlayfieldEngine
         cmake --preset windows-x86_64
         cmake --build --preset windows-x86_64
         ```
@@ -158,8 +157,8 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         ```
         brew install cmake flex bison
         
-        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
-        cd PlayfieldVM
+        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+        cd PlayfieldEngine
         cmake -B build .
         cmake --build build --parallel
         ```
@@ -213,7 +212,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 +-----------------------------------------------------+
                           ||
 +-----------------------------------------------------+
-|                  Playfield VM Core                  |
+|                    Playfield VM                     |
 +-----------------------------------------------------+
                 ||                          ||
 +--------------------------------+  +-----------------+
@@ -254,7 +253,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### Console Unity Plugin Notice
 
-Playfield VM provides Unity Plugin binaries for platforms including
+Playfield Engine provides Unity Plugin binaries for platforms including
 Windows 64-bit and game consoles.
 
 - These binaries are provided for demonstration purposes only.
@@ -298,7 +297,7 @@ even in tightly controlled environments.
 
 ## Tests
 
-Playfield VM is tested on the following environments in the development.
+Playfield Engine is tested on the following environments in the development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -374,10 +373,10 @@ Samples are added timely.
 To generate game templates with ChatGPT, please let it load the
 following references:
 
-- [Playfield VM Script Syntax](docs/mkdocs-en/docs/syntax.html)
-- [Playfield VM Engine API](docs/mkdocs-en/docs/api.html)
+- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.html)
+- [Playfield Script API](docs/mkdocs-en/docs/api.html)
 
-ChatGPT can then create runnable Playfield VM games directly.
+ChatGPT can then create runnable Playfield Engine games directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -386,40 +385,40 @@ ChatGPT can then create runnable Playfield VM games directly.
 
 ## NoctVM Ecosystem
 
-Playfield VM is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **Playfield VM** — go-anywhere 2D game engine (this project)
+- **Playfield Engine** — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-Playfield VM is one of the runtimes that embeds and extends the NoctLang core.
+Playfield Engine is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
 ```
-Playfield VM
+Playfield Engine
 Copyright (C) 2025, Awe Morris. All rights reserved.
 ```
 
-Playfield VM is available as open-source software under the **MIT License**.
+Playfield Engine is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
 ## Join Us
 
-Playfield VM is still in its early stages. We're building the game
+Playfield Engine is still in its early stages. We're building the game
 engine with care, hoping it will inspire and empower creators around
 the world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what Playfield VM can become. You're
+Every small step helps shape what Playfield Engine can become. You're
 welcome to join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

@@ -419,7 +419,7 @@ if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BUNDLE)
   # Make an app bundle.
   set_target_properties(playfield PROPERTIES
     MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.playfieldvm"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.playfield"
     MACOSX_BUNDLE_BUNDLE_NAME "Playfield"
   )
 

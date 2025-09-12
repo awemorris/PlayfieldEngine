@@ -1,5 +1,5 @@
-How To Build Playfield VM
-========================
+How To Build Playfield Engine
+=============================
 
 ## Windows (WSL2)
 
@@ -15,7 +15,7 @@ sudo apt-get install mingw-w64
 
 ### Steps
 
-Open a terminal and enter the `Playfield VM` direcotry, then type the following.
+Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
 cmake --preset windows-x86_64
@@ -31,7 +31,7 @@ cmake --build --preset windows-x86_64
 
 ### Steps
 
-Open a terminal and enter the `Playfield VM` direcotry, then type the following.
+Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
 cmake --preset windows-x86_64
@@ -45,7 +45,7 @@ cmake --build --preset windows-x86_64
 * A `Windows 11` PC with an Intel, AMD, or Arm64 processor
 * `Visual Studio 2022 Community` installed (C++, CMake)
 * `Git for Windows` installed
-* `Playfield VM` source tree downloaded
+* `Playfield Engine` source tree downloaded
 
 ### Steps
 
@@ -73,7 +73,7 @@ sudo dnf install patch libX11-devel libXpm-devel alsa-lib-devel mesa-libGL-devel
 
 ### Steps
 
-Open a terminal and enter the `Playfield VM` direcotry, then type the following.
+Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
 cmake --preset linux
@@ -90,7 +90,7 @@ cmake --build --preset linux
 
 ### Steps
 
-Open a terminal and enter th `Playfield VM` direcotry, then type the following.
+Open a terminal and enter th `Playfield Engine` direcotry, then type the following.
 
 ```
 ./configure
@@ -137,7 +137,7 @@ Then, open the Xcode project at `projects/macos-dmg`, and build the project on X
 
 ### Steps
 
-Open a terminal and enter the `Playfield VM` direcotry, then type the following.
+Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
 cmake --preset freebsd

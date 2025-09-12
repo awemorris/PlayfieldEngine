@@ -1,14 +1,14 @@
-Playfield VM
-============
+Playfield Engine
+================
 
-`Playfield VM` へようこそ！夢を燃料に動くゲームエンジンです。
+`Playfield Engine` へようこそ！夢を燃料に動くゲームエンジンです。
 
 ---
 
 * 初めての方へ
     * [スタートガイド](gettingstarted.md)
-    * [PlayfieldVM Script の文法](syntax.md)
-    * [PlayfieldVM エンジンの API](api.md)
+    * [Playfield Script の文法](syntax.md)
+    * [Playfield Script の API](api.md)
 
 * プロジェクト貢献者へ
     * [ビルド方法](build.md)
