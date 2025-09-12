@@ -1,11 +1,11 @@
 /* -*- coding: utf-8; indent-tabs-mode: t; tab-width: 4; c-basic-offset: 4; -*- */
 
 /*
- * Copyright (C) 2025, PicoPicoP. All rights reserved.
+ * Copyright (C) 2025, Awe Morris. All rights reserved.
  */
 
 /*
- * A simple HTTP server specialized for PicoPicoScript.
+ * A simple HTTP server specialized for PlayFieldVM.
  */
 
 #include <stdio.h>

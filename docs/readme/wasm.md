@@ -7,7 +7,7 @@ How To Use The Wasm Version
     - index.html       ... Wasm File
     - assets.pak       ... Asset File (replace this by your own)
 - Other
-    - picopico-web.exe ... Launcher for Windows
+    - playfield-web.exe ... Launcher for Windows
 
 ## On Windows
 

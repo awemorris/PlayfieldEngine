@@ -4,10 +4,10 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-#ifndef PICOPICO_NOCT2D_H
-#define PICOPICO_NOCT2D_H
+#ifndef PLAYFIELD_NOCT2D_H
+#define PLAYFIELD_NOCT2D_H
 
-#include <picopico/c89compat.h>
+#include <playfield/c89compat.h>
 #include <stratohal/platform.h>
 
 /*
@@ -20,7 +20,7 @@ struct image;
  * Create a color texture.
  */
 bool
-picopico_create_color_texture(
+playfield_create_color_texture(
 	int width,
 	int height,
 	int r,
@@ -33,7 +33,7 @@ picopico_create_color_texture(
  * Load a texture.
  */
 bool
-picopico_load_texture(
+playfield_load_texture(
 	const char *fname,
 	int *ret,
 	int *width,
@@ -43,14 +43,14 @@ picopico_load_texture(
  * Destroy a texture.
  */
 void
-picopico_destroy_texture(
+playfield_destroy_texture(
 	int tex_id);
 
 /*
  * Render a texture.
  */
 void
-picopico_render_texture(
+playfield_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -66,7 +66,7 @@ picopico_render_texture(
  * Render a texture.
  */
 void
-picopico_render_texture_3d(
+playfield_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -86,7 +86,7 @@ picopico_render_texture_3d(
  * Render a texture.
  */
 void
-picopico_draw(
+playfield_draw(
 	int tex_id,
 	int x,
 	int y);
@@ -95,7 +95,7 @@ picopico_draw(
  * Load a font.
  */
 bool
-picopico_load_font(
+playfield_load_font(
 	int slot,
 	const char *file);
 
@@ -103,7 +103,7 @@ picopico_load_font(
  * Create a text texture.
  */
 bool
-picopico_create_text_texture(
+playfield_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
@@ -116,7 +116,7 @@ picopico_create_text_texture(
  * Play a sound on a stream.
  */
 bool
-picopico_play_sound(
+playfield_play_sound(
 	int stream,
 	const char *file);
 
@@ -124,14 +124,14 @@ picopico_play_sound(
  * Stop a sound on a stream.
  */
 bool
-picopico_stop_sound(
+playfield_stop_sound(
 	int stream);
 
 /*
  * Set a sound volume on a stream.
  */
 bool
-picopico_set_volume(
+playfield_set_volume(
 	int stream,
 	float val);
 
@@ -139,13 +139,13 @@ picopico_set_volume(
  * Move to a tag file.
  */
 bool
-picopico_move_to_tag_file(
+playfield_move_to_tag_file(
 	const char *file);
 
 /*
  * Move to a next tag.
  */
 void
-picopico_move_to_next_tag(void);
+playfield_move_to_next_tag(void);
 
 #endif

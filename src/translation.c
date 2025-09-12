@@ -2,7 +2,7 @@
 
 const char *get_system_language(void);
 
-const char *picopico_gettext(const char *msg)
+const char *playfield_gettext(const char *msg)
 {
     const char *lang_code = get_system_language();
     if (strcmp(msg, "Error: %s: %d: %s\n") == 0) {

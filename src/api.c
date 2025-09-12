@@ -1,14 +1,14 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, PicoPicoP. All rights reserved.
+ * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
 /*
  * C API
  */
 
-#include <picopico/picopico.h>
+#include <playfield/playfield.h>
 
 #include "engine.h"
 #include "common.h"
@@ -75,7 +75,7 @@ cleanup_api(void)
  * Load a texture.
  */
 bool
-picopico_load_texture(
+playfield_load_texture(
 	const char *fname,
 	int *ret,
 	int *width,
@@ -145,7 +145,7 @@ picopico_load_texture(
  * Create a color texture.
  */
 bool
-picopico_create_color_texture(
+playfield_create_color_texture(
 	int width,
 	int height,
 	int r,
@@ -231,7 +231,7 @@ search_free_entry(void)
  * Destroy a texture.
  */
 void
-picopico_destroy_texture(
+playfield_destroy_texture(
 	int tex_id)
 {
 	assert(tex_id >= 0);
@@ -248,7 +248,7 @@ picopico_destroy_texture(
  * Render a texture.
  */
 void
-picopico_render_texture(
+playfield_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -284,7 +284,7 @@ picopico_render_texture(
  * Render a texture.
  */
 void
-picopico_render_texture_3d(
+playfield_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -318,7 +318,7 @@ picopico_render_texture_3d(
  * Render a texture.
  */
 void
-picopico_draw(
+playfield_draw(
 	int tex_id,
 	int x,
 	int y)
@@ -351,7 +351,7 @@ picopico_draw(
  * Load a font file to a font slot.
  */
 bool
-picopico_load_font(
+playfield_load_font(
 	int slot,
 	const char *file)
 {
@@ -405,7 +405,7 @@ pixel_t color_code_to_pixel_value(const char *code)
  * Create a text texture.
  */
 bool
-picopico_create_text_texture(
+playfield_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
@@ -478,7 +478,7 @@ picopico_create_text_texture(
  * Play a sound file on a stream.
  */
 bool
-picopico_play_sound(
+playfield_play_sound(
 	int stream,
 	const char *file)
 {
@@ -501,7 +501,7 @@ picopico_play_sound(
  * Stop the sound on a stream.
  */
 bool
-picopico_stop_sound(
+playfield_stop_sound(
 	int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
@@ -521,7 +521,7 @@ picopico_stop_sound(
  * Set the sound volume on a stream.
  */
 bool
-picopico_set_sound_volue(
+playfield_set_sound_volue(
 	int stream,
 	float vol)
 {
@@ -543,7 +543,7 @@ picopico_set_sound_volue(
  * Load a tag file and move to it.
  */
 bool
-picopico_move_to_tag_file(
+playfield_move_to_tag_file(
 	const char *file)
 {
 	/* Load the tag file. */
@@ -557,7 +557,7 @@ picopico_move_to_tag_file(
  * Move to a next tag.
  */
 void
-picopico_move_to_next_tag(void)
+playfield_move_to_next_tag(void)
 {
 	move_to_next_tag();
 }

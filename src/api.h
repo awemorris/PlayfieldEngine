@@ -1,17 +1,17 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, PicoPicoP. All rights reserved.
+ * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
 /*
  * C API Implementation
  */
 
-#ifndef PICOPICO_API_H
-#define PICOPICO_API_H
+#ifndef PLAYFIELD_API_H
+#define PLAYFIELD_API_H
 
-#include <picopico/picopico.h>
+#include <playfield/playfield.h>
 
 /* Initialize the API. */
 bool init_api(void);

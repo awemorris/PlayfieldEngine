@@ -20,13 +20,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"  // 0x0409 = US English, 0x04b0 = Unicode
         BEGIN
-            VALUE "CompanyName",      "picopicoscript.com\0"
-            VALUE "FileDescription",  "PicoPicoScript Virtual Machine Scripting Runtime\0"
+            VALUE "CompanyName",      "noctvm.io\0"
+            VALUE "FileDescription",  "PlayfieldVM Scripting Runtime Virtual Machine\0"
             VALUE "FileVersion",      "1.0.0.0\0"
-            VALUE "InternalName",     "picopico.exe\0"
-            VALUE "LegalCopyright",   "© 2025 PicoPicoP. All rights reserved.\0"
-            VALUE "OriginalFilename", "picopico.exe\0"
-            VALUE "ProductName",      "PicoPicoScript\0"
+            VALUE "InternalName",     "playfield.exe\0"
+            VALUE "LegalCopyright",   "© 2025 Awe Morris. All rights reserved.\0"
+            VALUE "OriginalFilename", "playfield.exe\0"
+            VALUE "ProductName",      "PlayfieldVM\0"
             VALUE "ProductVersion",   "1.0.0.0\0"
         END
     END

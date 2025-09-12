@@ -1,15 +1,15 @@
-PicoPicoScript スタートガイド
-=============================
+PlayfieldVM スタートガイド
+==========================
 
 入門として最初のゲームを動かしてみる手順は、以下の通りです。
 
 ## 実行ファイルのダウンロード
 
-最新の `PicoPicoScript` 実行ファイルを [リリースページ](https://github.com/awemorris/PicoPicoScript/releases) からダウンロードしてください。
+最新の `PlayfieldVM` 実行ファイルを [リリースページ](https://github.com/awemorris/PlayfieldVM/releases) からダウンロードしてください。
 
 ## ゲームを実行する
 
-`picopico.exe` ファイルをダブルクリックするとゲームが起動します。
+`playfield.exe` ファイルをダブルクリックするとゲームが起動します。
 
 ## ゲームを編集する
 
@@ -17,103 +17,7 @@ PicoPicoScript スタートガイド
 
 ## ゲームを配布用にエクスポートする
 
-エクスプーラでゲームのファイルを選択肢、それを `picopico-pack.exe` のアイコンにドロップしてください。
+エクスプーラでゲームのファイルを選択肢、それを `playfield-pack.exe` のアイコンにドロップしてください。
 すると、`assets.pak` ファイルが作成されます。
 
-作成された `assets.pak` ファイルを `picopico.exe` ファイルと同じフォルダに置いてください。
-
----
-
-## PicoPicoScript チュートリアルゲーム
-
-### Bounder (飛び跳ね)
-
-これは一番シンプルなサンプルです。
-`SAMPLES/bouncer` フォルダを参照してください。
-
-```
-//
-// ==== bouncer ====
-//
-
-func setup() {
-    return {
-        width: 800,
-        height: 450,
-        title: "Bouncer"
-    };
-}
-
-func start() {
-    W = 800;
-    H = 450;
-    BLOCK_W = 48;      // pixels
-    BLOCK_H = 48;      // pixels
-    SPEED_X = 180.0;   // pixels/sec
-    SPEED_Y = 140.0;   // pixels/sec
-    MAX_DT  = 0.1;     // sec
-
-    // Create a texture.
-    tex = Engine.createColorTexture({
-        width: BLOCK_W,
-        height: BLOCK_H,
-        r: 0,
-        g: 128,
-        b: 255,
-        a: 255
-    });
-
-    // Set the initial block position.
-    x = (W - BLOCK_W) * 0.5;
-    y = (H - BLOCK_H) * 0.5;
-
-    // Set the initial speed.
-    vx = SPEED_X;
-    vy = SPEED_Y;
-
-    last_ms = Engine.millisec;
-}
-
-func frame() {
-    var now_ms = Engine.millisec;
-    var dt = (now_ms - last_ms) * 0.001;
-    last_ms = now_ms;
-
-    // Process the input.
-    if (Engine.isMouseLeftPressed) {
-        x = (W - BLOCK_W) * 0.5;
-        y = (H - BLOCK_H) * 0.5;
-    }
-
-    // Update the position
-    x = x + vx * dt;
-    y = y + vy * dt;
-
-    // Reflect.
-    if (x < 0) {
-        // Left to right.
-        x = -x;
-        vx = -vx;
-    } else if (x > W - BLOCK_W) {
-        // Right to left.
-        x = 2*(W - BLOCK_W) - x;
-        vx = -vx;
-    }
-    if (y < 0) {
-        // Up to down.
-        y = -y;
-        vy = -vy;
-    } else if (y > H - BLOCK_H) {
-        // Down to up.
-        y = 2*(H - BLOCK_H) - y;
-        vy = -vy;
-    }
-
-    // Draw.
-    Engine.draw({
-        texture: tex,
-        x: x,
-        y: y
-    });
-}
-```
+作成された `assets.pak` ファイルを `playfield.exe` ファイルと同じフォルダに置いてください。

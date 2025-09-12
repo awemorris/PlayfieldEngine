@@ -114,10 +114,10 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_WINDOWS":         "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_WINDOWS":    "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {
@@ -128,10 +128,10 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86_64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_WINDOWS":         "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_WINDOWS":    "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {
@@ -142,10 +142,10 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-arm64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_WINDOWS":         "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_WINDOWS":    "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {
@@ -156,11 +156,11 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/macos.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_MACOS":           "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON",
-        "PICO_ENABLE_BUNDLE":          "ON"
+        "PLAYFIELD_TARGET_MACOS":      "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BUNDLE":     "ON"
       }
     },
     {
@@ -170,10 +170,10 @@
       "binaryDir":      "${sourceDir}/build-linux",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_LINUX":           "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_LINUX":      "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {
@@ -183,11 +183,11 @@
       "binaryDir":      "${sourceDir}/build-linux-fbdev",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_LINUX":           "ON",
-        "PICO_ENABLE_FBDEV":           "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_I18N":            "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_LINUX":      "ON",
+        "PLAYFIELD_ENABLE_FBDEV":      "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {
@@ -198,7 +198,7 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Debug",
-        "PICO_TARGET_IOS":             "ON"
+        "PLAYFIELD_TARGET_IOS":        "ON"
       }
     },
     {
@@ -209,8 +209,8 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-device.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_IOS":             "ON",
-        "PICO_ENABLE_STATIC":          "ON"
+        "PLAYFIELD_TARGET_IOS":        "ON",
+        "PLAYFIELD_ENABLE_STATIC":     "ON"
       }
     },
     {
@@ -221,8 +221,8 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-simulator.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_IOS":             "ON",
-        "PICO_ENABLE_STATIC":          "ON"
+        "PLAYFIELD_TARGET_IOS":        "ON",
+        "PLAYFIELD_ENABLE_STATIC":     "ON"
       }
     },
     {
@@ -235,8 +235,8 @@
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
         "ANDROID_ABI":                 "x86",
-        "PICO_TARGET_ANDROID":         "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_ANDROID":    "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -249,8 +249,8 @@
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
         "ANDROID_ABI":                 "x86_64",
-        "PICO_TARGET_ANDROID":         "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_ANDROID":    "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -263,8 +263,8 @@
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
         "ANDROID_ABI":                 "armeabi-v7a",
-        "PICO_TARGET_ANDROID":         "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_ANDROID":    "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -277,8 +277,8 @@
         "CMAKE_BUILD_TYPE":            "Release",
         "ANDROID_PLATFORM":            "30",
         "ANDROID_ABI":                 "arm64-v8a",
-        "PICO_TARGET_ANDROID":         "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_ANDROID":    "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -289,7 +289,7 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/wasm.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_WASM":            "ON"
+        "PLAYFIELD_TARGET_WASM":       "ON"
       }
     },
     {
@@ -300,8 +300,8 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-win64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_UNITY":           "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_UNITY":      "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -312,8 +312,8 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-winarm64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Debug",
-        "PICO_TARGET_UNITY":           "ON",
-        "PICO_ENABLE_SHARED":          "ON"
+        "PLAYFIELD_TARGET_UNITY":      "ON",
+        "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
     {
@@ -323,10 +323,10 @@
       "binaryDir":      "${sourceDir}/build-unity-switch",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-switch.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_UNITY":           "ON",
-        "PICO_TARGET_UNITY_SWITCH":    "ON",
-        "PICO_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":                 "Release",
+        "PLAYFIELD_TARGET_UNITY":           "ON",
+        "PLAYFIELD_TARGET_UNITY_SWITCH":    "ON",
+        "PLAYFIELD_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -337,9 +337,9 @@
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-ps5.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_UNITY":           "ON",
-        "PICO_TARGET_UNITY_PS5":       "ON",
-        "PICO_ENABLE_STATIC":          "ON"
+        "PLAYFIELD_TARGET_UNITY":      "ON",
+        "PLAYFIELD_TARGET_UNITY_PS5":  "ON",
+        "PLAYFIELD_ENABLE_STATIC":     "ON"
       }
     },
     {
@@ -349,10 +349,10 @@
       "binaryDir":      "${sourceDir}/build-unity-xbox",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/unity-xbox.cmake",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_UNITY":           "ON",
-        "PICO_TARGET_UNITY_XBOX":      "ON",
-        "PICO_ENABLE_STATIC":          "ON"
+        "CMAKE_BUILD_TYPE":                 "Release",
+        "PLAYFIELD_TARGET_UNITY":           "ON",
+        "PLAYFIELD_TARGET_UNITY_XBOX":      "ON",
+        "PLAYFIELD_ENABLE_STATIC":          "ON"
       }
     },
     {
@@ -362,9 +362,9 @@
       "binaryDir":      "${sourceDir}/build-freebsd",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PICO_TARGET_FREEBSD":         "ON",
-        "PICO_ENABLE_JIT":             "ON",
-        "PICO_ENABLE_PACK":            "ON"
+        "PLAYFIELD_TARGET_FREEBSD":    "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     }
   ],

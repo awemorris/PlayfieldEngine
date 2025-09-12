@@ -8,10 +8,10 @@
  * Top Level Header
  */
 
-#ifndef PICOPICO_ENGINE_H
-#define PICOPICO_ENGINE_H
+#ifndef PLAYFIELD_ENGINE_H
+#define PLAYFIELD_ENGINE_H
 
-#include <picopico/picopico.h>
+#include <playfield/playfield.h>
 
 /* The file name of the startup file. */
 #define STARTUP_FILE	"main.noct"

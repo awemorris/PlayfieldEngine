@@ -1,13 +1,16 @@
-PicoPicoScript
-==============
+PlayfieldVM / PicoPicoScript
+============================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/release/awemorris/PicoPicoScript.svg)](https://github.com/awemorris/PicoPicoScript/releases)
-[![Downloads](https://img.shields.io/github/downloads/awemorris/PicoPicoScript/total.svg)](https://github.com/awemorris/PicoPicoScript/releases)
+[![GitHub release](https://img.shields.io/github/release/awemorris/PlayfieldVM.svg)](https://github.com/awemorris/PlayfieldVM/releases)
+[![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldVM/total.svg)](https://github.com/awemorris/PlayfieldVM/releases)
 
-`PicoPicoScript` is a 2D game engine which runs everywhere.
+`PlayfieldVM` is a 2D game engine that runs everywhere.
+With scripts written in the [Noct](https://github.com/awemorris/NoctLang) language,
+it can render graphics and play sounds seamlessly across platforms.
+For education and beginners, the engine is also nicknamed **PicoPicoScript**.
 
-Built completely from scratch, `PicoPicoScript` features:
+Built completely from scratch, PlayfieldVM features:
 
 - **Comfortable Scripting:**
     - Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
@@ -15,32 +18,32 @@ Built completely from scratch, `PicoPicoScript` features:
     - Write a script and run it instantly — **Jot and Run!**
 - **Portable Rendering & Audio:**
     - Driven by StratoHAL, a portable game library also designed in-house.
-    - Runs almost everywhere: Windows, macOS, Linux, iOS, Android, WebAssembly, and even consoles.
+    - Runs almost everywhere: Windows, macOS, Linux, WebAssembly, iOS, Android, and even consoles.
     - Ship for platforms you don't physically own — **Go Far, Stay Close!**
-- **Minimal Runtime**
+- **Minimal Runtime:**
     - Runtime fits within just ~1.4MB on Windows.
 
-## What's PicoPicoScript?
+## Why PlayfieldVM?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-`PicoPicoScript` was born from this single question.
+PlayfieldVM was born from this single question.
 
 Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.  `PicoPicoScript` was created with the
-belief that every creator deserves space to explore, no matter their
+live, or what tools you have.  PlayfieldVM was created with the belief
+that every creator deserves space to explore, no matter their
 surroundings.
 
 It runs smoothly even on older or low-spec machines — if you have a
 computer, there's a place for you to create.  It's a helpful companion
 for creators everywhere — especially in places with fewer resources.
-If you have something to make, `PicoPicoScript` will be here to walk
-with you.
+If you have something to make, PlayfieldVM will be here to walk with
+you.
 
-Whether you're using a Raspberry Pi in a classroom, or using
-a UN-issued Chromebook in a temporary shelter, `PicoPicoScript` offers
-gentle tools to help bring your ideas to life — in a way that feels
-simple, thoughtful, and your own.
+Whether you're using a Raspberry Pi in a classroom, or using a
+UN-issued Chromebook in a temporary shelter, PlayfieldVM offers gentle
+tools to help bring your ideas to life — in a way that feels simple,
+thoughtful, and your own.
 
 The goal is simple:
 **To make game development accessible, thoughtful, and within reach
@@ -122,7 +125,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### 1-a. Download the latest release:
 
-- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PicoPicoScript/releases)
+- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldVM/releases)
 
 ### 1-b. Clone and build from the repository:
 
@@ -132,7 +135,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         - Rename the exe files to `flex.exe` and `bison.exe`.
     - Clone the repo.
         ```
-        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
+        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
         ```
     - Open the folder by Visual Studio 2022.
     - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
@@ -143,24 +146,24 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         ```
         sudo apt-get install cmake mingw-w64 flex bison
         
-        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
-        cd PicoPicoScript
+        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
+        cd PlayfieldVM
         cmake --preset windows-x86_64
         cmake --build --preset windows-x86_64
         ```
-    - The file `picopico.exe` will be generated in the `build-win-x86_64` directory.
+    - The file `playfield.exe` will be generated in the `build-win-x86_64` directory.
 
 - macOS (macOS 11 or later, brew, CMake >= 3.22)
     - Type the following in the terminal.
         ```
         brew install cmake flex bison
         
-        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
-        cd PicoPicoScript
+        git clone --recursive https://github.com/awemorris/PlayfieldVM.git
+        cd PlayfieldVM
         cmake -B build .
         cmake --build build --parallel
         ```
-    - The app bundle `PicoPico.app` will be generated in the `build` directory.
+    - The app bundle `Playfield.app` will be generated in the `build` directory.
     - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
 
 - Linux (Ubuntu 22.04 or later, CMake >= 3.22)
@@ -168,12 +171,12 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
         ```
         sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
         
-        git clone --recursive https://github.com/awemorris/PicoPicoScript.git
-        cd PicoPicoScript
+        git clone --recursive https://github.com/awemorris/Playfield.git
+        cd Playfield
         cmake -B build .
         cmake --build build --parallel
         ```
-    - The file `picopico` will be generated in the `build` directory.
+    - The file `playfield` will be generated in the `build` directory.
     - The app uses X11 and OpenGL.
 
 - Notes
@@ -186,12 +189,12 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### 2. Run a game script
 
-- Place the sample game files alongside the binary, i.e., `picopico.exe`, `PicoPico.app`, or `picopico`.
+- Place the sample game files alongside the binary, i.e., `playfield.exe`, `Playfield.app`, or `playfield`.
     - E.g., `cp samples/rush/* build/`
 - Run the app.
-    - Windows: Double click the `picopico.exe` file.
-    - macOS: Double click the `PicoPico.app` icon.
-    - Linux: Run `./picopico` on the terminal.
+    - Windows: Double click the `playfield.exe` file.
+    - macOS: Double click the `Playfield.app` icon.
+    - Linux: Run `./playfield` on the terminal.
 
 ### 3. Explore more features
 
@@ -206,11 +209,11 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ```
 +-----------------------------------------------------+
-|                      User Script                    |
+|                     User Script                     |
 +-----------------------------------------------------+
                           ||
 +-----------------------------------------------------+
-|                    PicoPico Core                    |
+|                   PlayfieldVM Core                  |
 +-----------------------------------------------------+
                 ||                          ||
 +--------------------------------+  +-----------------+
@@ -251,7 +254,8 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### Console Unity Plugin Notice
 
-`PicoPicoScript` provides Unity Plugin binaries for platforms including Windows 64-bit and game consoles.
+PlayfieldVM provides Unity Plugin binaries for platforms including
+Windows 64-bit and game consoles.
 
 - These binaries are provided for demonstration purposes only.
 - They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
@@ -260,7 +264,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 ### NoctLang
 
 **NoctLang** is a lightweight scripting language designed specifically
-for `PicoPicoScript`. With a game-oriented syntax, it emphasizes clarity,
+for Playfield. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
@@ -294,7 +298,7 @@ even in tightly controlled environments.
 
 ## Tests
 
-`PicoPicoScript` is tested on the following environments in the development.
+PlayfieldVM is tested on the following environments in the development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -317,29 +321,29 @@ even in tightly controlled environments.
 
 |Preset                       |Platform            |Compiler       |Directory           |Target           |
 |-----------------------------|--------------------|---------------|--------------------|-----------------|
-|windows-x86                  |Windows             |MINGW          |build-win-x86       |picopico.exe     |
-|windows-x86_64               |Windows             |MINGW          |build-win-x86_64    |picopico.exe     |
-|windows-arm64                |Windows             |MINGW (LLVM)   |build-win-arm64     |picopico.exe     |
-|macos                        |macOS               |Clang          |build-macos         |PicoPico.app     |
-|linux                        |Linux               |GCC            |build-linux         |picopico         |
-|ios-device                   |iOS Device          |Clang          |build-ios-device    |libpicopico.a    |
-|ios-simulator                |iOS Simulator       |Clang          |build-ios-simulator |libpicopico.a    |
-|android-x86                  |Android x86         |Clang          |build-android-x86   |libpicopico.so   |
-|android-x86_64               |Android x86_64      |Clang          |build-android-x86_64|libpicopico.so   |
-|android-armv7                |Android armv7       |Clang          |build-android-armv7 |libpicopico.so   |
-|android-arm64                |Android arm64       |Clang          |build-android-arm64 |libpicopico.so   |
+|windows-x86                  |Windows             |MINGW          |build-win-x86       |playfield.exe    |
+|windows-x86_64               |Windows             |MINGW          |build-win-x86_64    |playfield.exe    |
+|windows-arm64                |Windows             |MINGW (LLVM)   |build-win-arm64     |playfield.exe    |
+|macos                        |macOS               |Clang          |build-macos         |Playfield.app    |
+|linux                        |Linux               |GCC            |build-linux         |playfield        |
+|ios-device                   |iOS Device          |Clang          |build-ios-device    |libplayfield.a   |
+|ios-simulator                |iOS Simulator       |Clang          |build-ios-simulator |libplayfield.a   |
+|android-x86                  |Android x86         |Clang          |build-android-x86   |libplayfield.so  |
+|android-x86_64               |Android x86_64      |Clang          |build-android-x86_64|libplayfield.so  |
+|android-armv7                |Android armv7       |Clang          |build-android-armv7 |libplayfield.so  |
+|android-arm64                |Android arm64       |Clang          |build-android-arm64 |libplayfield.so  |
 |wasm                         |WebAssembly         |Emscripten     |build-wasm          |index.html       |
-|unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libpicopico.dll  |
-|unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libpicopico.a    |
-|unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libpicopico.a    |
-|unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libpicopico.a    |
-|freebsd                      |FreeBSD             |Clang          |build-freebsd       |picopico         |
-|windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
-|windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
-|windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
-|windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
-|windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
-|windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |picopico.exe     |
+|unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libplayfield.dll |
+|unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libplayfield.a   |
+|unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libplayfield.a   |
+|unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libplayfield.a   |
+|freebsd                      |FreeBSD             |Clang          |build-freebsd       |playfield        |
+|windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
+|windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
+|windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
+|windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
+|windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
+|windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
 
 ---
 
@@ -370,10 +374,10 @@ Samples are added timely.
 To generate game templates with ChatGPT, please let it load the
 following references:
 
-- [PicoPicoScript Syntax](docs/mkdocs-en/docs/syntax.html)
-- [PicoPicoScript API](docs/mkdocs-en/docs/api.html)
+- [PlayfieldVM Script Syntax](docs/mkdocs-en/docs/syntax.html)
+- [PlayfieldVM Engine API](docs/mkdocs-en/docs/api.html)
 
-ChatGPT can then create runnable `PicoPicoScript` games directly.
+ChatGPT can then create runnable PlayfieldVM games directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -382,40 +386,40 @@ ChatGPT can then create runnable `PicoPicoScript` games directly.
 
 ## NoctVM Ecosystem
 
-`PicoPicoScript` is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+PlayfieldVM is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **PicoPicoScript** — go-anywhere 2D game engine (this project)
+- **PlayfieldVM** — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-`PicoPicoScript` is one of the runtimes that embeds and extends the NoctLang core.
+PlayfieldVM is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
 ```
-PicoPicoScript
-Copyright (C) 2025, PicoPicoP. All rights reserved.
+PlayfieldVM
+Copyright (C) 2025, Awe Morris. All rights reserved.
 ```
 
-`PicoPicoScript` is available as open-source software under the **MIT License**.
+PlayfieldVM is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
 ## Join Us
 
-`PicoPicoScript` is still in its early stages. We're building the game engine
-with care, hoping it will inspire and empower creators around the
-world.
+PlayfieldVM is still in its early stages. We're building the game
+engine with care, hoping it will inspire and empower creators around
+the world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what `PicoPicoScript` can become. You're welcome to
-join us on this journey.
+Every small step helps shape what PlayfieldVM can become. You're
+welcome to join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

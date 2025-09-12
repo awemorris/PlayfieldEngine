@@ -8,8 +8,8 @@
  * C89 Compatibility
  */
 
-#ifndef PICOPICO_C89COMPAT_H
-#define PICOPICO_C89COMPAT_H
+#ifndef PLAYFIELD_C89COMPAT_H
+#define PLAYFIELD_C89COMPAT_H
 
 /*
  * Here, we define two macros that indicates the target architecture
@@ -379,8 +379,8 @@ typedef unsigned long long uint64_t;
  */
 #if !defined(PPS_TR)
 #if defined(USE_TRANSLATION)
-#define PPS_TR(s)	picopico_gettext(s)
-const char *picopico_gettext(const char *msg);
+#define PPS_TR(s)	playfield_gettext(s)
+const char *playfield_gettext(const char *msg);
 #else
 #define PPS_TR(s)	(s)
 #endif

@@ -1,76 +1,76 @@
 cmake_minimum_required(VERSION 3.16)
-project(picopico LANGUAGES C CXX)
+project(playfield LANGUAGES C CXX)
 
 #
 # Configuration
 #
 
 # Targets
-option(PICO_TARGET_WINDOWS       "Build for Windows"       OFF)
-option(PICO_TARGET_MACOS         "Build for macOS"         OFF)
-option(PICO_TARGET_LINUX         "Build for Linux"         OFF)
-option(PICO_TARGET_IOS           "Build for iOS"           OFF)
-option(PICO_TARGET_ANDROID       "Build for Android"       OFF)
-option(PICO_TARGET_WASM          "Build for Emscripten"    OFF)
-option(PICO_TARGET_UNITY         "Build for Unity"         OFF)
-option(PICO_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
+option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"       OFF)
+option(PLAYFIELD_TARGET_MACOS         "Build for macOS"         OFF)
+option(PLAYFIELD_TARGET_LINUX         "Build for Linux"         OFF)
+Option(PLAYFIELD_TARGET_IOS           "Build for iOS"           OFF)
+option(PLAYFIELD_TARGET_ANDROID       "Build for Android"       OFF)
+option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"    OFF)
+option(PLAYFIELD_TARGET_UNITY         "Build for Unity"         OFF)
+option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
 
 # Options
-option(PICO_ENABLE_JIT           "Enable JIT"              OFF)
-option(PICO_ENABLE_I18N          "Enable translation"      OFF)
-option(PICO_ENABLE_BUNDLE        "Enable macOS bundle"     OFF)
-option(PICO_ENABLE_PACK          "Enable packager"         OFF)
-option(PICO_ENABLE_STATIC        "Build a static library"  OFF)
-option(PICO_ENABLE_SHARED        "Build a dynamic library" OFF)
-option(PICO_ENABLE_DIST          "Build for packages"      OFF)
+option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
+option(PLAYFIELD_ENABLE_I18N          "Enable translation"      OFF)
+option(PLAYFIELD_ENABLE_BUNDLE        "Enable macOS bundle"     OFF)
+option(PLAYFIELD_ENABLE_PACK          "Enable packager"         OFF)
+option(PLAYFIELD_ENABLE_STATIC        "Build a static library"  OFF)
+option(PLAYFIELD_ENABLE_SHARED        "Build a dynamic library" OFF)
+option(PLAYFIELD_ENABLE_DIST          "Build for packages"      OFF)
 
 #
 # Automatic Target Detection
 #
 
 # For when a target is manually specified.
-if(   PICO_TARGET_WINDOWS
-   OR PICO_TARGET_MACOS
-   OR PICO_TARGET_LINUX
-   OR PICO_TARGET_IOS
-   OR PICO_TARGET_ANDROID
-   OR PICO_TARGET_WASM
-   OR PICO_TARGET_UNITY
-   OR PICO_TARGET_FREEBSD
+if(   PLAYFIELD_TARGET_WINDOWS
+   OR PLAYFIELD_TARGET_MACOS
+   OR PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_UNITY
+   OR PLAYFIELD_TARGET_FREEBSD
 )
   # A target and options are manually specified.
 else()   
   if(WIN32)
     # Windows is detected.
-    set(PICO_TARGET_WINDOWS    ON)
-    set(PICO_ENABLE_JIT        ON)
-    set(PICO_ENABLE_I18N       ON)
-    set(PICO_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_WINDOWS    ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(APPLE AND NOT IOS)
     # macOS is detected.
-    set(PICO_TARGET_MACOS      ON)
-    set(PICO_ENABLE_JIT        ON)
-    set(PICO_ENABLE_I18N       ON)
-    set(PICO_ENABLE_BUNDLE     ON)
-    set(PICO_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_MACOS      ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_BUNDLE     ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Linux is detected.
-    set(PICO_TARGET_LINUX      ON)
-    set(PICO_ENABLE_JIT        ON)
-    set(PICO_ENABLE_I18N       ON)
-    set(PICO_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_LINUX      ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(PICO_TARGET_FREEBSD    ON)
-    set(PICO_ENABLE_JIT        ON)
-    set(PICO_ENABLE_I18N       ON)
-    set(PICO_ENABLE_GLX        ON)
-    set(PICO_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_FREEBSD    ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_GLX        ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   # No automatic detection for:
@@ -83,15 +83,15 @@ endif()
 # NoctLang Configuration
 #
 
-# Merge objects into libpico.
-if(   PICO_TARGET_IOS
-   OR PICO_TARGET_ANDROID
-   OR PICO_TARGET_UNITY
+# Merge subproject objects into libplayfield.
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_UNITY
 )
   # For library generation.
   set(NOCTLANG_ENABLE_OBJECT ON)
 else()
-  if(PICO_ENABLE_DIST)
+  if(PLAYFIELD_ENABLE_DIST)
     # For dynamically linked binaries.
     set(NOCTLANG_ENABLE_SHARED ON)
   else()
@@ -101,24 +101,24 @@ else()
 endif()
 
 # Emscripten
-if(PICO_TARGET_WASM)
+if(PLAYFIELD_TARGET_WASM)
   set(NOCTLANG_TARGET_WASM ON)
 endif()
 
 # Unity
-if(PICO_TARGET_UNITY)
+if(PLAYFIELD_TARGET_UNITY)
   set(NOCTLANG_TARGET_UNITY ON)
 endif()
 
 # Use JIT.
-if(PICO_ENABLE_JIT)
+if(PLAYFIELD_ENABLE_JIT)
   set(NOCTLANG_ENABLE_JIT ON)
 else()
   set(NOCTLANG_ENABLE_JIT OFF)
 endif()
 
 # Use translation.
-if(PICO_ENABLE_I18N)
+if(PLAYFIELD_ENABLE_I18N)
   set(NOCTLANG_ENABLE_I18N ON)
 endif()
 
@@ -131,41 +131,41 @@ endif()
 #
 
 # Set the target and its specific options.
-if(PICO_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS)
   set(STRATO_TARGET_WINDOWS ON)
-elseif(PICO_TARGET_MACOS)
+elseif(PLAYFIELD_TARGET_MACOS)
   set(STRATO_TARGET_MACOS ON)
-elseif(PICO_TARGET_LINUX)
+elseif(PLAYFIELD_TARGET_LINUX)
   set(STRATO_TARGET_LINUX ON)
-elseif(PICO_TARGET_IOS)
+elseif(PLAYFIELD_TARGET_IOS)
   set(STRATO_TARGET_IOS ON)
-elseif(PICO_TARGET_ANDROID)
+elseif(PLAYFIELD_TARGET_ANDROID)
   set(STRATO_TARGET_ANDROID ON)
-elseif(PICO_TARGET_WASM)
+elseif(PLAYFIELD_TARGET_WASM)
   set(STRATO_TARGET_WASM ON)
-elseif(PICO_TARGET_UNITY)
+elseif(PLAYFIELD_TARGET_UNITY)
   set(STRATO_TARGET_UNITY ON)
-elseif(PICO_TARGET_FREEBSD)
+elseif(PLAYFIELD_TARGET_FREEBSD)
   set(STRATO_TARGET_FREEBSD ON)
 endif()
 
-if(PICO_TARGET_UNITY_SWITCH)
+if(PLAYFIELD_TARGET_UNITY_SWITCH)
   set(STRATO_TARGET_UNITY_SWITCH)
-elseif(PICO_TARGET_UNITY_PS5)
+elseif(PLAYFIELD_TARGET_UNITY_PS5)
   set(STRATO_TARGET_UNITY_PS5)
-elseif(PICO_TARGET_UNITY_XBOX)
+elseif(PLAYFIELD_TARGET_UNITY_XBOX)
   set(STRATO_TARGET_UNITY_XBOX)
 endif()
 
-# Merge objects into libpico.
-if(   PICO_TARGET_IOS
-   OR PICO_TARGET_ANDROID
-   OR PICO_TARGET_UNITY
+# Merge subproject objects into libplayfield.
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_UNITY
 )
   # For library generation.
   set(STRATO_ENABLE_OBJECT ON)
 else()
-  if(PICO_ENABLE_DIST)
+  if(PLAYFIELD_ENABLE_DIST)
     # For dynamically linked binaries.
     set(STRATO_ENABLE_SHARED ON)
   else()
@@ -175,12 +175,12 @@ else()
 endif()
 
 # Linux Framebuffer
-if(PICO_ENABLE_FBDEV)
+if(PLAYFIELD_ENABLE_FBDEV)
   set(STRATO_ENABLE_FBDEV ON)
 endif()
 
 # Use translation.
-if(PICO_ENABLE_I18N)
+if(PLAYFIELD_ENABLE_I18N)
   set(STRATO_ENABLE_I18N ON)
 endif()
 
@@ -217,7 +217,7 @@ endif()
 # Apple Quirks
 #
 
-if(PICO_TARGET_MACOS)
+if(PLAYFIELD_TARGET_MACOS)
   set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
 
@@ -257,7 +257,7 @@ endif()
 #
 
 # Base Source
-set(PICO_BASE_SOURCES
+set(PLAYFIELD_BASE_SOURCES
   src/api.c
   src/common.c
   src/mainloop.c
@@ -266,37 +266,37 @@ set(PICO_BASE_SOURCES
 )
 
 # I18N Source
-if(PICO_ENABLE_I18N)
-  set(PICO_I18N_SOURCES
+if(PLAYFIELD_ENABLE_I18N)
+  set(PLAYFIELD_I18N_SOURCES
     src/i18n.c
     src/translation.c
   )
 endif()
 
 # Resource
-if(PICO_TARGET_WINDOWS)
-  set(PICO_RESOURCES
+if(PLAYFIELD_TARGET_WINDOWS)
+  set(PLAYFIELD_RESOURCES
     resources/resource.rc
   )
 endif()
 
 # Add Target
-if(   PICO_TARGET_IOS
-   OR PICO_TARGET_ANDROID
-   OR PICO_TARGET_UNITY
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_UNITY
 )
   # Make a library.
-  if(PICO_ENABLE_SHARED)
-    set(PICO_LIB_TYPE SHARED)
+  if(PLAYFIELD_ENABLE_SHARED)
+    set(PLAYFIELD_LIB_TYPE SHARED)
   else()
-    set(PICO_LIB_TYPE STATIC)
+    set(PLAYFIELD_LIB_TYPE STATIC)
   endif()
   add_library(
-    picopico
-    ${PICO_LIB_TYPE}
-    ${PICO_BASE_SOURCES}
-    ${PICO_I18N_SOURCES}
-    ${PICO_RESOURCES}
+    playfield
+    ${PLAYFIELD_LIB_TYPE}
+    ${PLAYFIELD_BASE_SOURCES}
+    ${PLAYFIELD_I18N_SOURCES}
+    ${PLAYFIELD_RESOURCES}
     $<TARGET_OBJECTS:png>
     $<TARGET_OBJECTS:jpeg>
     $<TARGET_OBJECTS:webp>
@@ -312,64 +312,64 @@ if(   PICO_TARGET_IOS
 else()
   # Make an executable.
   add_executable(
-    picopico
-    ${PICO_BASE_SOURCES}
-    ${PICO_I18N_SOURCES}
-    ${PICO_RESOURCES}
+    playfield
+    ${PLAYFIELD_BASE_SOURCES}
+    ${PLAYFIELD_I18N_SOURCES}
+    ${PLAYFIELD_RESOURCES}
   )
 endif()
 
 # Link NoctLang and Strato
-target_link_libraries(picopico PRIVATE
+target_link_libraries(playfield PRIVATE
   noctlang
   strato
 )
 
 # -Iinclude
-target_include_directories(picopico PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(playfield PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -DUSE_JIT
-if(PICO_ENABLE_JIT)
-  target_compile_definitions(picopico PRIVATE USE_JIT)
+if(PLAYFIELD_ENABLE_JIT)
+  target_compile_definitions(playfield PRIVATE USE_JIT)
 endif()
 
 # -DUSE_TRANSLATION
-if(PICO_ENABLE_I18N)
-  target_compile_definitions(picopico PRIVATE USE_TRANSLATION)
+if(PLAYFIELD_ENABLE_I18N)
+  target_compile_definitions(playfield PRIVATE USE_TRANSLATION)
 endif()
 
 # -DUSE_SHARED
-if(PICO_ENABLE_SHARED)
-  target_compile_definitions(picopico PRIVATE USE_SHARED)
+if(PLAYFIELD_ENABLE_SHARED)
+  target_compile_definitions(playfield PRIVATE USE_SHARED)
 endif()
 
 # -DUSE_UNITY
-if(PICO_TARGET_UNITY)
-  target_compile_definitions(picopico PRIVATE USE_UNITY)
+if(PLAYFIELD_TARGET_UNITY)
+  target_compile_definitions(playfield PRIVATE USE_UNITY)
 endif()
 
 # Windows quirks
-if(PICO_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS)
   if(MSVC)
-    target_compile_options(picopico PRIVATE /utf-8)
-    target_link_options(picopico PRIVATE /SUBSYSTEM:WINDOWS)
+    target_compile_options(playfield PRIVATE /utf-8)
+    target_link_options(playfield PRIVATE /SUBSYSTEM:WINDOWS)
   else()
-    target_compile_options(picopico PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
-    target_link_options(picopico PRIVATE -mwindows -static)
+    target_compile_options(playfield PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    target_link_options(playfield PRIVATE -mwindows -static)
   endif()
 endif()
 
 # Emscripten
-if(PICO_TARGET_WASM)
+if(PLAYFIELD_TARGET_WASM)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(picopico PROPERTIES OUTPUT_NAME index)
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
 
   # -DUSE_EMSCRIPTEN
-  target_compile_definitions(picopico PRIVATE USE_EMSCRIPTEN)
+  target_compile_definitions(playfield PRIVATE USE_EMSCRIPTEN)
 
   # Link options.
-  target_link_options(picopico PRIVATE
+  target_link_options(playfield PRIVATE
     -o index.html
     -sSINGLE_FILE=1
     -sTOTAL_MEMORY=536870912
@@ -388,48 +388,48 @@ endif()
 # Packager Target
 #
 
-if(PICO_ENABLE_PACK)
+if(PLAYFIELD_ENABLE_PACK)
   add_executable(
-    picopico-pack
+    playfield-pack
     src/pack.c
   )
-  target_link_libraries(picopico-pack stratopack)
+  target_link_libraries(playfield-pack stratopack)
 endif()
 
 #
 # Web Server target
 #
 
-if(PICO_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS)
   add_executable(
-    picopico-web
+    playfield-web
     src/webserver.c
   )
-  target_link_libraries(picopico-web wsock32 ws2_32)
+  target_link_libraries(playfield-web wsock32 ws2_32)
 endif()
 
 #
 # macOS Bundle
 #
 
-if(PICO_TARGET_MACOS AND PICO_ENABLE_BUNDLE)
+if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BUNDLE)
   # Use capital name.
-  set_target_properties(picopico PROPERTIES OUTPUT_NAME "PicoPico")
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME "Playfield")
 
   # Make an app bundle.
-  set_target_properties(picopico PROPERTIES
+  set_target_properties(playfield PROPERTIES
     MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.picopicoscript"
-    MACOSX_BUNDLE_BUNDLE_NAME "PicoPico"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.playfieldvm"
+    MACOSX_BUNDLE_BUNDLE_NAME "Playfield"
   )
 
   # Set an icon.
   set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/icon512.png")
-  target_sources(picopico PRIVATE ${APP_ICON})
+  target_sources(playfield PRIVATE ${APP_ICON})
   set_source_files_properties(${APP_ICON} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  set_target_properties(picopico PROPERTIES
+  set_target_properties(playfield PROPERTIES
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
@@ -438,5 +438,5 @@ if(PICO_TARGET_MACOS AND PICO_ENABLE_BUNDLE)
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  target_sources(picopico PRIVATE ${APP_GAME_DATA})
+  target_sources(playfield PRIVATE ${APP_GAME_DATA})
 endif()

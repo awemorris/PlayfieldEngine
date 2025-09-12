@@ -36,9 +36,9 @@ jobs:
         with:
           name: windows-binaries
           path: |
-            out/**/picopico.exe
-            out/**/picopico-pack.exe
-            out/**/picopico-web.exe
+            out/**/playfield.exe
+            out/**/playfield-pack.exe
+            out/**/playfield-web.exe
           if-no-files-found: error
           retention-days: 7
 
@@ -84,9 +84,9 @@ jobs:
 
       - name: Build for Windows.
         run: |
-          cp windows/build/windows-msvc-x64-release/Release/picopico.exe dist/
-          cp windows/build/windows-msvc-x64-release/Release/picopico-pack.exe dist/misc/windows/
-          cp windows/build/windows-msvc-x64-release/Release/picopico-web.exe dist/misc/wasm/
+          cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
+          cp windows/build/windows-msvc-x64-release/Release/playfield-pack.exe dist/misc/windows/
+          cp windows/build/windows-msvc-x64-release/Release/playfield-web.exe dist/misc/wasm/
           cp samples/shoot/main.noct dist/
 
       - name: Setup for macOS
@@ -107,17 +107,17 @@ jobs:
           echo "BBBBBBBBBBBB"
           cmake --build --preset macos
           cd build-macos
-          codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" PicoPico.app
-          ditto -c -k --sequesterRsrc --keepParent PicoPico.app PicoPico.zip
-          xcrun notarytool submit PicoPico.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_SECRET" --wait
-          xcrun stapler staple PicoPico.app
+          codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" Playfield.app
+          ditto -c -k --sequesterRsrc --keepParent Playfield.app Playfield.zip
+          xcrun notarytool submit Playfield.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_SECRET" --wait
+          xcrun stapler staple Playfield.app
           mkdir tmp
-          cp -Rv PicoPico.app tmp/PicoPico.app
-          hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname PicoPico PicoPico.dmg
-          codesign --sign "Developer ID Application" PicoPico.dmg
+          cp -Rv Playfield.app tmp/Playfield.app
+          hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname Playfield Playfield.dmg
+          codesign --sign "Developer ID Application" Playfield.dmg
           cd ..
-          cp build-macos/PicoPico.dmg dist/misc/macos/
-          cp build-macos/picopico-pack dist/misc/macos/
+          cp build-macos/Playfield.dmg dist/misc/macos/
+          cp build-macos/playfield-pack dist/misc/macos/
 
       - name: Setup for Wasm
         uses: mymindstorm/setup-emsdk@v14
@@ -138,7 +138,7 @@ jobs:
           cmake --build --preset ios-device
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
-          xcodebuild -create-xcframework -library build-ios-device/libpicopico.a -headers include -library build-ios-simulator/libpicopico.a -headers include -output PicoPico.xcframework
+          xcodebuild -create-xcframework -library build-ios-device/libplayfield.a -headers include -library build-ios-simulator/libplayfield.a -headers include -output Playfield.xcframework
           mkdir dist/misc/ios/ios.xcodeproj
           cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
           mkdir dist/misc/ios/ios
@@ -147,7 +147,7 @@ jobs:
           cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
           cp resources/projects/ios/ios/ios.entitlements dist/misc/ios/ios/
           cp resources/projects/ios/ios/LaunchScreen.storyboard dist/misc/ios/ios/
-          cp -R PicoPico.xcframework dist/misc/ios/ios/
+          cp -R Playfield.xcframework dist/misc/ios/ios/
           mkdir dist/misc/ios/Resources/
           cp resources/assets.pak dist/misc/ios/Resources/
           mkdir dist/misc/ios/Resources/video
@@ -177,16 +177,16 @@ jobs:
           cp -R resources/projects/android/build.bat dist/misc/android/
           mkdir -p dist/misc/android/app/src/main/assets
           cp samples/shoot/main.noct dist/misc/android/app/src/main/assets/
-          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid
-          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/picopico/engineandroid/
+          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfieldvm/engineandroid
+          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/playfieldvm/engineandroid/
           mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
-          cp build-android-arm64/libpicopico.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
+          cp build-android-arm64/libplayfield.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
           mkdir -p dist/misc/android/app/src/main/jniLibs/armeabi-v7a
-          cp build-android-armv7/libpicopico.so dist/misc/android/app/src/main/jniLibs/armeabi-v7a/
+          cp build-android-armv7/libplayfield.so dist/misc/android/app/src/main/jniLibs/armeabi-v7a/
           mkdir -p dist/misc/android/app/src/main/jniLibs/x86_64
-          cp build-android-x86_64/libpicopico.so dist/misc/android/app/src/main/jniLibs/x86_64/
+          cp build-android-x86_64/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86_64/
           mkdir -p dist/misc/android/app/src/main/jniLibs/x86
-          cp build-android-x86/libpicopico.so dist/misc/android/app/src/main/jniLibs/x86/
+          cp build-android-x86/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86/
 
       - name: Setup for Unity
         run: |
@@ -210,7 +210,7 @@ jobs:
           mkdir dist/misc/unity/Assets/StreamingAssets
           cp samples/shoot/main.noct dist/misc/unity/Assets/StreamingAssets/
           mkdir dist/misc/unity/Assets/Resources
-          cp external/StratoHAL/src/PicoPicoScript.cs dist/misc/unity/Assets/
+          cp external/StratoHAL/src/PlayfieldScript.cs dist/misc/unity/Assets/
           cp external/StratoHAL/src/NormalShader.shader dist/misc/unity/Assets/Resources/
           cp external/StratoHAL/src/AddShader.shader dist/misc/unity/Assets/Resources/
           cp external/StratoHAL/src/DimShader.shader dist/misc/unity/Assets/Resources/
@@ -223,10 +223,10 @@ jobs:
           mkdir dist/misc/unity/Assets/Plugins/PS5
           mkdir dist/misc/unity/Assets/Plugins/GameCoreXboxSeries
           mkdir dist/misc/unity/Assets/Plugins/Common
-          cp build-unity-win64/libpicopico.dll dist/misc/unity/Assets/Plugins/x86_64/
-          cp build-unity-switch/libpicopico.a dist/misc/unity/Assets/Plugins/Switch/
-          cp build-unity-ps5/libpicopico.a dist/misc/unity/Assets/Plugins/PS5/
-          cp build-unity-xbox/picopico.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp build-unity-win64/libplayfield.dll dist/misc/unity/Assets/Plugins/x86_64/
+          cp build-unity-switch/libplayfield.a dist/misc/unity/Assets/Plugins/Switch/
+          cp build-unity-ps5/libplayfield.a dist/misc/unity/Assets/Plugins/PS5/
+          cp build-unity-xbox/playfield.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
           cp docs/readme/unity.md dist/misc/unity/
 
       - name: Make documents
@@ -252,15 +252,15 @@ jobs:
 
       - name: Make documents
         run: |
-          mv dist "PicoPicoScript-$DATE-$SHORT_SHA"
-          zip -r -9 "PicoPicoScript-$DATE-$SHORT_SHA.zip" "PicoPicoScript-$DATE-$SHORT_SHA"
+          mv dist "PlayfieldVM-$DATE-$SHORT_SHA"
+          zip -r -9 "PlayfieldVM-$DATE-$SHORT_SHA.zip" "PlayfieldVM-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          name: PicoPicoScript-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PicoPicoScript-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+          name: PlayfieldVM-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          files: PlayfieldVM-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
           body: |
             This is an automated relase.
         env:
