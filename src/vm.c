@@ -35,7 +35,7 @@ static NoctEnv *env;
 
 /* Forward Declaration */
 static bool load_startup_file(void);
-static bool call_setup(char **title, int *width, int *height);
+static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
 #if 0
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
@@ -47,7 +47,7 @@ static bool install_api(NoctEnv *env);
 /*
  * Create a VM, then call setup().
  */
-bool create_vm(char **title, int *width, int *height)
+bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 {
 	/* Create a language runtime. */
 	if (!noct_create_vm(&vm, &env))
@@ -58,7 +58,7 @@ bool create_vm(char **title, int *width, int *height)
 		return false;
 
 	/* Call "setup()" and get a title and window size. */
-	if (!call_setup(title, width, height)) {
+	if (!call_setup(title, width, height, fullscreen)) {
 		const char *file;
 		int line;
 		const char *msg;
@@ -112,12 +112,13 @@ static bool load_startup_file(void)
 }
 
 /* Call "setup()" function to determin a title, width, and height. */
-static bool call_setup(char **title, int *width, int *height)
+static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
 {
 	NoctValue ret;
 	NoctValue title_val;
 	NoctValue width_val;
 	NoctValue height_val;
+	NoctValue fullscreen_val;
 	const char *title_s;
 	bool succeeded;
 
@@ -150,6 +151,20 @@ static bool call_setup(char **title, int *width, int *height)
 				break;
 			if (!noct_get_int(env, &height_val, height))
 				break;
+		}
+
+		/* Get the "fullscreen" element from the dictionary. */
+		if (fullscreen != NULL) {
+			bool fullscreen_exist;
+			if (!noct_check_dict_key(env, &ret, "fullscreen", &fullscreen_exist))
+				return false;
+			if (fullscreen_exist) {
+				if (!noct_get_dict_elem(env, &ret, "fullscreen", &fullscreen_val))
+					return false;
+				*fullscreen = fullscreen_val.val.i;
+			} else {
+				*fullscreen = false;
+			}
 		}
 
 		/* Do a fast GC. */

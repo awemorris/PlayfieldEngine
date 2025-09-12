@@ -9,7 +9,7 @@
 
 #include "stratohal/platform.h"
 
-bool create_vm(char **title, int *width, int *height);
+bool create_vm(char **title, int *width, int *height, bool *fullscreen);
 void destroy_vm(void);
 bool call_vm_function(const char *func_name);
 bool call_vm_tag_function(bool *tag_end);

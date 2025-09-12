@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 static bool is_running;
+static bool is_fulscreen_start;
 static uint64_t lap_origin;
 
 /*
@@ -24,6 +25,7 @@ bool on_event_boot(char **title, int *width, int *height)
 	char *title_ret;
 	int width_ret;
 	int height_ret;
+	bool fullscreen_ret;
 	
 #ifdef USE_TRANSLATION
 	/* Initialize the locale. */
@@ -35,7 +37,7 @@ bool on_event_boot(char **title, int *width, int *height)
 		return false;
 
 	/* Create a VM, then call setup(). */
-	if (!create_vm(&title_ret, &width_ret, &height_ret))
+	if (!create_vm(&title_ret, &width_ret, &height_ret, &fullscreen_ret))
 		return false;
 
 	/* Save the window size. */
@@ -54,6 +56,7 @@ bool on_event_boot(char **title, int *width, int *height)
 		*width = width_ret;
 	if (height != NULL)
 		*height = height_ret;
+	is_fulscreen_start = fullscreen_ret;
 
 	return true;
 }
@@ -63,6 +66,9 @@ bool on_event_boot(char **title, int *width, int *height)
  */
 bool on_event_start(void)
 {
+	if (is_fulscreen_start)
+		enter_full_screen_mode();
+
 	/* Initialize the API variables. */
 	set_vm_int("mousePosX", 0);
 	set_vm_int("mousePosY", 0);

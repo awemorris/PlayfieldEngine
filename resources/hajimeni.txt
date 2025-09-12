@@ -22,7 +22,7 @@
 ■ ファイル構成
 
   playfield.exe          ... ゲームエンジン本体の実行ファイル
-  main.noct              ... 動作確認用スクリプト
+  main.pf                ... 動作確認用スクリプト
   hajimeni.txt           ... 本書
   readme.txt             ... 英語版README
   documents-japanese/    ... 日本語ドキュメント
@@ -49,7 +49,7 @@
 
 ■ 使い方 (Windows)
 
-playfield.exe をダブルクリックして実行してください。同じフォルダにある main.noct
+playfield.exe をダブルクリックして実行してください。同じフォルダにある main.pf
 スクリプトが起動します。
 
 スクリプト、画像、音声、フォントなどを１つの assets.pak パッケージファイルにま
@@ -60,7 +60,7 @@ playfield.exe をダブルクリックして実行してください。同じフ
 ■ 使い方 (macOS)
 
 　playfield.dmg を開き、中身の Playfield アプリを適当な場所にコピーします。
-コピーしたアプリを main.noct や assets.pak のあるフォルダに入れて、アプリを起動
+コピーしたアプリを main.pf や assets.pak のあるフォルダに入れて、アプリを起動
 することで、ゲームを実行できます。
 
 ■ 使い方 (Wasm)

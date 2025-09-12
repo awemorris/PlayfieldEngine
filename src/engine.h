@@ -14,6 +14,6 @@
 #include <playfield/playfield.h>
 
 /* The file name of the startup file. */
-#define STARTUP_FILE	"main.noct"
+#define STARTUP_FILE	"main.pf"
 
 #endif
