@@ -1,12 +1,12 @@
-site_name: PicoPicoScript Docs
-repo_url: https://github.com/awemorris/PicoPicoScript
+site_name: PlayfieldVM Docs
+repo_url: https://github.com/awemorris/PlayfieldVM
 use_directory_urls: false
 
 nav:
   - Home: index.md
   - Getting Started: gettingstarted.md
-  - PicoPicoScript Syntax: syntax.md
-  - PicoPicoScript API: api.md
+  - PlayfieldVM Script Syntax: syntax.md
+  - PlayfieldVM Engine API: api.md
   - How To Build: build.md
   - Porting: porting.md
   - Design: design.md

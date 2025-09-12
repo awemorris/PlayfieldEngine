@@ -1,9 +1,9 @@
-PicoPicoScript Design Overview
-===============================
+PlayfieldVM Design Overview
+===========================
 
 ## Porting Layer
 
-Did you know that `PicoPicoScript` runs seamlessly on Windows, macOS, Linux, iPhone,
+Did you know that `PlayfieldVM` runs seamlessly on Windows, macOS, Linux, iPhone,
 iPad, Android, Web browsers, — and even game consoles?
 
 The `extern/StratoHAL` directory contains its platform abstraction layer,
@@ -81,7 +81,7 @@ Only enabled on x86 and x86_64 Windows target.
 
 ## Main Layer
 
-The main layer consists of `src/*.c` files, which defines API for `PicoPicoScript`.
+The main layer consists of `src/*.c` files, which defines API for `PlayfieldVM`.
 There are C APIs defined in `src/api.c`, and there are Noct wrappers defined in `src/vm.c`.
 
 ### Tag File

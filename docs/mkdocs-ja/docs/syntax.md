@@ -1,7 +1,7 @@
-PicoPicoScript の文法
-=====================
+PlayfieldVM スクリプトの文法
+============================
 
-`PicoPicoScript` はスクリプト言語として `Noct` を使用します。
+`PlayfieldVM` はスクリプト言語として `Noct` を使用します。
 
 ## 代入
 

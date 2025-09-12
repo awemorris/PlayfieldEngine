@@ -1,7 +1,7 @@
-PicoPicoScript Syntax
-======================
+PlayfieldVM Script Syntax
+=========================
 
-`PicoPicoScript` uses `NoctLang` as a scripting language.
+`PlayfieldVM` uses `NoctLang` as a scripting language.
 
 ## Assignments
 

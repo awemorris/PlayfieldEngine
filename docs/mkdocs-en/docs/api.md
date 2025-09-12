@@ -1,5 +1,5 @@
-PicoPicoScript API
-===================
+PlayfieldVM Engine API
+======================
 
 Every API function takes one parameter. The parameter must be a dictionary and
 arguments must be stored as key-and-value pairs.

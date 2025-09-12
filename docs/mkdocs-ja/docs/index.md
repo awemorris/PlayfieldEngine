@@ -1,15 +1,14 @@
-PicoPicoScript
-==============
+PlayfieldVM
+===========
 
-ピコピコスクリプトへようこそ！
-ピコスクはあなたの夢を燃料に動くゲームエンジンです。
+`PlayfieldVM` へようこそ！夢を燃料に動くゲームエンジンです。
 
 ---
 
 * 初めての方へ
     * [スタートガイド](gettingstarted.md)
-    * [PicoPicoScript の文法](syntax.md)
-    * [PicoPicoScript のAPI](api.md)
+    * [PlayfieldVM Script の文法](syntax.md)
+    * [PlayfieldVM エンジンの API](api.md)
 
 * プロジェクト貢献者へ
     * [ビルド方法](build.md)

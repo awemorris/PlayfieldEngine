@@ -1,9 +1,9 @@
-PicoPicoScript 設計概要
-=======================
+PlayfieldVM 設計概要
+====================
 
 ## 移植レイヤ
 
-`PicoPicoScript` が Windows, macOS, Linux, iOS, Android, そして家庭用ゲーム機という、多様な環境で動作することをご存知でしょうか？
+`PlayfieldVM` が Windows, macOS, Linux, iOS, Android, そして家庭用ゲーム機という、多様な環境で動作することをご存知でしょうか？
 
 `extern/StratoHAL` ディレクトリにはプラットフォーム抽象化レイヤが含まれす。
 これはプラットフォームごとに違いをきれいに吸収するものです。
@@ -78,7 +78,7 @@ PicoPicoScript 設計概要
 
 ## メインレイヤー
 
-`PicoPicoScript` の API を定義するメインレイヤは `src/*.c` にあります。
+`PlayfieldVM` の API を定義するメインレイヤは `src/*.c` にあります。
 `src/api.c` にて C API を実装した上で、それを `src/vm.c` にて Noct でラッピングしてあります。
 
 ### タグファイル

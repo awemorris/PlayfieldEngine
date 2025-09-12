@@ -1,14 +1,14 @@
-PicoPicoScript
-==============
+PlayfieldVM
+===========
 
-Welcome to `PicoPicoScript`, a game engine fueled by your dreams.
+Welcome to `PlayfieldVM`, a game engine fueled by your dreams.
 
 ---
 
 * For Beginners
     * [Getting Started](gettingstarted.md)
-    * [PicoPicoScript Syntax](syntax.md)
-    * [PicoPicoScript API](api.md)
+    * [PlayfieldVM Script Syntax](syntax.md)
+    * [PlayfieldVM Engine API](api.md)
 
 * For Contributors
     * [How To Build](build.md)
