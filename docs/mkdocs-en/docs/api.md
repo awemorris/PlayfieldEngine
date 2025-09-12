@@ -1,4 +1,4 @@
-PlayfieldVM Engine API
+Playfield VM Engine API
 ======================
 
 Every API function takes one parameter. The parameter must be a dictionary and

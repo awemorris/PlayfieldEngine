@@ -1,16 +1,16 @@
-PlayfieldVM / PicoPicoScript
+Playfield VM / PicoPicoScript
 ============================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/release/awemorris/PlayfieldVM.svg)](https://github.com/awemorris/PlayfieldVM/releases)
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldVM/total.svg)](https://github.com/awemorris/PlayfieldVM/releases)
 
-`PlayfieldVM` is a 2D game engine that runs everywhere.
+`Playfield VM` is a 2D game engine that runs everywhere.
 With scripts written in the [Noct](https://github.com/awemorris/NoctLang) language,
 it can render graphics and play sounds seamlessly across platforms.
 For education and beginners, the engine is also nicknamed **PicoPicoScript**.
 
-Built completely from scratch, PlayfieldVM features:
+Built completely from scratch, Playfield VM features:
 
 - **Comfortable Scripting:**
     - Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
@@ -23,25 +23,25 @@ Built completely from scratch, PlayfieldVM features:
 - **Minimal Runtime:**
     - Runtime fits within just ~1.4MB on Windows.
 
-## Why PlayfieldVM?
+## Why Playfield VM?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-PlayfieldVM was born from this single question.
+Playfield VM was born from this single question.
 
 Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.  PlayfieldVM was created with the belief
+live, or what tools you have.  Playfield VM was created with the belief
 that every creator deserves space to explore, no matter their
 surroundings.
 
 It runs smoothly even on older or low-spec machines — if you have a
 computer, there's a place for you to create.  It's a helpful companion
 for creators everywhere — especially in places with fewer resources.
-If you have something to make, PlayfieldVM will be here to walk with
+If you have something to make, Playfield VM will be here to walk with
 you.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, PlayfieldVM offers gentle
+UN-issued Chromebook in a temporary shelter, Playfield VM offers gentle
 tools to help bring your ideas to life — in a way that feels simple,
 thoughtful, and your own.
 
@@ -183,7 +183,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
     - Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
     - Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
     - macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
-    - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
+	      - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
     - Unity Plugin build is not included in this Quick Start. Use the CMake presets named `unity-*`.
     - A full build takes 10 seconds using 10 cores.
 
@@ -213,7 +213,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 +-----------------------------------------------------+
                           ||
 +-----------------------------------------------------+
-|                   PlayfieldVM Core                  |
+|                  Playfield VM Core                  |
 +-----------------------------------------------------+
                 ||                          ||
 +--------------------------------+  +-----------------+
@@ -254,7 +254,7 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ### Console Unity Plugin Notice
 
-PlayfieldVM provides Unity Plugin binaries for platforms including
+Playfield VM provides Unity Plugin binaries for platforms including
 Windows 64-bit and game consoles.
 
 - These binaries are provided for demonstration purposes only.
@@ -298,7 +298,7 @@ even in tightly controlled environments.
 
 ## Tests
 
-PlayfieldVM is tested on the following environments in the development.
+Playfield VM is tested on the following environments in the development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -374,10 +374,10 @@ Samples are added timely.
 To generate game templates with ChatGPT, please let it load the
 following references:
 
-- [PlayfieldVM Script Syntax](docs/mkdocs-en/docs/syntax.html)
-- [PlayfieldVM Engine API](docs/mkdocs-en/docs/api.html)
+- [Playfield VM Script Syntax](docs/mkdocs-en/docs/syntax.html)
+- [Playfield VM Engine API](docs/mkdocs-en/docs/api.html)
 
-ChatGPT can then create runnable PlayfieldVM games directly.
+ChatGPT can then create runnable Playfield VM games directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -386,40 +386,40 @@ ChatGPT can then create runnable PlayfieldVM games directly.
 
 ## NoctVM Ecosystem
 
-PlayfieldVM is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+Playfield VM is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **PlayfieldVM** — go-anywhere 2D game engine (this project)
+- **Playfield VM** — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-PlayfieldVM is one of the runtimes that embeds and extends the NoctLang core.
+Playfield VM is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
 ```
-PlayfieldVM
+Playfield VM
 Copyright (C) 2025, Awe Morris. All rights reserved.
 ```
 
-PlayfieldVM is available as open-source software under the **MIT License**.
+Playfield VM is available as open-source software under the **MIT License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
 ## Join Us
 
-PlayfieldVM is still in its early stages. We're building the game
+Playfield VM is still in its early stages. We're building the game
 engine with care, hoping it will inspire and empower creators around
 the world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what PlayfieldVM can become. You're
+Every small step helps shape what Playfield VM can become. You're
 welcome to join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

@@ -1,7 +1,7 @@
-PlayfieldVM
-===========
+Playfield VM
+============
 
-`PlayfieldVM` へようこそ！夢を燃料に動くゲームエンジンです。
+`Playfield VM` へようこそ！夢を燃料に動くゲームエンジンです。
 
 ---
 

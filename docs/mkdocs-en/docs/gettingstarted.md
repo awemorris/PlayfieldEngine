@@ -1,5 +1,5 @@
-PlayfieldVM Getting Started
-===========================
+Playfield VM Getting Started
+============================
 
 Follow the steps below to run your first game.
 

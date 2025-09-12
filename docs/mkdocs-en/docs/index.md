@@ -1,7 +1,7 @@
-PlayfieldVM
-===========
+Playfield VM
+============
 
-Welcome to `PlayfieldVM`, a game engine fueled by your dreams.
+Welcome to `Playfield VM`, a game engine fueled by your dreams.
 
 ---
 

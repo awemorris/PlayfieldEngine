@@ -1,11 +1,11 @@
-PlayfieldVM スタートガイド
-==========================
+Playfield VM スタートガイド
+===========================
 
 入門として最初のゲームを動かしてみる手順は、以下の通りです。
 
 ## 実行ファイルのダウンロード
 
-最新の `PlayfieldVM` 実行ファイルを [リリースページ](https://github.com/awemorris/PlayfieldVM/releases) からダウンロードしてください。
+最新の `Playfield VM` 実行ファイルを [リリースページ](https://github.com/awemorris/PlayfieldVM/releases) からダウンロードしてください。
 
 ## ゲームを実行する
 

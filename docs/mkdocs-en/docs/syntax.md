@@ -1,7 +1,7 @@
-PlayfieldVM Script Syntax
-=========================
+Playfield VM Script Syntax
+==========================
 
-`PlayfieldVM` uses `NoctLang` as a scripting language.
+`Playfield VM` uses `NoctLang` as a scripting language.
 
 ## Assignments
 
