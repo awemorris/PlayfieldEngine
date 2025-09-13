@@ -375,8 +375,8 @@ Samples are added timely.
 To generate game templates with ChatGPT, please let it load the
 following references:
 
-- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.html)
-- [Playfield Script API](docs/mkdocs-en/docs/api.html)
+- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Playfield Script API](docs/mkdocs-en/docs/api.md)
 
 ChatGPT can then create runnable Playfield Engine games directly.
 
