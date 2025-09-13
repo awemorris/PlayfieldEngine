@@ -27,7 +27,7 @@
   readme.txt             ... 英語版README
   documents-japanese/    ... 日本語ドキュメント
   documents-english/     ... 英語ドキュメント
-  sapmles/               ... サンプルゲーム
+  samples/               ... サンプルゲーム
   misc/
     windows/
       playfield-pack.exe ... assets.pak を作成するパッケージャ
@@ -112,7 +112,7 @@ playfield-web.exe を実行すれば、ブラウザでゲームが表示され�
 ■ 著作権
 
 Playfield Engine
-Copyright (C) 2025, Awe Morris. All rights reserved.
+© 2025 Awe Morris
 
 ■ その他
 
