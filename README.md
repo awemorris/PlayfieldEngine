@@ -1,3 +1,4 @@
+
 Playfield Engine
 ================
 
@@ -6,21 +7,22 @@ Playfield Engine
 [![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldEngine/total.svg)](https://github.com/awemorris/PlayfieldEngine/releases)
 
 `Playfield Engine` is a 2D game scripting runtime that works everywhere.
-With scripts written in the [Noct](https://github.com/awemorris/NoctLang) language,
+With scripts written in `Playfield Script`,
 it can render graphics and play sounds seamlessly across platforms.
 
 Built completely from scratch, Playfield Engine features:
 
 - **Comfortable Scripting:**
-    - Powered by [Noct](https://github.com/awemorris/NoctLang), a C/JS-like scripting language designed in-house.
+    - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
     - Native performance with a built-in JIT compiler.
     - Write a script and run it instantly — **Jot and Run!**
 - **Portable Rendering & Audio:**
-    - Driven by StratoHAL, a portable game library also designed in-house.
-    - Runs almost everywhere: Windows, macOS, Linux, WebAssembly, iOS, Android, and even consoles.
-    - Ship for platforms you don't physically own — **Go Far, Stay Close!**
+    - Powered by StratoHAL, a portable game library also designed in-house.
+    - Runs virtually everywhere: Windows, macOS, Linux, WebAssembly, iOS, Android, and even consoles.
+    - Deploy to platforms you don't even own — **Go Far, Stay Close!**
 - **Minimal Runtime:**
-    - Runtime fits within just ~1.4MB on Windows.
+    - The runtime is only ~1.4 MB on Windows.
+    - Perfect for mobile apps — **Go Magically Small, Get Massively Loved!**
 
 ## Why Playfield Engine?
 
@@ -401,7 +403,7 @@ Playfield Engine is one of the runtimes that embeds and extends the NoctLang cor
 
 ```
 Playfield Engine
-Copyright (C) 2025, Awe Morris. All rights reserved.
+© 2025 Awe Morris
 ```
 
 Playfield Engine is available as open-source software under the **MIT License**.
