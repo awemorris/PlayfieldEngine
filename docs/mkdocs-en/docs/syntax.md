@@ -26,6 +26,18 @@ func main() {
 }
 ```
 
+## Global Variables
+
+Global variables can be defined in functions, and cannot be defined
+outside functions.
+
+```
+func main() {
+    globalVariable = 123;
+    print(globalVariable);
+}
+```
+
 ## Local Variables
 
 Using the `var` keyword allows you to declare a variable as
