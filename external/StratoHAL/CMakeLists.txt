@@ -6,21 +6,22 @@ project(StratoHAL LANGUAGES C CXX)
 #
 
 # Target
-option(STRATO_TARGET_WINDOWS       "Build for Windows"       OFF)
-option(STRATO_TARGET_MACOS         "Build for macOS"         OFF)
-option(STRATO_TARGET_LINUX         "Build for Linux"         OFF)
-option(STRATO_TARGET_IOS           "Build for iOS"           OFF)
-option(STRATO_TARGET_ANDROID       "Build for Android"       OFF)
-option(STRATO_TARGET_WASM          "Build for Emscripten"    OFF)
-option(STRATO_TARGET_UNITY         "Build for Unity"         OFF)
-option(STRATO_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
-option(STRATO_TARGET_NETBSD        "Build for NetBSD"        OFF)
-option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"       OFF)
+option(STRATO_TARGET_WINDOWS       "Build for Windows"                  OFF)
+option(STRATO_TARGET_MACOS         "Build for macOS"                    OFF)
+option(STRATO_TARGET_LINUX         "Build for Linux"                    OFF)
+option(STRATO_TARGET_IOS           "Build for iOS"                      OFF)
+option(STRATO_TARGET_ANDROID       "Build for Android"                  OFF)
+option(STRATO_TARGET_WASM          "Build for Emscripten"               OFF)
+option(STRATO_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"  OFF)
+option(STRATO_TARGET_UNITY         "Build for Unity"                    OFF)
+option(STRATO_TARGET_FREEBSD       "Build for FreeBSD"                  OFF)
+option(STRATO_TARGET_NETBSD        "Build for NetBSD"                   OFF)
+option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"                  OFF)
 
 # Options
-option(STRATO_ENABLE_I18N          "Enable translation"      OFF)
-option(STRATO_ENABLE_STATIC        "Build a static library"  OFF)
-option(STRATO_ENABLE_SHARED        "Build a dynamic library" OFF)
+option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
+option(STRATO_ENABLE_STATIC        "Build a static library"             OFF)
+option(STRATO_ENABLE_SHARED        "Build a dynamic library"            OFF)
 
 #
 # Automatic Target Detection
@@ -33,6 +34,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_IOS
    OR STRATO_TARGET_ANDROID
    OR STRATO_TARGET_WASM
+   OR STRATO_TARGET_WASM_LOCAL
    OR STRATO_TARGET_UNITY
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
@@ -209,6 +211,19 @@ if(STRATO_TARGET_WASM)
     src/wave.c
     src/stdfile.c
     src/emmain.c
+    src/alsound.c
+    src/glrender.c
+  )
+endif()
+
+# For Emscripten (local file).
+if(STRATO_TARGET_WASM_LOCAL)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/emfile.c
+    src/emlocalmain.c
     src/alsound.c
     src/glrender.c
   )

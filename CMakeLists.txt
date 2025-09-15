@@ -6,14 +6,15 @@ project(playfield LANGUAGES C CXX)
 #
 
 # Targets
-option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"       OFF)
-option(PLAYFIELD_TARGET_MACOS         "Build for macOS"         OFF)
-option(PLAYFIELD_TARGET_LINUX         "Build for Linux"         OFF)
-Option(PLAYFIELD_TARGET_IOS           "Build for iOS"           OFF)
-option(PLAYFIELD_TARGET_ANDROID       "Build for Android"       OFF)
-option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"    OFF)
-option(PLAYFIELD_TARGET_UNITY         "Build for Unity"         OFF)
-option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"       OFF)
+option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"                    OFF)
+option(PLAYFIELD_TARGET_MACOS         "Build for macOS"                      OFF)
+option(PLAYFIELD_TARGET_LINUX         "Build for Linux"                      OFF)
+Option(PLAYFIELD_TARGET_IOS           "Build for iOS"                        OFF)
+option(PLAYFIELD_TARGET_ANDROID       "Build for Android"                    OFF)
+option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                 OFF)
+option(PLAYFIELD_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"    OFF)
+option(PLAYFIELD_TARGET_UNITY         "Build for Unity"                      OFF)
+option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"                    OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -35,6 +36,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
    OR PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_WASM_LOCAL
    OR PLAYFIELD_TARGET_UNITY
    OR PLAYFIELD_TARGET_FREEBSD
 )
@@ -101,7 +103,8 @@ else()
 endif()
 
 # Emscripten
-if(PLAYFIELD_TARGET_WASM)
+if(   PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_WASM_LOCAL)
   set(NOCTLANG_TARGET_WASM ON)
 endif()
 
@@ -143,6 +146,8 @@ elseif(PLAYFIELD_TARGET_ANDROID)
   set(STRATO_TARGET_ANDROID ON)
 elseif(PLAYFIELD_TARGET_WASM)
   set(STRATO_TARGET_WASM ON)
+elseif(PLAYFIELD_TARGET_WASM_LOCAL)
+  set(STRATO_TARGET_WASM_LOCAL ON)
 elseif(PLAYFIELD_TARGET_UNITY)
   set(STRATO_TARGET_UNITY ON)
 elseif(PLAYFIELD_TARGET_FREEBSD)
@@ -379,6 +384,33 @@ if(PLAYFIELD_TARGET_WASM)
     -lidbfs.js
     --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shell.html"
     --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/pre.js"
+    --use-preload-plugins
+    --profiling-funcs
+  )
+endif()
+
+# Emscripten
+if(PLAYFIELD_TARGET_WASM_LOCAL)
+  # Make the output name "index.html"
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
+
+  # -DUSE_EMSCRIPTEN
+  target_compile_definitions(playfield PRIVATE USE_EMSCRIPTEN)
+
+  # Link options.
+  target_link_options(playfield PRIVATE
+    -o index.html
+    -sSINGLE_FILE=1
+    -sTOTAL_MEMORY=536870912
+    -sNO_EXIT_RUNTIME=1
+    -sEXPORTED_FUNCTIONS=[_onLoadProject,_setVisible,_setHidden,_malloc]
+    -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString,writeArrayToMemory]
+    -s ASYNCIFY
+    -lopenal
+    -lidbfs.js
+    --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shelllocal.html"
+    --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/prelocal.js"
     --use-preload-plugins
     --profiling-funcs
   )

@@ -293,6 +293,17 @@
       }
     },
     {
+      "name":           "wasm-local",
+      "displayName":    "Wasm",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-wasm-local",
+      "toolchainFile":  "${sourceDir}/cmake/toolchains/wasm.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PLAYFIELD_TARGET_WASM_LOCAL": "ON"
+      }
+    },
+    {
       "name":           "unity-win64",
       "displayName":    "Unity Win64",
       "generator":      "Ninja",
@@ -424,6 +435,10 @@
     {
       "name": "wasm",
       "configurePreset": "wasm"
+    },
+    {
+      "name": "wasm-local",
+      "configurePreset": "wasm-local"
     },
     {
       "name": "unity-win64",
