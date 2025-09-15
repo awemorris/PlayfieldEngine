@@ -135,6 +135,8 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
     - Windows: Double click the `playfield.exe` file.
     - macOS: Double click the `Playfield.app` icon.
     - Linux: Run `./PlayfieldEngine-x86_64.AppImage` on the terminal.
+- For Chromebook users:
+    - Open [this page](https://noctvm.io/w/) on the browser, then open a game folder.
 
 ### 3. Explore more features
 
