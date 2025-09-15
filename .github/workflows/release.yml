@@ -298,7 +298,9 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip linux/PlayfieldEngine-x86_64.AppImage
+          files: |
+            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+            linux/PlayfieldEngine-x86_64.AppImage
           body: |
             This is an automated relase.
         env:
