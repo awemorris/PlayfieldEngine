@@ -75,7 +75,7 @@ jobs:
           retention-days: 7
 
   build-macos:
-    needs: [build-windows build-linux]
+    needs: [build-windows, build-linux]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
