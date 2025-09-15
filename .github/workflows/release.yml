@@ -76,6 +76,7 @@ jobs:
           Icon=playfield
           Categories=Game;Development;
           EOF
+          cp resources/icon.png AppDir/playfield.png
 
       - name: Create AppImage
         run: ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
