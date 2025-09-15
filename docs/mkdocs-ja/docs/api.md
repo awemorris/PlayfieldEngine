@@ -70,12 +70,29 @@ func frame() {
 
 これらは変数であり、関数ではありません。
 
-|変数                        |説明                                       |
-|----------------------------|-------------------------------------------|
-|Engine.mousePosX            |マウスX座標                                |
-|Engine.mousePosY            |マウスY座標                                |
-|Engine.isMouseLeftPressed   |左マウスボタン                             |
-|Engine.isMouseRightPressed  |右マウスボタン                             |
+|変数                            |説明                                       |
+|--------------------------------|-------------------------------------------|
+|Engine.mousePosX                |マウスX座標                                |
+|Engine.mousePosY                |マウスY座標                                |
+|Engine.isMouseLeftPressed       |左マウスボタン                             |
+|Engine.isMouseRightPressed      |右マウスボタン                             |
+|Engine.isKeyUpPressed           |上キー                                     |
+|Engine.isKeyDownPressed         |下キー                                     |
+|Engine.isKeyLeftPressed         |左キー                                     |
+|Engine.isKeyRightPressed        |右キー                                     |
+|Engine.isKeyReturnPressed       |リターンキー                               |
+|Engine.isControllerUpPressed    |ゲームパッド上キー                         |
+|Engine.isControllerDownPressed  |ゲームパッド下キー                         |
+|Engine.isControllerLeftPressed  |ゲームパッド左キー                         |
+|Engine.isControllerRightPressed |ゲームパッド右キー                         |
+|Engine.isController1Pressed     |ゲームパッドボタン1                        |
+|Engine.isController2Pressed     |ゲームパッドボタン2                        |
+|Engine.isController3Pressed     |ゲームパッドボタン3                        |
+|Engine.isController4Pressed     |ゲームパッドボタン4                        |
+|Engine.isController5Pressed     |ゲームパッドボタン5                        |
+|Engine.isController6Pressed     |ゲームパッドボタン6                        |
+|Engine.isController7Pressed     |ゲームパッドボタン7                        |
+|Engine.isController8Pressed     |ゲームパッドボタン8                        |
 
 ```
 func update() {

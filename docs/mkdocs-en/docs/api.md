@@ -70,12 +70,29 @@ func frame() {
 
 These are variables, not functions.
 
-|Variable                    |Description                                |
-|----------------------------|-------------------------------------------|
-|Engine.mousePosX            |Mouse position X.                          |
-|Engine.mousePosY            |Mouse position Y.                          |
-|Engine.isMouseLeftPressed   |Left mouse button state.                   |
-|Engine.isMouseRightPressed  |Right mouse button state.                  |
+|Variable                        |Description                                |
+|--------------------------------|-------------------------------------------|
+|Engine.mousePosX                |Mouse position X.                          |
+|Engine.mousePosY                |Mouse position Y.                          |
+|Engine.isMouseLeftPressed       |Left mouse button state.                   |
+|Engine.isMouseRightPressed      |Right mouse button state.                  |
+|Engine.isKeyUpPressed           |Up key state.                              |
+|Engine.isKeyDownPressed         |Down key state.                            |
+|Engine.isKeyLeftPressed         |Left key state.                            |
+|Engine.isKeyRightPressed        |Right key state.                           |
+|Engine.isKeyReturnPressed       |Return key state.                          |
+|Engine.isControllerUpPressed    |Game pad up arrow state.                   |
+|Engine.isControllerDownPressed  |Game pad down arrow state.                 |
+|Engine.isControllerLeftPressed  |Game pad left arrow state.                 |
+|Engine.isControllerRightPressed |Game pad right arrow state.                |
+|Engine.isController1Pressed     |Game pad button 1 state.                   |
+|Engine.isController2Pressed     |Game pad button 2 state.                   |
+|Engine.isController3Pressed     |Game pad button 3 state.                   |
+|Engine.isController4Pressed     |Game pad button 4 state.                   |
+|Engine.isController5Pressed     |Game pad button 5 state.                   |
+|Engine.isController6Pressed     |Game pad button 6 state.                   |
+|Engine.isController7Pressed     |Game pad button 7 state.                   |
+|Engine.isController8Pressed     |Game pad button 8 state.                   |
 
 ```
 func update() {
