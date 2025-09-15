@@ -131,6 +131,7 @@ jobs:
           mkdir dist/misc
           mkdir dist/misc/windows
           mkdir dist/misc/macos
+          mkdir dist/misc/linux
           mkdir dist/misc/wasm
           mkdir dist/misc/ios
           mkdir dist/misc/android
@@ -142,6 +143,10 @@ jobs:
           cp windows/build/windows-msvc-x64-release/Release/playfield-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x64-release/Release/playfield-web.exe dist/misc/wasm/
           cp samples/shoot/main.pf dist/
+
+      - name: Build for Linux.
+        run: |
+          cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
 
       - name: Setup for macOS
         uses: apple-actions/import-codesign-certs@v3
@@ -314,10 +319,9 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: |
-            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
-            linux/PlayfieldEngine-x86_64.AppImage
+          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
           body: |
-            This is an automated relase.
+            This automated release includes standalone engines for Windows, macOS, and Linux.
+            In addition, export kits for WebAssembly, iOS, Android, and Unity are included.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
