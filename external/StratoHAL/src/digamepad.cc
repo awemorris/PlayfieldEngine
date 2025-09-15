@@ -138,10 +138,7 @@ VOID DInputUpdate(VOID)
     DIJOYSTATE2 js;
 
     if (pGamepad == NULL)
-    {
-	log_info("No gamepad.");
         return;
-    }
 
     pGamepad->Acquire();
 
