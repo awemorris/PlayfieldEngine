@@ -18,7 +18,7 @@ Built completely from scratch, Playfield Engine features:
     - Write a script and run it instantly — **Jot and Run!**
 - **Portable Rendering & Audio:**
     - Powered by StratoHAL, a portable game library also designed in-house.
-    - Runs virtually everywhere: Windows, macOS, Linux, WebAssembly, iOS, Android, and even consoles.
+    - Runs virtually everywhere: Windows, macOS, Linux, Chromebook, WebAssembly, iOS, Android, and even consoles.
     - Deploy to platforms you don't even own — **Go Far, Stay Close!**
 - **Minimal Runtime:**
     - The runtime is only ~1.4 MB on Windows.
@@ -73,16 +73,17 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 
 **Nightly Works On**
 
-|Type       |OS         |Status             |
-|-----------|-----------|-------------------|
-|Desktop    |Windows    |Works              |
-|           |macOS      |Works              |
-|           |Linux      |Works              |
-|           |FreeBSD    |Works              |
-|Mobile     |iOS        |Works              |
-|           |Android    |Works              |
-|Others     |WebAssembly|Works              |
-|           |Unity      |Works              |
+|Type       |OS         |Status                             |
+|-----------|-----------|-----------------------------------|
+|Desktop    |Windows    |Works                              |
+|           |macOS      |Works                              |
+|           |Linux      |Works                              |
+|           |FreeBSD    |Works                              |
+|           |Chromebook |Works [Here](https://noctvm.io/w/) |
+|Mobile     |iOS        |Works                              |
+|           |Android    |Works                              |
+|Others     |WebAssembly|Works                              |
+|           |Unity      |Works                              |
 
 ---
 
@@ -124,25 +125,27 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ## Quick Start
 
+Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
+
 ### 1. Download the latest binary:
 
 - Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldEngine/releases)
 
 ### 2. Run a game script
 
-- Place the sample game files alongside the binary, i.e., `playfield.exe`, `Playfield.app`, or `PlayfieldEngine-x86_64.AppImage`.
-- Run the app.
-    - Windows: Double click the `playfield.exe` file.
-    - macOS: Double click the `Playfield.app` icon.
-    - Linux: Run `./PlayfieldEngine-x86_64.AppImage` on the terminal.
-- For Chromebook users:
+- For Windows, macOS, and Linux:
+    - Place a binary alongside a sample game.
+    - Run the app.
+        - Windows: Double click the `playfield.exe` file.
+        - macOS: Double click the `Playfield.app` icon.
+        - Linux: Run `./PlayfieldEngine-x86_64.AppImage` on the terminal.
+- For Chromebook:
     - Open [this page](https://noctvm.io/w/) on the browser, then open a game folder.
 
 ### 3. Explore more features
 
 - See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
 - See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
-
 
 ### Appendix. Build from source
 
@@ -336,6 +339,7 @@ Playfield Engine is tested on the following environments in the development.
 |android-armv7                |Android armv7       |Clang          |build-android-armv7 |libplayfield.so  |
 |android-arm64                |Android arm64       |Clang          |build-android-arm64 |libplayfield.so  |
 |wasm                         |WebAssembly         |Emscripten     |build-wasm          |index.html       |
+|wasm-local                   |Chromebook          |Emscripten     |build-wasm-local    |index.html       |
 |unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libplayfield.dll |
 |unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libplayfield.a   |
 |unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libplayfield.a   |
@@ -369,6 +373,7 @@ Samples are added timely.
 |bouncer       |samples/bouncer      |A block bounce demo.             |
 |rush          |samples/rush         |A jumping game demo.             |
 |heartbeatclock|samples/hearbeatclock|A clock.                         |
+|shoot         |samples/shoot        |A mini shooting.                 |
 
 ---
 
