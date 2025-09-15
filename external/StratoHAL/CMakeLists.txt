@@ -165,6 +165,7 @@ if(STRATO_TARGET_WINDOWS)
     src/gdirender.c
     src/dsound.c
     src/dsvideo.cc
+    src/digamepad.cc
   )
 endif()
 
@@ -465,6 +466,7 @@ if(STRATO_TARGET_WINDOWS)
     gdi32
     ole32
     dsound
+    dinput8
     strmiids
     dxguid
   )

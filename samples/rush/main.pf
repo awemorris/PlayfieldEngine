@@ -25,7 +25,7 @@ func start() {
     msgTex = null;
 
     player = {
-        x: 60,
+        x: 120,
         y: 0,
         w: 48,
         h: 48,
@@ -108,14 +108,18 @@ func resetGame() {
 }
 
 func update(dt) {
+    var pressed = Engine.isMouseLeftPressed ||
+                  Engine.isKeyReturnPressed ||
+                  Engine.isController1Pressed;
+
     if (gameOver) {
-        if (Engine.isMouseLeftPressed)
+        if (pressed)
             resetGame();
         return;
     }
 
     // Input: jump on mouse/tap
-    if (Engine.isMouseLeftPressed && player.onGround) {
+    if (pressed && player.onGround) {
         player.vy = jumpVel;
         player.onGround = false;
 

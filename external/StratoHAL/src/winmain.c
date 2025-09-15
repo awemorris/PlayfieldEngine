@@ -14,6 +14,7 @@
 #include "d3drender.h"
 #include "dsound.h"
 #include "dsvideo.h"
+#include "digamepad.h"
 #include "stdfile.h"
 
 /* Windows */
@@ -294,12 +295,18 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		/* Fall-thru. */
 	}
 
+	/* Initialize the joystick HAL. */
+	DInputInitialize(hInstance, hWndMain);
+
 	return TRUE;
 }
 
 /* Cleanup the app. */
 static void CleanupApp(void)
 {
+	/* Cleanup the joystick HAL. */
+    DInputCleanup();
+
 	/* Cleanup the graphics HAL. */
 	D3DCleanup();
 
@@ -486,6 +493,9 @@ static BOOL RunFrame(void)
 
 		return TRUE;
 	}
+
+	/* Update DirectInput. */
+	DInputUpdate();
 
 	/* Start rendering. */
 	D3DStartFrame();

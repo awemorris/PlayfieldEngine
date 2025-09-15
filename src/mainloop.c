@@ -75,6 +75,23 @@ bool on_event_start(void)
 	set_vm_int("millisec", 0);
 	set_vm_int("isMouseLeftPressed", 0);
 	set_vm_int("isMouseRightPressed", 0);
+	set_vm_int("isKeyUpPressed", 0);
+	set_vm_int("isKeyDownPressed", 0);
+	set_vm_int("isKeyLeftPressed", 0);
+	set_vm_int("isKeyRightPressed", 0);
+	set_vm_int("isKeyReturnPressed", 0);
+        set_vm_int("isControllerLeftPressed", 0);
+        set_vm_int("isControllerRightPressed", 0);
+        set_vm_int("isControllerUpPressed", 0);
+        set_vm_int("isControllerDownPressed", 0);
+        set_vm_int("isController1Pressed", 0);
+        set_vm_int("isController2Pressed", 0);
+        set_vm_int("isController3Pressed", 0);
+        set_vm_int("isController4Pressed", 0);
+        set_vm_int("isController5Pressed", 0);
+        set_vm_int("isController6Pressed", 0);
+        set_vm_int("isController7Pressed", 0);
+        set_vm_int("isController8Pressed", 0);
 
 	/* Initialize the lap timer. */
 	reset_lap_timer(&lap_origin);
@@ -131,15 +148,121 @@ void on_event_stop(void)
 
 void on_event_key_press(int key)
 {
-	UNUSED_PARAMETER(key);
-	if (is_running) {
+	if (!is_running)
+		return;
+
+	switch (key) {
+	case KEY_LEFT:
+		set_vm_int("isKeyLeftPressed", 1);
+		break;
+	case KEY_RIGHT:
+		set_vm_int("isKeyRightPressed", 1);
+		break;
+	case KEY_UP:
+		set_vm_int("isKeyUpPressed", 1);
+		break;
+	case KEY_DOWN:
+		set_vm_int("isKeyDownPressed", 1);
+		break;
+	case KEY_RETURN:
+		set_vm_int("isKeyReturnPressed", 1);
+		break;
+	case KEY_CONTROLLER_LEFT:
+		set_vm_int("isControllerLeftPressed", 1);
+		break;
+	case KEY_CONTROLLER_RIGHT:
+		set_vm_int("isControllerRightPressed", 1);
+		break;
+	case KEY_CONTROLLER_UP:
+		set_vm_int("isControllerUpPressed", 1);
+		break;
+	case KEY_CONTROLLER_DOWN:
+		set_vm_int("isControllerDownPressed", 1);
+		break;
+	case KEY_CONTROLLER_1:
+		set_vm_int("isController1Pressed", 1);
+		break;
+	case KEY_CONTROLLER_2:
+		set_vm_int("isController2Pressed", 1);
+		break;
+	case KEY_CONTROLLER_3:
+		set_vm_int("isController3Pressed", 1);
+		break;
+	case KEY_CONTROLLER_4:
+		set_vm_int("isController4Pressed", 1);
+		break;
+	case KEY_CONTROLLER_5:
+		set_vm_int("isController5Pressed", 1);
+		break;
+	case KEY_CONTROLLER_6:
+		set_vm_int("isController6Pressed", 1);
+		break;
+	case KEY_CONTROLLER_7:
+		set_vm_int("isController7Pressed", 1);
+		break;
+	case KEY_CONTROLLER_8:
+		set_vm_int("isController8Pressed", 1);
+		break;
 	}
 }
 
 void on_event_key_release(int key)
 {
-	UNUSED_PARAMETER(key);
-	if (is_running) {
+	if (!is_running)
+		return;
+
+	switch (key) {
+	case KEY_LEFT:
+		set_vm_int("isKeyLeftPressed", 0);
+		break;
+	case KEY_RIGHT:
+		set_vm_int("isKeyRightPressed", 0);
+		break;
+	case KEY_UP:
+		set_vm_int("isKeyUpPressed", 0);
+		break;
+	case KEY_DOWN:
+		set_vm_int("isKeyDownPressed", 0);
+		break;
+	case KEY_RETURN:
+		set_vm_int("isKeyReturnPressed", 0);
+		break;
+	case KEY_CONTROLLER_LEFT:
+		set_vm_int("isControllerLeftPressed", 0);
+		break;
+	case KEY_CONTROLLER_RIGHT:
+		set_vm_int("isControllerRightPressed", 0);
+		break;
+	case KEY_CONTROLLER_UP:
+		set_vm_int("isControllerUpPressed", 0);
+		break;
+	case KEY_CONTROLLER_DOWN:
+		set_vm_int("isControllerDownPressed", 0);
+		break;
+	case KEY_CONTROLLER_1:
+		set_vm_int("isController1Pressed", 0);
+		break;
+	case KEY_CONTROLLER_2:
+		set_vm_int("isController2Pressed", 0);
+		break;
+	case KEY_CONTROLLER_3:
+		set_vm_int("isController3Pressed", 0);
+		break;
+	case KEY_CONTROLLER_4:
+		set_vm_int("isController4Pressed", 0);
+		break;
+	case KEY_CONTROLLER_5:
+		set_vm_int("isController5Pressed", 0);
+		break;
+	case KEY_CONTROLLER_6:
+		set_vm_int("isController6Pressed", 0);
+		break;
+	case KEY_CONTROLLER_7:
+		set_vm_int("isController7Pressed", 0);
+		break;
+	case KEY_CONTROLLER_8:
+		set_vm_int("isController8Pressed", 0);
+		break;
 	}
 }
 
