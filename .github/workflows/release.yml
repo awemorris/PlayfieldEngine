@@ -66,6 +66,16 @@ jobs:
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
 
+      - name: Add desktop & icon
+        run: |
+          cat > AppDir/playfield.desktop <<EOF
+          [Desktop Entry]
+          Type=Application
+          Name=Playfield Engine
+          Exec=playfield
+          Categories=Game;Development;
+          EOF
+
       - name: Create AppImage
         run: ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
 
