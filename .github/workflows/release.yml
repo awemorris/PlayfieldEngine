@@ -48,6 +48,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up dependencies
+        run: git submodule update --init
+
       - name: Install deps
         run: sudo apt-get update && sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison
 
