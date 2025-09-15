@@ -124,11 +124,25 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 
 ## Quick Start
 
-### 1-a. Download the latest release:
+### 1. Download the latest binary:
 
 - Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldEngine/releases)
 
-### 1-b. Clone and build from the repository:
+### 2. Run a game script
+
+- Place the sample game files alongside the binary, i.e., `playfield.exe`, `Playfield.app`, or `PlayfieldEngine-x86_64.AppImage`.
+- Run the app.
+    - Windows: Double click the `playfield.exe` file.
+    - macOS: Double click the `Playfield.app` icon.
+    - Linux: Run `./PlayfieldEngine-x86_64.AppImage` on the terminal.
+
+### 3. Explore more features
+
+- See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
+- See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
+
+
+### Appendix. Build from source
 
 - Visual Studio 2022
     - Install the [winflexbison](https://github.com/lexxmark/winflexbison).
@@ -187,20 +201,6 @@ For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/getting
 	      - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
     - Unity Plugin build is not included in this Quick Start. Use the CMake presets named `unity-*`.
     - A full build takes 10 seconds using 10 cores.
-
-### 2. Run a game script
-
-- Place the sample game files alongside the binary, i.e., `playfield.exe`, `Playfield.app`, or `playfield`.
-    - E.g., `cp samples/rush/* build/`
-- Run the app.
-    - Windows: Double click the `playfield.exe` file.
-    - macOS: Double click the `Playfield.app` icon.
-    - Linux: Run `./playfield` on the terminal.
-
-### 3. Explore more features
-
-- See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
-- See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
 
 ---
 
