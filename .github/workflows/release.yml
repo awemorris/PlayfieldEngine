@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build_windows:
+  build-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -42,8 +42,40 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  build_macos:
-    needs: [build_windows]
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: sudo apt-get update && sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison
+
+      - name: Build Playfield Engine
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+          mkdir -p AppDir/usr/bin
+          cp build/playfield AppDir/usr/bin/
+
+      - name: Download appimagetool
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+      - name: Create AppImage
+        run: ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: PlayfieldEngine-x86_64.AppImage
+          if-no-files-found: error
+          retention-days: 7
+
+  build-macos:
+    needs: [build-windows build-linux]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -54,6 +86,12 @@ jobs:
         with:
           name: windows-binaries
           path: windows
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-appimage
+          path: linux
 
       - name: Set up dependencies
         run: |
@@ -260,7 +298,7 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip linux/PlayfieldEngine-x86_64.AppImage
           body: |
             This is an automated relase.
         env:
