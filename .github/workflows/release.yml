@@ -73,6 +73,7 @@ jobs:
           Type=Application
           Name=Playfield Engine
           Exec=playfield
+          Icon=playfield
           Categories=Game;Development;
           EOF
 
