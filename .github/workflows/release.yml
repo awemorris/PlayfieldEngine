@@ -60,6 +60,7 @@ jobs:
           cmake --build build --config Release
           mkdir -p AppDir/usr/bin
           cp build/playfield AppDir/usr/bin/
+          cp resources/linux/AppRun AppDir/
 
       - name: Download appimagetool
         run: |
