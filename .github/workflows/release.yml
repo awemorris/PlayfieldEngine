@@ -66,7 +66,7 @@ jobs:
           EOF
           sudo apt-get update
           sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu qemu-user-static binfmt-support
-          sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64 libfuse2:arm64
+          sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64
 
       - name: Download appimagetool
         run: |
@@ -103,7 +103,8 @@ jobs:
           cmake --build build --config Release
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
-          ARCH=aarch64 qemu-aarch64-static ./appimagetool-aarch64.AppImage AppDir PlayfieldEngine-aarch64.AppImage
+          qemu-aarch64-static ./appimagetool-aarch64.AppImage --appimage-extract
+          qemu-aarch64-static ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
