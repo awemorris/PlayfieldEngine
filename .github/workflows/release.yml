@@ -28,8 +28,11 @@ jobs:
           -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
           -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
-      - name: Build (Release)
+      - name: Build (x64)
         run: cmake --build --preset windows-msvc-x64-release --config Release --parallel
+
+      - name: Build (arm64)
+        run: cmake --build --preset windows-msvc-arm64-release --config Release --parallel
 
       - name: Upload Windows EXEs
         uses: actions/upload-artifact@v4
@@ -41,6 +44,11 @@ jobs:
             out/**/playfield-web.exe
           if-no-files-found: error
           retention-days: 7
+
+      - name: Build (Release)
+        run: cmake --build --preset windows-msvc-x64-release --config Release --parallel
+
+
 
   build-linux:
     runs-on: ubuntu-22.04
@@ -65,7 +73,7 @@ jobs:
           deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse
           EOF
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu qemu-user-static binfmt-support desktop-file-validate
+          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu qemu-user-static binfmt-support desktop-file-utils
           sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64 libglib2.0-0:arm64 libgobject-2.0-0:arm64 libgdk-pixbuf-2.0-0:arm64 libfuse2:arm64 libgcrypt20:arm64 libgpgme-dev:arm64
 
       - name: Download appimagetool
@@ -168,6 +176,7 @@ jobs:
           cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
           cp windows/build/windows-msvc-x64-release/Release/playfield-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x64-release/Release/playfield-web.exe dist/misc/wasm/
+          cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
           cp samples/shoot/main.pf dist/
 
       - name: Copy for Linux.
