@@ -385,6 +385,10 @@
       "configurePreset": "windows-msvc-x64-release"
     },
     {
+      "name": "windows-msvc-arm64-release",
+      "configurePreset": "windows-msvc-arm64-release"
+    },
+    {
       "name": "windows-x86",
       "configurePreset": "windows-x86"
     },
