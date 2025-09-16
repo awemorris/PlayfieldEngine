@@ -52,15 +52,11 @@ jobs:
         run: git submodule update --init
 
       - name: Install deps
-        run: sudo apt-get update && sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2
-
-      - name: Build Playfield Engine
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
-          mkdir -p AppDir/usr/bin
-          cp build/playfield AppDir/usr/bin/
-          cp resources/linux/AppRun AppDir/
+          sudo dpkg --add-architecture arm64
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu
+          sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64
 
       - name: Download appimagetool
         run: |
@@ -79,14 +75,32 @@ jobs:
           EOF
           cp resources/icon.png AppDir/playfield.png
 
-      - name: Create AppImage
-        run: ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
+      - name: Build for x86_64
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+          mkdir -p AppDir/usr/bin
+          cp build/playfield AppDir/usr/bin/
+          cp resources/linux/AppRun AppDir/
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
+
+      - name: Build for aarch64
+        run: |
+          rm -rf build AppDir
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux-aarch64.cmake
+          cmake --build build --config Release
+          mkdir -p AppDir/usr/bin
+          cp build/playfield AppDir/usr/bin/
+          cp resources/linux/AppRun AppDir/
+          ARCH=aarch64 ./appimagetool-x86_64.AppImage --appimage-arch aarch64 AppDir PlayfieldEngine-aarch64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-appimage
-          path: PlayfieldEngine-x86_64.AppImage
+          path: |
+            PlayfieldEngine-x86_64.AppImage
+            PlayfieldEngine-aarch64.AppImage
           if-no-files-found: error
           retention-days: 7
 
@@ -114,7 +128,7 @@ jobs:
           git submodule update --init
 
           brew update
-          brew install mingw-w64 bison flex mkdocs-material
+          brew install mingw-w64 bison flex mkdocs-material p7zip
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
 
@@ -313,13 +327,16 @@ jobs:
         run: |
           mv dist "PlayfieldEngine-$DATE-$SHORT_SHA"
           zip -r -9 "PlayfieldEngine-$DATE-$SHORT_SHA.zip" "PlayfieldEngine-$DATE-$SHORT_SHA"
+          7z a -t7z -mx=9 "PlayfieldEngine-$DATE-$SHORT_SHA.7z" "PlayfieldEngine-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+          files: |
+            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.7z
           body: |
             This automated release includes standalone engines for Windows, macOS, and Linux.
             In addition, export kits for WebAssembly, iOS, Android, and Unity are included.
