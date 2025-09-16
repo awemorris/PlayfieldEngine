@@ -65,13 +65,15 @@ jobs:
           deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse
           EOF
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu
+          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu qemu-user-static
           sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64
 
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage
           chmod +x appimagetool-x86_64.AppImage
+          chmod +x appimagetool-aarch64.AppImage
 
       - name: Add desktop & icon
         run: |
@@ -101,7 +103,7 @@ jobs:
           cmake --build build --config Release
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
-          ARCH=aarch64 ./appimagetool-x86_64.AppImage --appimage-arch aarch64 AppDir PlayfieldEngine-aarch64.AppImage
+          ARCH=aarch64 qemu-aarch64-static ./appimagetool-aarch64.AppImage AppDir PlayfieldEngine-aarch64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -160,14 +162,14 @@ jobs:
           mkdir dist/misc/android
           mkdir dist/misc/unity
 
-      - name: Build for Windows.
+      - name: Copy for Windows.
         run: |
           cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
           cp windows/build/windows-msvc-x64-release/Release/playfield-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x64-release/Release/playfield-web.exe dist/misc/wasm/
           cp samples/shoot/main.pf dist/
 
-      - name: Build for Linux.
+      - name: Copy for Linux.
         run: |
           cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
           cp linux/PlayfieldEngine-aarch64.AppImage dist/misc/linux/
@@ -185,9 +187,7 @@ jobs:
           TEAM_ID: ${{ secrets.TEAM_ID }}
           APP_SECRET: ${{ secrets.APP_PASSWORD }}
         run: |
-          echo "AAAAAAAAAAAA"
           cmake --preset macos
-          echo "BBBBBBBBBBBB"
           cmake --build --preset macos
           cd build-macos
           codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" Playfield.app
