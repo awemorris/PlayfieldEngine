@@ -22,7 +22,7 @@ jobs:
       - name: Set up dependencies
         run: git submodule update --init
 
-      - name: Configure (CMake - VS2022 x64)
+      - name: Configure (x64)
         run: >
           cmake --preset windows-msvc-x64-release
           -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
@@ -30,6 +30,12 @@ jobs:
 
       - name: Build (x64)
         run: cmake --build --preset windows-msvc-x64-release --config Release --parallel
+
+      - name: Configure (arm64)
+        run: >
+          cmake --preset windows-msvc-arm64-release
+          -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
+          -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
       - name: Build (arm64)
         run: cmake --build --preset windows-msvc-arm64-release --config Release --parallel
