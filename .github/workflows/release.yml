@@ -75,6 +75,7 @@ jobs:
 
       - name: Add desktop & icon
         run: |
+          mkdir -p AppDir/usr/bin
           cat > AppDir/playfield.desktop <<EOF
           [Desktop Entry]
           Type=Application
@@ -89,7 +90,6 @@ jobs:
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-          mkdir -p AppDir/usr/bin
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
           ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
