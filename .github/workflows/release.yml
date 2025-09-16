@@ -43,7 +43,7 @@ jobs:
           retention-days: 7
 
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -161,6 +161,7 @@ jobs:
       - name: Build for Linux.
         run: |
           cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
+          cp linux/PlayfieldEngine-aarch64.AppImage dist/misc/linux/
 
       - name: Setup for macOS
         uses: apple-actions/import-codesign-certs@v3
