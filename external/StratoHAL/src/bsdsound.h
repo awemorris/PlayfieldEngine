@@ -11,7 +11,7 @@
 #ifndef PLATFORM_BSDSOUND_H
 #define PLATFORM_BSDSOUND_H
 
-#include "c89compat.h"
+#include <stratohal/c89compat.h>
 
 /* Initialize sound. */
 bool init_sound(void);
