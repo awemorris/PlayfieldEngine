@@ -96,10 +96,9 @@ jobs:
 
       - name: Build for aarch64
         run: |
-          rm -rf build AppDir
+          rm -rf build
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux-aarch64.cmake
           cmake --build build --config Release
-          mkdir -p AppDir/usr/bin
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
           ARCH=aarch64 ./appimagetool-x86_64.AppImage --appimage-arch aarch64 AppDir PlayfieldEngine-aarch64.AppImage
