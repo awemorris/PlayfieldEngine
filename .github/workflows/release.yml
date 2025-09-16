@@ -55,10 +55,10 @@ jobs:
         run: |
           sudo dpkg --add-architecture arm64
           sudo sed -i 's|http://.*.ubuntu.com/ubuntu/|http://ports.ubuntu.com/ubuntu-ports/|g' /etc/apt/sources.list.d/ubuntu.sources
-          sudo sed -i '/security.ubuntu.com/d' /etc/apt/sources.list
-          sudo sed -i '/noble-security/d' /etc/apt/sources.list
-          sudo sed -i '/noble-updates/d' /etc/apt/sources.list
-          sudo sed -i '/noble-backports/d' /etc/apt/sources.list
+          sudo sed -i '/security.ubuntu.com/d' /etc/apt/sources.list.d/ubuntu.sources
+          sudo sed -i '/noble-security/d' /etc/apt/sources.list.d/ubuntu.sources
+          sudo sed -i '/noble-updates/d' /etc/apt/sources.list.d/ubuntu.sources
+          sudo sed -i '/noble-backports/d' /etc/apt/sources.list.d/ubuntu.sources
           sudo apt-get update
           sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu
           sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64
