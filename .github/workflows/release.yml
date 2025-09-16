@@ -119,7 +119,7 @@ jobs:
           cp resources/icon.png AppDir/playfield.png
           qemu-aarch64-static ./appimagetool-aarch64.AppImage --appimage-extract
           export ARCH=aarch64
-          ARCH=aarch64 qemu-aarch64-static ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
+          ARCH=aarch64 ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
           unset ARCH
 
       - name: Upload artifact
