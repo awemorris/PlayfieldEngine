@@ -54,7 +54,7 @@ jobs:
       - name: Install deps
         run: |
           sudo tee /etc/apt/sources.list <<'EOF'
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
           deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
           EOF
           sudo apt-get update
