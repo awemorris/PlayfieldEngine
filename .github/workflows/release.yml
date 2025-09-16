@@ -113,7 +113,7 @@ jobs:
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
           qemu-aarch64-static ./appimagetool-aarch64.AppImage --appimage-extract
-          qemu-aarch64-static ARCH=aarch64 ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
+          ARCH=aarch64 qemu-aarch64-static ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
