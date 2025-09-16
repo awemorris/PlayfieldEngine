@@ -53,6 +53,7 @@ jobs:
 
       - name: Install deps
         run: |
+          cat /etc/apt/sources.list
           sudo sed -i 's|http://archive.ubuntu.com/ubuntu|http://ports.ubuntu.com/ubuntu-ports|g' /etc/apt/sources.list
           sudo sed -i '/security/d' /etc/apt/sources.list
           sudo sed -i '/backports/d' /etc/apt/sources.list
