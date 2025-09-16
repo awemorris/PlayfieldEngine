@@ -54,8 +54,8 @@ jobs:
       - name: Install deps
         run: |
           sudo dpkg --add-architecture arm64
-          sudo sed -i 's|http://.*.ubuntu.com/ubuntu/|http://ports.ubuntu.com/ubuntu-ports/|g' /etc/apt/sources.list
-          sudo sed -i '/security/d' /etc/apt/sources.list
+          sudo sed -i 's|http://.*.ubuntu.com/ubuntu/|http://ports.ubuntu.com/ubuntu-ports/|g' /etc/apt/sources.list.d/ubuntu.sources
+          sudo sed -i '/security.ubuntu.com/d' /etc/apt/sources.list
           sudo sed -i '/noble-security/d' /etc/apt/sources.list
           sudo sed -i '/noble-updates/d' /etc/apt/sources.list
           sudo sed -i '/noble-backports/d' /etc/apt/sources.list
