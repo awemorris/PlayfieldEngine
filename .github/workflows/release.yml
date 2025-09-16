@@ -84,10 +84,9 @@ jobs:
           chmod +x appimagetool-x86_64.AppImage
           chmod +x appimagetool-aarch64.AppImage
 
-      - name: Add desktop & icon
+      - name: Add desktop
         run: |
-          mkdir -p AppDir/usr/bin
-          cat > AppDir/playfield.desktop <<EOF
+          cat > playfield.desktop <<EOF
           [Desktop Entry]
           Type=Application
           Name=Playfield Engine
@@ -95,23 +94,29 @@ jobs:
           Icon=playfield
           Categories=Game;
           EOF
-          cp resources/icon.png AppDir/playfield.png
 
       - name: Build for x86_64
         run: |
+          rm -rf build AppDir
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
+          mkdir -p AppDir/usr/bin
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
+          cp playfield.desktop AppDir/
+          cp resources/icon.png AppDir/playfield.png
           ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
 
       - name: Build for aarch64
         run: |
-          rm -rf build
+          rm -rf build AppDir
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux-aarch64.cmake
           cmake --build build --config Release
+          mkdir -p AppDir/usr/bin
           cp build/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
+          cp playfield.desktop AppDir/
+          cp resources/icon.png AppDir/playfield.png
           qemu-aarch64-static ./appimagetool-aarch64.AppImage --appimage-extract
           export ARCH=aarch64
           qemu-aarch64-static ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
