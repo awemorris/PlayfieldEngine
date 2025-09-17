@@ -36,6 +36,8 @@ static struct wave *wave_tbl[SOUND_TRACKS];
 /* Forward Declaration */
 static int search_free_entry(void);
 static bool create_texture(int width, int height, int *ret, struct image **img);
+static char *make_save_file_name(const char *key);
+static char get_hex_char(int val);
 
 /*
  * Initialization
@@ -96,7 +98,7 @@ playfield_load_texture(
 	/* Get a file extension. */
 	ext = strrchr(fname, '.');
 	if (ext == NULL) {
-		log_error("Cannot determine a file type for \"%s\".", fname);
+		log_error(PPS_TR("Cannot determine the file type for \"%s\"."), fname);
 		return false;
 	}
 
@@ -110,19 +112,19 @@ playfield_load_texture(
 	    strcmp(ext, ".jpeg") == 0 ||
 	    strcmp(ext, ".JPEG") == 0) {
 		if (!create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error("Cannot load an image \"%s\".", fname);
+			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else if (strcmp(ext, ".webp") == 0 ||
 		   strcmp(ext, ".WebP") == 0 ||
 		   strcmp(ext, ".WEBP") == 0) {
 		if (!create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error("Cannot load an image \"%s\".", fname);
+			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else {
 		if (!create_image_with_png((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error("Cannot load an image \"%s\".", fname);
+			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	}
@@ -194,7 +196,7 @@ create_texture(
 	/* Allocate a texture entry. */
 	index = search_free_entry();
 	if (index == -1) {
-		log_error("Too many textures.");
+		log_error(PPS_TR("Too many textures."));
 		return false;
 	}
 
@@ -360,7 +362,7 @@ playfield_load_font(
 
 	/* Check the font slot index. */
 	if (slot < 0 || slot >= GLYPH_DATA_COUNT) {
-		log_error("Invalid font slot index.");
+		log_error(PPS_TR("Invalid font slot index."));
 		return false;
 	}
 
@@ -483,7 +485,7 @@ playfield_play_sound(
 	const char *file)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error("Invalid stream index.");
+		log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -505,7 +507,7 @@ playfield_stop_sound(
 	int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error("Invalid stream index.");
+		log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -526,7 +528,7 @@ playfield_set_sound_volue(
 	float vol)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error("Invalid stream index.");
+		log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -560,4 +562,184 @@ void
 playfield_move_to_next_tag(void)
 {
 	move_to_next_tag();
+}
+
+/*
+ * Write save data.
+ */
+bool
+playfield_write_save_data(
+	const char *key,
+	const void *data,
+	size_t size)
+{
+	char *fname;
+	struct wfile *wf;
+	size_t ret;
+
+	/* Make a save file name. */
+	fname = make_save_file_name(key);
+	if (fname == NULL) {
+		log_error(PPS_TR("Save data key too long."));
+		return false;
+	}
+	free(fname);
+
+	/* Open a save file. */
+	if (!open_wfile(fname, &wf)) {
+		log_error(PPS_TR("Cannot open a save file."));
+		return false;
+	}
+
+	/* Write data to the save file. */
+	if (!write_wfile(wf, data, size, &ret)) {
+		log_error(PPS_TR("Cannot write to a save file."));
+		return false;
+	}
+
+	/* Close the save file. */
+	close_wfile(wf);
+
+	return true;
+}
+
+/*
+ * Read save data.
+ */
+bool
+playfield_read_save_data(
+	const char *key,
+	void *data,
+	size_t size,
+	size_t *ret)
+{
+	char *fname;
+	struct rfile *rf;
+
+	/* Make a save file name. */
+	fname = make_save_file_name(key);
+	if (fname == NULL) {
+		log_error(PPS_TR("Save data key too long."));
+		return false;
+	}
+	free(fname);
+
+	/* Open a save file. */
+	if (!open_rfile(fname, &rf)) {
+		log_error(PPS_TR("Cannot open a save file."));
+		return false;
+	}
+
+	/* Get a file size. */
+	if (!get_rfile_size(rf, ret)) {
+		log_error(PPS_TR("Cannot get the size of a save file."));
+		return false;
+	}
+	if (size < *ret) {
+		log_error(PPS_TR("Save file too large."));
+		return false;
+	}
+
+	/* Read data to the save file. */
+	if (!read_rfile(rf, data, *ret, ret)) {
+		log_error(PPS_TR("Cannot read a save file."));
+		free(fname);
+		return false;
+	}
+
+	/* Close the save file. */
+	close_rfile(rf);
+
+	return true;
+}
+
+/*
+ * Check whether save data exist or not.
+ */
+bool
+playfield_check_save_data(
+	const char *key)
+{
+	char *fname;
+	bool ret;
+
+	/* Make a save file name. */
+	fname = make_save_file_name(key);
+	if (fname == NULL) {
+		log_error(PPS_TR("Save data key too long."));
+		return false;
+	}
+
+	ret = check_file_exist(fname);
+	free(fname);
+
+	return ret;
+}
+
+/* Make a save file name correspond to a key string. */
+static char *
+make_save_file_name(
+	const char *key)
+{
+	char buf[1024];
+	int i, len, pos;
+
+	len = strlen(key);
+	if (len * 2 > sizeof(buf) - 1) {
+		/* File name too long. */
+		return NULL;
+	}
+
+	pos = 0;
+	for (i = 0; i < len; i++) {
+		buf[pos + 0] = get_hex_char(key[i] >> 4);
+		buf[pos + 1] = get_hex_char(key[i] & 4);
+		pos += 2;
+	}
+	buf[pos] = '\0';
+
+	return strdup(buf);
+}
+
+/* Get a hex character. */
+static char get_hex_char(int val)
+{
+	switch (val) {
+	case 0:
+		return '0';
+	case 1:
+		return '1';
+	case 2:
+		return '2';
+	case 3:
+		return '3';
+	case 4:
+		return '4';
+	case 5:
+		return '5';
+	case 6:
+		return '6';
+	case 7:
+		return '7';
+	case 8:
+		return '8';
+	case 9:
+		return '9';
+	case 10:
+		return 'a';
+	case 11:
+		return 'b';
+	case 12:
+		return 'c';
+	case 13:
+		return 'd';
+	case 14:
+		return 'e';
+	case 15:
+		return 'f';
+	default:
+		break;
+	}
+	assert(0);
+	return -1;
 }

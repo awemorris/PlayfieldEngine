@@ -29,6 +29,9 @@
 /* Bytecode File Header */
 #define BYTECODE_HEADER		"Noct Bytecode"
 
+/* Save data size. */
+#define SERIALIZE_SIZE		(1 * 1024 * 1024)
+
 /* NoctLang */
 static NoctVM *vm;
 static NoctEnv *env;
@@ -37,11 +40,11 @@ static NoctEnv *env;
 static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
-#if 0
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
-#endif
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
 static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret);
+static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret);
+static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size);
 static bool install_api(NoctEnv *env);
 
 /*
@@ -65,7 +68,7 @@ bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -102,7 +105,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -179,7 +182,7 @@ static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -201,7 +204,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -236,7 +239,7 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
+		log_error(PPS_TR("In tag %s:%d: runtime error."),
 			  get_tag_file_name(),
 			  get_tag_line());
 		return false;
@@ -246,13 +249,13 @@ bool call_vm_tag_function(bool *tag_end)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(PPS_TR("In tag %s:%d: runtime error."),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			log_error(PPS_TR("In scenario %s:%d: runtime error.\n"),
+			log_error(PPS_TR("In tag %s:%d: runtime error."),
 				  get_tag_file_name(),
 				  get_tag_line());
 			return false;
@@ -264,14 +267,14 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		log_error(PPS_TR("%s:%d: Tag \"%s\" not found.\n"),
+		log_error(PPS_TR("%s:%d: Tag \"%s\" not found."),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function.\n"),
+		log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function."),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -284,7 +287,7 @@ bool call_vm_tag_function(bool *tag_end)
 		int line;
 		const char *msg;
 
-		log_error(PPS_TR("In scenario %s:%d: Tag \"%s\" execution error.\n"),
+		log_error(PPS_TR("In tag %s:%d: Tag \"%s\" execution error."),
 			  get_tag_file_name(),
 			  get_tag_line(),
 			  t->tag_name);
@@ -292,7 +295,7 @@ bool call_vm_tag_function(bool *tag_end)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -383,7 +386,7 @@ static bool debug(NoctEnv *env)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("%s:%d: error: %s\n"), file, line, msg);
+		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -392,25 +395,25 @@ static bool debug(NoctEnv *env)
 	{
 		int d;
 		noct_get_int(env, &param, &d);
-		log_info("%d\n", d);
+		log_info("%d", d);
 		break;
 	}
 	case NOCT_VALUE_FLOAT:
 	{
 		float f;
 		noct_get_float(env, &param, &f);
-		log_info("%f\n", f);
+		log_info("%f", f);
 		break;
 	}
 	case NOCT_VALUE_STRING:
 	{
 		const char *s;
 		noct_get_string(env, &param, &s);
-		log_info("%s\n", s);
+		log_info("%s", s);
 		break;
 	}
 	default:
-		log_info("[object]\n");
+		log_info("[object]");
 		break;
 	}
 
@@ -442,7 +445,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(PPS_TR("%s:%d: Error: %s\n"), file, line, msg);
+			log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	} else {
@@ -453,7 +456,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(PPS_TR("%s:%d: Error: %s\n"), file, line, msg);
+			log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	}
@@ -490,17 +493,16 @@ static bool Engine_moveToNextTag(NoctEnv *env)
 /* Engine.callTagFunction() */
 static bool Engine_callTagFunction(NoctEnv *env)
 {
-	NoctValue ret;
 	bool tag_end;
+	NoctValue ret;
 
 	UNUSED_PARAMETER(env);
-
-	noct_pin_local(env, 1, &ret);
 
 	if (!call_vm_tag_function(&tag_end))
 		return false;
 
-	noct_set_return_make_int(env, &ret, tag_end ? false : true);
+	if (!noct_set_return_make_int(env, &ret, tag_end ? 0 : 1))
+		return false;
 
 	return true;
 }
@@ -553,15 +555,11 @@ static bool Engine_loadTexture(NoctEnv *env)
 	int tex_height;
 	NoctValue ret, tmp;
 
-	if (!get_string_param(env, "file", &file)) {
-		noct_error(env, PPS_TR("file parameter is not set."));
+	if (!get_string_param(env, "file", &file))
 		return false;
-	}
 
-	if (!playfield_load_texture(file, &tex_id, &tex_width, &tex_height)) {
-		noct_error(env, PPS_TR("Failed to load a texture."));
+	if (!playfield_load_texture(file, &tex_id, &tex_width, &tex_height))
 		return false;
-	}
 
 	if (!noct_make_empty_dict(env, &ret))
 		return false;
@@ -711,7 +709,6 @@ static bool Engine_playSound(NoctEnv *env)
 {
 	int stream;
 	const char *file;
-	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
@@ -721,10 +718,6 @@ static bool Engine_playSound(NoctEnv *env)
 	if (!playfield_play_sound(stream, file))
 		return false;
 
-	noct_make_int(env, &ret, 1);
-	if (!noct_set_return(env, &ret))
-		return false;
-
 	return true;
 }
 
@@ -732,16 +725,11 @@ static bool Engine_playSound(NoctEnv *env)
 static bool Engine_stopSound(NoctEnv *env)
 {
 	int stream;
-	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
 	if (!playfield_stop_sound(stream))
-		return false;
-
-	noct_make_int(env, &ret, 1);
-	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
@@ -751,16 +739,11 @@ static bool Engine_stopSound(NoctEnv *env)
 static bool Engine_setSoundVolume(NoctEnv *env)
 {
 	int stream;
-	NoctValue ret;
 
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
 	if (!playfield_stop_sound(stream))
-		return false;
-
-	noct_make_int(env, &ret, 1);
-	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
@@ -771,7 +754,6 @@ static bool Engine_loadFont(NoctEnv *rt)
 {
 	int slot;
 	const char *file;
-	NoctValue ret;
 
 	if (!get_int_param(env, "slot", &slot))
 		return false;
@@ -781,10 +763,6 @@ static bool Engine_loadFont(NoctEnv *rt)
 	if (!playfield_load_font(slot, file))
 		return false;
 
-	noct_make_int(env, &ret, 1);
-	if (!noct_set_return(env, &ret))
-		return false;
-	
 	return true;
 }
 
@@ -799,8 +777,7 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	int tex_id;
 	int tex_width;
 	int tex_height;
-	NoctValue ret;
-	NoctValue ival;
+	NoctValue ret, tmp;
 
 	if (!get_int_param(env, "slot", &slot))
 		return false;
@@ -818,29 +795,22 @@ static bool Engine_createTextTexture(NoctEnv *env)
 		return false;
 
 	if (!playfield_create_text_texture(slot,
-					text,
-					size,
-					make_pixel(a, r, g, b),
-					&tex_id,
-					&tex_width,
-					&tex_height))
+					   text,
+					   size,
+					   make_pixel(a, r, g, b),
+					   &tex_id,
+					   &tex_width,
+					   &tex_height))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))
 		return false;
-
-	noct_make_int(env, &ival, tex_id);
-	if (!noct_set_dict_elem(env, &ret, "id", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "id", &tmp, tex_id))
 		return false;
-	
-	noct_make_int(env, &ival, tex_width);
-	if (!noct_set_dict_elem(env, &ret, "width", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "width", &tmp, tex_width))
 		return false;
-
-	noct_make_int(env, &ival, tex_height);
-	if (!noct_set_dict_elem(env, &ret, "height", &ival))
+	if (!noct_set_dict_elem_make_int(env, &ret, "height", &tmp, tex_height))
 		return false;
-
 	if (!noct_set_return(env, &ret))
 		return false;
 
@@ -854,9 +824,7 @@ static bool Engine_getDate(NoctEnv *env)
 	NoctValue val;
 	time_t t;
 	struct tm *tm_info;
-
-	if (!noct_pin_local(env, 2, &ret, &val))
-		return false;
+	bool is_ok;
 
 	if (!noct_make_empty_dict(env, &ret))
 		return false;
@@ -875,11 +843,86 @@ static bool Engine_getDate(NoctEnv *env)
 		return false;
 	if (!noct_set_dict_elem_make_int(env, &ret, "second", &val, tm_info->tm_sec))
 		return false;
-	
 	if (!noct_set_return(env, &ret))
 		return false;
 
 	return true;
+}
+
+/* Engine.writeSaveData() */
+static bool Engine_writeSaveData(NoctEnv *env)
+{
+	NoctValue key, value;
+	const char *key_s;
+	void *data;
+	size_t size;
+
+	if (!noct_get_arg_check_string(env, 0, &key, &key_s))
+		return false;
+	if (!noct_get_arg(env, 1, &value))
+		return false;
+
+	data = malloc(SERIALIZE_SIZE);
+	if (data == NULL) {
+		log_out_of_memory();
+		return false;
+	}
+
+	if (!serialize_save_data(env, &value, data, SERIALIZE_SIZE, &size)) {
+		free(data);
+		return false;
+	}
+
+	if (!playfield_write_save_data(key_s, data, size)) {
+		free(data);
+		return false;
+	}
+
+	free(data);
+
+	return true;
+}
+
+static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret)
+{
+	return false;
+}
+
+/* Engine.readSaveData() */
+static bool Engine_readSaveData(NoctEnv *env)
+{
+	NoctValue key, ret;
+	const char *key_s;
+	void *data;
+	size_t size;
+
+	if (!noct_get_arg_check_string(env, 0, &key, &key_s))
+		return false;
+
+	data = malloc(SERIALIZE_SIZE);
+	if (data == NULL) {
+		log_out_of_memory();
+		return false;
+	}
+
+	if (!playfield_read_save_data(key_s, data, SERIALIZE_SIZE, &size)) {
+		free(data);
+		return false;
+	}
+
+	if (!deserialize_save_data(env, &ret, data, size)) {
+		free(data);
+		return false;
+	}
+	
+	free(data);
+
+	return true;
+}
+
+static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size)
+{
+	return false;
 }
 
 /*
@@ -893,13 +936,17 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	float f;
 	const char *s;
 
+	noct_pin_local(env, 2, &param, &elem);
+
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
 		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
@@ -917,8 +964,11 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 		break;
 	default:
 		noct_error(env, "Unexpected parameter value for %s.", name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
+
+	noct_unpin_local(env, 2, &param, &elem);
 
 	return true;
 }
@@ -929,13 +979,17 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 {
 	NoctValue param, elem;
 
+	noct_pin_local(env, 2, &param, &elem);
+
 	if (!rt_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
 	if (!rt_get_dict_elem(env, &param, name, &elem)) {
 		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
@@ -951,8 +1005,11 @@ static bool get_float_param(NoctEnv *env, const char *name, float *ret)
 		break;
 	default:
 		rt_error(env, PPS_TR("Unexpected parameter value for %s."), name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
+
+	noct_unpin_local(env, 2, &param, &elem);
 
 	return true;
 }
@@ -964,13 +1021,17 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	NoctValue param, elem;
 	static char buf[128];
 
+	noct_pin_local(env, 2, &param, &elem);
+
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
 		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
@@ -996,8 +1057,11 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		break;
 	default:
 		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
+		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
+
+	noct_unpin_local(env, 2, &param, &elem);
 
 	return true;
 }
@@ -1007,32 +1071,41 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 {
 	NoctValue param, elem, ival;
 
+	noct_pin_local(env, 3, &param, &elem, &ival);
+
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
 		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (elem.type != NOCT_VALUE_DICT) {
 		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
+		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &elem, key, &ival)) {
 		noct_error(env, PPS_TR("Parameter %s doesn't have the key %s."), name, key);
+		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (ival.type != NOCT_VALUE_INT) {
 		noct_error(env, PPS_TR("Unexpected parameter value for %s.%s."), name, key);
+		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	*ret = ival.val.i;
+
+	noct_unpin_local(env, 3, &param, &elem, &ival);
 
 	return true;
 }

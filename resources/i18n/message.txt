@@ -1,50 +1,76 @@
-ID:Error: %s: %d: %s\n
-ja:エラー: %s: %d: %s\n
-ca:Error: %s: %d: %s\n
-es:Error: %s: %d: %s\n
-de:Fehler: %s: %d: %s\n
-it:Errore: %s: %d: %s\n
+ID:Error: %s: %d: %s
+ja:エラー: %s: %d: %s
+ca:Error: %s: %d: %s
+es:Error: %s: %d: %s
+de:Fehler: %s: %d: %s
+it:Errore: %s: %d: %s
 ---
-ID:Cannot open file "%s".\n
-ja:ファイル "%s" を開けません。\n
-ca:No es pot obrir el fitxer "%s".\n
-es:No se puede abrir el archivo "%s".\n
-de:Datei "%s" kann nicht geöffnet werden.\n
-it:Impossibile aprire il file "%s".\n
+ID:Cannot open file "%s".
+ja:ファイル "%s" を開けません。
+ca:No es pot obrir el fitxer "%s".
+es:No se puede abrir el archivo "%s".
+de:Datei "%s" kann nicht geöffnet werden.
+it:Impossibile aprire il file "%s".
 ---
-ID:Cannot read file "%s".\n
-ja:ファイル "%s" を読み込めません。\n
-ca:No es pot llegir el fitxer "%s".\n
-es:No se puede leer el archivo "%s".\n
-de:Datei "%s" kann nicht gelesen werden.\n
-it:Impossibile leggere il file "%s".\n
+ID:Cannot get the size of file "%s".
+ja:ファイル "%s" のサイズを取得できません。
 ---
-ID:%s:%d: error: %s\n
-ja:%s:%d: エラー: %s\n
-ca:%s:%d: error: %s\n
-es:%s:%d: error: %s\n
-de:%s:%d: Fehler: %s\n
-it:%s:%d: errore: %s\n
+ID:Cannot read file "%s".
+ja:ファイル "%s" を読み込めません。
+ca:No es pot llegir el fitxer "%s".
+es:No se puede leer el archivo "%s".
+de:Datei "%s" kann nicht gelesen werden.
+it:Impossibile leggere il file "%s".
 ---
-ID:shell(): Parameter not a string.\n
-ja:shell(): 引数が文字列ではありません。\n
-ca:shell(): El paràmetre no és un string.\n
-es:shell(): El parámetro no es un string.\n
-de:shell(): Parameter ist kein String.\n
-it:shell(): Il parametro non è un string.\n
+ID:shell(): Parameter not a string.
+ja:shell(): 引数が文字列ではありません。
+ca:shell(): El paràmetre no és un string.g.
+es:shell(): El parámetro no es un string.
+de:shell(): Parameter ist kein String.
+it:shell(): Il parametro non è un string.
 ---
-ID:Failed to load a texture.\n
-ja:テクスチャのロードに失敗しました。\n
+ID:In tag %s:%d: runtime error.
+ja:タグ %s:%d: 実行エラー
 ---
-ID:file parameter is not set.\n
-ja:file引数がありません。\n
+ID:%s:%d: Tag "%s" not found.
+ja:%s:%d: タグ "%s" がみつかりません。
 ---
-ID:No startup file.
-ja:スタートアップファイルがありません。
+ID:%s:%d: "tag_%s" is not a function.
+ja:%s:%d: "tag_%s" が関数ではありません。
 ---
-ID:Failed to initialize the graphics.
-ja:グラフィックスの初期化に失敗しました。
+ID:In tag %s:%d: Tag "%s" execution error.
+ja:タグ %s:%d: タグ "%s" の実行エラーです。
 ---
-ID:Failed to initialize sound.
-ja:サウンドの初期化に失敗しました。
+ID:Cannot determine the file type for "%s".
+ja:"%s" のファイルタイプを決定できません。
+---
+ID:Cannot load an image "%s".
+ja:画像 "%s" をロードできません。
+---
+ID:Too many textures.
+ja:テキスチャが多すぎます。
+---
+ID:Invalid font slot index.
+ja:フォントスロットの番号が不正です。
+---
+ID:Invalid sound stream index.
+ja:サウンドストリームの番号が不正です。
+---
+ID:Save data key too long.
+ja:セーブデータキーが長すぎます。
+---
+ID:Cannot open a save file.
+ja:セーブファイルを開けません。
+---
+ID:Cannot write to a save file.
+ja:セーブファイルに書き込めません。
+---
+ID:Cannot get the size of a save file.
+ja:セーブファイルのサイズを取得できません。
+---
+ID:Save file too large.
+ja:セーブファイルが大きすぎます。
+---
+ID:Cannot read a save file.
+ja:セーブファイルを読み込めません。
 ---

@@ -226,7 +226,7 @@ static void SIGSEGV_Handler(int n)
 {
 	UNUSED_PARAMETER(n);
 
-	log_error("Crashed.\n");
+	log_error(S_TR("The app is crashed."));
 
 	exit(1);
 }
@@ -1132,7 +1132,7 @@ bool log_error(const char *s, ...)
  */
 bool log_out_of_memory(void)
 {
-	log_error("Out of memory.");
+	log_error(S_TR("Out of memory."));
 	return true;
 }
 

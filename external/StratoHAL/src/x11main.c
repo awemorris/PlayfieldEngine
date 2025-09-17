@@ -1018,7 +1018,7 @@ bool log_error(const char *s, ...)
  */
 bool log_out_of_memory(void)
 {
-	log_error("Out of memory.");
+	log_error(S_TR("Out of memory."));
 	return true;
 }
 

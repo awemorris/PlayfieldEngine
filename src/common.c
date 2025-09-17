@@ -26,12 +26,12 @@ bool load_file(const char *file, char **buf, size_t *size)
 	assert(buf != NULL);
 
 	if (!open_rfile(file, &f)) {
-		log_error(S_TR("Cannot open file \"%s\".\n"), file);
+		log_error(PPS_TR("Cannot open file \"%s\"."), file);
 		return false;
 	}
 
 	if (!get_rfile_size(f, &file_size)) {
-		log_error(S_TR("Cannot get the size of file \"%s\"."), file);
+		log_error(PPS_TR("Cannot get the size of file \"%s\"."), file);
 		return false;
 	}
 
@@ -43,7 +43,7 @@ bool load_file(const char *file, char **buf, size_t *size)
 		}
 
 		if (!read_rfile(f, *buf, file_size, &read_size)) {
-			log_error(S_TR("Cannot read file \"%s\"."), file);
+			log_error(PPS_TR("Cannot read file \"%s\"."), file);
 			free(*buf);
 			return false;
 		}

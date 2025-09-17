@@ -148,4 +148,30 @@ playfield_move_to_tag_file(
 void
 playfield_move_to_next_tag(void);
 
+/*
+ * Write save data.
+ */
+bool
+playfield_write_save_data(
+	const char *key,
+	const void *data,
+	size_t size);
+
+/*
+ * Read save data.
+ */
+bool
+playfield_read_save_data(
+	const char *key,
+	void *data,
+	size_t size,
+	size_t *ret);
+
+/*
+ * Check whether save data exist or not.
+ */
+bool
+playfield_check_save_data(
+	const char *key);
+
 #endif

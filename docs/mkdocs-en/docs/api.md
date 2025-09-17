@@ -350,3 +350,34 @@ func playJumpSound() {
     });
 }
 ```
+
+## Save Data
+
+### Engine.writeSaveData()
+
+This API writes a save data value that corresponds to a key string.
+If the save data value is too large, this API will fail.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|key                 |Key string.                                                   |
+|value               |Value. (integer, floating point, array, or dictionary)        |
+
+### Engine.readSaveData()
+
+This API reads save data value that corresponds to a key string.
+The return value will be an object that represents a save data value.
+This API will fail when the specified key is not available.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|key                 |Key string.                                                   |
+
+### Engine.checkSaveData()
+
+This API checks whether the save data exist for a key string or not.
+The return value is a boolean.
+
+|Argument Name       |Description                                                   |
+|--------------------|--------------------------------------------------------------|
+|key                 |Key string.                                                   |
