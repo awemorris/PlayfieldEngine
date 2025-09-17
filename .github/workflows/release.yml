@@ -302,15 +302,15 @@ jobs:
         run: |
           cd docs/mkdocs-en
           mkdocs build
-          mv site ../../dist/documents-english
+          mv site ../../dist/misc/documents-english
           cd ../..
           cd docs/mkdocs-ja
           mkdocs build
-          mv site ../../dist/documents-japanese
+          mv site ../../dist/misc/documents-japanese
           cd ../..
-          cp -R samples dist/samples
-          cp resources/readme.txt dist/
-          cp resources/hajimeni.txt dist/
+          cp -R samples dist/misc/samples
+          cp docs/readme/readme.txt dist/
+          cp docs/readme/hajimeni.txt dist/
 
       - name: Get current date
         id: date

@@ -1,0 +1,844 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【ソフト名】Playfield Engine           【Ver】0.8.1
+【著作権者】Awe Morris                 【制作日】2025-09-17
+【種　　別】MIT License OSS
+【登 録 名】PFE080.ZIP                 【圧縮】ZIP
+【動作環境】Windows 10 以降
+【必要機器】キーボード, マウス
+【配 布 元】GitHub 等
+【連 絡 先】E-mail : awe@noctvm.io
+───────────────────────────────────────
+
+・このファイルを ChatGPT に読み込ませてください
+・「Playfield Script でゲームを作って」と指示すると、ゲームを生成できます！
+
+■ 概要
+
+　Playfield Engine はゲームスクリプトの実行エンジンです。Playfield Script とい
+う言語で記述されたスクリプトを読み込んで画面表示や音声再生を行うことができるた
+め、ゲームを開発することができます。
+
+　2020年代の最新環境で気軽にゲームを開発できます。かなり本格的な 2D ゲームが作
+れる一方で、キッズにも使っていただけると思います。また、昔 HSP や N88-BASIC で
+ゲームを作ったことがある方にも、最新のパソコンでゲーム作りを楽しんでいただけた
+らうれしいです。
+
+■ ファイル構成
+
+  playfield.exe           ... ゲームエンジン本体の実行ファイル
+  main.pf                 ... 動作確認用のスクリプト
+  hajimeni.txt            ... 本書
+  readme.txt              ... 英語版 README
+  misc/
+    samples/              ... サンプルゲーム
+    windows/
+      playfield-arm64.exe ... Arm64 のマシンで高速に動くゲームエンジン本体
+      playfield-pack.exe  ... assets.pak を作成するパッケージャ
+    macos/
+      playfield.dmg       ... macOS 版アプリ (macOS 10.13 以降)
+      playfield-pack.exe  ... パッケージャ
+    wasm/
+      index.html          ... ブラウザ用 WebAssembly ファイル
+      assets.pak          ... 動作確認用のアセット
+      playfield-web.exe   ... 動作確認用のブラウザ立ち上げアプリ
+      readme.txt          ... 説明書
+    ios/                  ... iOS Xcode プロジェクト (iOS 13.0 以降)
+    android/              ... Android Studio プロジェクト (Android 10 以降)
+    unity/                ... 家庭用ゲーム機向け Unity Plugin
+    documents-japanese/   ... 日本語ドキュメント
+    documents-english/    ... 英語ドキュメント
+
+■ インストール
+
+任意のフォルダに展開してください。
+
+■ 使い方 (Windows)
+
+playfield.exe をダブルクリックして実行してください。同じフォルダにある main.pf
+スクリプトが起動します。
+
+スクリプト、画像、音声、フォントなどを１つの assets.pak パッケージファイルにま
+とめることができます。まとめたいファイルを選択して playfield-pack.exe にドロッ
+プしてください。パッケージファイルがある場合、playfield.exe はパッケージ内のファイル
+を優先します。
+
+■ 使い方 (macOS)
+
+　playfield.dmg を開き、中身の Playfield アプリを適当な場所にコピーします。
+コピーしたアプリを main.pf や assets.pak のあるフォルダに入れて、アプリを起動
+することで、ゲームを実行できます。
+
+■ 使い方 (Wasm)
+
+　作成した assets.pak と index.html を Web サーバにアップロードすること
+で、ゲームを公開できます。また、試しに手元のパソコンで起動してみるには、
+playfield-web.exe を実行すれば、ブラウザでゲームが表示されます。
+
+■ 使い方 (iOS)
+
+　作成した assets.pak を Resources/ に入れてから、Xcode でプロジェクトを開きま
+す。iPhone や iPad などにアプリを転送することでゲームを起動できます。Mac 上で
+動作確認する場合、シミュレータが利用できます。
+
+■ 使い方 (Android)
+
+　まず、すべてのアセット を app/src/main/assets にコピーします。
+
+  ○ かんたんな方法
+
+    - android フォルダを D: ドライブ直下などの短い名前の場所にコピーします
+    - build.bat をダブルクリックして実行すると、黒いウィンドウが表示されます
+    - 途中、(y/N)? と表示されたら、 y キーを押してから、改行キーを押します
+    - ビルドが完了すると、黒いウィンドウが消えます
+    - Android アプリの app-debug.apk が作成されます
+    - OneDrive などを経由して Android スマートフォンで開きます
+
+  ○ 本格的な方法
+
+    - android フォルダを Android Studio で開きます
+    - アプリをビルドします
+    - パソコン上で動作確認したり、接続した Android で実行したりできます
+
+■ 使い方 (Unity)
+
+　すべてのアセットを StreamingAssets フォルダにコピーしてから、unity フォルダ
+を Unity Editor で開きます。
+
+■ 免責
+
+本ソフトの使用により生じたいかなる損害に対しても、作者は一切責任を負いません。
+
+■ 配布/転載/改造
+
+・MITライセンスに従います
+・営利、非営利に関わらず、著作権表示を行えば自由に改変、再配布を行えます
+・雑誌/CD-ROM 収録等は自由で、連絡いただけると作者も購入できてうれしいです
+
+■ 著作権
+
+Playfield Engine
+© 2025 Awe Morris
+
+■ その他
+
+・感想等メールで一言いただけるとうれしいです！
+
+■ 改版履歴
+
+2025-09-12 Ver.0.8.0 公開
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Playfield Script の文法
+=======================
+
+`Playfield Engine` はスクリプト言語として `Noct` を使用します。
+
+## 代入
+
+Noct の変数は動的型付けであり、明示的な宣言は不要です。
+代入演算子（`=`）を使って、変数を作成し値を代入します。
+
+以下のように、Noct では整数、浮動小数点数、文字列など、さまざまなデータ型をサポートしています。
+
+また、変数は実行中に異なる型へ再代入することが可能です。
+
+```
+func main() {
+    var a = 123;
+    print(a);
+
+    var b = 1.0;
+    print(b);
+
+    var c = "string";
+    print(c);
+}
+```
+
+## グローバル変数
+
+グローバル変数は関数の中で宣言します。関数の外に書くことはできません。
+
+```
+func main() {
+    globalVariable = 123;
+    print(globalVariable);
+}
+```
+
+## ローカル変数
+
+`var` キーワードを使うと、変数をローカル変数として宣言できます。
+`var` を付けずに代入すると、その変数はグローバル変数として作成されます。
+
+```
+func main() {
+    var a = 123;
+    print(a);
+}
+```
+
+## 配列
+
+配列はインデックスでアクセスできる、順序付きの値のコレクションです。
+配列は `for` ループ構文を使った反復処理をサポートしており、各要素を直接順番に処理できます。
+
+```
+func main() {
+    var array = [0, 1, 2];
+    for (value in array) {
+        print(value);
+    }
+}
+```
+
+Noct は動的型付けシステムであるため、配列は異なる型の値を同時に保持できます。
+
+```
+func main() {
+    var array = [123, "string"];
+}
+```
+
+Noct には配列の末尾に要素を追加するための組み込み関数 `push()` が用意されています。
+また、末尾の要素は `pop()` で削除できます。
+
+```
+func main() {
+    var array = []
+    array->push(0);
+    array->push(1);
+    array->push(2);
+
+    var last = array->pop();
+}
+```
+
+## 辞書
+
+辞書はキーと値のペアを格納するデータ構造で、他の言語におけるハッシュマップやオブジェクトに似ています。
+中括弧 `{}` を使って定義し、キーと値のペアはコロンで区切ります。
+
+辞書は反復処理をサポートしており、キーと値の両方に同時にアクセスできます。
+
+```
+func main() {
+    var dict = {key1: "value1", key2: "value2"};
+    for (key, value in dict) {
+        print("key = " + key);
+        print("value = " + value);
+    }
+
+}
+```
+
+辞書はシングルステップ方式で構築することもできます。
+代入の方法としては、`[]` を使う配列スタイルと、`.` を使うオブジェクトスタイルの両方が利用できます。
+
+```
+func main() {
+    var dict = {};
+    dict["key1"] = "value1";
+    dict.key2 = "value2";
+}
+```
+
+ビルトイン関数 `remove()` はキーを削除できます。
+
+```
+func main() {
+    var dict = {key1: "value1", key2: "value2"};
+    remove(dict, "key1");
+}
+```
+
+## for ループ
+
+`for` ループ構文は、範囲・配列・辞書といったシーケンスを反復処理するための簡潔な記法を提供します。
+
+範囲構文（`..` 演算子を使用）は、開始値から終了値のひとつ前までの値を生成するイテレータを作成します。
+
+```
+func main() {
+    for (i in 0..10) {
+        print(i);
+    }
+}
+```
+
+`for` ループは配列やその他のコレクション型を直接反復処理することもできます。
+
+配列は `for-value` 構文 を使って順に処理できます。
+
+```
+func main() {
+    array = [0, 1, 2];
+    for (value in array) {
+        print(value);
+    }
+}
+```
+
+辞書は `for-key-value` 構文 を使って反復処理できます。
+
+```
+func main() {
+    var dict = {key1: "value1", key2: "value2"};
+    for (key, value in dict) {
+        print(key + "=" + value);
+    }
+}
+```
+
+## while ループ
+
+`while` ループは、指定した条件が真（true）である限り処理を繰り返す、古典的な反復構文です。
+コレクションの反復処理を目的とした `for` ループとは異なり、`while` ループはより柔軟で、事前に反復回数がわからないアルゴリズムを実装するときなどに利用できます。
+
+以下の例では、0 から 9 までカウントアップする基本的なカウンターの実装を示しています。
+
+```
+func main() {
+    var i = 0;
+    while (i < 10) {
+        print(i);
+        i = i + 1;
+    }
+}
+```
+
+## if / else ブロック
+
+条件式を評価してブロックを条件付きで実行することができます。
+`if-else` 構文はおなじみの書式で、条件が順に評価されていきます。
+
+```
+func main() {
+    var a = readint();
+    if (a == 0) {
+        print("0");
+    } else if (a == 1) {
+        print("1");
+    } else {
+        print("other");
+    }
+}
+```
+
+## ラムダ関数
+
+Noct では、関数は第一級オブジェクトとして扱われます。
+匿名関数（lambda 式とも呼ばれる）を使うことで、名前を付けずに関数を作成できます。
+
+```
+func main() {
+    var f = (a, b) => { return a + b; }
+    print(f(1, 2));
+}
+```
+
+ラムダ関数は、コンパイル時に単純に名前付き関数へ変換されます。
+そのため、外側の関数で宣言された変数をキャプチャすることはできません。
+
+## インクリメント / デクリメント (+=, -=, ++, --)
+
+```
+func main() {
+    var a = 123;
+    a += 321;
+    a++;
+
+    var b = 123;
+    b -= 321;
+    b--;
+}
+```
+
+`++` と `--` は、単独の文（`a++;`, `b--;`）としてのみサポートされています。
+式の中で使用することは禁止されており、これは複雑な副作用を避けるための仕様です。
+
+## オブジェクト指向
+
+Noct のオブジェクト指向モデルは、プロトタイプベース OOP の軽量なバリエーションです。
+
+- クラスは単なる辞書のテンプレートです
+- 継承やインスタンス化は、辞書の複製とマージによって実現されます
+- プロトタイプチェーンは存在せず、クラスを変更しても既存のインスタンスには影響しません
+
+辞書は第一級オブジェクトとして扱われ、Dictionary-based OOP（辞書ベースOOP）と呼ばれます。
+
+```
+func main() {
+    // 基底クラスの定義 (クラスの実体はただの辞書です)
+    Animal = class {
+        name: "Animal",
+        cry: (this) => {
+        }
+    };
+
+    // サブクラスの定義 (辞書のマージにすぎません)
+    Cat = extend Animal {
+        name: "Cat",
+        voice: "meow",
+        cry: (this) => {
+            print(this.name + " cries like " + this.voice);
+        }
+    };
+
+    // インスタンス化 (これも辞書のマージです)
+    var myCat = new Cat {
+        voice: "neee"
+    };
+
+    // this渡し呼び出しには -> () 構文を使います (myCat.cry(myCat) と等価です)
+    myCat->cry();
+}
+```
+
+## 組み込み関数
+
+### int()
+
+```
+var i = int(1.23);
+```
+
+### float()
+
+```
+var f = float(123);
+```
+
+### newArray()
+
+```
+var array = newArray(10);
+```
+
+### push()
+
+```
+var array = [1, 2, 3];
+array->push(4);
+```
+
+### pop()
+
+```
+var array = [1, 2, 3];
+var last = array->pop();
+```
+
+### resize()
+
+```
+var array = [1, 2, 3];
+array->resize(2);
+```
+
+### substring()
+
+```
+var s1 = "ABCDEFG";
+var s2 = s1.substring(1, -1); // from the char 1, to the end "BCDEFG"
+}
+```
+
+### charAt()
+
+```
+var s = "ABC";
+for (i in 0 .. s.length) {
+   var c = s->charAt(i);
+   print(c);
+}
+```
+
+### sin(), cos(), tan()
+
+```
+var s = sin(x);
+var c = cos(x);
+var t = tan(x);
+```
+
+### random()
+
+```
+var r = random(); // 0 .. 1.0
+```
+
+### fast_gc(), full_gc(), compact_gc()
+
+```
+// Do young GC.
+fast_gc();
+
+// Do young + old GC.
+full_gc();
+
+// Do young + old + compact GC.
+compact_gc();
+```
+
+### unset()
+
+```
+var dic = {key1: "ABC"};
+dic->unset("key1");
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Playfield Script API
+====================
+
+すべての API 関数は 1 つのパラメータを取ります。
+そのパラメータは辞書でなければならず、引数はキーと値のペアとして格納されます。
+
+## 骨組み
+
+```
+func setup() {
+    return {
+        width:  1920,
+        height: 1080,
+        title:  "My Game"
+    };
+}
+
+func start() {
+    playerTex = Engine.loadTexture({
+                    file: "player.png"
+                });
+}
+
+func frame() {
+    Engine.draw({
+        texture: playerTex,
+        x:       Engine.mousePosX,
+        y:       Engine.mousePosY
+    });
+}
+```
+
+## 時間
+
+### 絶対的な時間
+
+|変数                        |説明                                       |
+|----------------------------|-------------------------------------------|
+|Engine.millisec             |起動からの時間（ミリ秒）                   |
+
+```
+func frame() {
+    var dt = (Engine.millisec - lastTime) * 0.001;
+
+    update(dt);
+    render();
+}
+```
+
+### Engine.getDate()
+
+日付を表す辞書を返します。
+
+```
+func frame() {
+    var date = Engine.getDate({});
+
+    var year  = date.year;
+    var month = date.month;
+    var day   = date.day;
+    var hour  = date.hour;
+    var min   = date.minute;
+    var sec   = date.second;
+}
+```
+
+## 入力
+
+### マウス状態
+
+これらは変数であり、関数ではありません。
+
+|変数                            |説明                                       |
+|--------------------------------|-------------------------------------------|
+|Engine.mousePosX                |マウスX座標                                |
+|Engine.mousePosY                |マウスY座標                                |
+|Engine.isMouseLeftPressed       |左マウスボタン                             |
+|Engine.isMouseRightPressed      |右マウスボタン                             |
+|Engine.isKeyUpPressed           |上キー                                     |
+|Engine.isKeyDownPressed         |下キー                                     |
+|Engine.isKeyLeftPressed         |左キー                                     |
+|Engine.isKeyRightPressed        |右キー                                     |
+|Engine.isKeyReturnPressed       |リターンキー                               |
+|Engine.isControllerUpPressed    |ゲームパッド上キー                         |
+|Engine.isControllerDownPressed  |ゲームパッド下キー                         |
+|Engine.isControllerLeftPressed  |ゲームパッド左キー                         |
+|Engine.isControllerRightPressed |ゲームパッド右キー                         |
+|Engine.isController1Pressed     |ゲームパッドボタン1                        |
+|Engine.isController2Pressed     |ゲームパッドボタン2                        |
+|Engine.isController3Pressed     |ゲームパッドボタン3                        |
+|Engine.isController4Pressed     |ゲームパッドボタン4                        |
+|Engine.isController5Pressed     |ゲームパッドボタン5                        |
+|Engine.isController6Pressed     |ゲームパッドボタン6                        |
+|Engine.isController7Pressed     |ゲームパッドボタン7                        |
+|Engine.isController8Pressed     |ゲームパッドボタン8                        |
+
+```
+func update() {
+    if (Engine.isMouseLeftPressed) {
+        player.x = player.x + 100;
+    }
+}
+```
+
+## レンダリング
+
+### Engine.createColorTexture()
+
+この API は指定された色のテクスチャを作成して返します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|width               |テクスチャの幅                                          |
+|height              |テクスチャの高さ                                        |
+|r                   |色の R 値 (0-255)                                       |
+|g                   |色の G 値 (0-255)                                       |
+|b                   |色の B 値 (0-255)                                       |
+|a                   |アルファ値 (0-255)                                      |
+
+```
+func createBlockTexture() {
+    blockTex = Engine.createColorTexture({
+                   width:  16,
+                   height: 16,
+                   r:      255,
+                   g:      255,
+                   b:      255,
+                   a:      255
+               });
+}
+```
+
+### Engine.loadTexture()
+
+この API はアセットからテクスチャをロードし、テクスチャを返します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|file                |ロードするファイルの名前                                |
+
+```
+func loadPlayerTexture() {
+   playerTex = Engine.loadTexture({
+                   file: "player.png"
+               });
+
+   var width = playerTex.width;
+   var height = playerTex.height;
+}
+```
+
+### Engine.destroyTexture()
+
+この API はテクスチャを破棄します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|texture             |テクスチャ                                              |
+
+```
+func destroyPlayerTexture() {
+    Engine.loadTexture({
+        texture: playerTex
+    });
+}
+```
+
+### Engine.renderTexture()
+
+この API はテクスチャをスクリーンに描画します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|dstLeft             |スクリーン X 座標                                       |
+|dstTop              |スクリーン Y 座標                                       |
+|dstWidth            |スクリーンでの幅                                        |
+|dstHeight           |スクリーンでの高さ                                      |
+|texture             |テクスチャ                                              |
+|srcLeft             |テクスチャの左上 X 座標                                 |
+|srcTop              |テクスチャの左上 Y 座標                                 |
+|srcWidth            |テクスチャ矩形の幅                                      |
+|srcHeight           |テキスチャ矩形の高さ                                    |
+|alpha               |アルファ値 (0-255)                                      |
+
+```
+func renderPlayer() {
+    Engine.renderTexture({
+        dstLeft:   playerPos.x,
+        dstTop:    playerPos.y,
+        dstWidth:  playerTex.width,
+	dstHeight: playerTex.height,
+        texture:   playerTex,
+        srcLeft:   0,
+        srcTop:    0,
+        srcWidth:  playerTex.width,
+        srcHeight: playerTex.height,
+        alpha:     255
+    });
+}
+```
+
+### Engine.draw()
+
+この API はテキスチャをスクリーンに描画します。
+`Engine.renderTexture()` のシンプル版です。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|texture             |テクスチャ                                              |
+|x                   |スクリーン X 座標                                       |
+|y                   |スクリーン Y 座標                                       |
+
+```
+func renderPlayer() {
+    Engine.draw({
+        texture: playerTex,
+        x:       playerPos.x,
+        y:       playerPos.y
+    });
+}
+```
+
+### Engine.renderTexture3D()
+
+この API はテクスチャを 3D 変形してスクリーンに描画します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|x1                  |スクリーン座標 X1                                       |
+|y1                  |スクリーン座標 Y1                                       |
+|x2                  |スクリーン座標 X2                                       |
+|y2                  |スクリーン座標 Y2                                       |
+|x3                  |スクリーン座標 X3                                       |
+|y3                  |スクリーン座標 Y3                                       |
+|x4                  |スクリーン座標 X4                                       |
+|y4                  |スクリーン座標 Y4                                       |
+|texture             |テクスチャ                                              |
+|srcLeft             |テクスチャ左上 X 座標                                   |
+|srcTop              |テクスチャ左上 Y 座標                                   |
+|srcWidth            |テクスチャ矩形の幅                                      |
+|srcHeight           |テクスチャ矩形の高さ                                    |
+|alpha               |アルファ値 (0-255)                                      |
+
+```
+func renderPlayer() {
+    Engine.renderTexture({
+        dstLeft:   playerPos.x,
+        dstTop:    playerPos.y,
+        dstWidth:  playerTex.width,
+	dstHeight: playerTex.height,
+        texture:   playerTex,
+        srcLeft:   0,
+        srcTop:    0,
+        srcWidth:  playerTex.width,
+        srcHeight: playerTex.height,
+        alpha:     255
+    });
+}
+```
+
+### Engine.loadFont()
+
+この API はフォントファイルをフォントスロットにロードします。
+
+|Argument Name       |Description                                             |
+|--------------------|--------------------------------------------------------|
+|slot                |フォントスロット番号 (0-3)                              |
+|file                |ロードするファイルの名前                                |
+
+```
+func loadNotoSansFont() {
+    Engine.loadFont({ slot: 0, file: "NotoSans.ttf" });
+}
+```
+
+### Engine.createTextTexture()
+
+この API はテキストを描画したテクスチャを描画します。
+     	 	 
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|slot                |フォントスロット番号 (0-3)                              |
+|text                |描画するテキスト                                        |
+|size                |フォントサイズ                                          |
+|r                   |色の R 値 (0-255)                                       |
+|g                   |色の G 値 (0-255)                                       |
+|b                   |色の B 値 (0-255)                                       |
+|a                   |アルファ値 (0-255)                                      |
+
+```
+func createScoreTexture() {
+    scoreTex = Engine.createTextTexture({
+                   slot: 0,
+                   text: "Score: " + score,
+                   size: 32,
+                   r:    255,
+                   g:    255,
+                   b:    255,
+                   a:    255
+               });
+}
+```
+
+## サウンド
+
+### Engine.playSound()
+
+この API はサウンドをサウンドトラック上で再生します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|stream              |トラック番号 (0-3)                                      |
+|file                |再生するファイルの名前                                  |
+
+```
+func playJumpSound() {
+    Engine.playSound({ stream: 0, file: "jump.ogg" });
+}
+```
+
+### Engine.stopSound()
+
+この API はサウンドトラック上のサウンド再生を停止します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|stream              |Track index. (0-3)                                      |
+
+```
+func playJumpSound() {
+    Engine.stopSound({ stream: 0 });
+}
+```
+
+### Engine.setSoundVolume()
+
+この API はサウンドトラックのボリュームを設定します。
+
+|引数名              |説明                                                    |
+|--------------------|--------------------------------------------------------|
+|stream              |トラック番号 (0-3, -1 ならマスター)                     |
+|volume              |ボリューム値 (0-1.0)                                    |
+
+```
+func playJumpSound() {
+    Engine.setSoundVolume({
+        stream: 0,
+        volume: 1.0
+    });
+}
+```
