@@ -703,6 +703,7 @@ enum key_code {
 	KEY_GAMEPAD_Y,
 	KEY_GAMEPAD_L,
 	KEY_GAMEPAD_R,
+	KEY_MAX,
 };
 
 /* Mouse button. */
