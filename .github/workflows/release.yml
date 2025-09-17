@@ -159,7 +159,6 @@ jobs:
       - name: Copy for Linux.
         run: |
           cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
-          cp linux/PlayfieldEngine-aarch64.AppImage dist/misc/linux/
 
       - name: Setup for macOS
         uses: apple-actions/import-codesign-certs@v3
