@@ -5,7 +5,7 @@
  */
 
 /*
- * DirectInput Joystick Input
+ * DirectInput Gamepad Input
  */
 
 extern "C" {
@@ -106,8 +106,8 @@ EnumAxesCallback(
     diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
     diprg.diph.dwHow        = DIPH_BYOFFSET; 
     diprg.diph.dwObj        = pdidoi->dwOfs;
-    diprg.lMin              = -1000; 
-    diprg.lMax              = +1000; 
+    diprg.lMin              = -32768;
+    diprg.lMax              = +32767;
     
     if (FAILED(pGamepad->SetProperty(DIPROP_RANGE, &diprg.diph)))
         return DIENUM_STOP;
@@ -156,44 +156,104 @@ VOID DInputUpdate(VOID)
         }
     } while (hr == DIERR_INPUTLOST);
 
-    const int DELTA = 200;
-    if (js.lX < -DELTA)
+    on_event_analog_input(ANALOG_X1, js.lX);
+    on_event_analog_input(ANALOG_Y1, js.lY);
+    on_event_analog_input(ANALOG_X2, js.lRx);
+    on_event_analog_input(ANALOG_Y2, js.lRy);
+    on_event_analog_input(ANALOG_L, js.lZ);
+    on_event_analog_input(ANALOG_L, js.lRz);
+
+    if (js.rgdwPOV[0] == 0)
     {
-        on_event_key_press(KEY_CONTROLLER_LEFT);
-        on_event_key_release(KEY_CONTROLLER_RIGHT);
+        on_event_key_press(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
     }
-    else if (js.lX > DELTA)
+    else if (js.rgdwPOV[0] == 4500)
     {
-        on_event_key_release(KEY_CONTROLLER_LEFT);
-        on_event_key_press(KEY_CONTROLLER_RIGHT);
+        on_event_key_press(KEY_GAMEPAD_UP);
+        on_event_key_press(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 9000)
+    {
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_press(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 13500)
+    {
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_press(KEY_GAMEPAD_RIGHT);
+        on_event_key_press(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 18000)
+    {
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_press(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 22500)
+    {
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_press(KEY_GAMEPAD_DOWN);
+        on_event_key_press(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 27000)
+    {
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_press(KEY_GAMEPAD_LEFT);
+    }
+    else if (js.rgdwPOV[0] == 31500)
+    {
+        on_event_key_press(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_press(KEY_GAMEPAD_LEFT);
     }
     else
     {
-        on_event_key_release(KEY_CONTROLLER_LEFT);
-        on_event_key_release(KEY_CONTROLLER_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_UP);
+        on_event_key_release(KEY_GAMEPAD_RIGHT);
+        on_event_key_release(KEY_GAMEPAD_DOWN);
+        on_event_key_release(KEY_GAMEPAD_LEFT);
     }
 
-    if (js.lY < -DELTA)
-    {
-        on_event_key_press(KEY_CONTROLLER_UP);
-        on_event_key_release(KEY_CONTROLLER_DOWN);
-    }
-    else if (js.lY > DELTA)
-    {
-        on_event_key_release(KEY_CONTROLLER_UP);
-        on_event_key_press(KEY_CONTROLLER_DOWN);
-    }
+    if (js.rgbButtons[1] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_A);
     else
-    {
-        on_event_key_release(KEY_CONTROLLER_UP);
-        on_event_key_release(KEY_CONTROLLER_DOWN);
-    }
+	on_event_key_release(KEY_GAMEPAD_A);
 
-    for (int i = 0; i < 32; i++)
-    {
-        if (js.rgbButtons[i] & 0x80)
-            on_event_key_press(KEY_CONTROLLER_1 + i);
-        else
-            on_event_key_release(KEY_CONTROLLER_1 + i);
-    }
+    if (js.rgbButtons[2] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_B);
+    else
+	on_event_key_release(KEY_GAMEPAD_B);
+
+    if (js.rgbButtons[0] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_X);
+    else
+	on_event_key_release(KEY_GAMEPAD_X);
+
+    if (js.rgbButtons[3] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_Y);
+    else
+	on_event_key_release(KEY_GAMEPAD_Y);
+
+    if (js.rgbButtons[4] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_L);
+    else
+	on_event_key_release(KEY_GAMEPAD_L);
+
+    if (js.rgbButtons[5] & 0x80)
+	on_event_key_press(KEY_GAMEPAD_R);
+    else
+	on_event_key_release(KEY_GAMEPAD_R);
 }

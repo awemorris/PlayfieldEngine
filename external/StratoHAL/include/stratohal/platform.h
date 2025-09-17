@@ -693,25 +693,32 @@ enum key_code {
 	KEY_S,
 	KEY_L,
 	KEY_H,
-	KEY_CONTROLLER_UP,
-	KEY_CONTROLLER_DOWN,
-	KEY_CONTROLLER_LEFT,
-	KEY_CONTROLLER_RIGHT,
-	KEY_CONTROLLER_1,
-	KEY_CONTROLLER_2,
-	KEY_CONTROLLER_3,
-	KEY_CONTROLLER_4,
-	KEY_CONTROLLER_5,
-	KEY_CONTROLLER_6,
-	KEY_CONTROLLER_7,
-	KEY_CONTROLLER_8,
-	KEY_MAX,
+	KEY_GAMEPAD_UP,
+	KEY_GAMEPAD_DOWN,
+	KEY_GAMEPAD_LEFT,
+	KEY_GAMEPAD_RIGHT,
+	KEY_GAMEPAD_A,
+	KEY_GAMEPAD_B,
+	KEY_GAMEPAD_X,
+	KEY_GAMEPAD_Y,
+	KEY_GAMEPAD_L,
+	KEY_GAMEPAD_R,
 };
 
 /* Mouse button. */
 enum mouse_button {
 	MOUSE_LEFT,
 	MOUSE_RIGHT,
+};
+
+/* Analog input. */
+enum analog_input {
+	ANALOG_X1,
+	ANALOG_Y1,
+	ANALOG_X2,
+	ANALOG_Y2,
+	ANALOG_L,
+	ANALOG_R,
 };
 
 /* Callbacks. */
@@ -724,6 +731,7 @@ void on_event_key_release(int key);
 void on_event_mouse_press(int button, int x, int y);
 void on_event_mouse_release(int button, int x, int y);
 void on_event_mouse_move(int x, int y);
+void on_event_analog_input(int input, int val);
 void on_event_touch_cancel(void);
 void on_event_swipe_down(void);
 void on_event_swipe_up(void);

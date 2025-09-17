@@ -4,8 +4,12 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-#ifndef STRATOHAL_DINPUT_H
-#define STRATOHAL_DINPUT_H
+/*
+ * DirectInput Gamepad Input
+ */
+
+#ifndef STRATOHAL_DIGAMEPAD_H
+#define STRATOHAL_DIGAMEPAD_H
 
 #include <windows.h>
 

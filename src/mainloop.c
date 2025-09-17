@@ -80,18 +80,22 @@ bool on_event_start(void)
 	set_vm_int("isKeyLeftPressed", 0);
 	set_vm_int("isKeyRightPressed", 0);
 	set_vm_int("isKeyReturnPressed", 0);
-        set_vm_int("isControllerLeftPressed", 0);
-        set_vm_int("isControllerRightPressed", 0);
-        set_vm_int("isControllerUpPressed", 0);
-        set_vm_int("isControllerDownPressed", 0);
-        set_vm_int("isController1Pressed", 0);
-        set_vm_int("isController2Pressed", 0);
-        set_vm_int("isController3Pressed", 0);
-        set_vm_int("isController4Pressed", 0);
-        set_vm_int("isController5Pressed", 0);
-        set_vm_int("isController6Pressed", 0);
-        set_vm_int("isController7Pressed", 0);
-        set_vm_int("isController8Pressed", 0);
+        set_vm_int("isGamepadLeftPressed", 0);
+        set_vm_int("isGamepadRightPressed", 0);
+        set_vm_int("isGamepadUpPressed", 0);
+        set_vm_int("isGamepadDownPressed", 0);
+        set_vm_int("isGamepadAPressed", 0);
+        set_vm_int("isGamepadBPressed", 0);
+        set_vm_int("isGamepadXPressed", 0);
+        set_vm_int("isGamepadYPressed", 0);
+        set_vm_int("isGamepadLPressed", 0);
+        set_vm_int("isGamepadRPressed", 0);
+	set_vm_int("gamepadAnalogX1", 0);
+	set_vm_int("gamepadAnalogY1", 0);
+	set_vm_int("gamepadAnalogX2", 0);
+	set_vm_int("gamepadAnalogY2", 0);
+	set_vm_int("gamepadAnalogL", 0);
+	set_vm_int("gamepadAnalogR", 0);
 
 	/* Initialize the lap timer. */
 	reset_lap_timer(&lap_origin);
@@ -167,41 +171,37 @@ void on_event_key_press(int key)
 	case KEY_RETURN:
 		set_vm_int("isKeyReturnPressed", 1);
 		break;
-	case KEY_CONTROLLER_LEFT:
-		set_vm_int("isControllerLeftPressed", 1);
+	case KEY_GAMEPAD_LEFT:
+		set_vm_int("isGamepadLeftPressed", 1);
 		break;
-	case KEY_CONTROLLER_RIGHT:
-		set_vm_int("isControllerRightPressed", 1);
+	case KEY_GAMEPAD_RIGHT:
+		set_vm_int("isGamepadRightPressed", 1);
 		break;
-	case KEY_CONTROLLER_UP:
-		set_vm_int("isControllerUpPressed", 1);
+	case KEY_GAMEPAD_UP:
+		set_vm_int("isGamepadUpPressed", 1);
 		break;
-	case KEY_CONTROLLER_DOWN:
-		set_vm_int("isControllerDownPressed", 1);
+	case KEY_GAMEPAD_DOWN:
+		set_vm_int("isGamepadDownPressed", 1);
 		break;
-	case KEY_CONTROLLER_1:
-		set_vm_int("isController1Pressed", 1);
+	case KEY_GAMEPAD_A:
+		set_vm_int("isGamepadAPressed", 1);
 		break;
-	case KEY_CONTROLLER_2:
-		set_vm_int("isController2Pressed", 1);
+	case KEY_GAMEPAD_B:
+		set_vm_int("isGamepadBPressed", 1);
 		break;
-	case KEY_CONTROLLER_3:
-		set_vm_int("isController3Pressed", 1);
+	case KEY_GAMEPAD_X:
+		set_vm_int("isGamepadXPressed", 1);
 		break;
-	case KEY_CONTROLLER_4:
-		set_vm_int("isController4Pressed", 1);
+	case KEY_GAMEPAD_Y:
+		set_vm_int("isGamepadYPressed", 1);
 		break;
-	case KEY_CONTROLLER_5:
-		set_vm_int("isController5Pressed", 1);
+	case KEY_GAMEPAD_L:
+		set_vm_int("isGamepadLPressed", 1);
 		break;
-	case KEY_CONTROLLER_6:
-		set_vm_int("isController6Pressed", 1);
+	case KEY_GAMEPAD_R:
+		set_vm_int("isGamepadRPressed", 1);
 		break;
-	case KEY_CONTROLLER_7:
-		set_vm_int("isController7Pressed", 1);
-		break;
-	case KEY_CONTROLLER_8:
-		set_vm_int("isController8Pressed", 1);
+	default:
 		break;
 	}
 }
@@ -227,41 +227,37 @@ void on_event_key_release(int key)
 	case KEY_RETURN:
 		set_vm_int("isKeyReturnPressed", 0);
 		break;
-	case KEY_CONTROLLER_LEFT:
-		set_vm_int("isControllerLeftPressed", 0);
+	case KEY_GAMEPAD_LEFT:
+		set_vm_int("isGamepadLeftPressed", 0);
 		break;
-	case KEY_CONTROLLER_RIGHT:
-		set_vm_int("isControllerRightPressed", 0);
+	case KEY_GAMEPAD_RIGHT:
+		set_vm_int("isGamepadRightPressed", 0);
 		break;
-	case KEY_CONTROLLER_UP:
-		set_vm_int("isControllerUpPressed", 0);
+	case KEY_GAMEPAD_UP:
+		set_vm_int("isGamepadUpPressed", 0);
 		break;
-	case KEY_CONTROLLER_DOWN:
-		set_vm_int("isControllerDownPressed", 0);
+	case KEY_GAMEPAD_DOWN:
+		set_vm_int("isGamepadDownPressed", 0);
 		break;
-	case KEY_CONTROLLER_1:
-		set_vm_int("isController1Pressed", 0);
+	case KEY_GAMEPAD_A:
+		set_vm_int("isGamepadAPressed", 0);
 		break;
-	case KEY_CONTROLLER_2:
-		set_vm_int("isController2Pressed", 0);
+	case KEY_GAMEPAD_B:
+		set_vm_int("isGamepadBPressed", 0);
 		break;
-	case KEY_CONTROLLER_3:
-		set_vm_int("isController3Pressed", 0);
+	case KEY_GAMEPAD_X:
+		set_vm_int("isGamepadXPressed", 0);
 		break;
-	case KEY_CONTROLLER_4:
-		set_vm_int("isController4Pressed", 0);
+	case KEY_GAMEPAD_Y:
+		set_vm_int("isGamepadYPressed", 0);
 		break;
-	case KEY_CONTROLLER_5:
-		set_vm_int("isController5Pressed", 0);
+	case KEY_GAMEPAD_L:
+		set_vm_int("isGamepadLPressed", 0);
 		break;
-	case KEY_CONTROLLER_6:
-		set_vm_int("isController6Pressed", 0);
+	case KEY_GAMEPAD_R:
+		set_vm_int("isGamepadRPressed", 0);
 		break;
-	case KEY_CONTROLLER_7:
-		set_vm_int("isController7Pressed", 0);
-		break;
-	case KEY_CONTROLLER_8:
-		set_vm_int("isController8Pressed", 0);
+	default:
 		break;
 	}
 }
@@ -297,6 +293,34 @@ void on_event_mouse_move(int x, int y)
 	if (is_running) {
 		set_vm_int("mousePosX", x);
 		set_vm_int("mousePosY", y);
+	}
+}
+
+void on_event_analog_input(int input, int val)
+{
+	if (is_running) {
+		switch (input) {
+		case ANALOG_X1:
+			set_vm_int("gamepadAnalogX1", val);
+			break;
+		case ANALOG_Y1:
+			set_vm_int("gamepadAnalogY1", val);
+			break;
+		case ANALOG_X2:
+			set_vm_int("gamepadAnalogX2", val);
+			break;
+		case ANALOG_Y2:
+			set_vm_int("gamepadAnalogY2", val);
+			break;
+		case ANALOG_L:
+			set_vm_int("gamepadAnalogL", val);
+			break;
+		case ANALOG_R:
+			set_vm_int("gamepadAnalogR", val);
+			break;
+		default:
+			break;
+		}
 	}
 }
 

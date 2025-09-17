@@ -66,8 +66,6 @@ func frame() {
 
 ## Input
 
-### Mouse Positions
-
 These are variables, not functions.
 
 |Variable                        |Description                                |
@@ -81,18 +79,22 @@ These are variables, not functions.
 |Engine.isKeyLeftPressed         |Left key state.                            |
 |Engine.isKeyRightPressed        |Right key state.                           |
 |Engine.isKeyReturnPressed       |Return key state.                          |
-|Engine.isControllerUpPressed    |Game pad up arrow state.                   |
-|Engine.isControllerDownPressed  |Game pad down arrow state.                 |
-|Engine.isControllerLeftPressed  |Game pad left arrow state.                 |
-|Engine.isControllerRightPressed |Game pad right arrow state.                |
-|Engine.isController1Pressed     |Game pad button 1 state.                   |
-|Engine.isController2Pressed     |Game pad button 2 state.                   |
-|Engine.isController3Pressed     |Game pad button 3 state.                   |
-|Engine.isController4Pressed     |Game pad button 4 state.                   |
-|Engine.isController5Pressed     |Game pad button 5 state.                   |
-|Engine.isController6Pressed     |Game pad button 6 state.                   |
-|Engine.isController7Pressed     |Game pad button 7 state.                   |
-|Engine.isController8Pressed     |Game pad button 8 state.                   |
+|Engine.isGamepadUpPressed       |Gamepad up arrow state.                    |
+|Engine.isGamepadDownPressed     |Gamepad down arrow state.                  |
+|Engine.isGamepadLeftPressed     |Gamepad left arrow state.                  |
+|Engine.isGamepadRightPressed    |Gamepad right arrow state.                 |
+|Engine.isGamepadAPressed        |Gamepad A button state.                    |
+|Engine.isGamepadBPressed        |Gamepad B button state.                    |
+|Engine.isGamepadXPressed        |Gamepad X button state.                    |
+|Engine.isGamepadYPressed        |Gamepad Y button state.                    |
+|Engine.isGamepadLPressed        |Gamepad L button state.                    |
+|Engine.isGamepadRPressed        |Gamepad R button state.                    |
+|Engine.gamepadAnalogX1          |Gamepad analog 1 X (-32768, 32767)         |
+|Engine.gamepadAnalogY1          |Gamepad analog 1 Y (-32768, 32767)         |
+|Engine.gamepadAnalogX2          |Gamepad analog 2 X (-32768, 32767)         |
+|Engine.gamepadAnalogY2          |Gamepad analog 2 Y (-32768, 32767)         |
+|Engine.gamepadAnalogL           |Gamepad analog L (-32768, 32767)           |
+|Engine.gamepadAnalogR           |Gamepad analog R (-32768, 32767)           |
 
 ```
 func update() {

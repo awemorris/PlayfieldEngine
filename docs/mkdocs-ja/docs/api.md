@@ -66,8 +66,6 @@ func frame() {
 
 ## 入力
 
-### マウス状態
-
 これらは変数であり、関数ではありません。
 
 |変数                            |説明                                       |
@@ -81,18 +79,22 @@ func frame() {
 |Engine.isKeyLeftPressed         |左キー                                     |
 |Engine.isKeyRightPressed        |右キー                                     |
 |Engine.isKeyReturnPressed       |リターンキー                               |
-|Engine.isControllerUpPressed    |ゲームパッド上キー                         |
-|Engine.isControllerDownPressed  |ゲームパッド下キー                         |
-|Engine.isControllerLeftPressed  |ゲームパッド左キー                         |
-|Engine.isControllerRightPressed |ゲームパッド右キー                         |
-|Engine.isController1Pressed     |ゲームパッドボタン1                        |
-|Engine.isController2Pressed     |ゲームパッドボタン2                        |
-|Engine.isController3Pressed     |ゲームパッドボタン3                        |
-|Engine.isController4Pressed     |ゲームパッドボタン4                        |
-|Engine.isController5Pressed     |ゲームパッドボタン5                        |
-|Engine.isController6Pressed     |ゲームパッドボタン6                        |
-|Engine.isController7Pressed     |ゲームパッドボタン7                        |
-|Engine.isController8Pressed     |ゲームパッドボタン8                        |
+|Engine.isGamepadUpPressed       |ゲームパッド上キー                         |
+|Engine.isGamepadDownPressed     |ゲームパッド下キー                         |
+|Engine.isGamepadLeftPressed     |ゲームパッド左キー                         |
+|Engine.isGamepadRightPressed    |ゲームパッド右キー                         |
+|Engine.isGamepadAPressed        |ゲームパッドボタン1                        |
+|Engine.isGamepadBPressed        |ゲームパッドボタン2                        |
+|Engine.isGamepadXPressed        |ゲームパッドボタン3                        |
+|Engine.isGamepadYPressed        |ゲームパッドボタン4                        |
+|Engine.isGamepadLPressed        |ゲームパッドボタン5                        |
+|Engine.isGamepadRPressed        |ゲームパッドボタン6                        |
+|Engine.gamepadAnalogX1          |ゲームパッドアナログ1 X (-32768, 32767)    |
+|Engine.gamepadAnalogY1          |ゲームパッドアナログ1 Y (-32768, 32767)    |
+|Engine.gamepadAnalogX2          |ゲームパッドアナログ1 X (-32768, 32767)    |
+|Engine.gamepadAnalogY2          |ゲームパッドアナログ1 Y (-32768, 32767)    |
+|Engine.gamepadAnalogL           |ゲームパッドアナログL (-32768, 32767)      |
+|Engine.gamepadAnalogR           |ゲームパッドアナログR (-32768, 32767)      |
 
 ```
 func update() {

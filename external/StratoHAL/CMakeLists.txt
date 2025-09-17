@@ -166,6 +166,7 @@ if(STRATO_TARGET_WINDOWS)
     src/dsound.c
     src/dsvideo.cc
     src/digamepad.cc
+    src/xigamepad.c
   )
 endif()
 
@@ -467,6 +468,7 @@ if(STRATO_TARGET_WINDOWS)
     ole32
     dsound
     dinput8
+    xinput
     strmiids
     dxguid
   )

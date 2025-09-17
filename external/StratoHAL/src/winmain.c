@@ -15,6 +15,7 @@
 #include "dsound.h"
 #include "dsvideo.h"
 #include "digamepad.h"
+#include "xigamepad.h"
 #include "stdfile.h"
 
 /* Windows */
@@ -494,8 +495,9 @@ static BOOL RunFrame(void)
 		return TRUE;
 	}
 
-	/* Update DirectInput. */
+	/* Update the gamepad input. */
 	DInputUpdate();
+	XInputUpdate();
 
 	/* Start rendering. */
 	D3DStartFrame();
