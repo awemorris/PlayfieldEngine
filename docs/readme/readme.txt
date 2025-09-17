@@ -1,8 +1,8 @@
 ==============================================================================
 Playfield Engine
 ==============================================================================
-Version      : 0.8.1
-Date         : September 17th 2025
+Version      : 0.8.2
+Date         : September 18th 2025
 Author       : Awe Morris
 Contact      : awe@noctvm.io
 Requirements : Windows 10 or later
