@@ -281,7 +281,7 @@ endif()
 # Resource
 if(PLAYFIELD_TARGET_WINDOWS)
   set(PLAYFIELD_RESOURCES
-    resources/resource.rc
+    resources/windows/resource.rc
   )
 endif()
 
