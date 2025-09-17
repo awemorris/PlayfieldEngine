@@ -62,27 +62,13 @@ jobs:
 
       - name: Install deps
         run: |
-          sudo dpkg --add-architecture arm64
-          sudo rm -rf /etc/apt/sources.list.d
-          sudo tee /etc/apt/sources.list <<'EOF'
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse
-          EOF
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2 gcc-aarch64-linux-gnu qemu-user-static binfmt-support desktop-file-utils appstream squashfs-tools
-          sudo apt-get install -y libx11-dev:arm64 libxpm-dev:arm64 libasound2-dev:arm64 mesa-common-dev:arm64 libglib2.0-0:arm64 libgobject-2.0-0:arm64 libgdk-pixbuf-2.0-0:arm64 libfuse2:arm64 libgcrypt20:arm64 libgpgme-dev:arm64
+          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2
 
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage
           chmod +x appimagetool-x86_64.AppImage
-          chmod +x appimagetool-aarch64.AppImage
 
       - name: Add desktop
         run: |
@@ -97,7 +83,6 @@ jobs:
 
       - name: Build for x86_64
         run: |
-          rm -rf build AppDir
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
           mkdir -p AppDir/usr/bin
@@ -107,27 +92,12 @@ jobs:
           cp resources/icon.png AppDir/playfield.png
           ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
 
-      - name: Build for aarch64
-        run: |
-          rm -rf build AppDir
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux-aarch64.cmake
-          cmake --build build --config Release
-          mkdir -p AppDir/usr/bin
-          cp build/playfield AppDir/usr/bin/
-          cp resources/linux/AppRun AppDir/
-          cp playfield.desktop AppDir/
-          cp resources/icon.png AppDir/playfield.png
-          qemu-aarch64-static ./appimagetool-aarch64.AppImage --appimage-extract
-          cp /usr/bin/mksquashfs ./squashfs-root/usr/lib/lib/appimagekit/mksquashfs
-          ARCH=arm_aarch64 qemu-aarch64-static ./squashfs-root/usr/bin/appimagetool AppDir PlayfieldEngine-aarch64.AppImage
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-appimage
           path: |
             PlayfieldEngine-x86_64.AppImage
-            PlayfieldEngine-aarch64.AppImage
           if-no-files-found: error
           retention-days: 7
 
