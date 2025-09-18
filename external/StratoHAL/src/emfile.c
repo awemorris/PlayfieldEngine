@@ -149,6 +149,14 @@ bool get_rfile_size(struct rfile *rf, size_t *ret)
 }
 
 /*
+ * Enable de-obfuscation on a read file stream.
+ */
+void decode_rfile(struct rfile *f)
+{
+	UNUSED_PARAMETER(f);
+}
+
+/*
  * Read from a file read stream.
  */
 bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)

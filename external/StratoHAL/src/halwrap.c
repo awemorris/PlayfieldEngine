@@ -488,6 +488,13 @@ bool get_rfile_size(struct rfile *rf, size_t *ret)
 #endif
 
 #if defined(USE_UNITY)
+void decode_rfile(struct rfile *f)
+{
+	UNUSED_PARAMETER(f);
+}
+#endif
+
+#if defined(USE_UNITY)
 bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
 {
 	size_t len;
