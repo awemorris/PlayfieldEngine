@@ -175,7 +175,6 @@ else()
     set(STRATO_ENABLE_SHARED ON)
   else()
     # For statically linked binaries.
-    set(STRATO_ENABLE_STATIC ON)
   endif()
 endif()
 

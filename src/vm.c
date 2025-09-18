@@ -42,6 +42,7 @@ static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
+static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value);
 static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret);
 static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret);
 static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size);
@@ -507,6 +508,38 @@ static bool Engine_callTagFunction(NoctEnv *env)
 	return true;
 }
 
+/* Engine.getDate() */
+static bool Engine_getDate(NoctEnv *env)
+{
+	NoctValue ret;
+	NoctValue val;
+	time_t t;
+	struct tm *tm_info;
+	bool is_ok;
+
+	if (!noct_make_empty_dict(env, &ret))
+		return false;
+
+	time(&t);
+	tm_info = localtime(&t);
+	if (!noct_set_dict_elem_make_int(env, &ret, "year", &val, tm_info->tm_year + 1900))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "month", &val, tm_info->tm_mon + 1))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "day", &val, tm_info->tm_mday))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "hour", &val, tm_info->tm_hour))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "minute", &val, tm_info->tm_min))
+		return false;
+	if (!noct_set_dict_elem_make_int(env, &ret, "second", &val, tm_info->tm_sec))
+		return false;
+	if (!noct_set_return(env, &ret))
+		return false;
+
+	return true;
+}
+
 /* Engine.createColorTexture() */
 static bool Engine_createColorTexture(NoctEnv *env)
 {
@@ -817,49 +850,17 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	return true;
 }
 
-/* Engine.getDate() */
-static bool Engine_getDate(NoctEnv *env)
-{
-	NoctValue ret;
-	NoctValue val;
-	time_t t;
-	struct tm *tm_info;
-	bool is_ok;
-
-	if (!noct_make_empty_dict(env, &ret))
-		return false;
-
-	time(&t);
-	tm_info = localtime(&t);
-	if (!noct_set_dict_elem_make_int(env, &ret, "year", &val, tm_info->tm_year + 1900))
-		return false;
-	if (!noct_set_dict_elem_make_int(env, &ret, "month", &val, tm_info->tm_mon + 1))
-		return false;
-	if (!noct_set_dict_elem_make_int(env, &ret, "day", &val, tm_info->tm_mday))
-		return false;
-	if (!noct_set_dict_elem_make_int(env, &ret, "hour", &val, tm_info->tm_hour))
-		return false;
-	if (!noct_set_dict_elem_make_int(env, &ret, "minute", &val, tm_info->tm_min))
-		return false;
-	if (!noct_set_dict_elem_make_int(env, &ret, "second", &val, tm_info->tm_sec))
-		return false;
-	if (!noct_set_return(env, &ret))
-		return false;
-
-	return true;
-}
-
 /* Engine.writeSaveData() */
 static bool Engine_writeSaveData(NoctEnv *env)
 {
-	NoctValue key, value;
-	const char *key_s;
+	const char *key;
+	NoctValue value;
 	void *data;
 	size_t size;
 
-	if (!noct_get_arg_check_string(env, 0, &key, &key_s))
+	if (!get_string_param(env, "key", &key))
 		return false;
-	if (!noct_get_arg(env, 1, &value))
+	if (!get_value_param(env, "value", &value))
 		return false;
 
 	data = malloc(SERIALIZE_SIZE);
@@ -873,7 +874,7 @@ static bool Engine_writeSaveData(NoctEnv *env)
 		return false;
 	}
 
-	if (!playfield_write_save_data(key_s, data, size)) {
+	if (!playfield_write_save_data(key, data, size)) {
 		free(data);
 		return false;
 	}
@@ -883,20 +884,15 @@ static bool Engine_writeSaveData(NoctEnv *env)
 	return true;
 }
 
-static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret)
-{
-	return false;
-}
-
 /* Engine.readSaveData() */
 static bool Engine_readSaveData(NoctEnv *env)
 {
-	NoctValue key, ret;
-	const char *key_s;
+	const char *key;
+	NoctValue ret;
 	void *data;
 	size_t size;
 
-	if (!noct_get_arg_check_string(env, 0, &key, &key_s))
+	if (!get_string_param(env, "key", &key))
 		return false;
 
 	data = malloc(SERIALIZE_SIZE);
@@ -905,7 +901,7 @@ static bool Engine_readSaveData(NoctEnv *env)
 		return false;
 	}
 
-	if (!playfield_read_save_data(key_s, data, SERIALIZE_SIZE, &size)) {
+	if (!playfield_read_save_data(key, data, SERIALIZE_SIZE, &size)) {
 		free(data);
 		return false;
 	}
@@ -914,15 +910,12 @@ static bool Engine_readSaveData(NoctEnv *env)
 		free(data);
 		return false;
 	}
-	
 	free(data);
 
-	return true;
-}
+	if (!noct_set_return(env, &ret))
+		return false;
 
-static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size)
-{
-	return false;
+	return true;
 }
 
 /*
@@ -973,48 +966,6 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	return true;
 }
 
-#if 0
-/* Get a float parameter. */
-static bool get_float_param(NoctEnv *env, const char *name, float *ret)
-{
-	NoctValue param, elem;
-
-	noct_pin_local(env, 2, &param, &elem);
-
-	if (!rt_get_arg(env, 0, &param)) {
-		noct_error(env, PPS_TR("Parameter is not set."));
-		noct_unpin_local(env, 2, &param, &elem);
-		return false;
-	}
-
-	if (!rt_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PPS_TR("Parameter %s is not set."), name);
-		noct_unpin_local(env, 2, &param, &elem);
-		return false;
-	}
-
-	switch (elem.type) {
-	case NOCT_VALUE_INT:
-		*ret = (float)elem.val.i;
-		break;
-	case NOCT_VALUE_FLOAT:
-		*ret = elem.val.f;
-		break;
-	case NOCT_VALUE_STRING:
-		*ret = (float)atof(elem.val.str->s);
-		break;
-	default:
-		rt_error(env, PPS_TR("Unexpected parameter value for %s."), name);
-		noct_unpin_local(env, 2, &param, &elem);
-		return false;
-	}
-
-	noct_unpin_local(env, 2, &param, &elem);
-
-	return true;
-}
-#endif
-
 /* Get a string parameter. */
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 {
@@ -1062,6 +1013,30 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	}
 
 	noct_unpin_local(env, 2, &param, &elem);
+
+	return true;
+}
+
+/* Get a value parameter. */
+static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
+{
+	NoctValue param;
+
+	noct_pin_local(env, 1, &param);
+
+	if (!noct_get_arg(env, 0, &param)) {
+		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_unpin_local(env, 1, &param);
+		return false;
+	}
+
+	if (!noct_get_dict_elem(env, &param, name, value)) {
+		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_unpin_local(env, 1, &param);
+		return false;
+	}
+
+	noct_unpin_local(env, 1, &param);
 
 	return true;
 }
@@ -1131,6 +1106,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
 		RTFUNC(callTagFunction),
+		RTFUNC(getDate),
 		RTFUNC(createColorTexture),
 		RTFUNC(loadTexture),
 		RTFUNC(destroyTexture),
@@ -1142,7 +1118,8 @@ bool install_api(NoctEnv *env)
 		RTFUNC(stopSound),
 		RTFUNC(loadFont),
 		RTFUNC(createTextTexture),
-		RTFUNC(getDate),
+		RTFUNC(writeSaveData),
+		RTFUNC(readSaveData),
 	};
 	const int tbl_size = sizeof(funcs) / sizeof(struct func);
 	struct rt_value dict;
@@ -1173,6 +1150,342 @@ bool install_api(NoctEnv *env)
 				return false;
 		}
 	}
+
+	return true;
+}
+
+/*
+ * Noct Value Serialization
+ */
+
+/* String Size Max */
+#define SER_STRING_MAX		4096
+
+/* Serialize Context */
+struct ser_ctx {
+	uint8_t *data;
+	size_t size;
+	size_t pos;
+	char sbuf[SER_STRING_MAX];
+};
+
+/* Value Type */
+enum {
+	SER_TYPE_INT,
+	SER_TYPE_FLOAT,
+	SER_TYPE_STRING,
+	SER_TYPE_ARRAY,
+	SER_TYPE_DICT,
+};
+
+/* Forward Declaration */
+static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx);
+static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx);
+static bool ser_put_u8(struct ser_ctx *ctx, uint8_t val);
+static bool ser_put_u32(struct ser_ctx *ctx, uint32_t val);
+static bool ser_put_string(struct ser_ctx *ctx, const char *val);
+static bool ser_get_u8(struct ser_ctx *ctx, uint8_t *val);
+static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val);
+static bool ser_get_string(struct ser_ctx *ctx, char **val);
+
+/* Serialize a value to a data buffer. */
+static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret)
+{
+	struct ser_ctx ctx;
+
+	ctx.data = (uint8_t *)data;
+	ctx.size = buf_size;
+	ctx.pos = 0;
+
+	if (!serialize_save_data_recursively(env, value, &ctx))
+		return false;
+
+	assert(ctx.pos <= ctx.size);
+
+	*ret = ctx.pos;
+
+	return true;
+}
+
+/* Serialize a value recursively. */
+static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx)
+{
+	int type;
+	int ival;
+	float fval;
+	const char *sval;
+	int size;
+	int i;
+
+	if (!noct_get_value_type(env, value, &type))
+		return false;
+
+	switch (type) {
+	case NOCT_VALUE_INT:
+		if (!noct_get_int(env, value, &ival))
+			return false;
+		if (!ser_put_u8(ctx, SER_TYPE_INT))
+			return false;
+		if (!ser_put_u32(ctx, ival))
+			return false;
+		return true;
+	case NOCT_VALUE_FLOAT:
+		if (!noct_get_float(env, value, &fval))
+			return false;
+		ival = *(int *)&fval;
+		if (!ser_put_u8(ctx, SER_TYPE_FLOAT))
+			return false;
+		if (!ser_put_u32(ctx, ival))
+			return false;
+		return true;
+	case NOCT_VALUE_STRING:
+		if (!noct_get_string(env, value, &sval))
+			return false;
+		if (!ser_put_u8(ctx, SER_TYPE_STRING))
+			return false;
+		if (!ser_put_string(ctx, sval))
+			return false;
+		return true;
+	case NOCT_VALUE_ARRAY:
+		if (!noct_get_array_size(env, value, &size))
+			return false;
+		if (!ser_put_u8(ctx, SER_TYPE_ARRAY))
+			return false;
+		if (!ser_put_u32(ctx, size))
+			return false;
+		for (i = 0; i < size; i++) {
+			NoctValue elem;
+			if (!noct_get_array_elem(env, value, i, &elem))
+				return false;
+			if (!serialize_save_data_recursively(env, &elem, ctx))
+				return false;
+		}
+		return true;
+	case NOCT_VALUE_DICT:
+		if (!noct_get_dict_size(env, value, &size))
+			return false;
+		if (!ser_put_u8(ctx, SER_TYPE_DICT))
+			return false;
+		if (!ser_put_u32(ctx, size))
+			return false;
+		for (i = 0; i < size; i++) {
+			NoctValue k, v;
+			if (!noct_get_dict_key_by_index(env, value, i, &k))
+				return false;
+			if (!noct_get_string(env, &k, &sval))
+				return false;
+			if (!ser_put_string(ctx, sval))
+				return false;
+			if (!noct_get_dict_value_by_index(env, value, i, &v))
+				return false;
+			if (!serialize_save_data_recursively(env, &v, ctx))
+				return false;
+		}
+		return true;
+	case NOCT_VALUE_FUNC:
+		log_error(PPS_TR("Cannot deserialize function."));
+		return false;
+	default:
+		assert(0);
+		break;
+	}
+	return false;
+}
+
+/* Deserialize a value from a data buffer. */
+static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size)
+{
+	struct ser_ctx ctx;
+
+	ctx.data = (uint8_t *)data;
+	ctx.size = buf_size;
+	ctx.pos = 0;
+
+	if (!deserialize_save_data_recursively(env, value, &ctx))
+		return false;
+
+	assert(ctx.pos <= ctx.size);
+
+	return true;
+}
+
+/* Deserialize a value recursively. */
+static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx)
+{
+	uint8_t type;
+	uint32_t ival;
+	float fval;
+	char *sval;
+	int size;
+	int i;
+
+	if (!ser_get_u8(ctx, &type))
+		return false;
+
+	switch (type) {
+	case SER_TYPE_INT:
+		if (!ser_get_u32(ctx, &ival))
+			return false;
+		if (!noct_make_int(env, value, ival))
+			return false;
+		return true;
+	case SER_TYPE_FLOAT:
+		if (!ser_get_u32(ctx, &ival))
+			return false;
+		fval = *(float *)&ival;
+		if (!noct_make_float(env, value, fval))
+			return false;
+		return true;
+	case SER_TYPE_STRING:
+		if (!ser_get_string(ctx, &sval))
+			return false;
+		if (!noct_make_string(env, value, sval))
+			return false;
+		return true;
+	case SER_TYPE_ARRAY:
+		if (!ser_get_u32(ctx, &size))
+			return false;
+		if (!noct_make_empty_array(env, value))
+			return false;
+		if (!noct_resize_array(env, value, size))
+			return false;
+		for (i = 0; i < size; i++) {
+			NoctValue elem;
+			if (!deserialize_save_data_recursively(env, &elem, ctx))
+				return false;
+			if (!noct_set_array_elem(env, value, i, &elem))
+				return false;
+		}
+		return true;
+	case SER_TYPE_DICT:
+		if (!ser_get_u32(ctx, &size))
+			return false;
+		if (!noct_make_empty_dict(env, value))
+			return false;
+		for (i = 0; i < size; i++) {
+			NoctValue elem;
+			char key[SER_STRING_MAX];
+			if (!ser_get_string(ctx, &sval))
+				return false;
+			strcpy(key, sval);
+			if (!deserialize_save_data_recursively(env, &elem, ctx))
+				return false;
+			if (!noct_set_dict_elem(env, value, key, &elem))
+				return false;
+		}
+		return true;
+	default:
+		log_error(PPS_TR("Invalid save data."));
+		return false;
+	}
+	return false;
+}
+
+/* Put a u8 to the data buffer. */
+static bool ser_put_u8(struct ser_ctx *ctx, uint8_t val)
+{
+	if (ctx->pos + 1 > ctx->size)
+		return false;
+
+	ctx->data[ctx->pos] = val;
+	ctx->pos++;
+
+	return true;
+}
+
+/* Put a u32 to the data buffer. */
+static bool ser_put_u32(struct ser_ctx *ctx, uint32_t val)
+{
+	if (ctx->pos + 4 > ctx->size)
+		return false;
+
+	ctx->data[ctx->pos + 0] = (uint8_t)(val & 0xff);
+	ctx->data[ctx->pos + 1] = (uint8_t)((val >> 8) & 0xff);
+	ctx->data[ctx->pos + 2] = (uint8_t)((val >> 16) & 0xff);
+	ctx->data[ctx->pos + 3] = (uint8_t)((val >> 24) & 0xff);
+
+	ctx->pos += 4;
+
+	return true;
+}
+
+/* Put a string to the data buffer. */
+static bool ser_put_string(struct ser_ctx *ctx, const char *val)
+{
+	size_t len;
+
+	len = strlen(val);
+	if (len > SER_STRING_MAX) {
+		log_error(PPS_TR("String too long."));
+		return false;
+	}
+
+	if (ctx->pos + 4 + len > ctx->size)
+		return false;
+
+	ctx->data[ctx->pos + 0] = (uint8_t)(len & 0xff);
+	ctx->data[ctx->pos + 1] = (uint8_t)((len >> 8) & 0xff);
+	ctx->data[ctx->pos + 2] = (uint8_t)((len >> 16) & 0xff);
+	ctx->data[ctx->pos + 3] = (uint8_t)((len >> 24) & 0xff);
+	ctx->pos += 4;
+
+	memcpy(ctx->data + ctx->pos, val, len);
+	ctx->pos += len;
+
+	return true;
+}
+
+/* Get a u8 from the data buffer. */
+static bool ser_get_u8(struct ser_ctx *ctx, uint8_t *val)
+{
+	if (ctx->pos + 1 > ctx->size)
+		return false;
+
+	*val = ctx->data[ctx->pos];
+	ctx->pos++;
+
+	return true;
+}
+
+/* Get a u32 from the data buffer. */
+static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val)
+{
+	if (ctx->pos + 4 > ctx->size)
+		return false;
+
+	*val = ((uint32_t)ctx->data[ctx->pos + 0]) |
+	       ((uint32_t)ctx->data[ctx->pos + 1] << 8) |
+	       ((uint32_t)ctx->data[ctx->pos + 2] << 16) |
+	       ((uint32_t)ctx->data[ctx->pos + 3] << 24);
+	ctx->pos += 4;
+
+	return true;
+}
+
+/* Get a string from the data buffer. */
+static bool ser_get_string(struct ser_ctx *ctx, char **val)
+{
+	uint32_t len;
+
+	if (ctx->pos + 4 > ctx->size)
+		return false;
+
+	len = ((uint32_t)ctx->data[ctx->pos + 0]) |
+	      ((uint32_t)ctx->data[ctx->pos + 1] << 8) |
+	      ((uint32_t)ctx->data[ctx->pos + 2] << 16) |
+	      ((uint32_t)ctx->data[ctx->pos + 3] << 24);
+	ctx->pos += 4;
+
+	if (len >= SER_STRING_MAX) {
+		log_error(PPS_TR("String too long."));
+		return false;
+	}
+
+	memcpy(ctx->sbuf, ctx->data + ctx->pos, len);
+	ctx->sbuf[len] = '\0';
+	ctx->pos += len;
+
+	*val = ctx->sbuf;
 
 	return true;
 }

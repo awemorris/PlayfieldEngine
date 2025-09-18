@@ -20,8 +20,8 @@ option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"                  OFF)
 
 # Options
 option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
-option(STRATO_ENABLE_STATIC        "Build a static library"             OFF)
-option(STRATO_ENABLE_SHARED        "Build a dynamic library"            OFF)
+option(STRATO_ENABLE_OBJECT        "Build an object library"            OFF)
+option(STRATO_ENABLE_SHARED        "Use shared libraries"               OFF)
 
 #
 # Automatic Target Detection

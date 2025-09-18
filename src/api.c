@@ -583,13 +583,21 @@ playfield_write_save_data(
 		log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
-	free(fname);
+
+	/* Make the save directory. */
+	if (!make_save_directory()) {
+		log_error(PPS_TR("Cannot make the save directory."));
+		free(fname);
+		return false;
+	}
 
 	/* Open a save file. */
 	if (!open_wfile(fname, &wf)) {
 		log_error(PPS_TR("Cannot open a save file."));
+		free(fname);
 		return false;
 	}
+	free(fname);
 
 	/* Write data to the save file. */
 	if (!write_wfile(wf, data, size, &ret)) {
@@ -622,13 +630,17 @@ playfield_read_save_data(
 		log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
-	free(fname);
 
 	/* Open a save file. */
 	if (!open_rfile(fname, &rf)) {
 		log_error(PPS_TR("Cannot open a save file."));
+		free(fname);
 		return false;
 	}
+	free(fname);
+
+	/* Enable de-obfuscation. */
+	decode_rfile(rf);
 
 	/* Get a file size. */
 	if (!get_rfile_size(rf, ret)) {
@@ -643,7 +655,6 @@ playfield_read_save_data(
 	/* Read data to the save file. */
 	if (!read_rfile(rf, data, *ret, ret)) {
 		log_error(PPS_TR("Cannot read a save file."));
-		free(fname);
 		return false;
 	}
 
@@ -684,13 +695,15 @@ make_save_file_name(
 	char buf[1024];
 	int i, len, pos;
 
+	strcpy(buf, SAVE_DIR "/");
+
 	len = strlen(key);
-	if (len * 2 > sizeof(buf) - 1) {
+	if (len * 2 > sizeof(buf) - strlen(buf) - 1) {
 		/* File name too long. */
 		return NULL;
 	}
 
-	pos = 0;
+	pos = strlen(buf);
 	for (i = 0; i < len; i++) {
 		buf[pos + 0] = get_hex_char(key[i] >> 4);
 		buf[pos + 1] = get_hex_char(key[i] & 4);

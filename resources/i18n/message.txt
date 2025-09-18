@@ -56,6 +56,9 @@ ja:フォントスロットの番号が不正です。
 ID:Invalid sound stream index.
 ja:サウンドストリームの番号が不正です。
 ---
+ID:Cannot make the save directory.
+ja:セーブディレクトリを作成できません。
+---
 ID:Save data key too long.
 ja:セーブデータキーが長すぎます。
 ---
@@ -73,4 +76,10 @@ ja:セーブファイルが大きすぎます。
 ---
 ID:Cannot read a save file.
 ja:セーブファイルを読み込めません。
+---
+ID:String too long.
+ja:文字列が長すぎます。
+---
+ID:Invalid save data.
+ja:セーブデータが不正です。
 ---

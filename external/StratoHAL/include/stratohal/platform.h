@@ -19,6 +19,9 @@
 /* Package file name */
 #define PACKAGE_FILE		"assets.pak"
 
+/* Save directory name */
+#define SAVE_DIR		"save"
+
 /*************
  * File Read *
  *************/
@@ -33,6 +36,9 @@ bool check_file_exist(const char *file);
 
 /* Open a file stream. */
 bool open_rfile(const char *file, struct rfile **f);
+
+/* Enable de-obfuscation on a read file stream. */
+void decode_rfile(struct rfile *f);
 
 /* Get a file size. */
 bool get_rfile_size(struct rfile *rf, size_t *ret);

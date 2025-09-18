@@ -411,6 +411,16 @@ bool get_rfile_size(struct rfile *f, size_t *ret)
 }
 
 /*
+ * Enable de-obfuscation on a read file stream.
+ */
+void decode_rfile(struct rfile *f)
+{
+	/* Setup the file struct. */
+	f->is_obfuscated = true;
+	set_random_seed(0, &f->next_random);
+}
+
+/*
  * Read bytes from a read file stream.
  */
 bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
@@ -443,6 +453,13 @@ bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
 
 		/* Read. */
 		len = fread(buf, 1, size, f->fp);
+
+		/* Do obfuscation decode. */
+		if (f->is_obfuscated) {
+			for (obf = 0; obf < len; obf++)
+				*(((char *)buf) + obf) ^= get_next_random(&f->next_random, &f->prev_random);
+		}
+
 	}
 
 	*ret = len;
