@@ -603,7 +603,7 @@ render_image_3d_add(
 				   alpha);
 }
 
-bool make_sav_dir(void)
+bool make_save_directory(void)
 {
 	/* Note: We don't create a sav directory for engine-android. */
 	return true;
