@@ -15,11 +15,15 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <linux/input.h>
 #include <dirent.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#if defined(__linux__)
+#include <linux/input.h>
+#else
+#include <dev/evdev/input.h>
+#endif
 
 static int fd = -1;
 
