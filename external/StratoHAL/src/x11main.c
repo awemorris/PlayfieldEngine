@@ -16,6 +16,7 @@
 #else
 #include "bsdsound.h"			/* BSD Sound Implementation */
 #endif
+#include "evgamepad.h"			/* evdev Gamepad */
 
 /* Xlib */
 #include <X11/Xlib.h>
@@ -298,6 +299,9 @@ static bool init_hal(int argc, char *argv[])
 		log_error("Can't create icon.\n");
 		return false;
 	}
+
+	/* Initialize the gamepad. */
+	init_evgamepad();
 
 	/* Initialize the viddeo HAL. */
 	gstplay_init(argc, argv);
@@ -675,6 +679,9 @@ static void run_game_loop(void)
 static bool run_frame(void)
 {
 	bool cont;
+
+	/* Read the gamepad. */
+	update_evgamepad();
 
 	/* Start rendering. */
 	if (!is_gst_playing)

@@ -201,6 +201,7 @@ if(   STRATO_TARGET_LINUX
       src/asound.c
       src/bsdsound.c
       src/nosound.c
+      src/evgamepad.c
       src/gstplay.c
     )
 endif()

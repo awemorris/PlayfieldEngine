@@ -384,6 +384,8 @@ static bool open_real(struct rfile *f, const char *path)
 		return false;
 
 	f->is_packaged = false;
+	f->is_obfuscated = false;
+
 	return true;
 }
 #endif
