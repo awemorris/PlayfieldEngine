@@ -21,6 +21,7 @@
 /* Windows */
 #include <windows.h>
 #include <shlobj.h>			/* SHGetFolderPath() */
+#include <richedit.h>		/* CHARFORMAT2 */
 #include "resource.h"
 
 /* Standard C */
@@ -60,8 +61,9 @@
 /* Buffer size of UTF-8/UTF-16 conversion. */
 #define CONV_MESSAGE_SIZE	(65536)
 
-/* Window class name. */
+/* Window class names. */
 static const wchar_t wszWindowClassMain[] = L"AppMain";
+static const wchar_t wszWindowClassLog[] = L"AppLog";
 
 /* i18n messages. */
 enum {
@@ -134,6 +136,11 @@ static BOOL bDShowMode;
 /* Is video skippable by a click? */
 static BOOL bDShowSkippable;
 
+/* Log window. */
+static HWND hWndLog;
+static HWND hWndLogText;
+static HBRUSH hEditBkBrush;
+
 /* Log file. */
 static FILE *pLogFile;
 static wchar_t *pwszLogFilePath;
@@ -165,6 +172,9 @@ static void OnCommand(WPARAM wParam, LPARAM lParam);
 static void OnSizing(int edge, LPRECT lpRect);
 static void OnSize(void);
 static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight);
+static VOID InitLogWindow(void);
+static VOID AppendLogToEdit(const char *text);
+static LRESULT CALLBACK LogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 static BOOL OpenLogFile(void);
 static void ShowLogFile(void);
 
@@ -1041,99 +1051,85 @@ static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
 	D3DResizeWindow(nClientWidth, nClientHeight, nViewportOffsetX, nViewportOffsetY, nViewportWidth, nViewportHeight, fMouseScale);
 }
 
-/*
- * HAL
- */
-
-/*
- * Show an INFO log.
- */
-bool log_info(const char *s, ...)
+/* Initialize the log window. */
+VOID InitLogWindow(void)
 {
-	char buf[LOG_BUF_SIZE];
-	va_list ap;
+	WNDCLASSEXW wcex;
+	HINSTANCE hInstance;
+	HFONT hFont;
 
-	OpenLogFile();
+	if (hWndLog != NULL)
+		return;
 
-	va_start(ap, s);
-	vsnprintf(buf, sizeof(buf), s, ap);
-	va_end(ap);
+	hInstance = GetModuleHandle(NULL);
+	
+	/* Register a window class. */
+	ZeroMemory(&wcex, sizeof(wcex));
+	wcex.cbSize			= sizeof(WNDCLASSEXW);
+	wcex.lpfnWndProc    = LogWndProc;
+	wcex.hInstance      = hInstance;
+	wcex.lpszClassName  = wszWindowClassLog;
+	RegisterClassExW(&wcex);
 
-	if(pLogFile != NULL)
-	{
-		fprintf(pLogFile, "%s\n", buf);
-		fflush(pLogFile);
-		if(ferror(pLogFile))
-			return false;
-	}
-	printf("%s\n", buf);
+	/* Create the log window. */
+	hWndLog = CreateWindowExW(0, wszWindowClassLog, L"Console",
+							  WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_OVERLAPPED,
+							  CW_USEDEFAULT, CW_USEDEFAULT,
+							  640, 480,
+							  NULL, NULL, hInstance, NULL);
 
-	return true;
+	/* Create the log text edit. */
+	LoadLibraryW(L"Msftedit.dll");
+	hWndLogText = CreateWindow(L"RICHEDIT50W", NULL,
+		ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP | ES_AUTOVSCROLL | WS_VSCROLL,
+		0, 0, 633, 450,
+		hWndLog, 0, hInstance, NULL);
+
+	/* Set the color. */
+	SendMessage(hWndLogText, EM_SETBKGNDCOLOR, 0, RGB(0, 0, 0));
+
+	/* Set the font. */
+	hFont = CreateFont(16, 0, 0, 0,
+					   FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+					   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS,
+					   DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE,
+					   L"Consolas");
+	SendMessage(hWndLogText, WM_SETFONT, (WPARAM)hFont, (LPARAM)TRUE);
+
+	/* Show the log window. */
+	ShowWindow(hWndLog, SW_SHOW);
+	UpdateWindow(hWndLog);
 }
 
-/*
- * Show a WARN log.
- */
-bool log_warn(const char *s, ...)
+/* Append a log line to the log edit. */
+VOID AppendLogToEdit(const char *text)
 {
-	char buf[LOG_BUF_SIZE];
-	va_list ap;
+	wchar_t buf[4096];
+	CHARFORMAT2 cf;
 
-	OpenLogFile();
+	int len = GetWindowTextLength(hWndLogText);
+	snwprintf(buf, sizeof(buf) / sizeof(wchar_t), L"%ls\r\n", win32_utf8_to_utf16(text));
 
-	va_start(ap, s);
-	vsnprintf(buf, sizeof(buf), s, ap);
-	va_end(ap);
+	SendMessage(hWndLogText, EM_SETSEL, (WPARAM)len, (LPARAM)len);
+	SendMessage(hWndLogText, EM_REPLACESEL, FALSE, (LPARAM)buf);
 
-	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONWARNING);
-
-	if(pLogFile != NULL)
-	{
-		fprintf(pLogFile, "%s\n", buf);
-		fflush(pLogFile);
-		if(ferror(pLogFile))
-			return false;
-	}
-	printf("%s\n", buf);
-
-	return true;
+	ZeroMemory(&cf, sizeof(cf));
+	cf.cbSize = sizeof(cf);
+	cf.dwMask = CFM_COLOR;
+	cf.crTextColor = RGB(255, 255, 255);
+	SendMessage(hWndLogText, EM_SETCHARFORMAT, SCF_ALL, (LPARAM)&cf);
 }
 
-/*
- * Show an ERROR log.
- */
-bool log_error(const char *s, ...)
+/* Window procedure. */
+static LRESULT CALLBACK LogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char buf[LOG_BUF_SIZE];
-	va_list ap;
-
-	OpenLogFile();
-
-	va_start(ap, s);
-	vsnprintf(buf, sizeof(buf), s, ap);
-	va_end(ap);
-
-	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONERROR);
-
-	if(pLogFile != NULL)
+	switch(message)
 	{
-		fprintf(pLogFile, "%s\n", buf);
-		fflush(pLogFile);
-		if(ferror(pLogFile))
-			return false;
+	case WM_DESTROY:
+		hWndLog = NULL;
+		return 0;
 	}
-	printf("%s\n", buf);
-
-	return true;
-}
-
-/*
- * Show an Out-of-memory error.
- */
-bool log_out_of_memory(void)
-{
-	log_error(S_TR("Out of memory."));
-	return true;
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 /* Open the log file. */
@@ -1180,6 +1176,110 @@ static void ShowLogFile(void)
         NULL,				// Arguments.
         NULL,               // Working directory.
         SW_SHOWNORMAL);		// ShowWindow() status.
+}
+
+/*
+ * HAL
+ */
+
+/*
+ * Show an INFO log.
+ */
+bool log_info(const char *s, ...)
+{
+	char buf[LOG_BUF_SIZE];
+	va_list ap;
+
+	OpenLogFile();
+
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	InitLogWindow();
+	AppendLogToEdit(buf);
+
+	if(pLogFile != NULL)
+	{
+		fprintf(pLogFile, "%s\n", buf);
+		fflush(pLogFile);
+		if(ferror(pLogFile))
+			return false;
+	}
+	printf("%s\n", buf);
+
+	return true;
+}
+
+/*
+ * Show a WARN log.
+ */
+bool log_warn(const char *s, ...)
+{
+	char buf[LOG_BUF_SIZE];
+	va_list ap;
+
+	OpenLogFile();
+
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONWARNING);
+
+	InitLogWindow();
+	AppendLogToEdit(buf);
+
+	if(pLogFile != NULL)
+	{
+		fprintf(pLogFile, "%s\n", buf);
+		fflush(pLogFile);
+		if(ferror(pLogFile))
+			return false;
+	}
+	printf("%s\n", buf);
+
+	return true;
+}
+
+/*
+ * Show an ERROR log.
+ */
+bool log_error(const char *s, ...)
+{
+	char buf[LOG_BUF_SIZE];
+	va_list ap;
+
+	OpenLogFile();
+
+	va_start(ap, s);
+	vsnprintf(buf, sizeof(buf), s, ap);
+	va_end(ap);
+
+	//MessageBoxW(hWndMain, win32_utf8_to_utf16(buf), wszTitle, MB_OK | MB_ICONERROR);
+
+	InitLogWindow();
+	AppendLogToEdit(buf);
+
+	if(pLogFile != NULL)
+	{
+		fprintf(pLogFile, "%s\n", buf);
+		fflush(pLogFile);
+		if(ferror(pLogFile))
+			return false;
+	}
+	printf("%s\n", buf);
+
+	return true;
+}
+
+/*
+ * Show an Out-of-memory error.
+ */
+bool log_out_of_memory(void)
+{
+	log_error(S_TR("Out of memory."));
+	return true;
 }
 
 /*
