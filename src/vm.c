@@ -39,7 +39,7 @@ static NoctEnv *env;
 /* Forward Declaration */
 static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
-static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value);
+static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value, bool is_inside_obj);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
@@ -373,15 +373,14 @@ static bool debug(NoctEnv *env)
 		return false;
 
 	memset(buf, 0, sizeof(buf));
-	serialize_printer(env, buf, sizeof(buf), &value);
+	serialize_printer(env, buf, sizeof(buf), &value, false);
 
 	log_info("%s", buf);
 
 	return true;
 }
 	
-/* Serialize a value recursively. */
-static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value)
+static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value, bool is_inside_obj)
 {
 	int type;
 	int ival;
@@ -389,6 +388,7 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	const char *sval;
 	int items;
 	int i;
+	char digits[1024];
 
 	if (!noct_get_value_type(env, value, &type))
 		return false;
@@ -397,54 +397,61 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	case NOCT_VALUE_INT:
 		if (!noct_get_int(env, value, &ival))
 			return false;
-		snprintf(buf, size, "%s%d", buf, ival);
+		snprintf(digits, sizeof(digits), "%d", ival);
+		strncat(buf, digits, size);
 		break;
 	case NOCT_VALUE_FLOAT:
 		if (!noct_get_float(env, value, &fval))
 			return false;
-		snprintf(buf, size, "%s%d", buf, ival);
+		snprintf(digits, sizeof(digits), "%f", fval);
+		strncat(buf, digits, size);
 		break;
 	case NOCT_VALUE_STRING:
 		if (!noct_get_string(env, value, &sval))
 			return false;
-		snprintf(buf, size, "%s%s", buf, sval);
+		if (is_inside_obj)
+			strncat(buf, "\"", size);
+		strncat(buf, sval, size);
+		if (is_inside_obj)
+			strncat(buf, "\"", size);
 		break;
 	case NOCT_VALUE_ARRAY:
 		if (!noct_get_array_size(env, value, &items))
 			return false;
-		snprintf(buf, size, "%s[", buf, sval);
+		strncat(buf, "[", size);
 		for (i = 0; i < items; i++) {
 			NoctValue elem;
 			if (!noct_get_array_elem(env, value, i, &elem))
 				return false;
-			if (!serialize_printer(env, buf, size, &elem))
+			if (!serialize_printer(env, buf, size, &elem, true))
 				return false;
 			if (i != items - 1)
-				snprintf(buf, size, "%s, ", buf, sval);
+				strncat(buf, ", ", size);
 		}
-		snprintf(buf, size, "%s]", buf, sval);
+		strncat(buf, "]", size);
 		break;
 	case NOCT_VALUE_DICT:
 		if (!noct_get_dict_size(env, value, &items))
 			return false;
-		snprintf(buf, size, "%s{", buf, sval);
+		strncat(buf, "{", size);
 		for (i = 0; i < items; i++) {
 			NoctValue k, v;
 			if (!noct_get_dict_key_by_index(env, value, i, &k))
 				return false;
 			if (!noct_get_string(env, &k, &sval))
 				return false;
-			snprintf(buf, size, "%s%s: ", buf, sval);
+			strncat(buf, sval, size);
+			strncat(buf, ": ", size);
 			if (!noct_get_dict_value_by_index(env, value, i, &v))
 				return false;
-			serialize_printer(env, buf, size, &v);
+			serialize_printer(env, buf, size, &v, true);
 			if (i != items - 1)
-				snprintf(buf, size, "%s, ", buf, sval);
+				strncat(buf, ", ", size);
 		}
-		snprintf(buf, size, "%s}", buf, sval);
+		strncat(buf, "}", size);
 		break;
 	case NOCT_VALUE_FUNC:
-		snprintf(buf, size, "%s<func>", buf, sval);
+		strncat(buf, "<func>", size);
 		break;
 	default:
 		assert(0);

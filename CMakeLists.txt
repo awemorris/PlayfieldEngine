@@ -443,14 +443,19 @@ endif()
 # Compiler target
 #
 
-add_executable(
-  playfield-compiler
-  src/compiler.c
-)
-target_include_directories(playfield-compiler PRIVATE external/NoctLang/src)
-target_link_libraries(playfield-compiler noctlang)
-if(UNIX)
-  target_link_libraries(playfield-compiler m)
+if(   PLAYFIELD_TARGET_WINDOWS
+   OR PLAYFIELD_TARGET_MACOS
+   OR PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_FREEBSD)
+  add_executable(
+    playfield-compiler
+    src/compiler.c
+  )
+  target_include_directories(playfield-compiler PRIVATE external/NoctLang/src)
+  target_link_libraries(playfield-compiler noctlang)
+  if(UNIX)
+    target_link_libraries(playfield-compiler m)
+  endif()
 endif()
 
 #
