@@ -46,6 +46,7 @@ static bool releaseMode;
 
 // Forward declaration.
 static void checkBundleResource(int argc, const char *argv[]);
+static void initGamepad(void);
 static void openLogWindow(void);
 static void putTextToLogWindow(const char *text);
 static FILE *openLog(void);
@@ -271,7 +272,13 @@ static void checkBundleResource(int argc, const char *argv[])
     }
     gameRendererStartFlag = true;
 
-    // Gamepad.
+    // Initialize the gamepad.
+    initGamepad();
+}
+
+// Initialize the gamepad.
+static void initGamepad(void)
+{
     [[NSNotificationCenter defaultCenter] addObserverForName:GCControllerDidConnectNotification
                                                       object:nil
                                                        queue:[NSOperationQueue mainQueue]

@@ -9,7 +9,9 @@
 //
 
 @import UIKit;
+
 #import <AVFoundation/AVFoundation.h>
+#import <GameController/GameController.h>
 
 #import "stratohal/platform.h"
 #import "stdfile.h"
@@ -32,6 +34,9 @@ static ViewController *theViewController;
 
 // Swipe mode.
 static BOOL isContinuousSwipeEnabled;
+
+// Forward declaration.
+static void initGamepad(void);
 
 //
 // Main
@@ -156,6 +161,110 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     _view.paused = NO;
     _view.delegate = _renderer;
     gameRendererStartFlag = TRUE;
+
+    // Initialize the gamepad.
+    initGamepad();
+}
+
+// Initialize the gamepad.
+static void initGamepad(void)
+{
+    [[NSNotificationCenter defaultCenter] addObserverForName:GCControllerDidConnectNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *note) {
+        GCController *controller = note.object;
+
+        controller.extendedGamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed) {
+                on_event_key_press(KEY_GAMEPAD_UP);
+                on_event_key_release(KEY_GAMEPAD_DOWN);
+            } else {
+                on_event_key_release(KEY_GAMEPAD_UP);
+            }
+        };
+        controller.extendedGamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed) {
+                on_event_key_press(KEY_GAMEPAD_DOWN);
+                on_event_key_release(KEY_GAMEPAD_UP);
+            } else {
+                on_event_key_release(KEY_GAMEPAD_DOWN);
+            }
+        };
+        controller.extendedGamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed) {
+                on_event_key_press(KEY_GAMEPAD_LEFT);
+                on_event_key_release(KEY_GAMEPAD_RIGHT);
+            } else {
+                on_event_key_release(KEY_GAMEPAD_LEFT);
+            }
+        };
+        controller.extendedGamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed) {
+                on_event_key_press(KEY_GAMEPAD_RIGHT);
+                on_event_key_release(KEY_GAMEPAD_LEFT);
+            } else {
+                on_event_key_release(KEY_GAMEPAD_RIGHT);
+            }
+        };
+        controller.extendedGamepad.buttonA.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed) 
+                on_event_key_press(KEY_GAMEPAD_A);
+            else
+                on_event_key_release(KEY_GAMEPAD_A); 
+        };
+        controller.extendedGamepad.buttonB.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed)
+                on_event_key_press(KEY_GAMEPAD_B);
+            else
+                on_event_key_release(KEY_GAMEPAD_B);
+        };
+        controller.extendedGamepad.buttonX.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed)
+                on_event_key_press(KEY_GAMEPAD_X);
+            else
+                on_event_key_release(KEY_GAMEPAD_X);
+        };
+        controller.extendedGamepad.buttonY.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed)
+                on_event_key_press(KEY_GAMEPAD_Y);
+            else
+                on_event_key_release(KEY_GAMEPAD_Y);
+        };
+        controller.extendedGamepad.leftShoulder.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed)
+                on_event_key_press(KEY_GAMEPAD_L);
+            else
+                on_event_key_release(KEY_GAMEPAD_L);
+        };
+        controller.extendedGamepad.rightShoulder.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            if (pressed)
+                on_event_key_press(KEY_GAMEPAD_R);
+            else
+                on_event_key_release(KEY_GAMEPAD_A);
+        };
+        controller.extendedGamepad.leftThumbstick.xAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
+            on_event_analog_input(ANALOG_X1, (int)(value * 32767));
+        };
+        controller.extendedGamepad.leftThumbstick.yAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
+            on_event_analog_input(ANALOG_Y1, (int)(value * 32767));
+        };
+        controller.extendedGamepad.rightThumbstick.xAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
+            on_event_analog_input(ANALOG_X2, (int)(value * 32767));
+        };
+        controller.extendedGamepad.rightThumbstick.yAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
+            on_event_analog_input(ANALOG_Y2, (int)(value * 32767));
+        };
+        controller.extendedGamepad.leftTrigger.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            on_event_analog_input(ANALOG_L, (int)(value * 32767));
+        };
+        controller.extendedGamepad.rightTrigger.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
+            on_event_analog_input(ANALOG_R, (int)(value * 32767));
+        };
+    }];
+    [GCController startWirelessControllerDiscoveryWithCompletionHandler:^{
+        NSLog(@"Finished scanning for controllers.");
+    }];
 }
 
 // Calculate the viewport size.
