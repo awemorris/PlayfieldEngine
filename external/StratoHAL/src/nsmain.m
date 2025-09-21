@@ -33,6 +33,10 @@ int screen_height;
 // View controller.
 static ViewController *theViewController;
 
+// Log window.
+static NSWindow *theLogWindow;
+static NSTextView *theLogTextView;
+
 // Log file.
 static char *logFilePath;
 
@@ -40,7 +44,9 @@ static char *logFilePath;
 static bool releaseMode;
 
 // Forward declaration.
-static void check_bundle_resource(int argc, const char *argv[]);
+static void checkBundleResource(int argc, const char *argv[]);
+static void openLogWindow(void);
+static void putTextToLogWindow(const char *text);
 static FILE *openLog(void);
 static void showLogAtExit(void);
 
@@ -57,7 +63,7 @@ int main(int argc, const char *argv[]) {
     setlocale(LC_NUMERIC, "C");
 
     // Check if we have valid game data as a resource.
-    check_bundle_resource(argc, argv);
+    checkBundleResource(argc, argv);
 
     // Run.
     [NSApplication sharedApplication];
@@ -69,7 +75,7 @@ int main(int argc, const char *argv[]) {
     return 0;
 }
 
-static void check_bundle_resource(int argc, const char *argv[])
+static void checkBundleResource(int argc, const char *argv[])
 {
     if (argc > 2) {
         if (strcmp(argv[1], ".") == 0) {
@@ -707,6 +713,50 @@ static void check_bundle_resource(int argc, const char *argv[])
 
 @end
 
+void openLogWindow(void)
+{
+    if (theLogWindow != nil)
+        return;
+
+    theLogWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(100, 100, 600, 400)
+                                               styleMask:(NSWindowStyleMaskTitled |
+                                                          NSWindowStyleMaskClosable |
+                                                          NSWindowStyleMaskResizable |
+                                                          NSWindowStyleMaskMiniaturizable)
+                                                 backing:NSBackingStoreBuffered
+                                                   defer:NO];
+    [theLogWindow setTitle:@"Console"];
+    [theLogWindow makeKeyAndOrderFront:nil];
+
+    NSScrollView *scrollView = [[NSScrollView alloc] initWithFrame:[[theLogWindow contentView] bounds]];
+    [scrollView setHasVerticalScroller:YES];
+    [scrollView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+
+    theLogTextView = [[NSTextView alloc] initWithFrame:[[scrollView contentView] bounds]];
+    [theLogTextView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+    [theLogTextView setEditable:YES];
+    [theLogTextView setFont:[NSFont systemFontOfSize:14]];
+
+    [scrollView setDocumentView:theLogTextView];
+
+    [[theLogWindow contentView] addSubview:scrollView];
+}
+
+void putTextToLogWindow(const char *text)
+{
+    NSString *newLine = [[[NSString alloc] initWithUTF8String:text] stringByAppendingString:@"\n"];
+
+    [[theLogTextView textStorage] appendAttributedString:
+        [[NSAttributedString alloc] initWithString:newLine]];
+
+    NSRange range = NSMakeRange([[theLogTextView string] length], 0);
+    [theLogTextView scrollRangeToVisible:range];
+
+    [theLogTextView setBackgroundColor:[NSColor blackColor]];
+    [theLogTextView setTextColor:[NSColor whiteColor]];
+    [theLogTextView setFont:[NSFont userFixedPitchFontOfSize:13]];
+}
+
 //
 // HAL
 //
@@ -817,10 +867,14 @@ bool log_info(const char *s, ...)
     vsnprintf(buf, sizeof(buf), s, ap);
     va_end(ap);
 
+    // Open the log window and put the text.
+    openLogWindow();
+    putTextToLogWindow(buf);
+
     // Write to the log file.
     FILE *fp = openLog();
     if (fp != NULL) {
-        fprintf(fp, "%s", buf);
+        fprintf(fp, "%s\n", buf);
         fflush(fp);
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
@@ -840,10 +894,14 @@ bool log_warn(const char *s, ...)
     vsnprintf(buf, sizeof(buf), s, ap);
     va_end(ap);
 
+    // Open the log window and put the text.
+    openLogWindow();
+    putTextToLogWindow(buf);
+
     // Write to the log file.
     FILE *fp = openLog();
     if (fp != NULL) {
-        fprintf(fp, "%s", buf);
+        fprintf(fp, "%s\n", buf);
         fflush(fp);
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
@@ -863,10 +921,14 @@ bool log_error(const char *s, ...)
     vsnprintf(buf, sizeof(buf), s, ap);
     va_end(ap);
 
+    // Open the log window and put the text.
+    openLogWindow();
+    putTextToLogWindow(buf);
+
     // Write to the log file.
     FILE *fp = openLog();
     if (fp != NULL) {
-        fprintf(fp, "%s", buf);
+        fprintf(fp, "%s\n", buf);
         fflush(fp);
     }
     NSLog(@"%@", [[NSString alloc] initWithUTF8String:buf]);
