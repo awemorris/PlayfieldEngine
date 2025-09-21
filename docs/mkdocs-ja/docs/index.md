@@ -1,7 +1,7 @@
 Playfield Engine
 ================
 
-`Playfield Engine` へようこそ！夢を燃料に動くゲームエンジンです。
+`Playfield Engine` へようこそ。
 
 ---
 
