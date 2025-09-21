@@ -477,6 +477,12 @@ var c = cos(x);
 var t = tan(x);
 ```
 
+### abs()
+
+```
+var a = abs(x);
+```
+
 ### random()
 
 ```
@@ -534,6 +540,22 @@ func frame() {
         x:       Engine.mousePosX,
         y:       Engine.mousePosY
     });
+}
+```
+
+## Debug
+
+### debug()
+
+This API prints a string or dumps an object.
+Only this API takes a non-dictionary argument.
+
+```
+func dumpEnemies() {
+    if (Engine.isGamepadXPressed) {
+        debug("[Current emenies]");
+        debug(enemies);
+    }
 }
 ```
 

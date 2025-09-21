@@ -454,66 +454,6 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	return true;
 }
 
-#if 0
-static bool debug(NoctEnv *env)
-{
-	NoctValue param;
-	int type;
-	bool succeeded;
-
-	type = 0;
-	succeeded = false;
-	do {
-		if (!noct_get_arg(env, 0, &param))
-			break;
-
-		if (!noct_get_value_type(env, &param, &type))
-			break;
-
-		succeeded = true;
-	} while (0);
-	if (!succeeded) {
-		const char *file;
-		int line;
-		const char *msg;
-		noct_get_error_file(env, &file);
-		noct_get_error_line(env, &line);
-		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
-		return false;
-	}
-
-	switch (type) {
-	case NOCT_VALUE_INT:
-	{
-		int d;
-		noct_get_int(env, &param, &d);
-		log_info("%d", d);
-		break;
-	}
-	case NOCT_VALUE_FLOAT:
-	{
-		float f;
-		noct_get_float(env, &param, &f);
-		log_info("%f", f);
-		break;
-	}
-	case NOCT_VALUE_STRING:
-	{
-		const char *s;
-		noct_get_string(env, &param, &s);
-		log_info("%s", s);
-		break;
-	}
-	default:
-		log_info("[object]");
-		break;
-	}
-
-	return true;
-}
-#endif
-
 /* import() */
 static bool import(NoctEnv *env)
 {

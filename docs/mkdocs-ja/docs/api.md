@@ -30,6 +30,22 @@ func frame() {
 }
 ```
 
+## デバッグ
+
+### debug()
+
+この API は文字列を表示するか、オブジェクトをダンプします。
+この API だけは、辞書でない引数を取ります。
+
+```
+func dumpEnemies() {
+    if (Engine.isGamepadXPressed) {
+        debug("[Current emenies]");
+        debug(enemies);
+    }
+}
+```
+
 ## 時間
 
 ### 絶対的な時間

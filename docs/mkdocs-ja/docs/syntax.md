@@ -332,6 +332,12 @@ var c = cos(x);
 var t = tan(x);
 ```
 
+### abs()
+
+```
+var a = abs(x);
+```
+
 ### random()
 
 ```

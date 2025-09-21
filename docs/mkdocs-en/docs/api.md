@@ -30,6 +30,22 @@ func frame() {
 }
 ```
 
+## Debug
+
+### debug()
+
+This API prints a string or dumps an object.
+Only this API takes a non-dictionary argument.
+
+```
+func dumpEnemies() {
+    if (Engine.isGamepadXPressed) {
+        debug("[Current emenies]");
+        debug(enemies);
+    }
+}
+```
+
 ## Time
 
 ### Absolute Time

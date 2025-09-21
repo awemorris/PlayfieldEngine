@@ -1108,7 +1108,7 @@ VOID AppendLogToEdit(const char *text)
 	CHARFORMAT2 cf;
 
 	int len = GetWindowTextLength(hWndLogText);
-	snwprintf(buf, sizeof(buf) / sizeof(wchar_t), L"%ls\r\n", win32_utf8_to_utf16(text));
+	_snwprintf(buf, sizeof(buf) / sizeof(wchar_t), L"%ls\r\n", win32_utf8_to_utf16(text));
 
 	SendMessage(hWndLogText, EM_SETSEL, (WPARAM)len, (LPARAM)len);
 	SendMessage(hWndLogText, EM_REPLACESEL, FALSE, (LPARAM)buf);
