@@ -32,7 +32,7 @@ func frame() {
 
 ## Debug
 
-### debug()
+### print()
 
 This API prints a string or dumps an object.
 Only this API takes a non-dictionary argument.
@@ -40,8 +40,8 @@ Only this API takes a non-dictionary argument.
 ```
 func dumpEnemies() {
     if (Engine.isGamepadXPressed) {
-        debug("[Current emenies]");
-        debug(enemies);
+        print("[Current emenies]");
+        print(enemies);
     }
 }
 ```

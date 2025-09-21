@@ -363,8 +363,8 @@ void full_gc(void)
  * API
  */
 
-/* debug() */
-static bool debug(NoctEnv *env)
+/* print() */
+static bool print(NoctEnv *env)
 {
 	char buf[8192];
 	NoctValue value;
@@ -1141,7 +1141,7 @@ bool install_api(NoctEnv *env)
 		const char *name;
 	} funcs[] = {
 #define RTFUNC(name) {Engine_##name, #name, "Engine_" # name}
-		{debug, NULL, "debug"},
+		{print, NULL, "print"},
 		{import, NULL, "import"},
 		RTFUNC(moveToTagFile),
 		RTFUNC(moveToNextTag),
