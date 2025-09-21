@@ -39,6 +39,7 @@ static NoctEnv *env;
 /* Forward Declaration */
 static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
+static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
@@ -365,6 +366,97 @@ void full_gc(void)
 /* debug() */
 static bool debug(NoctEnv *env)
 {
+	char buf[8192];
+	NoctValue value;
+
+	if (!noct_get_arg(env, 0, &value))
+		return false;
+
+	memset(buf, 0, sizeof(buf));
+	serialize_printer(env, buf, sizeof(buf), &value);
+
+	log_info("%s", buf);
+
+	return true;
+}
+	
+/* Serialize a value recursively. */
+static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value)
+{
+	int type;
+	int ival;
+	float fval;
+	const char *sval;
+	int items;
+	int i;
+
+	if (!noct_get_value_type(env, value, &type))
+		return false;
+
+	switch (type) {
+	case NOCT_VALUE_INT:
+		if (!noct_get_int(env, value, &ival))
+			return false;
+		snprintf(buf, size, "%s%d", buf, ival);
+		break;
+	case NOCT_VALUE_FLOAT:
+		if (!noct_get_float(env, value, &fval))
+			return false;
+		snprintf(buf, size, "%s%d", buf, ival);
+		break;
+	case NOCT_VALUE_STRING:
+		if (!noct_get_string(env, value, &sval))
+			return false;
+		snprintf(buf, size, "%s%s", buf, sval);
+		break;
+	case NOCT_VALUE_ARRAY:
+		if (!noct_get_array_size(env, value, &items))
+			return false;
+		snprintf(buf, size, "%s[", buf, sval);
+		for (i = 0; i < items; i++) {
+			NoctValue elem;
+			if (!noct_get_array_elem(env, value, i, &elem))
+				return false;
+			if (!serialize_printer(env, buf, size, &elem))
+				return false;
+			if (i != items - 1)
+				snprintf(buf, size, "%s, ", buf, sval);
+		}
+		snprintf(buf, size, "%s]", buf, sval);
+		break;
+	case NOCT_VALUE_DICT:
+		if (!noct_get_dict_size(env, value, &items))
+			return false;
+		snprintf(buf, size, "%s{", buf, sval);
+		for (i = 0; i < items; i++) {
+			NoctValue k, v;
+			if (!noct_get_dict_key_by_index(env, value, i, &k))
+				return false;
+			if (!noct_get_string(env, &k, &sval))
+				return false;
+			snprintf(buf, size, "%s%s: ", buf, sval);
+			if (!noct_get_dict_value_by_index(env, value, i, &v))
+				return false;
+			serialize_printer(env, buf, size, &v);
+			if (i != items - 1)
+				snprintf(buf, size, "%s, ", buf, sval);
+		}
+		snprintf(buf, size, "%s}", buf, sval);
+		break;
+	case NOCT_VALUE_FUNC:
+		snprintf(buf, size, "%s<func>", buf, sval);
+		break;
+	default:
+		assert(0);
+		break;
+	}
+
+	return true;
+}
+
+#if 0
+static bool debug(NoctEnv *env)
+{
 	NoctValue param;
 	int type;
 	bool succeeded;
@@ -420,6 +512,7 @@ static bool debug(NoctEnv *env)
 
 	return true;
 }
+#endif
 
 /* import() */
 static bool import(NoctEnv *env)

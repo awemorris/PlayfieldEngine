@@ -200,9 +200,3 @@ func clamp(v, lo, hi) {
 func randRange(a, b) {
 	return a + (b - a) * random();
 }
-
-func abs(x) {
-    if (x < 0)
-        return -x;
-    return x;
-}
