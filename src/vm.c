@@ -1383,7 +1383,7 @@ static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, st
 			return false;
 		return true;
 	case SER_TYPE_ARRAY:
-		if (!ser_get_u32(ctx, &size))
+		if (!ser_get_u32(ctx, (uint32_t *)&size))
 			return false;
 		if (!noct_make_empty_array(env, value))
 			return false;
@@ -1398,7 +1398,7 @@ static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, st
 		}
 		return true;
 	case SER_TYPE_DICT:
-		if (!ser_get_u32(ctx, &size))
+		if (!ser_get_u32(ctx, (uint32_t *)&size))
 			return false;
 		if (!noct_make_empty_dict(env, value))
 			return false;

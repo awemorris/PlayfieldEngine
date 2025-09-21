@@ -500,9 +500,7 @@ bool log_info(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
-	EM_ASM({
-		alert(UTF8ToString($0));
-	}, buf);
+	printf("%s\n", buf);
 
 	return true;
 }
@@ -516,9 +514,7 @@ bool log_warn(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
-	EM_ASM({
-		alert(UTF8ToString($0));
-	}, buf);
+	printf("%s\n", buf);
 
 	return true;
 }
@@ -531,6 +527,8 @@ bool log_error(const char *s, ...)
 	va_start(ap, s);
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
+
+	printf("%s\n", buf);
 
 	EM_ASM({
 		alert(UTF8ToString($0));
@@ -686,7 +684,7 @@ render_image_3d_add(
 				   alpha);
 }
 
-bool make_sav_dir(void)
+bool make_save_directory(void)
 {
 	return true;
 }
