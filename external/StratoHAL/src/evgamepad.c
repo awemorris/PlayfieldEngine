@@ -8,6 +8,8 @@
  * evdev Gamepad Input
  */
 
+#if defined(__linux__) || defined(__FreeBSD__)
+
 #include <stratohal/platform.h>
 
 #define _GNU_SOURCE
@@ -232,3 +234,16 @@ static void on_change_analog(int axis, int value)
 		break;
 	}
 }
+
+#else
+
+void init_evgamepad(void)
+{
+}
+
+void update_evgamepad(void)
+{
+}
+
+#endif
+
