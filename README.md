@@ -337,9 +337,9 @@ Playfield Engine is tested on the following environments in the development.
 |windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
 |windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
 |windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-x86                  |Windows             |MinGW          |build-win-x86       |playfield.exe    |
-|windows-x86_64               |Windows             |MinGW          |build-win-x86_64    |playfield.exe    |
-|windows-arm64                |Windows             |MinGW (LLVM)   |build-win-arm64     |playfield.exe    |
+|windows-mingw-x86            |Windows             |MinGW          |build-mingw-x86     |playfield.exe    |
+|windows-mingw-x86_64         |Windows             |MinGW          |build-mingw-x86_64  |playfield.exe    |
+|windows-mingw-arm64          |Windows             |MinGW (LLVM)   |build-mingw-arm64   |playfield.exe    |
 |macos                        |macOS               |Clang          |build-macos         |Playfield.app    |
 |linux                        |Linux               |GCC            |build-linux         |playfield        |
 |freebsd                      |FreeBSD             |Clang          |build-freebsd       |playfield        |
@@ -364,9 +364,9 @@ Playfield Engine is tested on the following environments in the development.
 
 |Platform       |Binary Size    |Memory Usage (GC)                                              |
 |---------------|---------------|---------------------------------------------------------------|
-|All targets    |~2 MB          |Allocates 512 MB at startup for GC; does not exceed that limit |
+|All targets    |~2 MB          |Allocates 256 MB at startup for GC; does not exceed that limit |
 
-The garbage collector allocates 512 MB at startup because 512 MB is the maximum heap size.
+The garbage collector allocates 256 MB at startup because currently 256 MB is the maximum heap size.
 
 ---
 

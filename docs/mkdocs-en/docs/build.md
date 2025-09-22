@@ -1,6 +1,21 @@
 How To Build Playfield Engine
 =============================
 
+## Windows (Visual Studio)
+
+### Prerequisite
+
+* A `Windows 11` PC with an Intel, AMD, or Arm64 processor
+* `Visual Studio 2022 Community` installed (C++, CMake)
+* `Git for Windows` installed
+* `Playfield Engine` source tree downloaded
+
+### Steps
+
+- Open the source code folder by Visual Studio.
+- Select one of the `MSVC` targets.
+- Build the project.
+
 ## Windows (WSL2)
 
 ### Prerequisite
@@ -18,40 +33,9 @@ sudo apt-get install mingw-w64
 Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
 
 ```
-cmake --preset windows-x86_64
-cmake --build --preset windows-x86_64
+cmake --preset windows-mingw-x86_64
+cmake --build --preset windows-mingw-x86_64
 ```
-
-## Windows (MSYS2)
-
-### Prerequisite
-
-* A `Windows 11` PC with an Intel, AMD, or Arm64 processor
-* `MSYS2` environment installed
-
-### Steps
-
-Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
-
-```
-cmake --preset windows-x86_64
-cmake --build --preset windows-x86_64
-```
-
-## Windows (Visual Studio)
-
-### Prerequisite
-
-* A `Windows 11` PC with an Intel, AMD, or Arm64 processor
-* `Visual Studio 2022 Community` installed (C++, CMake)
-* `Git for Windows` installed
-* `Playfield Engine` source tree downloaded
-
-### Steps
-
-- Open the source code folder by Visual Studio.
-- Select a `MSVC` target.
-- Build the project.
 
 ## Linux
 

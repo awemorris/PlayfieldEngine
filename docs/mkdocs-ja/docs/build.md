@@ -1,6 +1,21 @@
 Playfield Engine のビルド方法
 =============================
 
+## Windows (Visual Studio)
+
+### 前提
+
+* Intel, AMD, Arm64 のいずれかの `Windows 11` PC であること
+* `Visual Studio 2022 Community` がインストールされていること (C++, CMake)
+* `Git for Windows` がインストールされていること
+* `Playfield Engine` ソースツリーが展開されていること
+
+### 手順
+
+- ソースコードフォルダをVisual Studioで開く
+- MSVC ターゲットを選択する
+- ビルドして実行する
+
 ## Windows (WSL2)
 
 ### 前提
@@ -18,40 +33,9 @@ sudo apt-get install mingw-w64
 WSL2 のターミナルを起動し、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
 
 ```
-cmake --preset windows-x86_64
-cmake --build --preset windows-x86_64
+cmake --preset windows-mingw-x86_64
+cmake --build --preset windows-mingw-x86_64
 ```
-
-## Windows (MSYS2)
-
-### 前提
-
-* Intel, AMD, Arm64 のいずれかの `Windows 11` PC であること
-* `MSYS2` 環境がインストールされていること
-
-### 手順
-
-MSYS2 のターミナルを起動し、`Playfield Engine` ディレクトリに入り、次のコマンドをタイプする。
-
-```
-cmake --preset windows-x86_64
-cmake --build --preset windows-x86_64
-```
-
-## Windows (Visual Studio)
-
-### 前提
-
-* Intel, AMD, Arm64 のいずれかの `Windows 11` PC であること
-* `Visual Studio 2022 Community` がインストールされていること (C++, CMake)
-* `Git for Windows` がインストールされていること
-* `Playfield Engine` ソースツリーが展開されていること
-
-### 手順
-
-- ソースコードフォルダをVisual Studioで開く
-- MSVC ターゲットを選択する
-- ビルドして実行する
 
 ## Linux
 

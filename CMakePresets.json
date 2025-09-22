@@ -107,10 +107,10 @@
       }
     },
     {
-      "name":           "windows-x86",
+      "name":           "windows-mingw-x86",
       "displayName":    "MinGW x86",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-win-x86",
+      "binaryDir":      "${sourceDir}/build-mingw-x86",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
@@ -121,10 +121,10 @@
       }
     },
     {
-      "name":           "windows-x86_64",
+      "name":           "windows-mingw-x86_64",
       "displayName":    "MinGW x86_64",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-win-x86_64",
+      "binaryDir":      "${sourceDir}/build-mingw-x86_64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86_64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
@@ -135,10 +135,10 @@
       }
     },
     {
-      "name":           "windows-arm64",
+      "name":           "windows-mingw-arm64",
       "displayName":    "MinGW Arm64",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-win-arm64",
+      "binaryDir":      "${sourceDir}/build-mingw-arm64",
       "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-arm64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
@@ -404,28 +404,40 @@
   ],
   "buildPresets": [
     {
+      "name": "windows-msvc-x86-debug",
+      "configurePreset": "windows-msvc-x86-debug"
+    },
+    {
       "name": "windows-msvc-x86-release",
       "configurePreset": "windows-msvc-x86-release"
+    },
+    {
+      "name": "windows-msvc-x64-debug",
+      "configurePreset": "windows-msvc-x64-debug"
     },
     {
       "name": "windows-msvc-x64-release",
       "configurePreset": "windows-msvc-x64-release"
     },
     {
+      "name": "windows-msvc-arm64-debug",
+      "configurePreset": "windows-msvc-arm64-debug"
+    },
+    {
       "name": "windows-msvc-arm64-release",
       "configurePreset": "windows-msvc-arm64-release"
     },
     {
-      "name": "windows-x86",
-      "configurePreset": "windows-x86"
+      "name": "windows-mingw-x86",
+      "configurePreset": "windows-mingw-x86"
     },
     {
-      "name": "windows-x86_64",
-      "configurePreset": "windows-x86_64"
+      "name": "windows-mingw-x86_64",
+      "configurePreset": "windows-mingw-x86_64"
     },
     {
-      "name": "windows-arm64",
-      "configurePreset": "windows-arm64"
+      "name": "windows-mingw-arm64",
+      "configurePreset": "windows-mingw-arm64"
     },
     {
       "name": "macos",
