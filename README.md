@@ -63,7 +63,7 @@ for everyone.**
 
 [![Mini Shoot](https://noctvm.io/img/screenshot-3.png)](https://noctvm.io/g/3)
 
-[![DON'T RUSH IN COMIKET](https://noctvm.io/img/screenshot-1.png)]((https://noctvm.io/g/1)
+[![DON'T RUSH IN COMIKET](https://noctvm.io/img/screenshot-1.png)](https://noctvm.io/g/1)
 
 ---
 
