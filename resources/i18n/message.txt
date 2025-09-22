@@ -175,7 +175,6 @@ tw:無法開啟存檔檔案。
 ja:セーブファイルを開けません。
 ---
 ID:Cannot write to a save file.
-ID:Cannot write to a save file.
 es:No se puede escribir en un archivo de guardado.
 fr:Impossible d’écrire dans un fichier de sauvegarde.
 it:Impossibile scrivere in un file di salvataggio.

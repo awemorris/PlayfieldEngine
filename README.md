@@ -398,18 +398,30 @@ ChatGPT can then create runnable Playfield Engine games directly.
 
 ## Localization / Internationalization
 
-Playfield Engine supports following languages:
+Playfield Engine supports the following locales for the UI messages.
 
-- English
-- Spanish
-- French
-- German
-- Italian
-- Greek
-- Russian
-- Simplified Chinese
-- Traditional Chinese
-- Japanese
+| Language               | Locale Code | Translation Type         | Scope of Translation             |
+|------------------------|-------------|--------------------------|----------------------------------|
+| English                | `en-US`     | Original                 | UI / Docs / Samples              |
+| Spanish                | `es-ES`     | Machine Translation      | UI                               |
+| French                 | `fr-FR`     | Machine Translation      | UI                               |
+| Italian                | `it-IT`     | Machine Translation      | UI                               |
+| German                 | `de-DE`     | Machine Translation      | UI                               |
+| Greek                  | `el-GR`     | Machine Translation      | UI                               |
+| Russian                | `ru-RU`     | Machine Translation      | UI                               |
+| Simplified Chinese     | `zh-CN`     | Machine Translation      | UI                               |
+| Traditional Chinese    | `zh-TW`     | Machine Translation      | UI                               |
+| Japanese               | `ja-JP`     | Professional Translation | UI / Docs                        |
+
+---
+
+**How to switch languages**  
+Playfield Engine uses the system locale.
+To switch languages, set your system locale.
+
+**Contributing Translations**  
+Translation files are located under the three `i18n/` directories. (main, HAL and NoctLang)
+To propose a new translation or update an existing one, please open an Issue or submit a Pull Request.
 
 ---
 

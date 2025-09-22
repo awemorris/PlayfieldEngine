@@ -198,7 +198,6 @@ const char *playfield_gettext(const char *msg)
         return "Cannot open a save file.";
     }
     if (strcmp(msg, "Cannot write to a save file.") == 0) {
-    if (strcmp(msg, "Cannot write to a save file.") == 0) {
         if (strcmp(lang_code, "es") == 0) return "No se puede escribir en un archivo de guardado.";
         if (strcmp(lang_code, "fr") == 0) return "Impossible d’écrire dans un fichier de sauvegarde.";
         if (strcmp(lang_code, "it") == 0) return "Impossibile scrivere in un file di salvataggio.";
