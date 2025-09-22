@@ -301,7 +301,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	/* Initialize the sound HAL. */
 	if (!DSInitialize(hWndMain))
 	{
-		log_error(S_TR("Failed to initialize sound."));
+		log_error(S_TR("Failed to initialize the sound."));
 
 		/* Fall-thru. */
 	}

@@ -396,6 +396,23 @@ ChatGPT can then create runnable Playfield Engine games directly.
 
 ---
 
+## Localization / Internationalization
+
+Playfield Engine supports following languages:
+
+- English
+- Spanish
+- French
+- German
+- Italian
+- Greek
+- Russian
+- Simplified Chinese
+- Traditional Chinese
+- Japanese
+
+---
+
 ## NoctVM Ecosystem
 
 Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
