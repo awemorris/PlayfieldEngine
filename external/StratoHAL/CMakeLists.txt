@@ -508,7 +508,13 @@ if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_OPENBSD
 )
   # Add -lm -lpthread -lXpm -lX11
-  target_link_libraries(strato PUBLIC m pthread Xpm X11 GL GLX)
+  target_link_libraries(strato PUBLIC m pthread Xpm X11 GL)
+
+  # Add -lGLX
+  if(   STRATO_TARGET_LINUX
+     OR STRATO_TARGET_FREEBSD)
+    target_link_libraries(strato PUBLIC GLX)
+  endif()
 endif()
 
 # Linux: Add -lasound
