@@ -404,6 +404,10 @@
   ],
   "buildPresets": [
     {
+      "name": "windows-msvc-x86-release",
+      "configurePreset": "windows-msvc-x86-release"
+    },
+    {
       "name": "windows-msvc-x64-release",
       "configurePreset": "windows-msvc-x64-release"
     },
