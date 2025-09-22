@@ -59,11 +59,11 @@ for everyone.**
 
 ## Live Web Demo
 
-[![Heartbeat Clock](https://noctvm.io/img/screenshot-2.png)](https://noctvm.io/g/2)
+[![Heartbeat Clock](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-2.png)](https://noctvm.io/g/2)
 
-[![Mini Shoot](https://noctvm.io/img/screenshot-3.png)](https://noctvm.io/g/3)
+[![Mini Shoot](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-3.png)](https://noctvm.io/g/3)
 
-[![DON'T RUSH IN COMIKET](https://noctvm.io/img/screenshot-1.png)](https://noctvm.io/g/1)
+[![DON'T RUSH IN COMIKET](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-1.png)](https://noctvm.io/g/1)
 
 ---
 
