@@ -40,22 +40,24 @@ func frame() {
 }
 
 func update(dt) {
-    // Follow the mouse.
-    var tx = Engine.mousePosX;
-    var ty = Engine.mousePosY;
-    var dx = tx - player.x;
-    var dy = ty - player.y;
-    var len = abs(dx)+abs(dy);
-    if (len > 0) {
-        var vx = clamp(dx, -player.speed, player.speed);
-        var vy = clamp(dy, -player.speed, player.speed);
-        player.x += vx * dt * 1.0;
-        player.y += vy * dt * 1.0;
-    }
+    // Move.
+    var dx = 0;
+    var dy = 0;
+    if (Engine.isKeyLeftPressed || Engine.isGamepadLeftPressed)
+        dx -= 1;
+    if (Engine.isKeyRightPressed || Engine.isGamepadRightPressed)
+        dx += 1;
+    if (Engine.isKeyUpPressed || Engine.isGamepadUpPressed)
+        dy -= 1;
+    if (Engine.isKeyDownPressed || Engine.isGamepadDownPressed)
+        dy += 1;
+    var speed = 5;
+    player.x += dx * speed;
+    player.y += dy * speed;
 
     // Shooting.
     fireCooldown -= dt;
-    if (Engine.isMouseLeftPressed && fireCooldown <= 0.0) {
+    if ((Engine.isKeyReturnPressed || Engine.isGamepadAPressed) && fireCooldown <= 0.0) {
         bullets->push({ x: player.x+6, y: player.y-10, vy: -400 });
         fireCooldown = 0.08; // 12.5発/秒
         // Engine.playSound({ stream:0, file:"shot.ogg" });
@@ -92,7 +94,7 @@ func update(dt) {
         var hit = false;
         var keepBullets = [];
         for (b in bullets) {
-            if (aabb(b.x, b.y, 4, 8, e.x, e.y, e.w, e.h)) {
+            if (aabb(b.x, b.y, 10, 10, e.x, e.y, e.w, e.h)) {
                 hit = true; // Hide the bullet.
                 score += 10;
             } else {
