@@ -34,6 +34,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLES20;
 import android.view.Gravity;
+import android.view.InputDevice;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -92,6 +94,9 @@ public class MainActivity extends Activity {
     private native void nativeOnTouchStart(int x, int y, int points);
     private native void nativeOnTouchMove(int x, int y);
     private native void nativeOnTouchEnd(int x, int y, int points);
+	private native void nativeOnKeyDown(int key);
+	private native void nativeOnKeyUp(int key);
+	private native void nativeOnGamepadAnalog(float x1, float y1, float x2, float y2, float l, float r);
 
     //
     // Variables (do not touch)
@@ -135,6 +140,32 @@ public class MainActivity extends Activity {
 
     // The synchronization object for the mutual exclusion between the main thread and the rendering thread.
     private final Object syncObj = new Object();
+
+	//
+	// Key code
+	//
+	private static int KEY_CONTROL = 0;
+	private static int KEY_SPACE = 1;
+	private static int KEY_RETURN = 2;
+	private static int KEY_UP = 3;
+	private static int KEY_DOWN = 4;
+	private static int KEY_LEFT = 5;
+	private static int KEY_RIGHT = 6;
+	private static int KEY_ESCAPE = 7;
+	private static int KEY_C = 8;
+	private static int KEY_S = 9;
+	private static int KEY_L = 10;
+	private static int KEY_H = 11;
+	private static int KEY_GAMEPAD_UP = 12;
+	private static int KEY_GAMEPAD_DOWN = 13;
+	private static int KEY_GAMEPAD_LEFT = 14;
+	private static int KEY_GAMEPAD_RIGHT = 15;
+	private static int KEY_GAMEPAD_A = 16;
+	private static int KEY_GAMEPAD_B = 17;
+	private static int KEY_GAMEPAD_X = 18;
+	private static int KEY_GAMEPAD_Y = 19;
+	private static int KEY_GAMEPAD_L = 20;
+	private static int KEY_GAMEPAD_R = 21;
 
     //
     // Called when the app instance is created.
@@ -210,6 +241,8 @@ public class MainActivity extends Activity {
             super(context);
 
             setFocusable(true);
+			setFocusableInTouchMode(true);
+			requestFocus();
             setOnTouchListener(this);
             setEGLConfigChooser(8, 8, 8, 8, 0, 0);
             setEGLContextClientVersion(2);
@@ -312,6 +345,100 @@ public class MainActivity extends Activity {
             touchCount = pointed;
             return true;
         }
+
+		@Override
+		public boolean onKeyDown(int keyCode, KeyEvent event) {
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_BUTTON_A:
+				nativeOnKeyDown(KEY_GAMEPAD_A);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_B:
+				nativeOnKeyDown(KEY_GAMEPAD_B);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_X:
+				nativeOnKeyDown(KEY_GAMEPAD_X);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_Y:
+				nativeOnKeyDown(KEY_GAMEPAD_Y);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_L1:
+				nativeOnKeyDown(KEY_GAMEPAD_L);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_R1:
+				nativeOnKeyDown(KEY_GAMEPAD_R);
+				return true;
+			default:
+				break;
+			}
+			return super.onKeyDown(keyCode, event);
+		}
+
+		@Override
+		public boolean onKeyUp(int keyCode, KeyEvent event) {
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_BUTTON_A:
+				nativeOnKeyUp(KEY_GAMEPAD_A);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_B:
+				nativeOnKeyUp(KEY_GAMEPAD_B);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_X:
+				nativeOnKeyUp(KEY_GAMEPAD_X);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_Y:
+				nativeOnKeyUp(KEY_GAMEPAD_Y);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_L1:
+				nativeOnKeyUp(KEY_GAMEPAD_L);
+				return true;
+			case KeyEvent.KEYCODE_BUTTON_R1:
+				nativeOnKeyUp(KEY_GAMEPAD_R);
+				return true;
+			default:
+				break;
+			}
+			return super.onKeyDown(keyCode, event);
+		}
+
+		@Override
+		public boolean onGenericMotionEvent(MotionEvent event) {
+			if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK &&
+				event.getAction() == MotionEvent.ACTION_MOVE) {
+				float x1 = event.getAxisValue(MotionEvent.AXIS_X);
+				float y1 = event.getAxisValue(MotionEvent.AXIS_Y);
+				float x2 = event.getAxisValue(MotionEvent.AXIS_RX);
+				float y2 = event.getAxisValue(MotionEvent.AXIS_RY);
+				float l = event.getAxisValue(MotionEvent.AXIS_LTRIGGER);
+				float r = event.getAxisValue(MotionEvent.AXIS_RTRIGGER);
+				nativeOnGamepadAnalog(x1, y2, x2, y2, l, r);
+
+				float hatX = event.getAxisValue(MotionEvent.AXIS_HAT_X);
+				float hatY = event.getAxisValue(MotionEvent.AXIS_HAT_Y);
+				if (hatX == -1.0f) {
+					nativeOnKeyDown(KEY_GAMEPAD_LEFT);
+					nativeOnKeyUp(KEY_GAMEPAD_RIGHT);
+				} else if (hatX == 1.0f) {
+					nativeOnKeyDown(KEY_GAMEPAD_RIGHT);
+					nativeOnKeyUp(KEY_GAMEPAD_LEFT);
+				} else {
+					nativeOnKeyUp(KEY_GAMEPAD_RIGHT);
+					nativeOnKeyUp(KEY_GAMEPAD_LEFT);
+				}
+				if (hatY == -1.0f) {
+					nativeOnKeyDown(KEY_GAMEPAD_UP);
+					nativeOnKeyUp(KEY_GAMEPAD_DOWN);
+				} else if (hatY == 1.0f) {
+					nativeOnKeyDown(KEY_GAMEPAD_DOWN);
+					nativeOnKeyUp(KEY_GAMEPAD_UP);
+				} else {
+					nativeOnKeyUp(KEY_GAMEPAD_UP);
+					nativeOnKeyUp(KEY_GAMEPAD_DOWN);
+				}
+
+				return true;
+			}
+			return super.onGenericMotionEvent(event);
+		}
     }
 
     //

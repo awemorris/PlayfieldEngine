@@ -403,6 +403,43 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchEnd(
 	jni_env = NULL;
 }
 
+JNIEXPORT void JNICALL
+Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnKeyDown(
+	JNIEnv *env,
+	jobject instance,
+	int key)
+{
+	on_event_key_press(key);
+}
+
+JNIEXPORT void JNICALL
+Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnKeyUp(
+	JNIEnv *env,
+	jobject instance,
+	int key)
+{
+	on_event_key_release(key);
+}
+
+JNIEXPORT void JNICALL
+Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnGamepadAnalog(
+	JNIEnv *env,
+	jobject instance,
+	jfloat x1,
+	jfloat y1,
+	jfloat x2,
+	jfloat y2,
+	jfloat l,
+	jfloat r)
+{
+	on_event_analog_input(ANALOG_X1, (int)(x1 * 32767.0f));
+	on_event_analog_input(ANALOG_Y1, (int)(y1 * 32767.0f));
+	on_event_analog_input(ANALOG_X2, (int)(x2 * 32767.0f));
+	on_event_analog_input(ANALOG_Y2, (int)(y2 * 32767.0f));
+	on_event_analog_input(ANALOG_L, (int)(l * 32767.0f));
+	on_event_analog_input(ANALOG_R, (int)(r * 32767.0f));
+}
+
 /*
  * HAL
  */
@@ -446,6 +483,7 @@ bool log_error(const char *s, ...)
 bool log_out_of_memory(void)
 {
 	log_error("Out of memory.");
+	return true;
 }
 
 void notify_image_update(struct image *img)
