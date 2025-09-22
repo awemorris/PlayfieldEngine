@@ -23,7 +23,7 @@ Built completely from scratch, Playfield Engine features:
     - The runtime is only ~1.4 MB on Windows.
     - Perfect for mobile apps — **Go Magically Small, Get Massively Loved!**
 
-![platforms](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/platforms)
+![platforms](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/platforms.png)
 
 ---
 
