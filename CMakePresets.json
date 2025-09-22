@@ -377,6 +377,29 @@
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_PACK":       "ON"
       }
+    },
+    {
+      "name":           "netbsd",
+      "displayName":    "NetBSD",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-netbsd",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PLAYFIELD_TARGET_NETBSD":     "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
+      }
+    },
+    {
+      "name":           "openbsd",
+      "displayName":    "OpenBSD",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-openbsd",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PLAYFIELD_TARGET_OPENBSD":    "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -463,6 +486,14 @@
     {
       "name": "freebsd",
       "configurePreset": "freebsd"
+    },
+    {
+      "name": "netbsd",
+      "configurePreset": "netbsd"
+    },
+    {
+      "name": "openbsd",
+      "configurePreset": "openbsd"
     }
   ]
 }

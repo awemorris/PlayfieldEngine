@@ -15,6 +15,8 @@ option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                 OFF
 option(PLAYFIELD_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"    OFF)
 option(PLAYFIELD_TARGET_UNITY         "Build for Unity"                      OFF)
 option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"                    OFF)
+option(PLAYFIELD_TARGET_NETBSD        "Build for NetBSD"                     OFF)
+option(PLAYFIELD_TARGET_OPENBSD       "Build for OpenBSD"                    OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -39,6 +41,8 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_WASM_LOCAL
    OR PLAYFIELD_TARGET_UNITY
    OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD
 )
   # A target and options are manually specified.
 else()   
@@ -71,7 +75,19 @@ else()
     set(PLAYFIELD_TARGET_FREEBSD    ON)
     set(PLAYFIELD_ENABLE_JIT        ON)
     set(PLAYFIELD_ENABLE_I18N       ON)
-    set(PLAYFIELD_ENABLE_GLX        ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+    set(PLAYFIELD_TARGET_NETBSD     ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    set(PLAYFIELD_TARGET_OPENBSD    ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
     set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
@@ -152,6 +168,10 @@ elseif(PLAYFIELD_TARGET_UNITY)
   set(STRATO_TARGET_UNITY ON)
 elseif(PLAYFIELD_TARGET_FREEBSD)
   set(STRATO_TARGET_FREEBSD ON)
+elseif(PLAYFIELD_TARGET_NETBSD)
+  set(STRATO_TARGET_NETBSD ON)
+elseif(PLAYFIELD_TARGET_OPENBSD)
+  set(STRATO_TARGET_OPENBSD ON)
 endif()
 
 if(PLAYFIELD_TARGET_UNITY_SWITCH)
@@ -446,7 +466,9 @@ endif()
 if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_MACOS
    OR PLAYFIELD_TARGET_LINUX
-   OR PLAYFIELD_TARGET_FREEBSD)
+   OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD)
   add_executable(
     playfield-compiler
     src/compiler.c
