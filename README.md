@@ -425,6 +425,23 @@ To propose a new translation or update an existing one, please open an Issue or 
 
 ---
 
+## Thirdparty Libraries
+
+Playfield Engine uses the following libraries.
+The source code tarballs for the libraries are included in this repository.
+
+- zlib
+- libpng
+- libogg
+- libvorbis
+- JPEG9
+- libwebp
+- brotli
+- bzip2
+- FreeType2
+
+---
+
 ## NoctVM Ecosystem
 
 Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
