@@ -1,68 +1,87 @@
 How To Build Playfield Engine
 =============================
 
+* Notes
+    * Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
+    * Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
+    * macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
+    * Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
+    * A full build takes 10 seconds using 10 cores.
+
 ## Windows (Visual Studio)
 
 ### Prerequisite
 
-* A `Windows 11` PC with an Intel, AMD, or Arm64 processor
-* `Visual Studio 2022 Community` installed (C++, CMake)
-* `Git for Windows` installed
-* `Playfield Engine` source tree downloaded
+* `Visual Studio 2022 Community` installed with C/C++ and CMake configured
 
 ### Steps
 
-- Open the source code folder by Visual Studio.
-- Select one of the `MSVC` targets.
-- Build the project.
+* Install [winflexbison](https://github.com/lexxmark/winflexbison).
+    * Add the installation folder to the PATH environment variable.
+    * Rename the exe files to `flex.exe` and `bison.exe`.
+* Download the [Playfield Engine source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Open the source code folder by Visual Studio.
+    * Select one of the `MSVC` targets.
+    * Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
+    * Build the project.
+
+The target file `out/build/windows-msvc-x64-release/playfield.exe` will be created.
+
+---
 
 ## Windows (WSL2)
 
 ### Prerequisite
 
 * A `Windows 11` PC with an Intel, AMD, or Arm64 processor
-* `WSL2` environment installed
+* A `WSL2` feature installed
 * `Ubuntu` or `Debian` installed
-* Run the folowing:
-```
-sudo apt-get install mingw-w64
-```
 
 ### Steps
 
-Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
+Open the terminal and type the following.
 
 ```
+sudo apt-get install cmake mingw-w64 flex bison
+
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
 cmake --preset windows-mingw-x86_64
 cmake --build --preset windows-mingw-x86_64
 ```
+
+The target file `build-mingw-x86_64/playfield` will be created.
+
+---
 
 ## Linux
 
 ### Prerequisite
 
-* A Linux machine
-* `Ubuntu`, `Debian`, or `Raspberry Pi OS` installed
-* `GNU Make` installed
-
 On Debian, Ubuntu, or Raspberry Pi OS:
 ```
-sudo apt-get install build-essential libx11-dev libxpm-dev mesa-common-dev libasound2-dev
+sudo apt-get install git cmake ninja-build build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev
 ```
 
 On RedHat, Rocky Linux, Fedora, etc.:
 ```
-sudo dnf install patch libX11-devel libXpm-devel alsa-lib-devel mesa-libGL-devel
+sudo dnf groupinstall "Development Tools" "Development Libraries"
+sudo dnf install patch git cmake ninja-build libX11-devel libXpm-devel alsa-lib-devel mesa-libGL-devel
 ```
 
 ### Steps
 
-Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
-
+Open the terminal and type the following.
 ```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
 cmake --preset linux
 cmake --build --preset linux
 ```
+
+The target file `build-linux/playfield` will be created.
+
+---
 
 ## macOS
 
@@ -74,15 +93,18 @@ cmake --build --preset linux
 
 ### Steps
 
-Open a terminal and enter th `Playfield Engine` direcotry, then type the following.
+Open the terminal and type the following.
 
 ```
-./configure
-make
-sudo make install
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
+cmake --preset macos
+cmake --build --preset macos
 ```
 
-Then, open the Xcode project at `projects/macos-dmg`, and build the project on Xcode.
+The target `build-macos/Playfield.app` will be created.
+
+---
 
 ## iOS
 
@@ -94,36 +116,131 @@ Then, open the Xcode project at `projects/macos-dmg`, and build the project on X
 
 ### Steps
 
-- Merge assets into the `assets.pak` file.
-- Copy the `assets.pak` file to the `ios/resources` folder in the distribution SDK.
-- Open the `ios` folder in the SDK by Xcode
+* Pack assets into the `assets.pak` file.
+* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Copy your `assets.pak` file into the `misc/ios/resources` folder.
+* Open the `misc/ios` folder by Xcode.
+
+---
 
 ## Android
 
 ### Prerequisite
 
-* A machine with one of:
-    * `Windows 11`
-    * `macOS 15`
-    * `Linux`
 * `Android Studio`
 
 ### Steps
 
-- Copy your assets to the `android/app/src/main/assets` folder in the distribution SDK.
-- Open the `android` in the distribution SDK by Android Studio
+* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Copy your asset files into the `misc/android/app/src/main/assets` folder.
+* Open the `misc/android` folde by Android Studio
+
+---
+
+## WebAssembly
+
+### Prerequisite
+
+* `emsdk` installed.
+
+### Steps
+
+Open the terminal and type the following.
+
+```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
+cmake --preset wasm
+cmake --build --preset wasm
+```
+
+The target file `wasm/index.html` will be created.
+
+---
 
 ## FreeBSD
 
 ### Prerequisite
 
 * A `FreeBSD` machine
+* `cmake` and `ninja` installed.
 
 ### Steps
 
-Open a terminal and enter the `Playfield Engine` direcotry, then type the following.
+Open the terminal and type the following.
 
 ```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
 cmake --preset freebsd
 cmake --build --preset freebsd
 ```
+
+The target file `build-freebsd/playfield` will be created.
+
+---
+
+## NetBSD
+
+### Prerequisite
+
+* A `NetBSD` machine
+* `cmake` and `ninja` installed.
+
+### Steps
+
+Open the terminal and type the following.
+
+```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
+cmake --preset netbsd
+cmake --build --preset netbsd
+```
+
+The target file `build-netbsd/playfield` will be created.
+
+---
+
+## OpenBSD
+
+### Prerequisite
+
+* A `OpenBSD` machine
+* `cmake` and `ninja` installed.
+
+### Steps
+
+Open the terminal and type the following.
+
+```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
+cmake --preset openbsd
+cmake --build --preset openbsd
+```
+
+The target file `build-openbsd/playfield` will be created.
+
+---
+
+## Unity Plugin
+
+### Prerequisite
+
+* Full build of `LLVM` installed.
+
+### Steps
+
+Open the terminal and type the following.
+
+```
+git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
+cd PlayfieldEngine
+cmake --preset unity-win64
+cmake --build --preset unity-win64
+```
+
+The target file `build-unity-win64/libplayfield.dll` will be created.
+
+Note: Replace `win64` to one of `switch`, `ps5`, and `xbox`.

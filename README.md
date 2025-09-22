@@ -123,8 +123,6 @@ func frame() {
 **Note:** setup() defines the window, start() loads resources, and
 frame() is called each frame to render and update.
 
-For more examples, check the [Getting Started Guide](docs/mkdocs-en/docs/gettingstarted.md)
-
 ---
 
 ## Quick Start
@@ -148,87 +146,34 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 
 ### 3. Explore more features
 
-- See the [Getting Started](docs/mkdocs-en/docs/gettingstarted.md) page for the overview.
-- See the [Full Documentation](docs/mkdocs-en/docs/index.md) for the details.
-
-### Appendix. Build from source
-
-- Visual Studio 2022
-    - Install the [winflexbison](https://github.com/lexxmark/winflexbison).
-        - Add the installation folder to the PATH environment variable.
-        - Rename the exe files to `flex.exe` and `bison.exe`.
-    - Clone the repo.
-        ```
-        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
-        ```
-    - Open the folder by Visual Studio 2022.
-    - Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
-    - Build and run.
-
-- WSL2 (Ubuntu 22.04 or later, CMake >= 3.22)
-    - Type the following in the terminal.
-        ```
-        sudo apt-get install cmake mingw-w64 flex bison
-        
-        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
-        cd PlayfieldEngine
-        cmake --preset windows-x86_64
-        cmake --build --preset windows-x86_64
-        ```
-    - The file `playfield.exe` will be generated in the `build-win-x86_64` directory.
-
-- macOS (macOS 11 or later, brew, CMake >= 3.22)
-    - Type the following in the terminal.
-        ```
-        brew install cmake flex bison
-        
-        git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
-        cd PlayfieldEngine
-        cmake -B build .
-        cmake --build build --parallel
-        ```
-    - The app bundle `Playfield.app` will be generated in the `build` directory.
-    - The app is a Universal Binary 2 and runs on both Intel and Apple Silicon.
-
-- Linux (Ubuntu 22.04 or later, CMake >= 3.22)
-    - Type the following in the terminal.
-        ```
-        sudo apt-get install cmake build-essential flex bison libx11-dev libxpm-dev libasound2-dev mesa-common-dev
-        
-        git clone --recursive https://github.com/awemorris/Playfield.git
-        cd Playfield
-        cmake -B build .
-        cmake --build build --parallel
-        ```
-    - The file `playfield` will be generated in the `build` directory.
-    - The app uses X11 and OpenGL.
-
-- Notes
-    - Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
-    - Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
-    - macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
-	      - Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
-    - Unity Plugin build is not included in this Quick Start. Use the CMake presets named `unity-*`.
-    - A full build takes 10 seconds using 10 cores.
+- [Documentation Top](index.md)
+- [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
+- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Playfield Script API](docs/mkdocs-en/docs/api.md)
 
 ---
 
 ## Technical Overview
 
+Playfield Engine is not merely a wrapper around SDL combined with a
+scripting language. It features its own rendering and audio backends,
+and its own scripting language, positioning it as a fully independent
+game engine.
+
 ### Core Architecture
 
 ```
-+-----------------------------------------------------+
-|                     User Script                     |
-+-----------------------------------------------------+
-                          ||
-+-----------------------------------------------------+
-|                    Playfield VM                     |
-+-----------------------------------------------------+
-                ||                          ||
-+--------------------------------+  +-----------------+
-|  StratoHAL (Rendering/Audio)   |  |    NoctLang     |
-+--------------------------------+  +-----------------|
++----------------------------------------------------------+
+|                       User Scripts                       |
++----------------------------------------------------------+
+                             ||
++----------------------------------------------------------+
+|                 Playfield Script Runtime                 |
++----------------------------------------------------------+
+                ||                            ||
++--------------------------------+  +----------------------+
+|  StratoHAL (Rendering/Audio)   |  |   NoctLang VM (JIT)  |
++--------------------------------+  +----------------------|
 ```
 
 * **Scripting**:
@@ -236,16 +181,23 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
   tiny yet mighty language designed for game scripting.
 
 * **Rendering**:
-  Supports DirectX 9/11/12, Metal, OpenGL, and a fallback software
-  renderer for wide compatibility.
+  Supports native DirectX 9/11/12, Metal, OpenGL, OpenGL ES, and WebGL for wide compatibility.
 
 * **Audio**:
-  Provides lightweight audio support through DirectSound, Audio Unit,
-  ALSA, and other APIs.
+  Provides lightweight audio support through native DirectSound (Windows), Audio Unit (macOS/iOS),
+  ALSA (Linux), OSS (BSD), and other APIs.
 
-* **Small Footprint**:
-  The entire runtime fits within ~2MB, making it suitable for embedded
-  systems or constrained environments.
+### StratoHAL
+
+StratoHAL originated as the codebase of a 2D game engine developed
+since 2001, and has been open-sourced with a proven record of
+exceptional stability. Evolving over a quarter century from the
+Windows 9x era, StratoHAL has grown to support macOS, Linux, iOS,
+Android, WebAssembly, and Unity. It has been running reliably on
+smartphones for more than a decade. While SDL3 already exists as a
+popular open-source alternative, StratoHAL covers the same major
+platforms as SDL3 — and uniquely provides console support through
+Unity without relying on any NDA-restricted code.
 
 ### Platform Support
 
@@ -255,7 +207,7 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 |               |macOS               |Metal, Audio Unit                         |
 |               |ChromeOS            |OpenGL, ALSA                              |
 |               |Linux               |OpenGL, ALSA                              |
-|               |*BSD                |OpenGL, /dev/dsp                          |
+|               |*BSD                |OpenGL, OSS (/dev/dsp)                    |
 |               |Qt                  |Qt OpenGL                                 |
 |Mobile         |iOS                 |Metal, Audio Unit                         |
 |               |Android             |OpenGL, OpenSL ES, NDK                    |
@@ -273,8 +225,12 @@ Windows 64-bit and game consoles.
 
 ### NoctLang
 
+```
+Playfield Script = NoctLang + Playfield API
+```
+
 **NoctLang** is a lightweight scripting language designed specifically
-for Playfield. With a game-oriented syntax, it emphasizes clarity,
+for Playfield Engine. With a game-oriented syntax, it emphasizes clarity,
 instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
@@ -315,48 +271,50 @@ Playfield Engine is tested on the following environments in the development.
 |Desktop    |Windows         |11      |x64             |
 |           |                |        |arm64           |
 |           |macOS           |15      |arm64           |
-|           |                |13      |x86_64          |
+|           |                |12      |x86_64          |
 |           |Ubuntu          |24.04   |x86_64          |
 |           |                |        |arm64           |
 |           |Kubuntu         |25.04   |x86_64          |
 |Browser    |Chrome          |139     |WebAssembly     |
 |           |Safari          |18.6    |WebAssembly     |
 |Smartphone |iOS             |18      |Simulator       |
-|           |Android         |15      |Simulator       |
-|Console    |Unity           |6       |                |
+|           |Android         |16      |Simulator       |
+|Console    |Unity           |6.2     |Windows x64     |
 
 ---
 
 ## CMake Presets
 
-|Preset                       |Platform            |Compiler       |Directory           |Target           |
-|-----------------------------|--------------------|---------------|--------------------|-----------------|
-|windows-msvc-x86-debug       |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-msvc-x86-release     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-msvc-x64-debug       |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-msvc-x64-release     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-msvc-arm64-debug     |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-msvc-arm64-release   |Windows, VS2022     |MSVC           |out                 |playfield.exe    |
-|windows-mingw-x86            |Windows             |MinGW          |build-mingw-x86     |playfield.exe    |
-|windows-mingw-x86_64         |Windows             |MinGW          |build-mingw-x86_64  |playfield.exe    |
-|windows-mingw-arm64          |Windows             |MinGW (LLVM)   |build-mingw-arm64   |playfield.exe    |
-|macos                        |macOS               |Clang          |build-macos         |Playfield.app    |
-|linux                        |Linux               |GCC            |build-linux         |playfield        |
-|freebsd                      |FreeBSD             |Clang          |build-freebsd       |playfield        |
-|netbsd                       |NetBSD              |gcc            |build-freebsd       |playfield        |
-|openbsd                      |OpenBSD             |Clang          |build-freebsd       |playfield        |
-|wasm                         |WebAssembly         |Emscripten     |build-wasm          |index.html       |
-|wasm-local                   |Chromebook          |Emscripten     |build-wasm-local    |index.html       |
-|ios-device                   |iOS Device          |Clang          |build-ios-device    |libplayfield.a   |
-|ios-simulator                |iOS Simulator       |Clang          |build-ios-simulator |libplayfield.a   |
-|android-x86                  |Android x86         |Clang          |build-android-x86   |libplayfield.so  |
-|android-x86_64               |Android x86_64      |Clang          |build-android-x86_64|libplayfield.so  |
-|android-armv7                |Android armv7       |Clang          |build-android-armv7 |libplayfield.so  |
-|android-arm64                |Android arm64       |Clang          |build-android-arm64 |libplayfield.so  |
-|unity-win64                  |Unity Plugin        |Clang          |build-unity-win64   |libplayfield.dll |
-|unity-switch                 |Unity Plugin        |Clang          |build-unity-switch  |libplayfield.a   |
-|unity-ps5                    |Unity Plugin        |Clang          |build-unity-ps5     |libplayfield.a   |
-|unity-xbox                   |Unity Plugin        |Clang          |build-unity-xbox    |libplayfield.a   |
+Playfield Engine ships with CMake presets covering various platforms and build configurations.
+
+|Preset                       |Platform       |Compiler   |Directory                       |Target           |Type           |
+|-----------------------------|---------------|-----------|--------------------------------|-----------------|---------------|
+|windows-msvc-x86-debug       |Windows        |MSVC       |out/build/windows-x86-debug     |playfield.exe    |Executable     |
+|windows-msvc-x86-release     |Windows        |MSVC       |out/build/windows-x86-release   |playfield.exe    |Executable     |
+|windows-msvc-x64-debug       |Windows        |MSVC       |out/build/windows-x64-debug     |playfield.exe    |Executable     |
+|windows-msvc-x64-release     |Windows        |MSVC       |out/build/windows-x64-release   |playfield.exe    |Executable     |
+|windows-msvc-arm64-debug     |Windows        |MSVC       |out/build/windows-arm64-debug   |playfield.exe    |Executable     |
+|windows-msvc-arm64-release   |Windows        |MSVC       |out/build/windows-arm64/release |playfield.exe    |Executable     |
+|windows-mingw-x86            |Windows        |MinGW      |build-mingw-x86                 |playfield.exe    |Executable     |
+|windows-mingw-x86_64         |Windows        |MinGW      |build-mingw-x86_64              |playfield.exe    |Executable     |
+|windows-mingw-arm64          |Windows        |MinGW-LLVM |build-mingw-arm64               |playfield.exe    |Executable     |
+|macos                        |macOS          |Clang      |build-macos                     |Playfield.app    |App Bundle     |
+|linux                        |Linux          |GCC        |build-linux                     |playfield        |Executable     |
+|freebsd                      |FreeBSD        |Clang      |build-freebsd                   |playfield        |Executable     |
+|netbsd                       |NetBSD         |GCC        |build-freebsd                   |playfield        |Executable     |
+|openbsd                      |OpenBSD        |Clang      |build-freebsd                   |playfield        |Executable     |
+|wasm                         |WebAssembly    |Emscripten |build-wasm                      |index.html       |HTML + Wasm    |
+|wasm-local                   |Chromebook     |Emscripten |build-wasm-local                |index.html       |HTML + Wasm    |
+|ios-device                   |iOS Device     |Clang      |build-ios-device                |libplayfield.a   |Static Library |
+|ios-simulator                |iOS Simulator  |Clang      |build-ios-simulator             |libplayfield.a   |Static Library |
+|android-x86                  |Android x86    |Clang      |build-android-x86               |libplayfield.so  |Shared Library |
+|android-x86_64               |Android x86_64 |Clang      |build-android-x86_64            |libplayfield.so  |Shared Library |
+|android-armv7                |Android armv7  |Clang      |build-android-armv7             |libplayfield.so  |Shared Library |
+|android-arm64                |Android arm64  |Clang      |build-android-arm64             |libplayfield.so  |Shared Library |
+|unity-win64                  |Unity Plugin   |Clang-CL   |build-unity-win64               |libplayfield.dll |DLL Plugin     |
+|unity-switch                 |Unity Plugin   |Clang      |build-unity-switch              |libplayfield.a   |Static Library |
+|unity-ps5                    |Unity Plugin   |Clang      |build-unity-ps5                 |libplayfield.a   |Static Library |
+|unity-xbox                   |Unity Plugin   |Clang      |build-unity-xbox                |libplayfield.a   |Static Library |
 
 ---
 
@@ -385,8 +343,7 @@ Samples are added timely.
 
 ## ChatGPT Support
 
-To generate game templates with ChatGPT, please let it load the
-following references:
+To generate game templates with ChatGPT, please let it load the following references:
 
 - [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
 - [Playfield Script API](docs/mkdocs-en/docs/api.md)
@@ -414,8 +371,6 @@ Playfield Engine supports the following locales for the UI messages.
 | Simplified Chinese     | `zh-CN`     | Machine Translation      | UI                               |
 | Traditional Chinese    | `zh-TW`     | Machine Translation      | UI                               |
 | Japanese               | `ja-JP`     | Professional Translation | UI / Docs                        |
-
----
 
 **How to switch languages**  
 Playfield Engine uses the system locale.
