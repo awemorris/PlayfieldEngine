@@ -22,6 +22,15 @@ jobs:
       - name: Set up dependencies
         run: git submodule update --init
 
+      - name: Configure (x86)
+        run: >
+          cmake --preset windows-msvc-x86-release
+          -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
+          -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
+
+      - name: Build (x86)
+        run: cmake --build --preset windows-msvc-x86-release --config Release --parallel
+
       - name: Configure (x64)
         run: >
           cmake --preset windows-msvc-x64-release
@@ -151,8 +160,9 @@ jobs:
       - name: Copy for Windows.
         run: |
           cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
-          cp windows/build/windows-msvc-x64-release/Release/playfield-pack.exe dist/misc/windows/
-          cp windows/build/windows-msvc-x64-release/Release/playfield-web.exe dist/misc/wasm/
+          cp windows/build/windows-msvc-x86-release/Release/playfield.exe dist/misc/windows/playfield32.exe
+          cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
+          cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
           cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
           cp samples/shoot/main.pf dist/
 
