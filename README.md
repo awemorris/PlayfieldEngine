@@ -59,6 +59,8 @@ for everyone.**
 
 ## Live Web Demo
 
+These are the sample games that work on Web browsers.
+
 [![Heartbeat Clock](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-2.png)](https://noctvm.io/g/2)
 
 [![Mini Shoot](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-3.png)](https://noctvm.io/g/3)
@@ -78,11 +80,11 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 |Desktop    |Windows    |✅ Works     |22 Sep 2025  |Windows 11 x64                      |
 |           |macOS      |✅ Works     |22 Sep 2025  |macOS 15 Sonoma Arm64               |
 |           |Linux      |✅ Works     |22 Sep 2025  |Ubuntu 24.04 LTS x86_64             |
-|           |FreeBSD    |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
-|           |NetBSD     |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
-|           |OpenBSD    |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
 |Mobile     |iOS        |✅ Works     |22 Sep 2025  |iPhone iOS 18                       |
 |           |Android    |✅ Works     |22 Sep 2025  |Android 16                          |
+|BSD        |FreeBSD    |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
+|           |NetBSD     |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
+|           |OpenBSD    |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
 |Others     |WebAssembly|✅ Works     |22 Sep 2025  |Chrome                              |
 |           |Chromebook |✅ Works     |22 Sep 2025  |Chrome [Here](https://noctvm.io/w/) |
 |           |Unity      |✅ Works     |22 Sep 2025  |Unity 6.2 Windows 11 x86_64         |
