@@ -443,12 +443,12 @@ jobs:
           cd docs/mkdocs-en
           mkdocs build
           mv site documents-english
-          tar czf ../../documents-english.tar.gz -C documents-english
+          tar czf ../../documents-english.tar.gz documents-english
           cd ../..
           cd docs/mkdocs-ja
           mkdocs build
           mv site documents-japanese
-          tar czf ../../documents-japanese.tar.gz -C documents-japanese
+          tar czf ../../documents-japanese.tar.gz documents-japanese
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
