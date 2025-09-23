@@ -216,12 +216,10 @@ Unity without relying on any NDA-restricted code.
 
 ### Console Unity Plugin Notice
 
-Playfield Engine provides Unity Plugin binaries for platforms including
-Windows 64-bit and game consoles.
-
-- These binaries are provided for demonstration purposes only.
-- They are built entirely with the open-source LLVM/Clang toolchain (no proprietary SDKs).
-- For actual shipping builds, developers must re-compile using the official SDKs provided by each platform holder.
+Playfield Engine provides Unity Plugin binaries for platforms
+including Windows 64-bit and game consoles.  These binaries are built
+entirely with the open-source version of LLVM/Clang toolchain (no
+proprietary SDKs).
 
 ### NoctLang
 

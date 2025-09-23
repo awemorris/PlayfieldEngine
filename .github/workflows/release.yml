@@ -60,6 +60,41 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  build-mingw:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison
+
+      - name: Download mingw-w64-11.0
+        run: |
+          echo "Downloaing mingw-w64-11.0 with a MSVCRT/XP configuration."
+          wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
+          tar xJf mingw-w64-11.0.tar.bz2
+          echo "$PWD/mingw-w64-11.0/bin" >> $GITHUB_PATH
+
+      - name: Build for mingw-w64 i686
+        run: |
+          cmake --preset windows-mingw-x86
+          cmake --build --preset windows-mingw-x86
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mingw
+          path: |
+            build-mingw-x86/playfield.exe
+          if-no-files-found: error
+          retention-days: 7
+
   build-linux:
     runs-on: ubuntu-24.04
 
@@ -110,50 +145,39 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Download mingw-w64-11.0
-        run: |
-          wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
-          tar xJf mingw-w64-11.0.tar.bz2
-          echo "$PWD/mingw-w64-11.0/bin" >> $GITHUB_PATH
+  build-wasm:
+    runs-on: ubuntu-24.04
 
-      - name: Build for mingw-w64 i686
-        run: |
-          cmake --preset windows-mingw-x86
-          cmake --build --preset windows-mingw-x86
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Upload artifact
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Setup for Wasm
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Build for Wasm
+        run: |
+          cmake --preset wasm
+          cmake --build --preset wasm
+
+      - name: Upload Wasm
         uses: actions/upload-artifact@v4
         with:
-          name: mingw
+          name: wasm
           path: |
-            build-mingw-x86/playfield.exe
+            build-wasm/index.html
           if-no-files-found: error
           retention-days: 7
 
   build-macos:
-    needs: [build-windows, build-linux]
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-binaries
-          path: windows
-
-      - name: Download Linux artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-appimage
-          path: linux
-
-      - name: Download mingw artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: mingw
-          path: mingw
 
       - name: Set up dependencies
         run: |
@@ -170,31 +194,6 @@ jobs:
           bison --version
           which flex
           flex --version
-
-      - name: Make the target directory.
-        run: |
-          mkdir dist
-          mkdir dist/misc
-          mkdir dist/misc/windows
-          mkdir dist/misc/macos
-          mkdir dist/misc/linux
-          mkdir dist/misc/wasm
-          mkdir dist/misc/ios
-          mkdir dist/misc/android
-          mkdir dist/misc/unity
-
-      - name: Copy for Windows.
-        run: |
-          cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
-          cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
-          cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
-          cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
-          cp mingw/playfield.exe dist/misc/windows/playfield32.exe
-          cp samples/shoot/main.pf dist/
-
-      - name: Copy for Linux.
-        run: |
-          cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
 
       - name: Setup for macOS
         uses: apple-actions/import-codesign-certs@v3
@@ -224,18 +223,43 @@ jobs:
           cp build-macos/Playfield.dmg dist/misc/macos/
           cp build-macos/playfield-pack dist/misc/macos/
 
-      - name: Setup for Wasm
-        uses: mymindstorm/setup-emsdk@v14
+      - name: Upload macOS
+        uses: actions/upload-artifact@v4
         with:
-          version: latest
+          name: macos
+          path: |
+            build-macos/Playfield.dmg
+            build-macos/playfield-pack
+          if-no-files-found: error
+          retention-days: 7
 
-      - name: Build for Wasm
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up dependencies
         run: |
-          cmake --preset wasm
-          cmake --build --preset wasm
-          cp build-wasm/index.html dist/misc/wasm/
-          cp resources/assets.pak dist/misc/wasm/
-          cp docs/readme/wasm.md dist/misc/wasm/readme.txt
+          git submodule update --init
+
+          brew update
+          brew install mingw-w64 bison flex mkdocs-material p7zip
+          echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+          echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
+
+      - name: Verify versions
+        run: |
+          which bison
+          bison --version
+          which flex
+          flex --version
+
+      - name: Setup for iOS
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATE_FILE_BASE64 }}
+          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
 
       - name: Build for iOS
         run: |
@@ -244,18 +268,29 @@ jobs:
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
           xcodebuild -create-xcframework -library build-ios-device/libplayfield.a -headers include -library build-ios-simulator/libplayfield.a -headers include -output Playfield.xcframework
-          mkdir dist/misc/ios/ios.xcodeproj
-          cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
-          mkdir dist/misc/ios/ios
-          cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
-          cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
-          cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
-          cp resources/projects/ios/ios/ios.entitlements dist/misc/ios/ios/
-          cp resources/projects/ios/ios/LaunchScreen.storyboard dist/misc/ios/ios/
-          cp -R Playfield.xcframework dist/misc/ios/ios/
-          mkdir dist/misc/ios/Resources/
-          cp resources/assets.pak dist/misc/ios/Resources/
-          mkdir dist/misc/ios/Resources/video
+
+      - name: Upload iOS
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios
+          path: |
+            build-ios/Playfield.xcframework
+          if-no-files-found: error
+          retention-days: 7
+
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison
 
       - name: Setup for Android
         uses: nttld/setup-ndk@v1
@@ -272,30 +307,60 @@ jobs:
           cmake --build --preset android-x86_64
           cmake --preset android-x86
           cmake --build --preset android-x86
-          cp -R resources/projects/android/app dist/misc/android/
-          cp -R resources/projects/android/gradle.properties dist/misc/android/
-          cp -R resources/projects/android/build.gradle dist/misc/android/
-          cp -R resources/projects/android/gradlew dist/misc/android/
-          cp -R resources/projects/android/settings.gradle dist/misc/android/
-          cp -R resources/projects/android/gradlew.bat dist/misc/android/
-          cp -R resources/projects/android/gradle dist/misc/android/
-          cp -R resources/projects/android/build.bat dist/misc/android/
-          mkdir -p dist/misc/android/app/src/main/assets
-          cp samples/shoot/main.pf dist/misc/android/app/src/main/assets/
-          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid
-          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid/
-          mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
-          cp build-android-arm64/libplayfield.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
-          mkdir -p dist/misc/android/app/src/main/jniLibs/armeabi-v7a
-          cp build-android-armv7/libplayfield.so dist/misc/android/app/src/main/jniLibs/armeabi-v7a/
-          mkdir -p dist/misc/android/app/src/main/jniLibs/x86_64
-          cp build-android-x86_64/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86_64/
-          mkdir -p dist/misc/android/app/src/main/jniLibs/x86
-          cp build-android-x86/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-arm64
+          path: |
+            build-android-arm64/libplayfield.so
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-armv7
+          path: |
+            build-android-armv7/libplayfield.so
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-x86_64
+          path: |
+            build-android-x86_64/libplayfield.so
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-x86
+          path: |
+            build-android-x86/libplayfield.so
+          if-no-files-found: error
+          retention-days: 7
+
+  build-unity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison
 
       - name: Setup for Unity
         run: |
-          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-macOS-ARM64.tar.xz
+          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-Linux-X64.tar.xz
           mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
           echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
           #echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
@@ -311,6 +376,219 @@ jobs:
           cmake --build --preset unity-ps5
           cmake --preset unity-xbox
           cmake --build --preset unity-xbox
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-win64
+          path: |
+            build-unity-win64/libplayfield.dll
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-switch
+          path: |
+            build-unity-switch/libplayfield.a
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-ps5
+          path: |
+            build-unity-ps5/libplayfield.a
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-xbox
+          path: |
+            build-unity-xbox/libplayfield.a
+          if-no-files-found: error
+          retention-days: 7
+
+  zip:
+    needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-ios, build-android, build-unity]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mkdocs-material
+
+      - name: Make the target directory.
+        run: |
+          mkdir dist
+          mkdir dist/misc
+          mkdir dist/misc/windows
+          mkdir dist/misc/macos
+          mkdir dist/misc/linux
+          mkdir dist/misc/wasm
+          mkdir dist/misc/ios
+          mkdir dist/misc/android
+          mkdir dist/misc/unity
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-binaries
+          path: windows
+
+      - name: Copy for Windows.
+        run: |
+          cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
+          cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
+          cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
+          cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
+          cp samples/shoot/main.pf dist/
+
+      - name: Download mingw artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mingw
+          path: mingw
+
+      - name: Copy for mingw.
+        run: |
+          cp mingw/playfield.exe dist/misc/windows/playfield32.exe
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos
+          path: macos
+
+      - name: Copy for macOS.
+        run: |
+          cp macos/Playfield.dmg dist/misc/macos/
+          cp macos/playfield-pack dist/misc/macos/
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-appimage
+          path: linux
+
+      - name: Copy for Linux.
+        run: |
+          cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
+
+      - name: Download wasm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm
+          path: wasm
+
+      - name: Copy for Wasm.
+        run: |
+          cp wasm/index.html dist/misc/wasm/
+
+      - name: Download iOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ios
+          path: ios
+
+      - name: Copy for iOS.
+        run: |
+          mkdir dist/misc/ios/Resources/
+          cp resources/assets.pak dist/misc/ios/Resources/
+          mkdir dist/misc/ios/Resources/video
+          mkdir dist/misc/ios/ios.xcodeproj
+          cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
+          mkdir dist/misc/ios/ios
+          cp -R ios/Playfield.xcframework dist/misc/ios/ios/
+          cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
+          cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
+          cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
+          cp resources/projects/ios/ios/ios.entitlements dist/misc/ios/ios/
+          cp resources/projects/ios/ios/LaunchScreen.storyboard dist/misc/ios/ios/
+          mkdir dist/misc/ios/Resources/
+          cp resources/assets.pak dist/misc/ios/Resources/
+          mkdir dist/misc/ios/Resources/video
+
+      - name: Download Android arm64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-arm64
+          path: android-arm64
+
+      - name: Download Android armv7 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-armv7
+          path: android-armv7
+
+      - name: Download Android x86_64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-x86_64
+          path: android-x86_64
+
+      - name: Download Android x86 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-x86
+          path: android-x86
+
+      - name: Copy for Android
+        run: |
+          cp -R resources/projects/android/app dist/misc/android/
+          cp -R resources/projects/android/gradle.properties dist/misc/android/
+          cp -R resources/projects/android/build.gradle dist/misc/android/
+          cp -R resources/projects/android/gradlew dist/misc/android/
+          cp -R resources/projects/android/settings.gradle dist/misc/android/
+          cp -R resources/projects/android/gradlew.bat dist/misc/android/
+          cp -R resources/projects/android/gradle dist/misc/android/
+          cp -R resources/projects/android/build.bat dist/misc/android/
+          mkdir -p dist/misc/android/app/src/main/assets
+          cp samples/shoot/main.pf dist/misc/android/app/src/main/assets/
+          mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid
+          cp external/StratoHAL/src/MainActivity.java dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/arm64-v8a
+          cp android-arm64/libplayfield.so dist/misc/android/app/src/main/jniLibs/arm64-v8a/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/armeabi-v7a
+          cp android-armv7/libplayfield.so dist/misc/android/app/src/main/jniLibs/armeabi-v7a/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/x86_64
+          cp android-x86_64/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86_64/
+          mkdir -p dist/misc/android/app/src/main/jniLibs/x86
+          cp android-x86/libplayfield.so dist/misc/android/app/src/main/jniLibs/x86/
+
+      - name: Download Unity Win64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-win64
+          path: unity-win64
+
+      - name: Download Unity switch artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-switch
+          path: unity-switch
+
+      - name: Download Unity ps5 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-ps5
+          path: unity-ps5
+
+      - name: Download Unity xbox artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unity-xbox
+          path: unity-xbox
+
+      - name: Copy for Unity
+        run: |
           mkdir dist/misc/unity/Assets
           mkdir dist/misc/unity/Assets/StreamingAssets
           cp samples/shoot/main.pf dist/misc/unity/Assets/StreamingAssets/
@@ -328,10 +606,10 @@ jobs:
           mkdir dist/misc/unity/Assets/Plugins/PS5
           mkdir dist/misc/unity/Assets/Plugins/GameCoreXboxSeries
           mkdir dist/misc/unity/Assets/Plugins/Common
-          cp build-unity-win64/libplayfield.dll dist/misc/unity/Assets/Plugins/x86_64/
-          cp build-unity-switch/libplayfield.a dist/misc/unity/Assets/Plugins/Switch/
-          cp build-unity-ps5/libplayfield.a dist/misc/unity/Assets/Plugins/PS5/
-          cp build-unity-xbox/playfield.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp unity-win64/libplayfield.dll dist/misc/unity/Assets/Plugins/x86_64/
+          cp unity-switch/libplayfield.a dist/misc/unity/Assets/Plugins/Switch/
+          cp unity-ps5/libplayfield.a dist/misc/unity/Assets/Plugins/PS5/
+          cp unity-xbox/playfield.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
           cp docs/readme/unity.md dist/misc/unity/
 
       - name: Make documents
