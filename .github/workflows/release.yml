@@ -347,6 +347,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache LLVM
+        with:
+        uses: actions/cache@v4
+          path: llvm-20
+          key: llvm-20
+
       - name: Set up dependencies
         run: git submodule update --init
 
@@ -356,11 +362,11 @@ jobs:
           sudo apt-get install -y cmake ninja-build flex bison mingw-w64
 
       - name: Setup for Unity
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-Linux-X64.tar.xz
           mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
           echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
-          #echo "DYLD_LIBRARY_PATH=`pwd`/llvm-20/lib" >> $GITHUB_ENV
           clang --version
 
       - name: Build for Unity
@@ -406,7 +412,7 @@ jobs:
         with:
           name: unity-xbox
           path: |
-            build-unity-xbox/libplayfield.lib
+            build-unity-xbox/playfield.lib
           if-no-files-found: error
           retention-days: 7
 
