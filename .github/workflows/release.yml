@@ -265,15 +265,14 @@ jobs:
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
           xcodebuild -create-xcframework -library build-ios-device/libplayfield.a -headers include -library build-ios-simulator/libplayfield.a -headers include -output Playfield.xcframework
-          mkdir tmp
-          mv Playfield.xcframework tmp/
+          tar czf Playfield.xcframwork.tar.gz Playfield.xcframework
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: ios
           path: |
-            tmp
+            Playfield.xcframework.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -350,6 +349,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cache LLVM
+        id: cache-llvm
         uses: actions/cache@v4
         with:
           path: llvm-20
@@ -443,20 +443,21 @@ jobs:
           mkdir tmp
           cd docs/mkdocs-en
           mkdocs build
-          mv site ../../tmp/documents-english
+          mv site documents-english
+          tar czf ../../documents-english.tar.gz -C documents-english
           cd ../..
           cd docs/mkdocs-ja
           mkdocs build
-          mv site ../../tmp/documents-japanese
-          cd ../..
+          mv site documents-japanese
+          tar czf ../../documents-japanese.tar.gz -C documents-japanese
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: mkdocs
           path: |
-            tmp/documents-english
-            tmp/documents-japanese
+            documents-english.tar.gz
+            documents-japanese.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -548,8 +549,7 @@ jobs:
           mkdir dist/misc/ios/ios.xcodeproj
           cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
           mkdir dist/misc/ios/ios
-          ls ios
-          cp -R ios/Playfield.xcframework dist/misc/ios/ios/
+          tar xfz ios/Playfield.xcframework.tar.gz -C dist/misc/ios/ios/
           cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
           cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
           cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
@@ -663,8 +663,8 @@ jobs:
 
       - name: Copy documents
         run: |
-          mv mkdocs/documents-english dist/misc/
-          mv mkdocs/documents-japanese dist/misc/
+          tar xzf mkdocs/documents-english.tar.gz -C dist/misc/
+          tar xzf mkdocs/documents-japanese.tar.gz -C dist/misc/
           cp -R samples dist/misc/samples
           cp docs/readme/readme.txt dist/
           cp docs/readme/hajimeni.txt dist/
