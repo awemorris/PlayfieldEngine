@@ -219,9 +219,6 @@ jobs:
           cp -Rv Playfield.app tmp/Playfield.app
           hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname Playfield Playfield.dmg
           codesign --sign "Developer ID Application" Playfield.dmg
-          cd ..
-          cp build-macos/Playfield.dmg dist/misc/macos/
-          cp build-macos/playfield-pack dist/misc/macos/
 
       - name: Upload macOS
         uses: actions/upload-artifact@v4
@@ -274,7 +271,7 @@ jobs:
         with:
           name: ios
           path: |
-            build-ios/Playfield.xcframework
+            Playfield.xcframework
           if-no-files-found: error
           retention-days: 7
 
