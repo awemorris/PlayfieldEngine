@@ -110,6 +110,26 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Download mingw-w64-11.0
+        run: |
+          wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
+          tar xJf mingw-w64-11.0.tar.bz2
+          echo "$PWD/mingw-w64-11.0/bin" >> $GITHUB_PATH
+
+      - name: Build for mingw-w64 i686
+        run: |
+          cmake --preset windows-mingw-x86
+          cmake --build --preset windows-mingw-x86
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mignw
+          path: |
+            build-mingw-x86/playfield.exe
+          if-no-files-found: error
+          retention-days: 7
+
   build-macos:
     needs: [build-windows, build-linux]
     runs-on: macos-latest
@@ -128,6 +148,12 @@ jobs:
         with:
           name: linux-appimage
           path: linux
+
+      - name: Download mingw artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mingw
+          path: mingw
 
       - name: Set up dependencies
         run: |
@@ -160,10 +186,10 @@ jobs:
       - name: Copy for Windows.
         run: |
           cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
-          cp windows/build/windows-msvc-x86-release/Release/playfield.exe dist/misc/windows/playfield32.exe
           cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
           cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
+          cp mingw/playfield.exe dist/misc/windows/playfield32.exe
           cp samples/shoot/main.pf dist/
 
       - name: Copy for Linux.

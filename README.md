@@ -399,6 +399,95 @@ The source code tarballs for the libraries are included in this repository.
 
 ---
 
+## Compatibily List
+
+**Windows:**
+
+| OS      | Version | Patch | CPU    | Runtimes                                                                             | 32-bit Binary | 64-bit Binary | Direct3D |
+|---------|---------|-------|--------|--------------------------------------------------------------------------------------|---------------|---------------|----------|
+| Windows | XP      | SP3   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | XP      | SP3   | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   |       | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   |       | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   | SP1   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   | SP2   | x64    | DirectX End-User Runtimes (June 2010), Microsoft Visual C++ Redistributable 2015     | ✅            | ❌            | 9.0      |
+| Windows | Vista   | SP2   | x86    | DirectX 11 Platform Update                                                           | ✅            | ❌            | 11.0     |
+| Windows | Vista   | SP2   | x64    | DirectX 11 Platform Update, Microsoft Visual C++ Redistributable 2015                | ✅            | ❌            | 11.0     |
+| Windows | 7       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 7       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 7       | SP1   | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 7       | SP1   | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 8       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 8       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 8.1     |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 8.1     |       | x64    |                                                                                      | ✅            | ✅            | 11.0     |
+| Windows | 10      |       | x86    |                                                                                      | ✅            | ❌            | 12.0     |
+| Windows | 10      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 10      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 11      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 11      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
+
+**macOS:**
+
+| OS                | Version | CPU    | Status |
+|-------------------|---------|--------|--------|
+| OS X El Capitan   | 10.11   | x86_64 | ✅     |
+| macOS Sierra      | 10.12   | x86_64 | ✅     |
+| macOS High Sierra | 10.13   | x86_64 | ✅     |
+| macOS Mojave      | 10.14   | x86_64 | ✅     |
+| macOS Catalina    | 10.15   | x86_64 | ✅     |
+| macOS Big Sur     | 11.0    | arm64  | ✅     |
+| macOS Big Sur     | 11.0    | x86_64 | ✅     |
+| macOS Monterey    | 12.0    | arm64  | ✅     |
+| macOS Monterey    | 12.0    | x86_64 | ✅     |
+| macOS Ventura     | 13.0    | arm64  | ✅     |
+| macOS Ventura     | 13.0    | x86_64 | ✅     |
+| macOS Sonoma      | 14.0    | arm64  | ✅     |
+| macOS Sonoma      | 14.0    | x86_64 | ✅     |
+| macOS Sequoia     | 15.0    | arm64  | ✅     |
+| macOS Sequoia     | 15.0    | x86_64 | ✅     |
+| macOS Tahoe       | 26.0    | arm64  | ✅     |
+| macOS Tahoe       | 26.0    | x86_64 | ✅     |
+
+**Linux:**
+
+* Kernel 2.6+
+* X.org or XWayland
+* OpenGL (Mesa or NVIDIA)
+
+** iOS: **
+
+| OS     | Status |
+|--------|--------|
+| iOS 11 | ✅     |
+| iOS 12 | ✅     |
+| iOS 13 | ✅     |
+| iOS 14 | ✅     |
+| iOS 15 | ✅     |
+| iOS 16 | ✅     |
+| iOS 17 | ✅     |
+| iOS 18 | ✅     |
+| iOS 26 | ✅     |
+
+** Android: **
+
+| OS         | Status |
+|------------|--------|
+| Android 5  | ✅     |
+| Android 6  | ✅     |
+| Android 7  | ✅     |
+| Android 8  | ✅     |
+| Android 9  | ✅     |
+| Android 10 | ✅     |
+| Android 11 | ✅     |
+| Android 12 | ✅     |
+| Android 13 | ✅     |
+| Android 14 | ✅     |
+| Android 15 | ✅     |
+| Android 16 | ✅     |
+
+---
+
 ## NoctVM Ecosystem
 
 Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
