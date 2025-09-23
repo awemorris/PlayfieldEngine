@@ -265,13 +265,15 @@ jobs:
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
           xcodebuild -create-xcframework -library build-ios-device/libplayfield.a -headers include -library build-ios-simulator/libplayfield.a -headers include -output Playfield.xcframework
+          mkdir tmp
+          mv Playfield.xcframework tmp/
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
         with:
           name: ios
           path: |
-            Playfield.xcframework
+            tmp/Playfield.xcframework
           if-no-files-found: error
           retention-days: 7
 
