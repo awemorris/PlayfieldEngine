@@ -485,6 +485,38 @@ The source code tarballs for the libraries are included in this repository.
 
 ---
 
+## Gallery
+
+Playfield Engine running on Windows 11:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield Engine running on Windows 11">
+
+Playfield Engine running on macOS:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield Engine running on macOS">
+
+Playfield Engine running on Linux:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield Engine running on Linux">
+
+Playfield Engine running on iOS simulator:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield Engine running on iOS simulator">
+
+Playfield Engine running on Android emulator:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
+
+Playfield Engine running on Windows XP:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
+
+Playfield Engine running on NetBSD:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
+
+---
+
 ## NoctVM Ecosystem
 
 Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
