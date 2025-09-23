@@ -406,7 +406,7 @@ jobs:
         with:
           name: unity-xbox
           path: |
-            build-unity-xbox/libplayfield.a
+            build-unity-xbox/libplayfield.lib
           if-no-files-found: error
           retention-days: 7
 
