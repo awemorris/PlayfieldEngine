@@ -418,17 +418,54 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  build-unity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache LLVM
+        uses: actions/cache@v4
+        with:
+          path: llvm-20
+          key: llvm-20
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mkdocs-material
+
+      - name: Run mkdocs
+        run: |
+          mkdir tmp
+          cd docs/mkdocs-en
+          mkdocs build
+          mv site ../../tmp/documents-english
+          cd ../..
+          cd docs/mkdocs-ja
+          mkdocs build
+          mv site ../../tmp/documents-japanese
+          cd ../..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs
+          path: |
+            tmp/documents-english
+            tmp/documents-japanese
+          if-no-files-found: error
+          retention-days: 7
+
   zip:
     needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-ios, build-android, build-unity]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mkdocs-material
 
       - name: Make the target directory.
         run: |
@@ -617,16 +654,16 @@ jobs:
           cp unity-xbox/playfield.lib dist/misc/unity/Assets/Plugins/GameCoreXboxSeries/
           cp docs/readme/unity.md dist/misc/unity/
 
-      - name: Make documents
+      - name: Download mkdocs artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mkdocs
+          path: mkdocs
+
+      - name: Copy documents
         run: |
-          cd docs/mkdocs-en
-          mkdocs build
-          mv site ../../dist/misc/documents-english
-          cd ../..
-          cd docs/mkdocs-ja
-          mkdocs build
-          mv site ../../dist/misc/documents-japanese
-          cd ../..
+          mv mkdocs/documents-english dist/misc/
+          mv mkdocs/documents-japanese dist/misc/
           cp -R samples dist/misc/samples
           cp docs/readme/readme.txt dist/
           cp docs/readme/hajimeni.txt dist/
