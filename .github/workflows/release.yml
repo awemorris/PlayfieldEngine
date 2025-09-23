@@ -273,7 +273,7 @@ jobs:
         with:
           name: ios
           path: |
-            tmp/**
+            tmp
           if-no-files-found: error
           retention-days: 7
 
