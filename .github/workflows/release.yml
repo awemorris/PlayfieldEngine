@@ -548,6 +548,7 @@ jobs:
           mkdir dist/misc/ios/ios.xcodeproj
           cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/
           mkdir dist/misc/ios/ios
+          ls ios
           cp -R ios/Playfield.xcframework dist/misc/ios/ios/
           cp -R resources/projects/ios/ios/Assets.xcassets dist/misc/ios/ios/
           cp resources/projects/ios/ios/entry.c dist/misc/ios/ios/
