@@ -554,9 +554,6 @@ jobs:
           cp resources/projects/ios/ios/Info.plist dist/misc/ios/ios/
           cp resources/projects/ios/ios/ios.entitlements dist/misc/ios/ios/
           cp resources/projects/ios/ios/LaunchScreen.storyboard dist/misc/ios/ios/
-          mkdir dist/misc/ios/Resources/
-          cp resources/assets.pak dist/misc/ios/Resources/
-          mkdir dist/misc/ios/Resources/video
 
       - name: Download Android arm64 artifacts
         uses: actions/download-artifact@v4
