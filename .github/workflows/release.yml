@@ -85,6 +85,7 @@ jobs:
         run: |
           cmake --preset windows-mingw-x86
           cmake --build --preset windows-mingw-x86
+          i686-w64-mingw32-strip build-mingw-x86/playfield.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -533,6 +534,7 @@ jobs:
       - name: Copy for Wasm.
         run: |
           cp wasm/index.html dist/misc/wasm/
+          cp resources/assets.pak dist/misc/wasm/
 
       - name: Download iOS artifacts
         uses: actions/download-artifact@v4
