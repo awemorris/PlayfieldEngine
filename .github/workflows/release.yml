@@ -265,7 +265,7 @@ jobs:
           cmake --preset ios-simulator
           cmake --build --preset ios-simulator
           xcodebuild -create-xcframework -library build-ios-device/libplayfield.a -headers include -library build-ios-simulator/libplayfield.a -headers include -output Playfield.xcframework
-          tar czf Playfield.xcframwork.tar.gz Playfield.xcframework
+          tar czf Playfield.xcframework.tar.gz Playfield.xcframework
 
       - name: Upload iOS
         uses: actions/upload-artifact@v4
@@ -440,7 +440,6 @@ jobs:
 
       - name: Run mkdocs
         run: |
-          mkdir tmp
           cd docs/mkdocs-en
           mkdocs build
           mv site documents-english
