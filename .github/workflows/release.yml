@@ -418,7 +418,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  build-unity:
+  build-mkdocs:
     runs-on: ubuntu-latest
 
     steps:
@@ -461,7 +461,7 @@ jobs:
           retention-days: 7
 
   zip:
-    needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-ios, build-android, build-unity]
+    needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-ios, build-android, build-unity, build-mkdocs]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
