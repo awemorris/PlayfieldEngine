@@ -473,7 +473,6 @@ The source code tarballs for the libraries are included in this repository.
 
 | OS         | Status |
 |------------|--------|
-| Android 5  | ✅     |
 | Android 6  | ✅     |
 | Android 7  | ✅     |
 | Android 8  | ✅     |
