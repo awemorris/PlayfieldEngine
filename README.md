@@ -9,6 +9,17 @@ Playfield Engine
 With scripts written in `Playfield Script`,
 it can render graphics and play sounds seamlessly across platforms.
 
+## Download v0.8.4 now!
+
+| 📁                                                                                 | ![Windows](/img/logo-win.png)                                                | ![macOS](/img/logo-mac.png)                                  | ![Linux](/img/logo-linux.png)                                                        | ⛏️                                                                        |
+|------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| [All-in-One (Recommended)](https://noctvm.io/dl/playfield/playfield-all-0.8.4.zip) | [Windows 32-bit](https://noctvm.io/dl/playfield/playfield-win32-0.8.4.zip)   | [macOS](https://noctvm.io/dl/playfield/Playfield-0.8.4.dmg)  | [AppImage x86_64](https://noctvm.io/dl/playfield/Playfield-0.8.4-x86_64.AppImage)    | [iOS](https://noctvm.io/dl/playfield/playfield-ios-0.8.4.zip)            |
+| [Source](https://noctvm.io/dl/playfield/playfield-src-0.8.4.zip)                   | [Windows 64-bit](https://noctvm.io/dl/playfield/playfield-win64-0.8.4.zip)   |                                                              |                                                                                      | [Android](https://noctvm.io/dl/playfield/playfield-android-0.8.4.zip)    |
+|                                                                                    | [Windows Arm64](https://noctvm.io/dl/playfield/playfield-winarm64-0.8.4.zip) |                                                              |                                                                                      | [WebAssembly](https://noctvm.io/dl/playfield/playfield-wasm-0.8.4.zip)   |
+|                                                                                    |                                                                              |                                                              |                                                                                      | [Unity Plugin](https://noctvm.io/dl/playfield/playfield-unity-0.8.4.zip) |
+
+## Feature Highlights
+
 Built completely from scratch, Playfield Engine features:
 
 - **Comfortable Scripting:**
