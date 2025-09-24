@@ -403,27 +403,29 @@ The source code tarballs for the libraries are included in this repository.
 
 | OS      | Version | Patch | CPU    | Runtimes                                                                             | 32-bit Binary | 64-bit Binary | Direct3D |
 |---------|---------|-------|--------|--------------------------------------------------------------------------------------|---------------|---------------|----------|
-| Windows | XP      | SP3   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | XP      | SP3   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
 | Windows | XP      | SP3   | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   |       | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   |       | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
 | Windows | Vista   |       | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   | SP1   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   | SP2   | x64    | DirectX End-User Runtimes (June 2010), Microsoft Visual C++ Redistributable 2015     | ✅            | ❌            | 9.0      |
-| Windows | Vista   | SP2   | x86    | DirectX 11 Platform Update                                                           | ✅            | ❌            | 11.0     |
-| Windows | Vista   | SP2   | x64    | DirectX 11 Platform Update, Microsoft Visual C++ Redistributable 2015                | ✅            | ❌            | 11.0     |
-| Windows | 7       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | Vista   | SP1   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
+| Windows | Vista   | SP1   | x64    | DirectX End-User Runtimes (June 2010), Microsoft Visual C++ Redistributable 2015     | ✅            | ✅            | 9.0      |
+| Windows | Vista   | SP2   | x86    | DirectX 11 Platform Update                                                           | ✅            | -             | 11.0     |
+| Windows | Vista   | SP2   | x64    | DirectX 11 Platform Update, Microsoft Visual C++ Redistributable 2015                | ✅            | ✅            | 11.0     |
+| Windows | 7       |       | x86    |                                                                                      | ✅            | -             | 11.0     |
 | Windows | 7       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | 7       | SP1   | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 7       | SP1   | x86    |                                                                                      | ✅            | -             | 11.0     |
 | Windows | 7       | SP1   | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | 8       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 8       |       | x86    |                                                                                      | ✅            | -             | 11.0     |
 | Windows | 8       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | 8.1     |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
+| Windows | 8.1     |       | x86    |                                                                                      | ✅            | -             | 11.0     |
 | Windows | 8.1     |       | x64    |                                                                                      | ✅            | ✅            | 11.0     |
-| Windows | 10      |       | x86    |                                                                                      | ✅            | ❌            | 12.0     |
+| Windows | 10      |       | x86    |                                                                                      | ✅            | -             | 12.0     |
 | Windows | 10      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
 | Windows | 10      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
 | Windows | 11      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
 | Windows | 11      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
+
+Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
 
 **macOS:**
 
@@ -453,7 +455,7 @@ The source code tarballs for the libraries are included in this repository.
 * X.org or XWayland
 * OpenGL (Mesa or NVIDIA)
 
-** iOS: **
+**iOS:**
 
 | OS     | Status |
 |--------|--------|
@@ -467,7 +469,7 @@ The source code tarballs for the libraries are included in this repository.
 | iOS 18 | ✅     |
 | iOS 26 | ✅     |
 
-** Android: **
+**Android:**
 
 | OS         | Status |
 |------------|--------|
@@ -507,11 +509,11 @@ Playfield Engine running on Android emulator:
 
 <img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
 
-Playfield Engine running on Windows XP:
+Playfield Engine running on Windows XP — because why not:
 
 <img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
 
-Playfield Engine running on NetBSD:
+Playfield Engine running on NetBSD — Of course it runs!: 
 
 <img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
 
