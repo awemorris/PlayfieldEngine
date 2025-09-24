@@ -677,7 +677,7 @@ jobs:
       - name: Make documents
         run: |
           mv dist "PlayfieldEngine-$DATE-$SHORT_SHA"
-          zip -r -9 "PlayfieldEngine-$DATE-$SHORT_SHA.zip" "PlayfieldEngine-$DATE-$SHORT_SHA"
+          7z a -tzip -mx=9 "PlayfieldEngine-$DATE-$SHORT_SHA.zip" "PlayfieldEngine-$DATE-$SHORT_SHA"
           7z a -t7z -mx=9 "PlayfieldEngine-$DATE-$SHORT_SHA.7z" "PlayfieldEngine-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release

@@ -1,9 +1,9 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【ソフト名】Playfield Engine           【Ver】0.8.2
-【著作権者】Awe Morris                 【制作日】2025-09-18
+【ソフト名】Playfield Engine           【Ver】0.8.4
+【著作権者】Awe Morris                 【制作日】2025-09-24
 【種　　別】MIT License OSS
 【登 録 名】PFE080.ZIP                 【圧縮】ZIP
-【動作環境】Windows 10 以降
+【動作環境】Windows XP SP3 以降
 【必要機器】キーボード, マウス
 【配 布 元】GitHub 等
 【連 絡 先】E-mail : awe@noctvm.io
@@ -25,14 +25,15 @@ N88-BASIC でゲームを作ったことがある方にも、最新のパソコ�
 
 ■ ファイル構成
 
-  playfield.exe           ... ゲームエンジン本体の実行ファイル
+  playfield.exe           ... ゲームエンジン本体の実行ファイル (64 ビット)
   main.pf                 ... 動作確認用のスクリプト
   hajimeni.txt            ... 本書
   readme.txt              ... 英語版 README
   misc/
     samples/              ... サンプルゲーム
     windows/
-      playfield-arm64.exe ... Arm64 のマシンで高速に動くゲームエンジン本体
+      playfield32.exe     ... 32 ビットの本体実行ファイル
+      playfield-arm64.exe ... Arm64 の本体実行ファイル
       playfield-pack.exe  ... assets.pak を作成するパッケージャ
     macos/
       playfield.dmg       ... macOS 版アプリ (macOS 10.13 以降)

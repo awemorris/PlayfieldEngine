@@ -1,5 +1,0 @@
-#!/bin/sh
-
-rm -rf build-unity-switch
-cmake -S . -B build-unity-switch -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/unity-switch.cmake -DTARGET_UNITY=ON
-cmake --build build-unity-switch

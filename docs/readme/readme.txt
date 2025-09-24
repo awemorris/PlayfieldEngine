@@ -1,11 +1,10 @@
 ==============================================================================
 Playfield Engine
 ==============================================================================
-Version      : 0.8.2
-Date         : September 18th 2025
+Version      : 0.8.4
+Date         : September 24th 2025
 Author       : Awe Morris
 Contact      : awe@noctvm.io
-Requirements : Windows 10 or later
 ==============================================================================
 
  * Load this file into ChatGPT.
@@ -24,13 +23,14 @@ your PC — just like coding in classic BASIC, but with modern features.
 Files
 -----
 
-  playfield.exe           ... Main executable
+  playfield.exe           ... Main executable (64-bit)
   main.pf                 ... Sample main script
   readme.txt              ... This document
   hajimeni.txt            ... README in Japanese
   misc/
     samples/              ... Sample games
     windows/
+      playfield32.exe     ... 32-bit executable
       playfield-arm64.exe ... Arm64 executable
       playfield-pack.exe  ... Tool to create assets.pak
     macos/
