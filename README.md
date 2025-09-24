@@ -78,7 +78,7 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 |Type       |OS         |Status       |Confirm Date |Confirmed On                        |
 |-----------|-----------|-------------|-------------|------------------------------------|
 |Desktop    |Windows    |✅ Works     |22 Sep 2025  |Windows 11 x64                      |
-|           |macOS      |✅ Works     |22 Sep 2025  |macOS 15 Sonoma Arm64               |
+|           |macOS      |✅ Works     |22 Sep 2025  |macOS 15 Sequoia Arm64              |
 |           |Linux      |✅ Works     |22 Sep 2025  |Ubuntu 24.04 LTS x86_64             |
 |Mobile     |iOS        |✅ Works     |22 Sep 2025  |iPhone iOS 18                       |
 |           |Android    |✅ Works     |22 Sep 2025  |Android 16                          |
