@@ -258,6 +258,24 @@ even in tightly controlled environments.
 |WebAssembly    |Interpreter or AOT |
 |Unity Plugin   |Interpreter or AOT |
 
+### Runtime Footprint
+
+|Platform       |Binary Size    |Memory Usage (GC)                                              |
+|---------------|---------------|---------------------------------------------------------------|
+|All targets    |~2 MB          |Allocates 256 MB at startup for GC; does not exceed that limit |
+
+The garbage collector allocates 256 MB at startup because currently 256 MB is the maximum heap size.
+
+### Garbage Collection
+
+Playfield Engine implements a high-performance garbage collector
+similar to the HotSpot VM in Java, so you generally don’t need to
+worry much about delays caused by garbage collection.
+
+* The garbage collector uses a generational GC, managing objects in young and old generations.
+* Young-generation GC runs extremely fast using a copying algorithm (semi-space copy GC).
+* Old-generation GC uses a mark-and-sweep algorithm and performs compaction when necessary (mark-sweep-compact GC).
+
 ---
 
 ## Tests
@@ -313,16 +331,6 @@ Playfield Engine ships with CMake presets covering various platforms and build c
 |unity-switch                 |Unity Plugin   |Clang      |build-unity-switch              |libplayfield.a   |Static Library |
 |unity-ps5                    |Unity Plugin   |Clang      |build-unity-ps5                 |libplayfield.a   |Static Library |
 |unity-xbox                   |Unity Plugin   |Clang      |build-unity-xbox                |libplayfield.a   |Static Library |
-
----
-
-### Runtime Footprint
-
-|Platform       |Binary Size    |Memory Usage (GC)                                              |
-|---------------|---------------|---------------------------------------------------------------|
-|All targets    |~2 MB          |Allocates 256 MB at startup for GC; does not exceed that limit |
-
-The garbage collector allocates 256 MB at startup because currently 256 MB is the maximum heap size.
 
 ---
 
