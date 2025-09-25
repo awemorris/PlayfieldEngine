@@ -41,7 +41,7 @@ func start() {
     last_ms = Engine.millisec;
 }
 
-func frame() {
+func update() {
     var now_ms = Engine.millisec;
     var dt = (now_ms - last_ms) * 0.001;
     last_ms = now_ms;
@@ -75,8 +75,9 @@ func frame() {
         y = 2*(H - BLOCK_H) - y;
         vy = -vy;
     }
+}
 
-    // Draw.
+func render() {
     Engine.draw({
         texture: tex,
         x: x,

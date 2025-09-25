@@ -16,16 +16,21 @@ func setup() {
 }
 
 func start() {
-    playerTex = Engine.loadTexture({
-                    file: "player.png"
-                });
+    posX = 0;
+    posY = 0;
+    playerTex = Engine.loadTexture({ file: "player.png" });
 }
 
-func frame() {
+func update() {
+    x = Engine.mousePosX;
+    y = Engine.mousePosY;
+}
+
+func render() {
     Engine.draw({
         texture: playerTex,
-        x:       Engine.mousePosX,
-        y:       Engine.mousePosY
+        x: x,
+        y: y
     });
 }
 ```

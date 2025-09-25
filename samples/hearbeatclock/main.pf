@@ -71,10 +71,10 @@ func start() {
     });
 }
 
-//
-// Do rendering.
-//
-func frame() {
+func update() {
+}
+
+func render() {
     var t = (Engine.millisec - startTime) * 0.001 * 3.14159265;
 
     // Draw the background.

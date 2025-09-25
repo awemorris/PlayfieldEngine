@@ -72,7 +72,7 @@ func start() {
     updateScoreTex();
 }
 
-func frame() {
+func update() {
     var now = Engine.millisec;
     var dt = (now - lastTime) * 0.001;
 
@@ -82,32 +82,6 @@ func frame() {
 
     lastTime = now;
 
-    update(dt);
-    render();
-}
-
-func resetGame() {
-    obstacles = [];
-
-    player.x = 120;
-    player.y = groundY - player.h;
-    player.vy = 0;
-    player.onGround = true;
-
-    score = 0;
-
-    spawnTimer = 0.0;
-    gameOver = false;
-
-    updateScoreTex();
-
-    if (msgTex != null) {
-        Engine.destroyTexture({ texture: msgTex });
-        msgTex = 0;
-    }
-}
-
-func update(dt) {
     var pressed = Engine.isMouseLeftPressed ||
                   Engine.isKeyReturnPressed ||
                   Engine.isGamepadAPressed;
@@ -169,6 +143,55 @@ func update(dt) {
     obstacles = newObs;
 }
 
+func render() {
+    // Draw ground as a long rectangle
+    drawRect(0, groundY, screenW, 8, floorTex);
+
+    // Draw obstacles
+    for (ob in obstacles) {
+        Engine.draw({
+            texture: obTex,
+            x: ob.x,
+            y: ob.y
+        });
+    }
+
+    // Draw player
+    Engine.draw({
+        texture: playerTex,
+        x:       player.x,
+        y:       player.y
+    });
+
+    if (fontReady) {
+        if (scoreTex != null)
+            Engine.draw({ texture: scoreTex, x: 12, y: 10 });
+        if (gameOver && msgTex != null)
+            Engine.draw({ texture: msgTex, x: (screenW - msgTex.width) / 2, y: 120 });
+    }
+}
+
+func resetGame() {
+    obstacles = [];
+
+    player.x = 120;
+    player.y = groundY - player.h;
+    player.vy = 0;
+    player.onGround = true;
+
+    score = 0;
+
+    spawnTimer = 0.0;
+    gameOver = false;
+
+    updateScoreTex();
+
+    if (msgTex != null) {
+        Engine.destroyTexture({ texture: msgTex });
+        msgTex = 0;
+    }
+}
+
 func onGameOver() {
     if (gameOver)
         return;
@@ -201,34 +224,6 @@ func spawnObstacle() {
         h: h,
         counted: false
     });
-}
-
-func render() {
-    // Draw ground as a long rectangle
-    drawRect(0, groundY, screenW, 8, floorTex);
-
-    // Draw obstacles
-    for (ob in obstacles) {
-        Engine.draw({
-            texture: obTex,
-            x: ob.x,
-            y: ob.y
-        });
-    }
-
-    // Draw player
-    Engine.draw({
-        texture: playerTex,
-        x:       player.x,
-        y:       player.y
-    });
-
-    if (fontReady) {
-        if (scoreTex != null)
-            Engine.draw({ texture: scoreTex, x: 12, y: 10 });
-        if (gameOver && msgTex != null)
-            Engine.draw({ texture: msgTex, x: (screenW - msgTex.width) / 2, y: 120 });
-    }
 }
 
 func drawRect(x, y, w, h, tex) {

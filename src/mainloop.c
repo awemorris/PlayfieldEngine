@@ -119,8 +119,12 @@ bool on_event_frame(void)
 	/* Get the lap timer. */
 	set_vm_int("millisec", (int)get_lap_timer_millisec(&lap_origin));
 
-	/* Call frame(). */
-	if (!call_vm_function("frame"))
+	/* Call update(). */
+	if (!call_vm_function("update"))
+		return false;
+
+	/* Call render(). */
+	if (!call_vm_function("render"))
 		return false;
 
 	/* Check the exit flag. */

@@ -30,16 +30,11 @@ func start() {
     lastTime = Engine.millisec;
 }
 
-func frame() {
+func update() {
     var now = Engine.millisec;
     var dt  = (now - lastTime) * 0.001; // 秒
     lastTime = now;
 
-    update(dt);
-    render();
-}
-
-func update(dt) {
     // Move.
     var dx = 0;
     var dy = 0;
