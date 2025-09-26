@@ -2,12 +2,14 @@ Playfield Engine
 ================
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/release/awemorris/PlayfieldEngine.svg)](https://github.com/awemorris/PlayfieldEngine/releases)
-[![Downloads](https://img.shields.io/github/downloads/awemorris/PlayfieldEngine/total.svg)](https://github.com/awemorris/PlayfieldEngine/releases)
 
 `Playfield Engine` is a 2D game scripting runtime that works everywhere.
 With scripts written in `Playfield Script`,
 it can render graphics and play sounds seamlessly across platforms.
+
+[Official Page](https://noctvm.io/playfield/)
+ | 
+[Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
 
 ## Download v0.8.4 now!
 
@@ -157,10 +159,10 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 
 ### 3. Explore more features
 
-- [Documentation Top](index.md)
-- [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
+- [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
 - [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
 - [Playfield Script API](docs/mkdocs-en/docs/api.md)
+- [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
 
 ---
 
@@ -399,7 +401,7 @@ To propose a new translation or update an existing one, please open an Issue or 
 
 ---
 
-## Thirdparty Libraries
+## Third-party Libraries
 
 Playfield Engine uses the following libraries.
 The source code tarballs for the libraries are included in this repository.

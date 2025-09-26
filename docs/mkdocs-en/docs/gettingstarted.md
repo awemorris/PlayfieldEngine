@@ -1,23 +1,79 @@
-Playfield Engine Getting Started
-================================
+Getting Started
+===============
 
 Follow the steps below to run your first game.
 
-## Download the Binary
+## Get Playfield Engine
 
-Download the latest `Playfield Engine` binary from the [Releases Page](https://github.com/awemorris/PlayfieldEngine/releases).
+**Download**
 
-## Run the Game
+* Download the latest **All-in-One** ZIP of Playfield Engine from [the website](https://noctvm.io/playfield/).
+* Extract the ZIP file to any folder you like.
 
-Double-click the `playfield.exe` file to start the game.
+**On Windows:**
 
-## Edit the Game
+* Double-click `playfield.exe`.
+* The sample game will start automatically.
 
-Open the `main.pf` file.
+**On macOS:**
 
-## Export the Game
+* Open `misc/macos/Playfield.dmg`.
+* Copy the `Playfield` app from the DMG into the same folder as `playfield.exe`.
+* Double-click the `Playfield` app to run the sample game.
 
-Select your game files on Explorer and drop them to the `playfield-pack.exe` file,
-then the `assets.pak` file will be created.
+**On Linux:**
 
-Place the `assets.pak` file alongside the `playfield.exe` file.
+* Copy `misc/linux/Playfield-x86_64.AppImage` into the same folder as `playfield.exe`.
+* Make the AppImage executable if necessary (`chmod +x Playfield-x86_64.AppImage`).
+* Double-click the AppImage to run the sample game.
+
+## Making a First Game
+
+To create a minimal game:
+
+1. Make a new folder anywhere you like.
+2. Open your favorite text editor in that folder.
+3. Create a new file called `main.pf`.
+4. Copy the following code into to the file an save it.
+
+```
+// Called when the window is created.
+func setup() {
+    // Return the window configuration.
+    return {
+        width: 1280,
+        height: 720,
+        title: My First Game
+    };
+}
+
+// Called once when the game starts.
+func start() {
+    // Create a white 100x100 texture.
+    tex = Engine.createColorTexture({
+        width: 100,
+        height: 100,
+        r: 255, g: 255, b: 255, a: 255
+    });
+}
+
+// Called every frame before rendering.
+func update() {
+    posX = Engine.mousePosX;
+    posY = Engine.mousePosY;
+}
+
+// Called every frame to render graphics.
+func render() {
+    Engine.draw({ texture: tex, x: posX, y: posY });
+}
+```
+
+## Running Games
+
+Playfield Engine can load a game in two ways:
+
+* From a folder that contains a `main.pf` file.
+* From an `assets.pak` file that bundles all game assets.
+
+To create an `assets.pak` file, see [Distributing Games](distribute.md).
