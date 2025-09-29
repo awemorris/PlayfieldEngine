@@ -201,7 +201,7 @@ static void checkBundleResource(int argc, const char *argv[])
     // The modifier key status
     BOOL _isShiftPressed;
     BOOL _isControlPressed;
-    BOOL _isComandPressed;
+    BOOL _isCommandPressed;
     
     // The video player objects and status
     AVPlayer *_avPlayer;
