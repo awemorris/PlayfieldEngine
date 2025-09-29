@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.SurfaceHolder;
@@ -177,15 +178,28 @@ public class MainActivity extends Activity {
 
         isFinished = false;
 
-        // Do full screen settings.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            getWindow().getDecorView().getWindowInsetsController().setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        getWindow().addFlags(LayoutParams.FLAG_FULLSCREEN);
+        // Do full screen settings. (step1)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Create the main view.
         view = new MainView(this);
         setContentView(view);
+
+        // Do full screen settings. (step2)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController controller = getWindow().getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.systemBars());
+                controller.setSystemBarsBehavior(
+                        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                );
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
 
         // Prepare the video view.
         videoView = new VideoSurfaceView(this);
