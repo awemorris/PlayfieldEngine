@@ -1,9 +1,8 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【ソフト名】Playfield Engine           【Ver】0.8.4
-【著作権者】Awe Morris                 【制作日】2025-09-24
-【種　　別】MIT License OSS
-【登 録 名】PFE080.ZIP                 【圧縮】ZIP
-【動作環境】Windows XP SP3 以降
+【ソフト名】Playfield Engine           【Ver】0.8.6
+【著作権者】Awe Morris                 【制作日】2025-09-29
+【種　　別】OSS (zlib License)
+【動作環境】Windows XP SP3 以降, DirectX 9.0c以降
 【必要機器】キーボード, マウス
 【配 布 元】GitHub 等
 【連 絡 先】E-mail : awe@noctvm.io
@@ -109,16 +108,36 @@ playfield-web.exe を実行すれば、ブラウザでゲームが表示され�
 
 本ソフトの使用により生じたいかなる損害に対しても、作者は一切責任を負いません。
 
-■ 配布/転載/改造
+■ 利用/配布/改変
 
-・MITライセンスに従います
-・営利、非営利に関わらず、著作権表示を行えば自由に改変、再配布を行えます
-・雑誌/CD-ROM 収録等は自由で、連絡いただけると作者も購入できてうれしいです
+・zlibライセンスに従います
+・営利利用を含めて無償で利用できます
+・現状のまま提供されサポートや修正の保証はありません
+・利用した結果どんな問題が起きても責任を取りません
+・実行ファイルの配布に著作権表示は必須ではなく、ご厚意にお任せします
+・改変した場合はその旨の表示が必要です
 
-■ 著作権
+■ 著作権・ライセンス
 
-Playfield Engine
-© 2025 Awe Morris
+zlib License
+
+(C) 2025 Awe Morris
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
 
 ■ その他
 
@@ -126,6 +145,9 @@ Playfield Engine
 
 ■ 改版履歴
 
+2025-09-29 Ver.0.8.6 公開
+2025-09-24 Ver.0.8.5 公開
+2025-09-22 Ver.0.8.4 公開
 2025-09-12 Ver.0.8.0 公開
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -561,7 +561,7 @@ Playfield Engine
 © 2025 Awe Morris
 ```
 
-Playfield Engine is available as open-source software under the **MIT License**.
+Playfield Engine is available as open-source software under the **zlib License**.
 You're free to use, modify, and share it — even in commercial projects.
 
 ---
