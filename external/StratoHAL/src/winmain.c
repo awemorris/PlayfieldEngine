@@ -616,27 +616,12 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		/* Alt + F4 */
 		if(wParam == VK_F4)
 		{
-#if 0
-			if (MessageBox(hWnd,
-						   win32_utf8_to_utf16("Are you sure you want to exit?"),
-						   wszTitle, MB_OKCANCEL) == IDOK)
-			{
-#endif
-				DestroyWindow(hWnd);
-				return 0;
-#if 0
-			}
-#endif
+			DestroyWindow(hWnd);
+			return 0;
 		}
 		break;
 	case WM_CLOSE:
-#if 0
-		if (MessageBox(hWnd,
-					   win32_utf8_to_utf16("Are you sure you want to exit?"),
-					   wszTitle,
-					   MB_OKCANCEL) == IDOK)
-#endif
-			DestroyWindow(hWnd);
+		DestroyWindow(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN:
 		if (bRunning)
@@ -675,16 +660,6 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		if((HIWORD(lParam) & 0x4000) != 0)
 			return 0;
 
-		/* If ESC is pressed in the full screen mode. */
-		if((int)wParam == VK_ESCAPE && bFullScreen)
-		{
-			/* Change to the windowed mode. */
-			bNeedWindowed = TRUE;
-			SendMessage(hWndMain, WM_SIZE, 0, 0);
-			return 0;
-		}
-
-		/* Other keys. */
 		if (bRunning)
 		{
 			kc = ConvertKeyCode((int)wParam);
@@ -802,12 +777,32 @@ static int ConvertKeyCode(int nVK)
 {
 	switch(nVK)
 	{
-	case VK_CONTROL:
-		return KEY_CONTROL;
-	case VK_SPACE:
-		return KEY_SPACE;
+	case VK_ESCAPE:
+		return KEY_ESCAPE;
 	case VK_RETURN:
 		return KEY_RETURN;
+	case VK_SPACE:
+		return KEY_SPACE;
+	case VK_TAB:
+		return KEY_TAB;
+	case VK_BACK:
+		return KEY_BACKSPACE;
+	case VK_DELETE:
+		return KEY_DELETE;
+	case VK_HOME:
+		return KEY_HOME;
+	case VK_END:
+		return KEY_END;
+	case VK_PRIOR:
+		return KEY_PAGEUP;
+	case VK_NEXT:
+		return KEY_PAGEDOWN;
+	case VK_SHIFT:
+		return KEY_SHIFT;
+	case VK_CONTROL:
+		return KEY_CONTROL;
+	case VK_MENU:
+		return KEY_ALT;
 	case VK_UP:
 		return KEY_UP;
 	case VK_DOWN:
@@ -816,14 +811,102 @@ static int ConvertKeyCode(int nVK)
 		return KEY_LEFT;
 	case VK_RIGHT:
 		return KEY_RIGHT;
-	case VK_ESCAPE:
-		return KEY_ESCAPE;
-	case 'S':
-		return KEY_S;
-	case 'L':
-		return KEY_L;
+	case 'A':
+		return KEY_A;
+	case 'B':
+		return KEY_B;
+	case 'C':
+		return KEY_C;
+	case 'D':
+		return KEY_D;
+	case 'E':
+		return KEY_E;
+	case 'F':
+		return KEY_F;
+	case 'G':
+		return KEY_G;
 	case 'H':
 		return KEY_H;
+	case 'I':
+		return KEY_I;
+	case 'J':
+		return KEY_J;
+	case 'K':
+		return KEY_K;
+	case 'L':
+		return KEY_L;
+	case 'M':
+		return KEY_M;
+	case 'N':
+		return KEY_N;
+	case 'O':
+		return KEY_O;
+	case 'P':
+		return KEY_P;
+	case 'Q':
+		return KEY_Q;
+	case 'R':
+		return KEY_R;
+	case 'S':
+		return KEY_S;
+	case 'T':
+		return KEY_T;
+	case 'U':
+		return KEY_U;
+	case 'V':
+		return KEY_V;
+	case 'W':
+		return KEY_W;
+	case 'X':
+		return KEY_X;
+	case 'Y':
+		return KEY_Y;
+	case 'Z':
+		return KEY_Z;
+	case '1':
+		return KEY_1;
+	case '2':
+		return KEY_2;
+	case '3':
+		return KEY_3;
+	case '4':
+		return KEY_4;
+	case '5':
+		return KEY_5;
+	case '6':
+		return KEY_6;
+	case '7':
+		return KEY_7;
+	case '8':
+		return KEY_8;
+	case '9':
+		return KEY_9;
+	case '0':
+		return KEY_0;
+	case VK_F1:
+		return KEY_F1;
+	case VK_F2:
+		return KEY_F2;
+	case VK_F3:
+		return KEY_F3;
+	case VK_F4:
+		return KEY_F4;
+	case VK_F5:
+		return KEY_F5;
+	case VK_F6:
+		return KEY_F6;
+	case VK_F7:
+		return KEY_F7;
+	case VK_F8:
+		return KEY_F8;
+	case VK_F9:
+		return KEY_F9;
+	case VK_F10:
+		return KEY_F10;
+	case VK_F11:
+		return KEY_F11;
+	case VK_F12:
+		return KEY_F12;
 	default:
 		break;
 	}

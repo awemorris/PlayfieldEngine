@@ -606,15 +606,35 @@ static void initGamepad(void)
 // Called when a modifier key is pressed or released.
 - (void)flagsChanged:(NSEvent *)theEvent {
     // Get the Control key state.
-    BOOL bit = ([theEvent modifierFlags] & NSEventModifierFlagControl) == NSEventModifierFlagControl;
+    BOOL shiftBit = ([theEvent modifierFlags] & NSEventModifierFlagShift) == NSEventModifierFlagShift;
+    BOOL controlBit = ([theEvent modifierFlags] & NSEventModifierFlagControl) == NSEventModifierFlagControl;
+    BOOL commandBit = ([theEvent modifierFlags] & NSEventModifierFlagCommand) == NSEventModifierFlagCommand;
     
+    // Notify when the Shift key state is changed.
+    if (!_isShiftPressed && shiftBit) {
+        _isShiftPressed = YES;
+        on_event_key_press(KEY_SHIFT);
+    } else if (_isShiftPressed && !shiftBit) {
+        _isShiftPressed = NO;
+        on_event_key_release(KEY_SHIFT);
+    }
+
     // Notify when the Control key state is changed.
-    if (!_isControlPressed && bit) {
+    if (!_isControlPressed && controlBit) {
         _isControlPressed = YES;
         on_event_key_press(KEY_CONTROL);
-    } else if (_isControlPressed && !bit) {
+    } else if (_isControlPressed && !controlBit) {
         _isControlPressed = NO;
         on_event_key_release(KEY_CONTROL);
+    }
+
+    // Notify when the Command key state is changed.
+    if (!_isCommandPressed && commandBit) {
+        _isCommandPressed = YES;
+        on_event_key_press(KEY_ALT);
+    } else if (_isCommandPressed && !commandBit) {
+        _isCommandPressed = NO;
+        on_event_key_release(KEY_ALT);
     }
 }
 
@@ -638,13 +658,68 @@ static void initGamepad(void)
 // A helper to convert a keycode.
 - (int)convertKeyCode:(int)keyCode {
     switch(keyCode) {
-        case 49: return KEY_SPACE;
+        case 53: return KEY_ESCAPE;
         case 36: return KEY_RETURN;
+        case 49: return KEY_SPACE;
+        case 48: return KEY_TAB;
+        case 51: return KEY_BACKSPACE;
+        case 117: return KEY_DELETE;
+        case 115: return KEY_HOME;
+        case 119: return KEY_END;
+        case 116: return KEY_PAGEUP;
+        case 121: return KEY_PAGEDOWN;
         case 123: return KEY_LEFT;
         case 124: return KEY_RIGHT;
         case 125: return KEY_DOWN;
         case 126: return KEY_UP;
-        case 53: return KEY_ESCAPE;
+        case 0: return KEY_A;
+        case 11: return KEY_B;
+        case 8: return KEY_C;
+        case 2: return KEY_D;
+        case 14: return KEY_E;
+        case 3: return KEY_F;
+        case 5: return KEY_G;
+        case 4: return KEY_H;
+        case 34: return KEY_I;
+        case 38: return KEY_J;
+        case 40: return KEY_K;
+        case 37: return KEY_L;
+        case 46: return KEY_M;
+        case 45: return KEY_N;
+        case 31: return KEY_O;
+        case 35: return KEY_P;
+        case 12: return KEY_Q;
+        case 15: return KEY_R;
+        case 1: return KEY_S;
+        case 17: return KEY_T;
+        case 32: return KEY_U;
+        case 9: return KEY_V;
+        case 13: return KEY_W;
+        case 7: return KEY_X;
+        case 16: return KEY_Y;
+        case 6: return KEY_Z;
+        case 18: return KEY_1;
+        case 19: return KEY_2;
+        case 20: return KEY_3;
+        case 21: return KEY_4;
+        case 23: return KEY_5;
+        case 22: return KEY_6;
+        case 26: return KEY_7;
+        case 28: return KEY_8;
+        case 25: return KEY_9;
+        case 20: return KEY_0;
+        case 122: return KEY_F1;
+        case 120: return KEY_F2;
+        case 99: return KEY_F3;
+        case 118: return KEY_F4;
+        case 96: return KEY_F5;
+        case 97: return KEY_F6;
+        case 98: return KEY_F7;
+        case 100: return KEY_F8;
+        case 101: return KEY_F9;
+        case 109: return KEY_F10;
+        case 103: return KEY_F11;
+        case 111: return KEY_F12;
     }
     return -1;
 }

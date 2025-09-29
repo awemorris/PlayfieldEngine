@@ -60,11 +60,6 @@
 #define FRAME_MILLI	(16)	/* Millisec of a frame */
 #define SLEEP_MILLI	(5)	/* Millisec to sleep */
 
-/* Key code */
-enum {
-	KEY_F12 = KEY_MAX,
-};
-
 /* Window Config */
 static char *window_title;
 static int screen_width;
@@ -824,15 +819,36 @@ static int get_key_code(XEvent *event)
 
 	/* Convert to key_code. */
 	switch (keysym) {
+	case XK_Escape:
+		return KEY_ESCAPE;
 	case XK_Return:
 	case XK_KP_Enter:
 		return KEY_RETURN;
 	case XK_space:
 		return KEY_SPACE;
-		break;
+	case XK_Tab:
+		return KEY_TAB;
+	case XK_BackSpace:
+		return KEY_BACKSPACE;
+	case XK_Delete:
+		return KEY_DELETE;
+	case XK_Home:
+		return KEY_HOME;
+	case XK_End:
+		return KEY_END;
+	case XK_Page_Up:
+		return KEY_PAGEUP;
+	case XK_Page_Down:
+		return KEY_PAGEDOWN;
+	case XK_Shift_L:
+	case XK_Shift_R:
+		return KEY_SHIFT;
 	case XK_Control_L:
 	case XK_Control_R:
 		return KEY_CONTROL;
+	case XK_Alt_L:
+	case XK_Alt_R:
+		return KEY_ALT;
 	case XK_Down:
 		return KEY_DOWN;
 	case XK_Up:
@@ -841,6 +857,100 @@ static int get_key_code(XEvent *event)
 		return KEY_LEFT;
 	case XK_Right:
 		return KEY_RIGHT;
+	case XK_A:
+		return KEY_A;
+	case XK_B:
+		return KEY_B;
+	case XK_C:
+		return KEY_C;
+	case XK_D:
+		return KEY_D;
+	case XK_E:
+		return KEY_E;
+	case XK_F:
+		return KEY_F;
+	case XK_G:
+		return KEY_G;
+	case XK_H:
+		return KEY_H;
+	case XK_I:
+		return KEY_I;
+	case XK_J:
+		return KEY_J;
+	case XK_K:
+		return KEY_K;
+	case XK_L:
+		return KEY_L;
+	case XK_M:
+		return KEY_M;
+	case XK_N:
+		return KEY_N;
+	case XK_O:
+		return KEY_O;
+	case XK_P:
+		return KEY_P;
+	case XK_Q:
+		return KEY_Q;
+	case XK_R:
+		return KEY_R;
+	case XK_S:
+		return KEY_S;
+	case XK_T:
+		return KEY_T;
+	case XK_U:
+		return KEY_U;
+	case XK_V:
+		return KEY_V;
+	case XK_W:
+		return KEY_W;
+	case XK_X:
+		return KEY_X;
+	case XK_Y:
+		return KEY_Y;
+	case XK_Z:
+		return KEY_Z;
+	case XK_1:
+		return KEY_1;
+	case XK_2:
+		return KEY_2;
+	case XK_3:
+		return KEY_3;
+	case XK_4:
+		return KEY_4;
+	case XK_5:
+		return KEY_5;
+	case XK_6:
+		return KEY_6;
+	case XK_7:
+		return KEY_7;
+	case XK_8:
+		return KEY_8;
+	case XK_9:
+		return KEY_9;
+	case XK_0:
+		return KEY_0;
+	case XK_F1:
+		return KEY_F1;
+	case XK_F2:
+		return KEY_F2;
+	case XK_F3:
+		return KEY_F3;
+	case XK_F4:
+		return KEY_F4;
+	case XK_F5:
+		return KEY_F5;
+	case XK_F6:
+		return KEY_F6;
+	case XK_F7:
+		return KEY_F7;
+	case XK_F8:
+		return KEY_F8;
+	case XK_F9:
+		return KEY_F9;
+	case XK_F10:
+		return KEY_F10;
+	case XK_F11:
+		return KEY_F11;
 	case XK_F12:
 		return KEY_F12;
 	default:
@@ -856,13 +966,13 @@ static void event_button_press(XEvent *event)
 	switch (event->xbutton.button) {
 	case Button1:
 		on_event_mouse_press(MOUSE_LEFT,
-				     event->xbutton.x,
-				     event->xbutton.y);
+				     (int)(event->xbutton.x / mouse_scale),
+				     (int)(event->xbutton.y / mouse_scale));
 		break;
 	case Button3:
 		on_event_mouse_press(MOUSE_RIGHT,
-				     event->xbutton.x,
-				     event->xbutton.y);
+				     (int)(event->xbutton.x / mouse_scale),
+				     (int)(event->xbutton.y / mouse_scale));
 		break;
 	case Button4:
 		on_event_key_press(KEY_UP);
@@ -884,13 +994,13 @@ static void event_button_release(XEvent *event)
 	switch (event->xbutton.button) {
 	case Button1:
 		on_event_mouse_release(MOUSE_LEFT,
-				       event->xbutton.x,
-				       event->xbutton.y);
+				       (int)(event->xbutton.x / mouse_scale),
+				       (int)(event->xbutton.y / mouse_scale));
 		break;
 	case Button3:
 		on_event_mouse_release(MOUSE_RIGHT,
-				       event->xbutton.x,
-				       event->xbutton.y);
+				       (int)(event->xbutton.x / mouse_scale),
+				       (int)(event->xbutton.y / mouse_scale));
 		break;
 	}
 }
@@ -899,7 +1009,8 @@ static void event_button_release(XEvent *event)
 static void event_motion_notify(XEvent *event)
 {
 	/* Call an event handler. */
-	on_event_mouse_move(event->xmotion.x, event->xmotion.y);
+	on_event_mouse_move((int)(event->xmotion.x / mouse_scale),
+			    (int)(event->xmotion.y / mouse_scale));
 }
 
 /* Process a ConfigureNotify event. */
@@ -960,6 +1071,8 @@ bool log_info(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
+	printf("%s\n", buf);
+
 	open_log_file();
 	if (log_fp != NULL) {
 		fprintf(log_fp, "%s\n", buf);
@@ -967,7 +1080,6 @@ bool log_info(const char *s, ...)
 		if (ferror(log_fp))
 			return false;
 	}
-	printf("%s\n", buf);
 
 	return true;
 }
@@ -984,6 +1096,8 @@ bool log_warn(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
+	printf("%s\n", buf);
+
 	open_log_file();
 	if (log_fp != NULL) {
 		fprintf(log_fp, "%s\n", buf);
@@ -991,7 +1105,6 @@ bool log_warn(const char *s, ...)
 		if (ferror(log_fp))
 			return false;
 	}
-	printf("%s\n", buf);
 
 	return true;
 }
@@ -1008,6 +1121,8 @@ bool log_error(const char *s, ...)
 	vsnprintf(buf, sizeof(buf), s, ap);
 	va_end(ap);
 
+	printf("%s\n", buf);
+
 	open_log_file();
 	if (log_fp != NULL) {
 		fprintf(log_fp, "%s\n", buf);
@@ -1015,7 +1130,6 @@ bool log_error(const char *s, ...)
 		if (ferror(log_fp))
 			return false;
 	}
-	printf("%s\n", buf);
 	
 	return true;
 }

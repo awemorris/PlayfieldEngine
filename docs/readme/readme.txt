@@ -78,7 +78,7 @@ To preview the game locally, use "playfield-web.exe".
 Usage (iOS)
 -----------
 
-Place "assets.pak" in the "Resources/" folder, then open the project in Xcode.
+Place "assets.pak" in the "misc/ios/Resources/" folder, then open the project in Xcode.
 
 Usage (Android)
 ---------------

@@ -46,13 +46,19 @@ func update() {
         dy -= 1;
     if (Engine.isKeyDownPressed || Engine.isGamepadDownPressed)
         dy += 1;
+    if (Engine.isMouseLeftPressed) {
+        dx = 0;
+        dy = 0;
+        player.x = Engine.mousePosX;
+        player.y = Engine.mousePosY;
+    }
     var speed = 5;
     player.x += dx * speed;
     player.y += dy * speed;
 
     // Shooting.
     fireCooldown -= dt;
-    if ((Engine.isKeyReturnPressed || Engine.isGamepadAPressed) && fireCooldown <= 0.0) {
+    if ((Engine.isKeyReturnPressed || Engine.isGamepadAPressed || Engine.isMouseLeftPressed) && fireCooldown <= 0.0) {
         bullets->push({ x: player.x+6, y: player.y-10, vy: -400 });
         fireCooldown = 0.08; // 12.5発/秒
         // Engine.playSound({ stream:0, file:"shot.ogg" });

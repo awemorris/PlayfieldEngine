@@ -329,16 +329,136 @@ cb_keyup(int eventType,
 /* Get a key code. */
 static int get_keycode(const char *key)
 {
-	if (strcmp(key, "Enter") == 0) {
+	if (strcmp(key, "Escape") == 0) {
+		return KEY_ESCAPE;
+	} else if (strcmp(key, "Enter") == 0) {
 		return KEY_RETURN;
 	} else if (strcmp(key, " ") == 0) {
 		return KEY_SPACE;
+	} else if (strcmp(key, "Tab") == 0) {
+		return KEY_TAB;
+	} else if (strcmp(key, "Backspace") == 0) {
+		return KEY_BACKSPACE;
+	} else if (strcmp(key, "Delete") == 0) {
+		return KEY_DELETE;
+	} else if (strcmp(key, "Home") == 0) {
+		return KEY_HOME;
+	} else if (strcmp(key, "End") == 0) {
+		return KEY_END;
+	} else if (strcmp(key, "PageUp") == 0) {
+		return KEY_PAGEUP;
+	} else if (strcmp(key, "PageDown") == 0) {
+		return KEY_PAGEDOWN;
+	} else if (strcmp(key, "Shift") == 0) {
+		return KEY_SHIFT;
 	} else if (strcmp(key, "Control") == 0) {
 		return KEY_CONTROL;
+	} else if (strcmp(key, "Alt") == 0) {
+		return KEY_ALT;
 	} else if (strcmp(key, "ArrowUp") == 0) {
 		return KEY_UP;
 	} else if (strcmp(key, "ArrowDown") == 0) {
 		return KEY_DOWN;
+	} else if (strcmp(key, "ArrowLeft") == 0) {
+		return KEY_LEFT;
+	} else if (strcmp(key, "ArrowRight") == 0) {
+		return KEY_RIGHT;
+	} else if (strcmp(key, "A") == 0) {
+		return KEY_A;
+	} else if (strcmp(key, "B") == 0) {
+		return KEY_B;
+	} else if (strcmp(key, "C") == 0) {
+		return KEY_C;
+	} else if (strcmp(key, "D") == 0) {
+		return KEY_D;
+	} else if (strcmp(key, "E") == 0) {
+		return KEY_E;
+	} else if (strcmp(key, "F") == 0) {
+		return KEY_F;
+	} else if (strcmp(key, "G") == 0) {
+		return KEY_G;
+	} else if (strcmp(key, "H") == 0) {
+		return KEY_H;
+	} else if (strcmp(key, "I") == 0) {
+		return KEY_I;
+	} else if (strcmp(key, "J") == 0) {
+		return KEY_J;
+	} else if (strcmp(key, "K") == 0) {
+		return KEY_K;
+	} else if (strcmp(key, "L") == 0) {
+		return KEY_L;
+	} else if (strcmp(key, "M") == 0) {
+		return KEY_M;
+	} else if (strcmp(key, "N") == 0) {
+		return KEY_N;
+	} else if (strcmp(key, "O") == 0) {
+		return KEY_O;
+	} else if (strcmp(key, "P") == 0) {
+		return KEY_P;
+	} else if (strcmp(key, "Q") == 0) {
+		return KEY_Q;
+	} else if (strcmp(key, "R") == 0) {
+		return KEY_R;
+	} else if (strcmp(key, "S") == 0) {
+		return KEY_S;
+	} else if (strcmp(key, "T") == 0) {
+		return KEY_T;
+	} else if (strcmp(key, "U") == 0) {
+		return KEY_U;
+	} else if (strcmp(key, "V") == 0) {
+		return KEY_V;
+	} else if (strcmp(key, "W") == 0) {
+		return KEY_W;
+	} else if (strcmp(key, "X") == 0) {
+		return KEY_X;
+	} else if (strcmp(key, "Y") == 0) {
+		return KEY_Y;
+	} else if (strcmp(key, "Z") == 0) {
+		return KEY_Z;
+	} else if (strcmp(key, "1") == 0) {
+		return KEY_1;
+	} else if (strcmp(key, "2") == 0) {
+		return KEY_2;
+	} else if (strcmp(key, "3") == 0) {
+		return KEY_3;
+	} else if (strcmp(key, "4") == 0) {
+		return KEY_4;
+	} else if (strcmp(key, "5") == 0) {
+		return KEY_5;
+	} else if (strcmp(key, "6") == 0) {
+		return KEY_6;
+	} else if (strcmp(key, "7") == 0) {
+		return KEY_7;
+	} else if (strcmp(key, "8") == 0) {
+		return KEY_8;
+	} else if (strcmp(key, "9") == 0) {
+		return KEY_9;
+	} else if (strcmp(key, "0") == 0) {
+		return KEY_0;
+	} else if (strcmp(key, "F1") == 0) {
+		return KEY_F1;
+	} else if (strcmp(key, "F2") == 0) {
+		return KEY_F2;
+	} else if (strcmp(key, "F3") == 0) {
+		return KEY_F3;
+	} else if (strcmp(key, "F4") == 0) {
+		return KEY_F4;
+	} else if (strcmp(key, "F5") == 0) {
+		return KEY_F5;
+	} else if (strcmp(key, "F6") == 0) {
+		return KEY_F6;
+	} else if (strcmp(key, "F7") == 0) {
+		return KEY_F7;
+	} else if (strcmp(key, "F8") == 0) {
+		return KEY_F8;
+	} else if (strcmp(key, "F9") == 0) {
+		return KEY_F9;
+	} else if (strcmp(key, "F10") == 0) {
+		return KEY_F10;
+	} else if (strcmp(key, "F11") == 0) {
+		return KEY_F11;
+	} else if (strcmp(key, "F12") == 0) {
+		return KEY_F12;
 	}
 	return -1;
 }
