@@ -32,7 +32,7 @@ func start() {
 
 func update() {
     var now = Engine.millisec;
-    var dt  = (now - lastTime) * 0.001; // 秒
+    var dt  = (now - lastTime) * 0.001; // second
     lastTime = now;
 
     // Move.
@@ -46,21 +46,21 @@ func update() {
         dy -= 1;
     if (Engine.isKeyDownPressed || Engine.isGamepadDownPressed)
         dy += 1;
+    var speed = 5;
+    player.x += dx * speed;
+    player.y += dy * speed;
     if (Engine.isMouseLeftPressed) {
         dx = 0;
         dy = 0;
         player.x = Engine.mousePosX;
         player.y = Engine.mousePosY;
     }
-    var speed = 5;
-    player.x += dx * speed;
-    player.y += dy * speed;
 
     // Shooting.
     fireCooldown -= dt;
     if ((Engine.isKeyReturnPressed || Engine.isGamepadAPressed || Engine.isMouseLeftPressed) && fireCooldown <= 0.0) {
         bullets->push({ x: player.x+6, y: player.y-10, vy: -400 });
-        fireCooldown = 0.08; // 12.5発/秒
+        fireCooldown = 0.08;
         // Engine.playSound({ stream:0, file:"shot.ogg" });
     }
 
@@ -68,9 +68,8 @@ func update() {
     var aliveBullets = [];
     for (b in bullets) {
         b.y += b.vy * dt;
-        if (b.y > -10) {
+        if (b.y > -10)
             aliveBullets->push(b);
-        }
     }
     bullets = aliveBullets;
 

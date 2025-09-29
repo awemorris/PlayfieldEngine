@@ -311,15 +311,10 @@ bool set_vm_int(const char *prop_name, int val)
 {
 	NoctValue api, prop_val;
 
-	noct_pin_local(env, 2, &api, &prop_val);
-
 	if (!noct_get_global(env, "Engine", &api))
 		return false;
-	noct_make_int(env, &prop_val, val);
-	if (!noct_set_dict_elem(env, &api, prop_name, &prop_val))
+	if (!noct_set_dict_elem_make_int(env, &api, prop_name, &prop_val, val))
 		return false;
-
-	noct_unpin_local(env, 2, &api, &prop_val);
 
 	return true;
 }
@@ -331,14 +326,10 @@ bool get_vm_int(const char *prop_name, int *val)
 {
 	NoctValue dict, dict_val;
 
-	noct_pin_local(env, 2, &dict, &dict_val);
-
 	if (!noct_get_global(env, "Engine", &dict))
 		return false;
 	if (!noct_get_dict_elem_check_int(env, &dict, "exitFlag", &dict_val, val))
 		return false;
-
-	noct_unpin_local(env, 2, &dict, &dict_val);
 
 	return true;
 }
@@ -969,8 +960,6 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	float f;
 	const char *s;
 
-	noct_pin_local(env, 2, &param, &elem);
-
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
 		noct_unpin_local(env, 2, &param, &elem);
@@ -1001,8 +990,6 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 		return false;
 	}
 
-	noct_unpin_local(env, 2, &param, &elem);
-
 	return true;
 }
 
@@ -1011,8 +998,6 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 {
 	NoctValue param, elem;
 	static char buf[128];
-
-	noct_pin_local(env, 2, &param, &elem);
 
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
@@ -1052,8 +1037,6 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		return false;
 	}
 
-	noct_unpin_local(env, 2, &param, &elem);
-
 	return true;
 }
 
@@ -1061,8 +1044,6 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
 {
 	NoctValue param;
-
-	noct_pin_local(env, 1, &param);
 
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
@@ -1076,8 +1057,6 @@ static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
 		return false;
 	}
 
-	noct_unpin_local(env, 1, &param);
-
 	return true;
 }
 
@@ -1085,8 +1064,6 @@ static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
 static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret)
 {
 	NoctValue param, elem, ival;
-
-	noct_pin_local(env, 3, &param, &elem, &ival);
 
 	if (!noct_get_arg(env, 0, &param)) {
 		noct_error(env, PPS_TR("Parameter is not set."));
@@ -1119,8 +1096,6 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 	}
 
 	*ret = ival.val.i;
-
-	noct_unpin_local(env, 3, &param, &elem, &ival);
 
 	return true;
 }
