@@ -5,7 +5,7 @@ android {
     compileSdk 35
     defaultConfig {
         applicationId "io.noctvm.playfield.engineandroid"
-        minSdkVersion 28
+        minSdkVersion 32
         versionCode 1
         versionName "1.0.0"
     }
