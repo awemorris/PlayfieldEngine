@@ -70,21 +70,28 @@ int main(int argc, char *argv[])
 	swprintf(szURL, sizeof(szURL), L"http://localhost:8080/%d/", random_dir_number);
 	ShellExecuteW(NULL, L"open", szURL, NULL, NULL, SW_SHOWNORMAL);
 
-	/* Run HTTP server loop. */
-	while (1) {
-		/* Exit if all the files are transmitted. */
-		if (is_index_sent && is_data_sent)
-			break;
+	/* Get a socket for a connection. */
+	struct sockaddr_in from;
+	int len = sizeof(from);
+	int accept_sock = accept(listen_sock, (struct sockaddr *)&from, &len);
+	if (accept_sock == -1) {
+		printf("Error: Cannot accept.\n");
+		return 1;
+	}
+	printf("Accepted.\n");
 
-		/* Get a socket for a connection. */
-		struct sockaddr_in from;
-		int len = sizeof(from);
-		int accept_sock = accept(listen_sock, (struct sockaddr *)&from, &len);
-		if (accept_sock == -1) {
-			printf("Error: Cannot accept.\n");
-			return 1;
+	/* Loop until all the files are sent. */
+	while (1) {
+		char send_buf[4096];
+
+		/* Exit if all the files are transmitted. */
+		if (is_index_sent && is_data_sent) {
+			/* Send "Connection: Close". */
+			snprintf(send_buf, sizeof(send_buf), "Connection: Close\n");
+			send(accept_sock, send_buf, strlen(send_buf), 0);
+			close(accept_sock);
+			break;
 		}
-		printf("Accepted.\n");
 
 		/* Process lines in the request header. */
 		char *fname = NULL;
@@ -118,7 +125,6 @@ int main(int argc, char *argv[])
 			printf("404 Not Found\n");
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 404 Not Found\nContent-Size: 0\nConnection: Close\n\n");
 			send(accept_sock, send_buf, strlen(send_buf), 0);
-			close(accept_sock);
 			continue;
 		}
 		printf("File: %s\n", fname);
@@ -146,7 +152,6 @@ int main(int argc, char *argv[])
 
 		/* Send a response header.. */
 		printf("Sending response header...\n");
-		char send_buf[4096];
 		if (strcmp(fname, "index.html") == 0) {
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_index_sent = 1;
@@ -161,11 +166,6 @@ int main(int argc, char *argv[])
 		send(accept_sock, fdata, fsize, 0);
 		free(fdata);
 
-		/* Send "Connection: Close". */
-		snprintf(send_buf, sizeof(send_buf), "Connection: Close\n");
-		send(accept_sock, send_buf, strlen(send_buf), 0);
-
-		close(accept_sock);
 		printf("File %s Ok.\n", fname);
 	}
 
