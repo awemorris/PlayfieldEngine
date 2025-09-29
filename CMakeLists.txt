@@ -145,6 +145,8 @@ if(NOT NOCTLANG_ENABLE_CLI)
   set(NOCTLANG_ENABLE_CLI OFF)
 endif()
 
+set(NOCTLANG_DISABLE_INSTALL ON)
+
 #
 # Strato Configuration
 #
@@ -511,4 +513,41 @@ if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BUNDLE)
     MACOSX_PACKAGE_LOCATION "Resources"
   )
   target_sources(playfield PRIVATE ${APP_GAME_DATA})
+endif()
+
+#
+# Install
+#
+
+include(GNUInstallDirs)
+
+install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS playfield-compiler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+if (   PLAYFIELD_TARGET_FREEBSD
+    OR PLAYFIELD_TARGET_NETBSD
+    OR PLAYFIELD_TARGET_OPENBSD)
+  install(
+    FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1.mdoc"
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    RENAME      "playfield.1"
+  )
+  install(
+    FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1.mdoc"
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    RENAME      "playfield-compiler.1"
+  )
+  install(
+    FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1.mdoc"
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    RENAME      "playfield-pack.1"
+  )
+else()
+  install(
+    FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1"
+                "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1"
+                "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1"
+    DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+  )
 endif()
