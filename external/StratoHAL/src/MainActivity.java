@@ -71,10 +71,10 @@ public class MainActivity extends Activity {
     private static final String APP_NAME = "App";
 
     // Window width
-    private static final int VIEWPORT_WIDTH = 1280;
+    private static int VIEWPORT_WIDTH = 1280;
 
     // Window height
-    private static final int VIEWPORT_HEIGHT = 720;
+    private static int VIEWPORT_HEIGHT = 720;
 
     //
     // JNI (do not touch)
@@ -87,6 +87,8 @@ public class MainActivity extends Activity {
 
     // These are the native methods implemented in ndk*.c
     private native void nativeInitGame();
+    private native int nativeGetScreenWidth();
+    private native int nativeGetScreenHeight();
     private native void nativeReinitOpenGL();
     private native void nativeCleanup();
     private native boolean nativeRunFrame();
@@ -271,6 +273,8 @@ public class MainActivity extends Activity {
             if(!resumeFromVideo) {
                 synchronized (syncObj) {
                     nativeInitGame();
+                    VIEWPORT_WIDTH = nativeGetScreenWidth();
+                    VIEWPORT_HEIGHT = nativeGetScreenHeight();
                     isLoaded = true;
                 }
             } else {

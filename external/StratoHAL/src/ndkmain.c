@@ -173,6 +173,22 @@ static void init_locale(void)
 		lang_code = "en";
 }
 
+JNIEXPORT jint JNICALL
+Java_io_noctvm_playfield_engineandroid_MainActivity_nativeGetScreenWidth(
+	JNIEnv *env,
+	jobject instance)
+{
+	return screen_width;
+}
+
+JNIEXPORT jint JNICALL
+Java_io_noctvm_playfield_engineandroid_MainActivity_nativeGetScreenHeight(
+	JNIEnv *env,
+	jobject instance)
+{
+	return screen_height;
+}
+
 JNIEXPORT void JNICALL
 Java_io_noctvm_playfield_engineandroid_MainActivity_nativeReinitOpenGL(
         JNIEnv *env,
