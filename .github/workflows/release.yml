@@ -590,7 +590,6 @@ jobs:
           cp -R resources/projects/android/settings.gradle dist/misc/android/
           cp -R resources/projects/android/gradlew.bat dist/misc/android/
           cp -R resources/projects/android/gradle dist/misc/android/
-          cp -R resources/projects/android/build.bat dist/misc/android/
           mkdir -p dist/misc/android/app/src/main/assets
           cp samples/shoot/main.pf dist/misc/android/app/src/main/assets/
           mkdir -p dist/misc/android/app/src/main/java/io/noctvm/playfield/engineandroid

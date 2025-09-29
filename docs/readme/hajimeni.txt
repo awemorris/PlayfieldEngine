@@ -1,7 +1,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 【ソフト名】Playfield Engine           【Ver】0.8.6
 【著作権者】Awe Morris                 【制作日】2025-09-29
-【種　　別】OSS (zlib License)
+【種　　別】OSS (Zlib License)
 【動作環境】Windows XP SP3 以降, DirectX 9.0c以降
 【必要機器】キーボード, マウス
 【配 布 元】GitHub 等
@@ -82,22 +82,10 @@ playfield-web.exe を実行すれば、ブラウザでゲームが表示され�
 
 ■ 使い方 (Android)
 
-　まず、すべてのアセット を app/src/main/assets にコピーします。
-
-  ○ かんたんな方法
-
-    - android フォルダを D: ドライブ直下などの短い名前の場所にコピーします
-    - build.bat をダブルクリックして実行すると、黒いウィンドウが表示されます
-    - 途中、(y/N)? と表示されたら、 y キーを押してから、改行キーを押します
-    - ビルドが完了すると、黒いウィンドウが消えます
-    - Android アプリの app-debug.apk が作成されます
-    - OneDrive などを経由して Android スマートフォンで開きます
-
-  ○ 本格的な方法
-
-    - android フォルダを Android Studio で開きます
-    - アプリをビルドします
-    - パソコン上で動作確認したり、接続した Android で実行したりできます
+  - すべてのアセットを misc/android/app/src/main/assets にコピーします。
+  - misc/android フォルダを Android Studio で開きます
+  - アプリをビルドします
+  - パソコン上で動作確認したり、USB 接続した Android 端末で実行したりできます
 
 ■ 使い方 (Unity)
 

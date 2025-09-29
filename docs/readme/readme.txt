@@ -83,27 +83,16 @@ Place "assets.pak" in the "Resources/" folder, then open the project in Xcode.
 Usage (Android)
 ---------------
 
-First, copy all assets into "app/src/main/assets".
-
-  A. Easy Way
-
-    - Copy the "android" folder to a short path, such as "D:\"
-    - Double-click "build.bat"
-    - When prompted with "(y/N)", type "y" and press Enter
-    - "app-debug.apk" will be generated
-    - Install the APK on your Android device
-
-  B. Recommended Way
-
-    - Open the "android" folder with Android Studio
-    - Build the project
-    - Run the app on your device
+  - Copy all assets into "misc/android/app/src/main/assets".
+  - Open the "misc/android" folder with Android Studio
+  - Build the project
+  - Run the app on your device or emulators
 
 Usage (Unity)
 -------------
 
-Copy all assets into the "StreamingAssets" folder,  
-then open the project in the Unity Editor.
+Copy all assets into the "misc/unity/Assets/StreamingAssets" folder,  
+then open the project "misc/unity" in the Unity Editor.
 
 License / Copyright Notice
 --------------------------
