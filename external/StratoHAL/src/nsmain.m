@@ -198,8 +198,10 @@ static void checkBundleResource(int argc, const char *argv[])
     // The full screen status
     BOOL _isFullScreen;
     
-    // The control key status
+    // The modifier key status
+    BOOL _isShiftPressed;
     BOOL _isControlPressed;
+    BOOL _isComandPressed;
     
     // The video player objects and status
     AVPlayer *_avPlayer;
@@ -707,7 +709,7 @@ static void initGamepad(void)
         case 26: return KEY_7;
         case 28: return KEY_8;
         case 25: return KEY_9;
-        case 20: return KEY_0;
+        case 29: return KEY_0;
         case 122: return KEY_F1;
         case 120: return KEY_F2;
         case 99: return KEY_F3;
