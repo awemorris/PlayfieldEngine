@@ -28,6 +28,21 @@ int main(int argc, char *argv[])
 {
 	printf("LightHttpd\n\n");
 
+	if (_access("index.html", 0) == -1) {
+		MessageBoxW(NULL,
+					L"index.html not found.",
+					L"Playfield Engine Web Server and Browser Action",
+					MB_OK | MB_ICONEXCLAMATION);
+		return 1;
+	}
+	if (_access("assets.pak", 0) == -1) {
+		MessageBoxW(NULL,
+					L"assets.pak not found.",
+					L"Playfield Engine Web Server and Browser Action",
+					MB_OK | MB_ICONEXCLAMATION);
+		return 1;
+	}
+
 	/* Generate a random directory number to avoid browser cache mechanism. */
 	srand((unsigned)time(NULL));
 	int random_dir_number = rand();

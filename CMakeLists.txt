@@ -442,10 +442,18 @@ endif()
 #
 
 if(PLAYFIELD_ENABLE_PACK)
-  add_executable(
-    playfield-pack
-    src/pack.c
-  )
+  if (NOT PLAYFIELD_TARGET_WINDOWS)
+    add_executable(
+      playfield-pack
+      src/pack.c
+    )
+  else()
+    add_executable(
+      playfield-pack
+      src/pack.c
+      resources/windows/pack-resource.rc
+    )
+  endif()
   target_link_libraries(playfield-pack stratopack)
 endif()
 
@@ -457,6 +465,7 @@ if(PLAYFIELD_TARGET_WINDOWS)
   add_executable(
     playfield-web
     src/webserver.c
+    resources/windows/web-resource.rc
   )
   target_link_libraries(playfield-web wsock32 ws2_32)
 endif()
