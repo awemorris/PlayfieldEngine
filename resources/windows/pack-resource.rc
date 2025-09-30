@@ -2,7 +2,6 @@
 #include "resource.h"
 
 IDI_ICON ICON DISCARDABLE "icon.ico"
-CREATE_PROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "manifest.xml"
 
 // =============================
 // Version Information Resource
