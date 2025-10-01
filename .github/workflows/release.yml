@@ -55,6 +55,7 @@ jobs:
           name: windows-binaries
           path: |
             out/**/playfield.exe
+            out/**/playfield-editor.exe
             out/**/playfield-pack.exe
             out/**/playfield-web.exe
           if-no-files-found: error
