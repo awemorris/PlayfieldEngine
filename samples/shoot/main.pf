@@ -11,7 +11,7 @@ func start() {
     //////////////////////
     // Global Variables //
     //////////////////////
-    playerTex = Engine.createColorTexture({ width:16, height:16, r:255,g:255,b:255,a:255 }); // 16x16 Whiite, Player
+    playerTex = Engine.createColorTexture({ width:16, height:16, r:255,g:255,b:255,a:255 }); // 16x16 White, Player
     bulletTex = Engine.createColorTexture({ width:4,  height:8,  r:200,g:255,b:200,a:255 }); // 4x8   White, Bullet
     enemyTex = Engine.createColorTexture({ width:16, height:16, r:255,g:100,b:100,a:255 });  // 16x16 Red, Enemy
     scoreTex = null;
