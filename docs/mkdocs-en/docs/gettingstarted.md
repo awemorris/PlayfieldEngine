@@ -33,6 +33,7 @@ To create a minimal game:
 
 1. Make a new folder anywhere you like.
 2. Open your favorite text editor in that folder.
+    - On Windows, you can use `Playfield Editor` if you don't have a favorite editor.
 3. Create a new file called `main.pf`.
 4. Copy the following code into to the file an save it.
 
@@ -43,7 +44,7 @@ func setup() {
     return {
         width: 1280,
         height: 720,
-        title: My First Game
+        title: "My First Game"
     };
 }
 

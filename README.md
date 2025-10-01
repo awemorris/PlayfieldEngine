@@ -10,6 +10,8 @@ it can render graphics and play sounds seamlessly across platforms.
 [Official Page](https://noctvm.io/playfield/)
  | 
 [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
+ |
+[Japanese Page](https://noctvm.io/playfield-ja/)
 
 ## Download v0.8.9 now!
 
@@ -139,39 +141,44 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 ## Example
 
 Here's a simple example that displays an image following the mouse
-cursor. This shows the basic lifecycle: `setup` (window config),
-`start` (asset loading), `update` (per-frame logic), and `frame` (per-frame rendering).
+cursor. This shows the basic lifecycle:
+`setup` (window config),
+`start` (asset loading),
+`update` (per-frame logic and texture loading), and
+`render` (per-frame rendering).
 
 ```
+// Called when the window is created.
 func setup() {
-    var config = {
-        title: "My Sample Game",
-        width: 640,
-        height: 480
+    // Return the window configuration.
+    return {
+        width: 1280,
+        height: 720,
+        title: "My First Game"
     };
-    return config;
 }
 
+// Called once when the game starts.
 func start() {
-    myTexture = Engine.loadTexture({file: "apple.png"});
+    // Create a white 100x100 texture.
+    tex = Engine.createColorTexture({
+        width: 100,
+        height: 100,
+        r: 255, g: 255, b: 255, a: 255
+    });
 }
 
+// Called every frame before rendering.
 func update() {
     posX = Engine.mousePosX;
     posY = Engine.mousePosY;
 }
 
-func frame() {
-    Engine.draw({
-        texture: myTexture
-        x: posX,
-        y: posY,
-    });
+// Called every frame to render graphics.
+func render() {
+    Engine.draw({ texture: tex, x: posX, y: posY });
 }
 ```
-
-**Note:** setup() defines the window, start() loads resources, and
-frame() is called each frame to render and update.
 
 ---
 
@@ -181,20 +188,47 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 
 ### 1. Download the latest binary:
 
-- Precompiled binaries are available on the [Releases page](https://github.com/awemorris/PlayfieldEngine/releases)
+- Download the `All-in-One` file at the top of this page.
+- Extract the downloaded file.
 
 ### 2. Run a game script
 
-- For Windows, macOS, and Linux:
-    - Place a binary alongside a sample game.
-    - Run the app.
-        - Windows: Double click the `playfield.exe` file.
-        - macOS: Double click the `Playfield.app` icon.
-        - Linux: Run `./PlayfieldEngine-x86_64.AppImage` on the terminal.
+- For Windows:
+    - Double-click the `playfield.exe` file.
+    - The game will be started.
+- For macOS:
+    - Open the `misc` folder.
+    - Open the `macos` folder.
+    - Open the `Playfield.dmg` file.
+    - Copy the application inside the dmg file alongside the `main.pf` file.
+    - Double-click the copied application file.
+    - The game will be started.
+- For Linux:
+    - Open the `misc` folder.
+    - Open the `linux` folder.
+    - Copy the `PlayfieldEngine-x86_64.AppImage` file alongside the `main.pf` file.
+    - Double-click the copied AppImage file.
+    - The game will be started.
 - For Chromebook:
-    - Open [this page](https://noctvm.io/w/) on the browser, then open a game folder.
+    - Open [this URL](https://noctvm.io/w/) on the browser.
+    - Press the `Open Folder` button.
+    - Select the folder where the `main.pf` file exists.
+    - The game will be started.
 
-### 3. Explore more features
+### 3. Edit a game script
+
+- With Playfield Editor (Currently Windows only):
+    - Double-click the `playfield-editor.exe` file to run the editor.
+    - Open the `main.pf` file from the editor.
+    - Edit the file.
+    - Press Ctrl+R to run the game. (Press R key while holding Ctrl key down)
+- With your favorite editor:
+    - Prior to editing, copy the engine alongside the `main.pf` file.
+    - Open your favorite editor and load the `main.pf` file.
+    - Edit the file and save it.
+    - Run the engine.
+
+### 4. Explore more features
 
 - [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
 - [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
