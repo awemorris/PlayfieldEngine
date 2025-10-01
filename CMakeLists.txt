@@ -495,7 +495,7 @@ endif()
 # Editor Target
 #
 
-if(PLAYFIELD_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS AND MSVC)
   add_executable(
     playfield-editor
     src/editor.c
