@@ -82,6 +82,38 @@ These are the sample games that work on Web browsers.
 
 ---
 
+## Gallery
+
+Playfield Engine running on Windows 11:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield Engine running on Windows 11">
+
+Playfield Engine running on macOS:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield Engine running on macOS">
+
+Playfield Engine running on Linux:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield Engine running on Linux">
+
+Playfield Engine running on iOS simulator:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield Engine running on iOS simulator">
+
+Playfield Engine running on Android emulator:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
+
+Playfield Engine running on Windows XP — because why not:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
+
+Playfield Engine running on NetBSD — Of course it runs!: 
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
+
+---
+
 ## Status
 
 Currently in active development on the 0.8.x branch. Stable 1.0.0 release planned.
@@ -505,38 +537,6 @@ Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
 | Android 14 | ✅     |
 | Android 15 | ✅     |
 | Android 16 | ✅     |
-
----
-
-## Gallery
-
-Playfield Engine running on Windows 11:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield Engine running on Windows 11">
-
-Playfield Engine running on macOS:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield Engine running on macOS">
-
-Playfield Engine running on Linux:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield Engine running on Linux">
-
-Playfield Engine running on iOS simulator:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield Engine running on iOS simulator">
-
-Playfield Engine running on Android emulator:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
-
-Playfield Engine running on Windows XP — because why not:
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
-
-Playfield Engine running on NetBSD — Of course it runs!: 
-
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
 
 ---
 
