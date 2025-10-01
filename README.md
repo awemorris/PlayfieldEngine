@@ -1,7 +1,7 @@
 Playfield Engine
 ================
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: zlib](https://img.shields.io/badge/License-zlib-blue.svg)](LICENSE)
 
 `Playfield Engine` is a 2D game scripting runtime that works everywhere.
 With scripts written in `Playfield Script`,
