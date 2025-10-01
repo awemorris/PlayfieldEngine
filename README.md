@@ -140,7 +140,7 @@ Currently in active development on the 0.8.x branch. Stable 1.0.0 release planne
 
 Here's a simple example that displays an image following the mouse
 cursor. This shows the basic lifecycle: `setup` (window config),
-`start` (asset loading), and `frame` (per-frame logic).
+`start` (asset loading), `update` (per-frame logic), and `frame` (per-frame rendering).
 
 ```
 func setup() {
@@ -156,11 +156,16 @@ func start() {
     myTexture = Engine.loadTexture({file: "apple.png"});
 }
 
+func update() {
+    posX = Engine.mousePosX;
+    posY = Engine.mousePosY;
+}
+
 func frame() {
     Engine.draw({
         texture: myTexture
-        x: Engine.mousePosX,
-        y: Engine.mousePosY,
+        x: posX,
+        y: posY,
     });
 }
 ```
