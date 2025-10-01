@@ -458,20 +458,7 @@ if(PLAYFIELD_ENABLE_PACK)
 endif()
 
 #
-# Web Server target
-#
-
-if(PLAYFIELD_TARGET_WINDOWS)
-  add_executable(
-    playfield-web
-    src/webserver.c
-    resources/windows/web-resource.rc
-  )
-  target_link_libraries(playfield-web wsock32 ws2_32)
-endif()
-
-#
-# Compiler target
+# Compiler Target
 #
 
 if(   PLAYFIELD_TARGET_WINDOWS
@@ -488,6 +475,39 @@ if(   PLAYFIELD_TARGET_WINDOWS
   target_link_libraries(playfield-compiler noctlang)
   if(UNIX)
     target_link_libraries(playfield-compiler m)
+  endif()
+endif()
+
+#
+# Web Server Target
+#
+
+if(PLAYFIELD_TARGET_WINDOWS)
+  add_executable(
+    playfield-web
+    src/webserver.c
+    resources/windows/web-resource.rc
+  )
+  target_link_libraries(playfield-web wsock32 ws2_32)
+endif()
+
+#
+# Editor Target
+#
+
+if(PLAYFIELD_TARGET_WINDOWS)
+  add_executable(
+    playfield-editor
+    src/editor.c
+    resources/windows/editor-resource.rc
+  )
+  if(MSVC)
+    target_compile_options(playfield-editor PRIVATE /utf-8)
+    target_compile_definitions(playfield-editor PRIVATE UNICODE _UNICODE)
+    target_link_options(playfield-editor PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
+  else()
+    target_compile_options(playfield-editor PRIVATE -municode)
+    target_link_options(playfield-editor PRIVATE -mwindows -municode)
   endif()
 endif()
 

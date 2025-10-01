@@ -489,6 +489,7 @@ jobs:
       - name: Copy for Windows.
         run: |
           cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
+          cp windows/build/windows-msvc-x64-release/Release/playfield-editor.exe dist/
           cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
           cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
           cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
