@@ -229,7 +229,7 @@ static bool init_hal(int argc, char *argv[])
 	}
 
 	/* Initizalize OpenGL. */
-	if (!init_opengl(display_width, display_height)) {
+	if (!init_opengl(screen_width, screen_height)) {
 		log_error("Can't initialize OpenGL.");
 	}
 	update_viewport_size(screen_width, screen_height);
