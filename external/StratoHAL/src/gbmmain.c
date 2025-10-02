@@ -263,8 +263,9 @@ static bool open_display(void)
 	uint32_t stride;
 	int r;
 
-	fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
-	assert(fd >= 0);
+	fd = open("/dev/dri/card1", O_RDWR | O_CLOEXEC);
+	if (fd < 0)
+		return false;
 
 	drmModeRes *res = drmModeGetResources(fd);
 	if (res == NULL)

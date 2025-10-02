@@ -34,9 +34,18 @@
 /*
  * Linux and POSIX variant (OpenGL 3.2)
  */
-#if defined(TARGET_LINUX) || defined(TARGET_POSIX)
+#if (defined(TARGET_LINUX) && !defined(USE_LINUX_GBM)) || defined(TARGET_POSIX)
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include "glhelper.h"
+#endif
+
+/*
+ * Linux GBM (OpenGL ES 2.0)
+ */
+#if defined(TARGET_LINUX) && defined(USE_LINUX_GBM)
+#include <GLES3/gl3.h>
+#include <GLES2/gl2ext.h>
 #include "glhelper.h"
 #endif
 
