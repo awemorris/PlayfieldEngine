@@ -9,7 +9,7 @@
  */
 
 /* HAL */
-#include "stratohal/platform.h"	/* Public Interface */
+#include "stratohal/platform.h"		/* Public Interface */
 #include "stdfile.h"			/* Standard C File Implementation */
 #if defined(TARGET_LINUX)
 #include "asound.h"			/* ALSA Sound Implemenatation */
@@ -68,10 +68,13 @@ static int viewport_width;
 static int viewport_height;
 static float mouse_scale = 1.0f;
 static bool is_full_screen;
+static int physical_width;
+static int physical_height;
 
 /* X11 Objects */
 Display *display;
 Window window = BadAlloc;
+static int screen;
 static Pixmap icon = BadAlloc;
 static Pixmap icon_mask = BadAlloc;
 static Atom delete_message = BadAlloc;
@@ -347,8 +350,13 @@ bool create_glx_window(void)
 	viewport_width = screen_width;
 	viewport_height = screen_height;
 
+	/* Get the physical display size. */
+	screen = DefaultScreen(display);
+	physical_width = DisplayWidth(display, screen);
+	physical_height = DisplayHeight(display, screen);
+
 	/* Choose a framebuffer format. */
-	config = glXChooseFBConfig(display, DefaultScreen(display), pix_attr, &n);
+	config = glXChooseFBConfig(display, screen, pix_attr, &n);
 	if (config == NULL)
 		return false;
 	vi = glXGetVisualFromFBConfig(display, config[0]);
@@ -772,6 +780,16 @@ static bool next_event(void)
 static void event_key_press(XEvent *event)
 {
 	int key;
+	KeySym keysym;
+
+	keysym = XLookupKeysym(&event->xkey, 0);
+	if ((event->xkey.state & Mod1Mask) && (keysym == XK_Return)) {
+		if (!is_full_screen)
+			enter_full_screen_mode();
+		else
+			leave_full_screen_mode();
+		return;
+	}
 
 	/* Get a key code. */
 	key = get_key_code(event);
@@ -1453,7 +1471,32 @@ bool is_full_screen_mode(void)
  */
 void enter_full_screen_mode(void)
 {
-	/* stub */
+	Atom wm_state;
+	Atom fs_atom;
+	XEvent xev = {0};
+
+	if (is_full_screen)
+		return;
+
+	wm_state = XInternAtom(display, "_NET_WM_STATE", False);
+	fs_atom = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
+
+	xev.type = ClientMessage;
+	xev.xclient.window = window;
+	xev.xclient.message_type = wm_state;
+	xev.xclient.format = 32;
+	xev.xclient.data.l[0] = 1;
+	xev.xclient.data.l[1] = fs_atom;
+	xev.xclient.data.l[2] = 0; // no second property
+	xev.xclient.data.l[3] = 1;
+
+	XSendEvent(display,
+		   DefaultRootWindow(display),
+		   False,
+		   SubstructureRedirectMask | SubstructureNotifyMask,
+		   &xev);
+
+	is_full_screen = true;
 }
 
 /*
@@ -1461,7 +1504,32 @@ void enter_full_screen_mode(void)
  */
 void leave_full_screen_mode(void)
 {
-	/* stub */
+	Atom wm_state;
+	Atom fs_atom;
+	XEvent xev = {0};
+
+	if (!is_full_screen)
+		return;
+
+	wm_state = XInternAtom(display, "_NET_WM_STATE", False);
+	fs_atom = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
+
+	xev.type = ClientMessage;
+	xev.xclient.window = window;
+	xev.xclient.message_type = wm_state;
+	xev.xclient.format = 32;
+	xev.xclient.data.l[0] = 0;
+	xev.xclient.data.l[1] = fs_atom;
+	xev.xclient.data.l[2] = 0;
+	xev.xclient.data.l[3] = 1;
+
+	XSendEvent(display,
+		   DefaultRootWindow(display),
+		   False,
+		   SubstructureRedirectMask | SubstructureNotifyMask,
+		   &xev);
+
+	is_full_screen = false;
 }
 
 /*
