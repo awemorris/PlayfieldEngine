@@ -232,7 +232,7 @@ static bool init_hal(int argc, char *argv[])
 	if (!init_opengl(screen_width, screen_height)) {
 		log_error("Can't initialize OpenGL.");
 	}
-	update_viewport_size(screen_width, screen_height);
+	update_viewport_size(display_width, display_height);
 
 	/* Initialize the gamepad. */
 	init_evgamepad();
