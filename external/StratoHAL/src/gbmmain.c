@@ -251,7 +251,10 @@ static bool open_display(void)
 	struct gbm_device *gbm;
 	PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT;
 	static const EGLint cfg_attrs[] = {
-		EGL_RED_SIZE,8, EGL_GREEN_SIZE,8, EGL_BLUE_SIZE,8,
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		EGL_ALPHA_SIZE, 0,
 		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 		EGL_NONE
