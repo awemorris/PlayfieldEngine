@@ -1,5 +1,5 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-【ソフト名】Playfield Engine           【Ver】0.8.8
+【ソフト名】Playfield                  【Ver】0.8.8
 【著作権者】Awe Morris                 【制作日】2025-09-30
 【種　　別】OSS (Zlib License)
 【動作環境】Windows XP SP3 以降, DirectX 9.0c以降
@@ -13,8 +13,8 @@
 
 ■ 概要
 
-　Playfield Engine はゲームスクリプトの実行エンジンです。Playfield Script とい
-う言語で記述されたスクリプトを読み込んで画面表示や音声再生を行うことができるた
+　Playfield はゲームスクリプトの実行エンジンです。Playfield Script という言語
+で記述されたスクリプトを読み込んで画面表示や音声再生を行うことができるた
 め、ゲームを開発することができます。
 
 　2020年代の最新環境で気軽にゲームを開発できます。かなり本格的な 2D ゲームが作
@@ -119,7 +119,7 @@ playfield-web.exe を実行すれば、ブラウザでゲームが表示され�
 Playfield Script の文法
 =======================
 
-`Playfield Engine` はスクリプト言語として `Noct` を使用します。
+`Playfield` はスクリプト言語として `Noct` を使用します。
 
 ## 代入
 
@@ -860,7 +860,7 @@ func playJumpSound() {
 
 ■ ライセンス全文
 
-Playfield Engine
+Playfield
 
 (C) 2025 Awe Morris
 

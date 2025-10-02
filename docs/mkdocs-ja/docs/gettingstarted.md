@@ -3,11 +3,11 @@
 
 下記のステップに従って、最初のゲームを実行してください。
 
-## Playfield Engine の取得
+## Playfield の取得
 
 **ダウンロード**
 
-* 最新の **All-in-One** の ZIP を Playfield Engine の [ウェブサイト](https://noctvm.io/playfield/) からダウンロードしてください
+* 最新の **All-in-One** の ZIP を Playfield の [ウェブサイト](https://noctvm.io/playfield/) からダウンロードしてください
 * ZIP ファイルをお好きなフォルダに展開します
 
 **Windows の場合:**
@@ -71,7 +71,7 @@ func render() {
 
 ## ゲームの実行
 
-Playfield Engine は下記の２通りの方法でゲームをロードできます:
+Playfield は下記の２通りの方法でゲームをロードできます:
 
 * `main.pf` ファイルを含むフォルダ
 * `assets.pak` ファイル (すべてのゲームアセットが入っている)

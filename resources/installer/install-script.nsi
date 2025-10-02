@@ -2,7 +2,7 @@
 !define MUI_ICON "icon.ico"
 !define MUI_UNICON "icon.ico"
 
-Name "Playfield Engine"
+Name "Playfield"
 OutFile "playfield-installer.exe"
 InstallDir "$APPDATA\Local\playfield"
 
@@ -28,7 +28,7 @@ Section "Install"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "DisplayName" "playfield"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "DisplayIcon" '"$INSTDIR\icon.ico"'
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "DisplayVersion" "1"
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "Publisher" "The Playfield Engine Project"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "Publisher" "The Playfield Project"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\playfield" "UninstallString" '"$INSTDIR\Uninstall.exe"'
   WriteRegStr HKCU "Software\Classes\.pf" "" "playfield.script"
   WriteRegStr HKCU "Software\Classes\playfield.script" "" "Playfield Script"

@@ -1,7 +1,7 @@
-Playfield Engine
-================
+Playfield
+=========
 
-Welcome to `Playfield Engine`.
+Welcome to `Playfield`.
 
 ---
 

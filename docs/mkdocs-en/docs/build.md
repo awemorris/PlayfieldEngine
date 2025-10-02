@@ -1,5 +1,5 @@
-How To Build Playfield Engine
-=============================
+How To Build Playfield
+======================
 
 * Notes
     * Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
@@ -19,7 +19,7 @@ How To Build Playfield Engine
 * Install [winflexbison](https://github.com/lexxmark/winflexbison).
     * Add the installation folder to the PATH environment variable.
     * Rename the exe files to `flex.exe` and `bison.exe`.
-* Download the [Playfield Engine source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Open the source code folder by Visual Studio.
     * Select one of the `MSVC` targets.
     * Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
@@ -117,7 +117,7 @@ The target `build-macos/Playfield.app` will be created.
 ### Steps
 
 * Pack assets into the `assets.pak` file.
-* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Copy your `assets.pak` file into the `misc/ios/resources` folder.
 * Open the `misc/ios` folder by Xcode.
 
@@ -131,7 +131,7 @@ The target `build-macos/Playfield.app` will be created.
 
 ### Steps
 
-* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Copy your asset files into the `misc/android/app/src/main/assets` folder.
 * Open the `misc/android` folde by Android Studio
 

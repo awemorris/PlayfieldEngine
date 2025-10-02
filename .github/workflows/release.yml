@@ -121,7 +121,7 @@ jobs:
           cat > playfield.desktop <<EOF
           [Desktop Entry]
           Type=Application
-          Name=Playfield Engine
+          Name=Playfield
           Exec=playfield
           Icon=playfield
           Categories=Game;
@@ -136,14 +136,14 @@ jobs:
           cp resources/linux/AppRun AppDir/
           cp playfield.desktop AppDir/
           cp resources/icon.png AppDir/playfield.png
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir PlayfieldEngine-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir Playfield-x86_64.AppImage
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-appimage
           path: |
-            PlayfieldEngine-x86_64.AppImage
+            Playfield-x86_64.AppImage
           if-no-files-found: error
           retention-days: 7
 
@@ -525,7 +525,7 @@ jobs:
 
       - name: Copy for Linux.
         run: |
-          cp linux/PlayfieldEngine-x86_64.AppImage dist/misc/linux/
+          cp linux/Playfield-x86_64.AppImage dist/misc/linux/
 
       - name: Download wasm artifacts
         uses: actions/download-artifact@v4
@@ -677,18 +677,18 @@ jobs:
 
       - name: Make documents
         run: |
-          mv dist "PlayfieldEngine-$DATE-$SHORT_SHA"
-          7z a -tzip -mx=9 "PlayfieldEngine-$DATE-$SHORT_SHA.zip" "PlayfieldEngine-$DATE-$SHORT_SHA"
-          7z a -t7z -mx=9 "PlayfieldEngine-$DATE-$SHORT_SHA.7z" "PlayfieldEngine-$DATE-$SHORT_SHA"
+          mv dist "Playfield-$DATE-$SHORT_SHA"
+          7z a -tzip -mx=9 "Playfield-$DATE-$SHORT_SHA.zip" "Playfield-$DATE-$SHORT_SHA"
+          7z a -t7z -mx=9 "Playfield-$DATE-$SHORT_SHA.7z" "Playfield-$DATE-$SHORT_SHA"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          name: PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          name: Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}
           files: |
-            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
-            PlayfieldEngine-${{ env.DATE }}-${{ env.SHORT_SHA }}.7z
+            Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
+            Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}.7z
           body: |
             This automated release includes standalone engines for Windows, macOS, and Linux.
             In addition, export kits for WebAssembly, iOS, Android, and Unity are included.

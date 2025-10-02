@@ -1,7 +1,7 @@
 Playfield Script Syntax
 =======================
 
-`Playfield Engine` uses `Noct` as a scripting language.
+`Playfield` uses `Noct` as a scripting language.
 
 ## Assignments
 

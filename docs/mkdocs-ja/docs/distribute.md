@@ -7,7 +7,7 @@
 
 ### Windows の場合
 
-Playfield Engine に同梱されているパッケージングツールを利用できます：
+Playfield に同梱されているパッケージングツールを利用できます：
 
 1. `misc/windows/` フォルダに行きます
 2. すべてのアセット (main.pf, 画像、フォント、音声) を選択して、`playfield-pack.exe` にドロップします
@@ -49,19 +49,19 @@ Windows の場合と同様ですが、`misc/linux/playfield-pack` を代わり�
 アイコンを変更できる何らかのソフトを利用して、`playfield.exe` のアイコンを変更します。
 
 あるいは別の方法として:
-1. Playfield Engine のソースコードをダウンロードします
+1. Playfield のソースコードをダウンロードします
 2. `resources/windows/icon.ico` をあなたのアイコンに変更します
 3. アプリを再ビルドします
 
 ### macOS の場合
 
-1. Playfield Engine のソースコードをダウンロードします
+1. Playfield のソースコードをダウンロードします
 2. `resources/macos/icon512.png` をあなたのアイコン画像に変更します
 3. アプリを再ビルドします
 
 ### For Linux
 
-1. Playfield Engine のソースコードをダウンロードします
+1. Playfield のソースコードをダウンロードします
 2. `external/StratoHAL/src/icon.c` をあなたのアイコンデータに変更します
   * このファイルはXPM画像のテキストである必要があります
 3. アプリを再ビルドします

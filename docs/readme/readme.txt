@@ -1,5 +1,5 @@
 ==============================================================================
-Playfield Engine
+Playfield
 ==============================================================================
 Version      : 0.8.8
 Date         : September 30th 2025
@@ -13,9 +13,9 @@ Contact      : awe@noctvm.io
 About
 -----
 
-Playfield Engine is a lightweight game scripting runtime.  With scripts
-written in Playfield Script, it can render graphics and play sounds across
-multiple platforms.
+Playfield is a lightweight game scripting runtime.  With scripts written in
+Playfield Script, it can render graphics and play sounds across multiple
+platforms.
 
 Whether you're a beginner or a seasoned power user, you can create games on
 your PC — just like coding in classic BASIC, but with modern features.
@@ -114,7 +114,7 @@ Feel free to reach out.
 Playfield Script Syntax
 =======================
 
-`Playfield Engine` uses `Noct` as a scripting language.
+`Playfield` uses `Noct` as a scripting language.
 
 ## Assignments
 
@@ -869,7 +869,7 @@ func playJumpSound() {
 All Licenses
 ==============================================================================
 
-Playfield Engine
+Playfield
 
 (C) 2025 Awe Morris
 

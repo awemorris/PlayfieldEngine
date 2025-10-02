@@ -3,11 +3,11 @@ Getting Started
 
 Follow the steps below to run your first game.
 
-## Get Playfield Engine
+## Get Playfield
 
 **Download**
 
-* Download the latest **All-in-One** ZIP of Playfield Engine from [the website](https://noctvm.io/playfield/).
+* Download the latest **All-in-One** ZIP of Playfield from [the website](https://noctvm.io/playfield/).
 * Extract the ZIP file to any folder you like.
 
 **On Windows:**
@@ -72,7 +72,7 @@ func render() {
 
 ## Running Games
 
-Playfield Engine can load a game in two ways:
+Playfield can load a game in two ways:
 
 * From a folder that contains a `main.pf` file.
 * From an `assets.pak` file that bundles all game assets.

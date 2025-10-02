@@ -22,7 +22,7 @@
  */
 
 /* Window title. */
-#define WINDOW_TITLE			L"Playfield Engine Editor"
+#define WINDOW_TITLE			L"Playfield Editor"
 
 /* Fonts. */
 #define FONT_NAME				L"Consolas"
@@ -36,7 +36,7 @@
 #define COLOR_SELECTED			0x00282828
 
 /* The version string. */
-#define VERSION					L"Playfield Engine Editor\nCopyright (C) 2025 Awe Morris"
+#define VERSION					L"Playfield Editor\nCopyright (C) 2025 Awe Morris"
 
 /* The minimum window size. */
 #define DEFAULT_WINDOW_WIDTH	(800)
@@ -194,7 +194,7 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 	/* Create the main window. */
 	hWndMain = CreateWindowExW(0,
 							  wszWindowClassMainWindow,
-							  L"Playfield Engine Editor",
+							  L"Playfield Editor",
 							  WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_OVERLAPPED | WS_THICKFRAME,
 							  CW_USEDEFAULT,
 							  CW_USEDEFAULT,
@@ -322,7 +322,7 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 	{
 		MessageBoxW(hWndMain,
 					L"Cannot load dwmapi.dll",
-					L"Playfield Engine Editor",
+					L"Playfield Editor",
 					MB_OK | MB_ICONEXCLAMATION);
 	}
 

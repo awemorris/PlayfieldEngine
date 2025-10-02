@@ -31,14 +31,14 @@ int main(int argc, char *argv[])
 	if (_access("index.html", 0) == -1) {
 		MessageBoxW(NULL,
 					L"index.html not found.",
-					L"Playfield Engine Web Server and Browser Action",
+					L"Playfield Web Server and Browser Action",
 					MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
 	if (_access("assets.pak", 0) == -1) {
 		MessageBoxW(NULL,
 					L"assets.pak not found.",
-					L"Playfield Engine Web Server and Browser Action",
+					L"Playfield Web Server and Browser Action",
 					MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
