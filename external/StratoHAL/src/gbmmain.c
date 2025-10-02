@@ -18,13 +18,6 @@
 #endif
 #include "evgamepad.h"			/* evdev Gamepad */
 
-/* Xlib */
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/xpm.h>
-#include <X11/Xatom.h>
-#include <X11/Xlocale.h>
-
 /* OpenGL */
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -50,6 +43,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <locale.h>
 
 #if 0
 /* Gstreamer Video HAL */
@@ -123,6 +117,7 @@ static bool open_log_file(void);
 static void close_log_file(void);
 static bool open_display(void);
 static drmModeConnector* find_conn(int fd, drmModeRes *res, drmModeEncoder **out_enc);
+static void set_rotation(void);
 static void close_display(void);
 static void cleanup_hal(void);
 static void destroy_window(void);
@@ -232,7 +227,11 @@ static bool init_hal(int argc, char *argv[])
 	if (!init_opengl(screen_width, screen_height)) {
 		log_error("Can't initialize OpenGL.");
 	}
+#if !defined(USE_ROT90)
 	update_viewport_size(display_width, display_height);
+#else
+	update_viewport_size(display_height, display_width);
+#endif
 
 	/* Initialize the gamepad. */
 	init_evgamepad();
@@ -267,10 +266,13 @@ static bool open_display(void)
 	uint32_t stride;
 	int r;
 
-	fd = open("/dev/dri/card1", O_RDWR | O_CLOEXEC);
+	fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
 	if (fd < 0) {
-		perror("open(/dev/dri/card1)");
-		return false;
+		fd = open("/dev/dri/card1", O_RDWR | O_CLOEXEC);
+		if (fd < 0) {
+			perror("open(/dev/dri/card?)");
+			return false;
+		}
 	}
 
 	drmModeRes *res = drmModeGetResources(fd);

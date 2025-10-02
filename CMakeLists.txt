@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.13)
 project(playfield LANGUAGES C CXX)
 
 #
@@ -6,18 +6,18 @@ project(playfield LANGUAGES C CXX)
 #
 
 # Targets
-option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"                    OFF)
-option(PLAYFIELD_TARGET_MACOS         "Build for macOS"                      OFF)
-option(PLAYFIELD_TARGET_LINUX         "Build for Linux X11"                  OFF)
-option(PLAYFIELD_TARGET_LINUX_GBM     "Build for Linux Framebuffer"          OFF)
-Option(PLAYFIELD_TARGET_IOS           "Build for iOS"                        OFF)
-option(PLAYFIELD_TARGET_ANDROID       "Build for Android"                    OFF)
-option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                 OFF)
-option(PLAYFIELD_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"    OFF)
-option(PLAYFIELD_TARGET_UNITY         "Build for Unity"                      OFF)
-option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"                    OFF)
-option(PLAYFIELD_TARGET_NETBSD        "Build for NetBSD"                     OFF)
-option(PLAYFIELD_TARGET_OPENBSD       "Build for OpenBSD"                    OFF)
+option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"                     OFF)
+option(PLAYFIELD_TARGET_MACOS         "Build for macOS"                       OFF)
+option(PLAYFIELD_TARGET_LINUX         "Build for Linux X11"                   OFF)
+option(PLAYFIELD_TARGET_LINUX_GBM     "Build for Linux Framebuffer"           OFF)
+Option(PLAYFIELD_TARGET_IOS           "Build for iOS"                         OFF)
+option(PLAYFIELD_TARGET_ANDROID       "Build for Android"                     OFF)
+option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                  OFF)
+option(PLAYFIELD_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"     OFF)
+option(PLAYFIELD_TARGET_UNITY         "Build for Unity"                       OFF)
+option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"                     OFF)
+option(PLAYFIELD_TARGET_NETBSD        "Build for NetBSD"                      OFF)
+option(PLAYFIELD_TARGET_OPENBSD       "Build for OpenBSD"                     OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -27,6 +27,7 @@ option(PLAYFIELD_ENABLE_PACK          "Enable packager"         OFF)
 option(PLAYFIELD_ENABLE_STATIC        "Build a static library"  OFF)
 option(PLAYFIELD_ENABLE_SHARED        "Build a dynamic library" OFF)
 option(PLAYFIELD_ENABLE_DIST          "Build for packages"      OFF)
+option(PLAYFIELD_ENABLE_ROT90         "Rotate screen"           OFF)
 
 #
 # Automatic Target Detection
@@ -207,6 +208,11 @@ endif()
 # Use translation.
 if(PLAYFIELD_ENABLE_I18N)
   set(STRATO_ENABLE_I18N ON)
+endif()
+
+# Screen rotate
+if(PLAYFIELD_ENABLE_ROT90)
+  set(STRATO_ENABLE_ROT90 ON)
 endif()
 
 #

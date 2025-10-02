@@ -207,7 +207,12 @@ static const char *vertex_shader_src =
 	"varying float v_alpha;       \n"
 	"void main()                  \n"
 	"{                            \n"
-	"  gl_Position = a_position;  \n"
+#if !defined(USE_ROT90)
+	"  gl_Position = a_position.z;\n"
+#else
+        "  vec2 rotated = vec2(-a_position.y, a_position.x); \n"
+	"  gl_Position = vec4(rotated, a_position.z, 1.0);   \n"
+#endif
 	"  v_texCoord = a_texCoord;   \n"
 	"  v_alpha = a_alpha;         \n"
 	"}                            \n";
@@ -374,7 +379,11 @@ bool init_opengl(int width, int height)
 	/* Set a viewport. */
 	window_width = width;
 	window_height = height;
+#if !defined(USE_ROT90)
 	glViewport(0, 0, window_width, window_height);
+#else
+	glViewport(0, 0, window_height, window_width);
+#endif
 
 	/* Setup a vertex shader. */
 	if (!setup_vertex_shader(&vertex_shader_src, &vertex_shader))
@@ -1157,5 +1166,9 @@ static void update_texture_if_needed(struct image *img)
  */
 void opengl_set_screen(int x, int y, int w, int h)
 {
+#if !defined(USE_ROT90)
 	glViewport(x, y, w, h);
+#else
+	glViewport(y, x, h, w);
+#endif
 }

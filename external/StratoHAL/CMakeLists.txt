@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.13)
 project(StratoHAL LANGUAGES C CXX)
 
 #
@@ -23,6 +23,7 @@ option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"                  OFF)
 option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
 option(STRATO_ENABLE_OBJECT        "Build an object library"            OFF)
 option(STRATO_ENABLE_SHARED        "Use shared libraries"               OFF)
+option(STRATO_ENABLE_ROT90         "Rotate screen"                      OFF)
 
 #
 # Automatic Target Detection
@@ -421,6 +422,11 @@ endif()
 # Linux Framebuffer: Add -DUSE_LINUX_GBM
 if(STRATO_TARGET_LINUX_GBM)
   target_compile_definitions(strato PRIVATE USE_LINUX_GBM)
+endif()
+
+# Linux Framebuffer
+if(STRATO_TARGET_LINUX_GBM AND STRATO_ENABLE_ROT90)
+  target_compile_definitions(strato PRIVATE USE_ROT90)
 endif()
 
 # FreeBSD: Add -I/usr/local/include

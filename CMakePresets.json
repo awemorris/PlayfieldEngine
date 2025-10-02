@@ -190,6 +190,20 @@
       }
     },
     {
+      "name":           "linux-gbm-rot90",
+      "displayName":    "Linux Framebuffer",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-linux-gbm-rot90",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":            "Release",
+        "PLAYFIELD_TARGET_LINUX_GBM":  "ON",
+        "PLAYFIELD_ENABLE_JIT":        "ON",
+        "PLAYFIELD_ENABLE_I18N":       "ON",
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_ROT90":      "ON"
+      }
+    },
+    {
       "name":           "ios",
       "displayName":    "iOS",
       "generator":      "Xcode",
@@ -453,6 +467,10 @@
     {
       "name": "linux-gbm",
       "configurePreset": "linux-gbm"
+    },
+    {
+      "name": "linux-gbm-rot90",
+      "configurePreset": "linux-gbm-rot90"
     },
     {
       "name": "ios-device",
