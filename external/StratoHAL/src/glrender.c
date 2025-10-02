@@ -208,7 +208,7 @@ static const char *vertex_shader_src =
 	"void main()                  \n"
 	"{                            \n"
 #if !defined(USE_ROT90)
-	"  gl_Position = a_position.z;\n"
+	"  gl_Position = a_position;\n"
 #else
         "  vec2 rotated = vec2(-a_position.y, a_position.x); \n"
 	"  gl_Position = vec4(rotated, a_position.z, 1.0);   \n"
