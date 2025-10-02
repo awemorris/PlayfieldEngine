@@ -250,7 +250,7 @@ static bool open_display(void)
 {
 	struct gbm_device *gbm;
 	PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT;
-	static const EGLint cfg_attrs[] = {
+	static const EGLint base_cfg_attrs[] = {
 		EGL_RED_SIZE, 8,
 		EGL_GREEN_SIZE, 8,
 		EGL_BLUE_SIZE, 8,
@@ -261,23 +261,30 @@ static bool open_display(void)
 	};
 	EGLConfig cfg;
 	EGLint ncfg;
+	EGLConfig *cfgs;
 	EGLContext ctx;
 	uint32_t handle;
 	uint32_t stride;
 	int r;
 
 	fd = open("/dev/dri/card1", O_RDWR | O_CLOEXEC);
-	if (fd < 0)
+	if (fd < 0) {
+		perror("open(/dev/dri/card1)");
 		return false;
+	}
 
 	drmModeRes *res = drmModeGetResources(fd);
-	if (res == NULL)
+	if (res == NULL) {
+		fprintf(stderr, "drmModeGetResources failed\n");
 		return false;
+	}
 
 	enc = NULL;
 	conn = find_conn(fd, res, &enc);
-	if (conn == NULL)
+	if (conn == NULL) {
+		fprintf(stderr, "no connected connector\n");
 		return false;
+	}
 
 	mode = conn->modes[0]; /* Use the first mode. */
 	crtc_id = enc ? enc->crtc_id : 0;
@@ -291,51 +298,145 @@ static bool open_display(void)
 	display_refresh = conn->modes[0].vrefresh;
 
 	gbm = gbm_create_device(fd);
-	if (gbm == NULL)
+	if (gbm == NULL) {
+		fprintf(stderr, "gbm_create_device failed\n");
 		return false;
+	}
 
 	gsurf = gbm_surface_create(gbm,
 				   mode.hdisplay,
 				   mode.vdisplay,
 				   GBM_FORMAT_XRGB8888,
 				   GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-	if (gsurf == NULL)
+	if (gsurf == NULL) {
+	        fprintf(stderr, "gbm_surface_create failed (XRGB8888)\n");
 		return false;
+	}
 
 	// EGL display
 	eglGetPlatformDisplayEXT = (void*)eglGetProcAddress("eglGetPlatformDisplayEXT");
-	dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm, NULL);
-	if (dpy == EGL_NO_DISPLAY)
+	if (eglGetPlatformDisplayEXT == NULL) {
+		fprintf(stderr, "eglGetPlatformDisplayEXT not found (check EGL_EXT_platform_base / EGL_KHR_platform_gbm)\n");
 		return false;
-	if (!eglInitialize(dpy, NULL, NULL))
+	}
+
+	dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gbm, NULL);
+	if (dpy == EGL_NO_DISPLAY) {
+		fprintf(stderr, "eglGetPlatformDisplayEXT returned NO_DISPLAY\n");
+		return false;
+	}
+
+	if (!eglInitialize(dpy, NULL, NULL)) {
+		fprintf(stderr, "eglInitialize failed: 0x%04x\n", eglGetError());
+		return false;
+	}
+
+	if (!eglBindAPI(EGL_OPENGL_ES_API)) {
+		fprintf(stderr, "eglBindAPI(EGL_OPENGL_ES_API) failed: 0x%04x\n", eglGetError());
+		return false;
+	}
+
+	if (!eglChooseConfig(dpy, base_cfg_attrs, NULL, 0, &ncfg)) {
+		fprintf(stderr, "eglChooseConfig(count) failed or no configs: 0x%04x\n", eglGetError());
+		return false;
+	}
+	if (ncfg <= 0)
 		return false;
 
-	if (!eglChooseConfig(dpy, cfg_attrs, &cfg, 1, &ncfg))
+	cfgs = (EGLConfig*)malloc(sizeof(EGLConfig) * ncfg);
+	if (!cfgs)
 		return false;
-	if (ncfg != 1)
+
+	if (!eglChooseConfig(dpy, base_cfg_attrs, cfgs, ncfg, &ncfg) || ncfg <= 0) {
+		fprintf(stderr, "eglChooseConfig(list) failed: 0x%04x\n", eglGetError());
+		free(cfgs);
 		return false;
+	}
+
+	// XRGB first.
+	for (int i = 0; i < ncfg; ++i) {
+		EGLint id = 0, a = 0, rsz=0, gsz=0, bsz=0;
+		eglGetConfigAttrib(dpy, cfgs[i], EGL_NATIVE_VISUAL_ID, &id);
+		eglGetConfigAttrib(dpy, cfgs[i], EGL_ALPHA_SIZE, &a);
+		eglGetConfigAttrib(dpy, cfgs[i], EGL_RED_SIZE, &rsz);
+		eglGetConfigAttrib(dpy, cfgs[i], EGL_GREEN_SIZE, &gsz);
+		eglGetConfigAttrib(dpy, cfgs[i], EGL_BLUE_SIZE, &bsz);
+		if ((uint32_t)id == GBM_FORMAT_XRGB8888 && a == 0 && rsz==8 && gsz==8 && bsz==8) {
+			cfg = cfgs[i];
+			break;
+		}
+	}
+
+	// ARGB fallback.
+	if (!cfg) {
+		for (int i = 0; i < ncfg; ++i) {
+			EGLint id = 0;
+			eglGetConfigAttrib(dpy, cfgs[i], EGL_NATIVE_VISUAL_ID, &id);
+			if ((uint32_t)id == GBM_FORMAT_ARGB8888) {
+				cfg = cfgs[i];
+				break;
+			}
+		}
+		if (cfg) {
+			gbm_surface_destroy(gsurf);
+			gsurf = gbm_surface_create(gbm,
+						   mode.hdisplay,
+						   mode.vdisplay,
+						   GBM_FORMAT_ARGB8888,
+						   GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+			if (!gsurf) {
+				fprintf(stderr, "gbm_surface_create failed (fallback ARGB8888)\n");
+				free(cfgs);
+				return false;
+			}
+		}
+	}
+
+	free(cfgs);
+
+	if (!cfg) {
+		fprintf(stderr, "No matching EGLConfig for GBM format (XRGB/ARGB)\n");
+		return false;
+	}
 
 	ctx = eglCreateContext(dpy, cfg, EGL_NO_CONTEXT, (EGLint[]){EGL_CONTEXT_CLIENT_VERSION,2, EGL_NONE});
-	if (ctx == EGL_NO_CONTEXT)
+	if (ctx == EGL_NO_CONTEXT) {
+		fprintf(stderr, "eglCreateContext failed: 0x%04x\n", eglGetError());
 		return false;
+	}
 
 	esurf = eglCreateWindowSurface(dpy, cfg, (EGLNativeWindowType)gsurf, NULL);
-	if (esurf == EGL_NO_SURFACE)
+	if (esurf == EGL_NO_SURFACE) {
+		fprintf(stderr, "eglCreateWindowSurface failed: 0x%04x\n", eglGetError());
 		return false;
-	if (!eglMakeCurrent(dpy, esurf, esurf, ctx))
+	}
+
+	if (!eglMakeCurrent(dpy, esurf, esurf, ctx)) {
+		fprintf(stderr, "eglMakeCurrent failed: 0x%04x\n", eglGetError());
 		return false;
+	}
 
 	// make a BO for the first scan out, then set to CRTC.
 	bo = gbm_surface_lock_front_buffer(gsurf);
+	if (!bo) {
+		fprintf(stderr, "gbm_surface_lock_front_buffer failed\n");
+		return false;
+	}
+
 	handle = gbm_bo_get_handle(bo).u32;
 	stride = gbm_bo_get_stride(bo);
+
 	r = drmModeAddFB(fd, mode.hdisplay, mode.vdisplay, 24, 32, stride, handle, &fb);
-	if (r != 0)
+	if (r != 0) {
+		perror("drmModeAddFB");
 		return false;
+	}
 
 	orig = drmModeGetCrtc(fd, crtc_id);
-	if (drmModeSetCrtc(fd, crtc_id, fb, 0, 0, &conn->connector_id, 1, &mode))
+	if (drmModeSetCrtc(fd, crtc_id, fb, 0, 0, &conn->connector_id, 1, &mode)) {
+		fprintf(stderr, "drmModeSetCrtc failed\n");
 		return false;
+	}
 
 	return true;
 }
