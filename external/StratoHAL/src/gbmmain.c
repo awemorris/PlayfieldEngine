@@ -232,7 +232,7 @@ static bool init_hal(int argc, char *argv[])
 	if (!init_opengl(display_width, display_height)) {
 		log_error("Can't initialize OpenGL.");
 	}
-	update_viewport_size(display_width, display_height);
+	update_viewport_size(screen_width, screen_height);
 
 	/* Initialize the gamepad. */
 	init_evgamepad();
@@ -416,7 +416,13 @@ static bool open_display(void)
 		return false;
 	}
 
-	// make a BO for the first scan out, then set to CRTC.
+	// Draw 1 frame to lock the front buffer.
+	glViewport(0, 0, display_width, display_height);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	eglSwapBuffers(dpy, esurf);
+
+	// Make a BO for the first scan out, then set to CRTC.
 	bo = gbm_surface_lock_front_buffer(gsurf);
 	if (!bo) {
 		fprintf(stderr, "gbm_surface_lock_front_buffer failed\n");

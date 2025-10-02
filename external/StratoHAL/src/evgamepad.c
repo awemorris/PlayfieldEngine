@@ -246,4 +246,3 @@ void update_evgamepad(void)
 }
 
 #endif
-
