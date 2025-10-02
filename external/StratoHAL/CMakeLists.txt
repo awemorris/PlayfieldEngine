@@ -8,7 +8,8 @@ project(StratoHAL LANGUAGES C CXX)
 # Target
 option(STRATO_TARGET_WINDOWS       "Build for Windows"                  OFF)
 option(STRATO_TARGET_MACOS         "Build for macOS"                    OFF)
-option(STRATO_TARGET_LINUX         "Build for Linux"                    OFF)
+option(STRATO_TARGET_LINUX         "Build for Linux X11"                OFF)
+option(STRATO_TARGET_LINUX_GBM     "Build for Linux Framebuffer"        OFF)
 option(STRATO_TARGET_IOS           "Build for iOS"                      OFF)
 option(STRATO_TARGET_ANDROID       "Build for Android"                  OFF)
 option(STRATO_TARGET_WASM          "Build for Emscripten"               OFF)
@@ -31,6 +32,7 @@ option(STRATO_ENABLE_SHARED        "Use shared libraries"               OFF)
 if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_MACOS
    OR STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_GBM
    OR STRATO_TARGET_IOS
    OR STRATO_TARGET_ANDROID
    OR STRATO_TARGET_WASM
@@ -184,7 +186,7 @@ if(STRATO_TARGET_MACOS)
   )
 endif()
 
-# For Linux and *BSD.
+# For Linux and *BSD. (X11)
 if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
@@ -203,6 +205,20 @@ if(   STRATO_TARGET_LINUX
       src/nosound.c
       src/evgamepad.c
       src/gstplay.c
+    )
+endif()
+
+# For Linux Framebuffer.
+if(STRATO_TARGET_LINUX_GBM)
+  set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/gbmmain.c
+      src/glrender.c
+      src/asound.c
+      src/evgamepad.c
     )
 endif()
 
@@ -402,19 +418,24 @@ if(STRATO_TARGET_WINDOWS)
   )
 endif()
 
+# Linux Framebuffer: Add -DUSE_LINUX_GBM
+if(STRATO_TARGET_LINUX_GBM)
+  target_compile_definitions(strato PRIVATE USE_LINUX_GBM)
+endif()
+
 # FreeBSD: Add -I/usr/local/include
 if(STRATO_TARGET_FREEBSD)
-  target_include_directories(strato PUBLIC  /usr/local/include)
+  target_include_directories(strato PUBLIC /usr/local/include)
 endif()
 
 # NetBSD: Add -I/usr/local/include -I/usr/X11R7/include
 if(STRATO_TARGET_NETBSD)
-  target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R7/include)
+  target_include_directories(strato PUBLIC /usr/local/include /usr/X11R7/include)
 endif()
 
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
 if(STRATO_TARGET_OPENBSD)
-  target_include_directories(strato PUBLIC  /usr/local/include /usr/X11R6/include)
+  target_include_directories(strato PUBLIC /usr/local/include /usr/X11R6/include)
 endif()
 
 #
@@ -501,7 +522,7 @@ if(STRATO_TARGET_MACOS)
   )
 endif()
 
-# Linux and *BSD.
+# Linux and *BSD. (X11)
 if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
@@ -515,6 +536,13 @@ if(   STRATO_TARGET_LINUX
      OR STRATO_TARGET_FREEBSD)
     target_link_libraries(strato PUBLIC GLX)
   endif()
+endif()
+
+# Linux framebuffer.
+if(STRATO_TARGET_LINUX_GBM)
+  # Add -lm -lpthread -lgbm -ldrm -lEGL -lGLESv2 -lasound
+  target_link_libraries(strato PUBLIC m pthread gbm drm EGL GLESv2 asound)
+  target_include_directories(strato PUBLIC /usr/include/libdrm)
 endif()
 
 # Linux: Add -lasound
@@ -537,7 +565,7 @@ if(STRATO_TARGET_OPENBSD)
   target_link_directories(strato PUBLIC /usr/local/lib /usr/X11R6/lib)
 endif()
 
-# Android: Add -lgles
+# Android: Add -lGLESv3 -lOpenSLES -llog
 if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
 endif()

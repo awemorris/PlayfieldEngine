@@ -177,14 +177,13 @@
       }
     },
     {
-      "name":           "linux-fbdev",
+      "name":           "linux-gbm",
       "displayName":    "Linux Framebuffer",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-linux-fbdev",
+      "binaryDir":      "${sourceDir}/build-linux-gbm",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
-        "PLAYFIELD_TARGET_LINUX":      "ON",
-        "PLAYFIELD_ENABLE_FBDEV":      "ON",
+        "PLAYFIELD_TARGET_LINUX_GBM":  "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
         "PLAYFIELD_ENABLE_PACK":       "ON"
@@ -452,8 +451,8 @@
       "configurePreset": "linux"
     },
     {
-      "name": "linux-fbdev",
-      "configurePreset": "linux-fbdev"
+      "name": "linux-gbm",
+      "configurePreset": "linux-gbm"
     },
     {
       "name": "ios-device",

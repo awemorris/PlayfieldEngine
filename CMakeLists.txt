@@ -8,7 +8,8 @@ project(playfield LANGUAGES C CXX)
 # Targets
 option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"                    OFF)
 option(PLAYFIELD_TARGET_MACOS         "Build for macOS"                      OFF)
-option(PLAYFIELD_TARGET_LINUX         "Build for Linux"                      OFF)
+option(PLAYFIELD_TARGET_LINUX         "Build for Linux X11"                  OFF)
+option(PLAYFIELD_TARGET_LINUX_GBM     "Build for Linux Framebuffer"          OFF)
 Option(PLAYFIELD_TARGET_IOS           "Build for iOS"                        OFF)
 option(PLAYFIELD_TARGET_ANDROID       "Build for Android"                    OFF)
 option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                 OFF)
@@ -35,6 +36,7 @@ option(PLAYFIELD_ENABLE_DIST          "Build for packages"      OFF)
 if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_MACOS
    OR PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_LINUX_GBM
    OR PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
    OR PLAYFIELD_TARGET_WASM
@@ -158,6 +160,8 @@ elseif(PLAYFIELD_TARGET_MACOS)
   set(STRATO_TARGET_MACOS ON)
 elseif(PLAYFIELD_TARGET_LINUX)
   set(STRATO_TARGET_LINUX ON)
+elseif(PLAYFIELD_TARGET_LINUX_GBM)
+  set(STRATO_TARGET_LINUX_GBM ON)
 elseif(PLAYFIELD_TARGET_IOS)
   set(STRATO_TARGET_IOS ON)
 elseif(PLAYFIELD_TARGET_ANDROID)
@@ -198,11 +202,6 @@ else()
   else()
     # For statically linked binaries.
   endif()
-endif()
-
-# Linux Framebuffer
-if(PLAYFIELD_ENABLE_FBDEV)
-  set(STRATO_ENABLE_FBDEV ON)
 endif()
 
 # Use translation.
