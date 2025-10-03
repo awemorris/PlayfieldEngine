@@ -1200,7 +1200,7 @@ static void keyboard_key(void *data, struct wl_keyboard *keyboard, uint32_t seri
 			is_alt_pressed = false;
 	}
 
-	if (keycode == KEY_RETURN && is_alt_pressed) {
+	if (keycode == KEY_RETURN && state == WL_KEYBOARD_KEY_STATE_PRESSED && is_alt_pressed) {
 		if (!is_full_screen)
 			enter_full_screen_mode();
 		else
