@@ -997,7 +997,13 @@ bool is_full_screen_mode(void)
  */
 void enter_full_screen_mode(void)
 {
-	/* stub */
+	if (is_full_screen)
+		return;
+
+	xdg_toplevel_set_fullscreen(xdg_toplevel, NULL);
+	wl_surface_commit(wl_surface);
+
+	is_full_screen = true;
 }
 
 /*
@@ -1005,7 +1011,13 @@ void enter_full_screen_mode(void)
  */
 void leave_full_screen_mode(void)
 {
-	/* stub */
+	if (!is_full_screen)
+		return;
+
+	xdg_toplevel_unset_fullscreen(xdg_toplevel);
+	wl_surface_commit(wl_surface);
+
+	is_full_screen = false;
 }
 
 /*
@@ -1175,9 +1187,27 @@ static void keyboard_leave(void *data, struct wl_keyboard *keyboard, uint32_t se
 
 static void keyboard_key(void *data, struct wl_keyboard *keyboard, uint32_t serial, uint32_t time, uint32_t key, uint32_t state)
 {
+	static bool is_alt_pressed;
+
 	int keycode;
 
 	keycode = get_keycode(key);
+
+	if (keycode == KEY_ALT) {
+		if (state == WL_KEYBOARD_KEY_STATE_PRESSED)
+			is_alt_pressed = true;
+		else
+			is_alt_pressed = false;
+	}
+
+	if (keycode == KEY_RETURN && is_alt_pressed) {
+		if (!is_full_screen)
+			enter_full_screen_mode();
+		else
+			leave_full_screen_mode();
+		return;
+	}
+
 	if (state == WL_KEYBOARD_KEY_STATE_PRESSED)
 		on_event_key_press(keycode);
 	else
