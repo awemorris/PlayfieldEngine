@@ -82,6 +82,8 @@ These are the sample games that work on Web browsers.
 
 [![DON'T RUSH IN COMIKET](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-1.png)](https://noctvm.io/g/1)
 
+[![Small Shoot](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-4.png)](https://noctvm.io/g/4)
+
 ---
 
 ## Gallery
