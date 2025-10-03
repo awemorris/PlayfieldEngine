@@ -578,11 +578,71 @@ func frame() {
 |Engine.mousePosY                |マウスY座標                                |
 |Engine.isMouseLeftPressed       |左マウスボタン                             |
 |Engine.isMouseRightPressed      |右マウスボタン                             |
-|Engine.isKeyUpPressed           |上キー                                     |
-|Engine.isKeyDownPressed         |下キー                                     |
-|Engine.isKeyLeftPressed         |左キー                                     |
-|Engine.isKeyRightPressed        |右キー                                     |
-|Engine.isKeyReturnPressed       |リターンキー                               |
+|Engine.isEscapeKeyPressed       |Escape キーの状態                          |
+|Engine.isReturnKeyPressed       |Return キーの状態                          |
+|Engine.isSpaceKeyPressed        |Space キーの状態                           |
+|Engine.isTabKeyPressed          |Tab キーの状態                             |
+|Engine.isBackspaceKeyPressed    |Backspace キーの状態                       |
+|Engine.isDeleteKeyPressed       |Delete キーの状態                          |
+|Engine.isHomeKeyPressed         |Home キーの状態                            |
+|Engine.isEndKeyPressed          |End キーの状態                             |
+|Engine.isPageupKeyPressed       |PageUp キーの状態                          |
+|Engine.isPagedownKeyPressed     |PageDown キーの状態                        |
+|Engine.isShiftKeyPressed        |Shift キーの状態                           |
+|Engine.isControlKeyPressed      |Control キーの状態                         |
+|Engine.isAltKeyPressed          |Alt キーの状態                             |
+|Engine.isUpKeyPressed           |Up arrow キーの状態                        |
+|Engine.isDownKeyPressed         |Down arrow キーの状態                      |
+|Engine.isRightKeyPressed        |Right arrow キーの状態                     |
+|Engine.isLeftKeyPressed         |Left arrow キーの状態                      |
+|Engine.isAKeyPressed            |'A' キーの状態                             |
+|Engine.isBKeyPressed            |'B' キーの状態                             |
+|Engine.isCKeyPressed            |'C' キーの状態                             |
+|Engine.isDKeyPressed            |'D' キーの状態                             |
+|Engine.isEKeyPressed            |'E' キーの状態                             |
+|Engine.isFKeyPressed            |'F' キーの状態                             |
+|Engine.isGKeyPressed            |'G' キーの状態                             |
+|Engine.isHKeyPressed            |'H' キーの状態                             |
+|Engine.isIKeyPressed            |'I' キーの状態                             |
+|Engine.isJKeyPressed            |'J' キーの状態                             |
+|Engine.isKKeyPressed            |'K' キーの状態                             |
+|Engine.isLKeyPressed            |'L' キーの状態                             |
+|Engine.isMKeyPressed            |'M' キーの状態                             |
+|Engine.isNKeyPressed            |'N' キーの状態                             |
+|Engine.isOKeyPressed            |'O' キーの状態                             |
+|Engine.isPKeyPressed            |'P' キーの状態                             |
+|Engine.isQKeyPressed            |'Q' キーの状態                             |
+|Engine.isRKeyPressed            |'R' キーの状態                             |
+|Engine.isSKeyPressed            |'S' キーの状態                             |
+|Engine.isTKeyPressed            |'T' キーの状態                             |
+|Engine.isUKeyPressed            |'U' キーの状態                             |
+|Engine.isVKeyPressed            |'V' キーの状態                             |
+|Engine.isWKeyPressed            |'W' キーの状態                             |
+|Engine.isXKeyPressed            |'X' キーの状態                             |
+|Engine.isYKeyPressed            |'Y' キーの状態                             |
+|Engine.isZKeyPressed            |'Z' キーの状態                             |
+|Engine.is1KeyPressed            |'1' キーの状態                             |
+|Engine.is2KeyPressed            |'2' キーの状態                             |
+|Engine.is3KeyPressed            |'3' キーの状態                             |
+|Engine.is4KeyPressed            |'4' キーの状態                             |
+|Engine.is5KeyPressed            |'5' キーの状態                             |
+|Engine.is6KeyPressed            |'6' キーの状態                             |
+|Engine.is7KeyPressed            |'7' キーの状態                             |
+|Engine.is8KeyPressed            |'8' キーの状態                             |
+|Engine.is9KeyPressed            |'9' キーの状態                             |
+|Engine.is0KeyPressed            |'0' キーの状態                             |
+|Engine.isF1KeyPressed           |F1 key state.                              |
+|Engine.isF2KeyPressed           |F2 key state.                              |
+|Engine.isF3KeyPressed           |F3 key state.                              |
+|Engine.isF4KeyPressed           |F4 key state.                              |
+|Engine.isF5KeyPressed           |F5 key state.                              |
+|Engine.isF6KeyPressed           |F6 key state.                              |
+|Engine.isF7KeyPressed           |F7 key state.                              |
+|Engine.isF8KeyPressed           |F8 key state.                              |
+|Engine.isF9KeyPressed           |F9 key state.                              |
+|Engine.isF10KeyPressed          |F10 key state.                             |
+|Engine.isF11KeyPressed          |F11 key state.                             |
+|Engine.isF12KeyPressed          |F12 key state.                             |
 |Engine.isGamepadUpPressed       |ゲームパッド上キー                         |
 |Engine.isGamepadDownPressed     |ゲームパッド下キー                         |
 |Engine.isGamepadLeftPressed     |ゲームパッド左キー                         |

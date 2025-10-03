@@ -592,23 +592,87 @@ These are variables, not functions.
 |Engine.mousePosY                |Mouse position Y.                          |
 |Engine.isMouseLeftPressed       |Left mouse button state.                   |
 |Engine.isMouseRightPressed      |Right mouse button state.                  |
-|Engine.isKeyUpPressed           |Up key state.                              |
-|Engine.isKeyDownPressed         |Down key state.                            |
-|Engine.isKeyLeftPressed         |Left key state.                            |
-|Engine.isKeyRightPressed        |Right key state.                           |
-|Engine.isKeyReturnPressed       |Return key state.                          |
-|Engine.isControllerUpPressed    |Game pad up arrow state.                   |
-|Engine.isControllerDownPressed  |Game pad down arrow state.                 |
-|Engine.isControllerLeftPressed  |Game pad left arrow state.                 |
-|Engine.isControllerRightPressed |Game pad right arrow state.                |
-|Engine.isController1Pressed     |Game pad button 1 state.                   |
-|Engine.isController2Pressed     |Game pad button 2 state.                   |
-|Engine.isController3Pressed     |Game pad button 3 state.                   |
-|Engine.isController4Pressed     |Game pad button 4 state.                   |
-|Engine.isController5Pressed     |Game pad button 5 state.                   |
-|Engine.isController6Pressed     |Game pad button 6 state.                   |
-|Engine.isController7Pressed     |Game pad button 7 state.                   |
-|Engine.isController8Pressed     |Game pad button 8 state.                   |
+|Engine.isEscapeKeyPressed       |Escape key state.                          |
+|Engine.isReturnKeyPressed       |Return key state.                          |
+|Engine.isSpaceKeyPressed        |Space key state.                           |
+|Engine.isTabKeyPressed          |Tab key state.                             |
+|Engine.isBackspaceKeyPressed    |Backspace key state.                       |
+|Engine.isDeleteKeyPressed       |Delete key state.                          |
+|Engine.isHomeKeyPressed         |Home key state.                            |
+|Engine.isEndKeyPressed          |End key state.                             |
+|Engine.isPageupKeyPressed       |PageUp key state.                          |
+|Engine.isPagedownKeyPressed     |PageDown key state.                        |
+|Engine.isShiftKeyPressed        |Shift key state.                           |
+|Engine.isControlKeyPressed      |Control key state.                         |
+|Engine.isAltKeyPressed          |Alt key state.                             |
+|Engine.isUpKeyPressed           |Up arrow key state.                        |
+|Engine.isDownKeyPressed         |Down arrow key state.                      |
+|Engine.isRightKeyPressed        |Right arrow key state.                     |
+|Engine.isLeftKeyPressed         |Left arrow key state.                      |
+|Engine.isAKeyPressed            |'A' key state.                             |
+|Engine.isBKeyPressed            |'B' key state.                             |
+|Engine.isCKeyPressed            |'C' key state.                             |
+|Engine.isDKeyPressed            |'D' key state.                             |
+|Engine.isEKeyPressed            |'E' key state.                             |
+|Engine.isFKeyPressed            |'F' key state.                             |
+|Engine.isGKeyPressed            |'G' key state.                             |
+|Engine.isHKeyPressed            |'H' key state.                             |
+|Engine.isIKeyPressed            |'I' key state.                             |
+|Engine.isJKeyPressed            |'J' key state.                             |
+|Engine.isKKeyPressed            |'K' key state.                             |
+|Engine.isLKeyPressed            |'L' key state.                             |
+|Engine.isMKeyPressed            |'M' key state.                             |
+|Engine.isNKeyPressed            |'N' key state.                             |
+|Engine.isOKeyPressed            |'O' key state.                             |
+|Engine.isPKeyPressed            |'P' key state.                             |
+|Engine.isQKeyPressed            |'Q' key state.                             |
+|Engine.isRKeyPressed            |'R' key state.                             |
+|Engine.isSKeyPressed            |'S' key state.                             |
+|Engine.isTKeyPressed            |'T' key state.                             |
+|Engine.isUKeyPressed            |'U' key state.                             |
+|Engine.isVKeyPressed            |'V' key state.                             |
+|Engine.isWKeyPressed            |'W' key state.                             |
+|Engine.isXKeyPressed            |'X' key state.                             |
+|Engine.isYKeyPressed            |'Y' key state.                             |
+|Engine.isZKeyPressed            |'Z' key state.                             |
+|Engine.is1KeyPressed            |'1' key state.                             |
+|Engine.is2KeyPressed            |'2' key state.                             |
+|Engine.is3KeyPressed            |'3' key state.                             |
+|Engine.is4KeyPressed            |'4' key state.                             |
+|Engine.is5KeyPressed            |'5' key state.                             |
+|Engine.is6KeyPressed            |'6' key state.                             |
+|Engine.is7KeyPressed            |'7' key state.                             |
+|Engine.is8KeyPressed            |'8' key state.                             |
+|Engine.is9KeyPressed            |'9' key state.                             |
+|Engine.is0KeyPressed            |'0' key state.                             |
+|Engine.isF1KeyPressed           |F1 key state.                              |
+|Engine.isF2KeyPressed           |F2 key state.                              |
+|Engine.isF3KeyPressed           |F3 key state.                              |
+|Engine.isF4KeyPressed           |F4 key state.                              |
+|Engine.isF5KeyPressed           |F5 key state.                              |
+|Engine.isF6KeyPressed           |F6 key state.                              |
+|Engine.isF7KeyPressed           |F7 key state.                              |
+|Engine.isF8KeyPressed           |F8 key state.                              |
+|Engine.isF9KeyPressed           |F9 key state.                              |
+|Engine.isF10KeyPressed          |F10 key state.                             |
+|Engine.isF11KeyPressed          |F11 key state.                             |
+|Engine.isF12KeyPressed          |F12 key state.                             |
+|Engine.isGamepadUpPressed       |Gamepad up arrow state.                    |
+|Engine.isGamepadDownPressed     |Gamepad down arrow state.                  |
+|Engine.isGamepadLeftPressed     |Gamepad left arrow state.                  |
+|Engine.isGamepadRightPressed    |Gamepad right arrow state.                 |
+|Engine.isGamepadAPressed        |Gamepad A button state.                    |
+|Engine.isGamepadBPressed        |Gamepad B button state.                    |
+|Engine.isGamepadXPressed        |Gamepad X button state.                    |
+|Engine.isGamepadYPressed        |Gamepad Y button state.                    |
+|Engine.isGamepadLPressed        |Gamepad L button state.                    |
+|Engine.isGamepadRPressed        |Gamepad R button state.                    |
+|Engine.gamepadAnalogX1          |Gamepad analog 1 X (-32768, 32767)         |
+|Engine.gamepadAnalogY1          |Gamepad analog 1 Y (-32768, 32767)         |
+|Engine.gamepadAnalogX2          |Gamepad analog 2 X (-32768, 32767)         |
+|Engine.gamepadAnalogY2          |Gamepad analog 2 Y (-32768, 32767)         |
+|Engine.gamepadAnalogL           |Gamepad analog L (-32768, 32767)           |
+|Engine.gamepadAnalogR           |Gamepad analog R (-32768, 32767)           |
 
 ```
 func update() {
