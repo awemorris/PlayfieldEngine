@@ -7,31 +7,35 @@ Playfield Script API
 ## 骨組み
 
 ```
+// ウィンドウが作成されるときに呼ばれます
 func setup() {
+    // ウィンドウの設定を返します
     return {
-        width:  1920,
-        height: 1080,
-        title:  "My Game"
+        width: 1280,
+        height: 720,
+        title: "My First Game"
     };
 }
 
+// ゲームが開始するときに呼ばれます
 func start() {
-    posX = 0;
-    posY = 0;
-    playerTex = Engine.loadTexture({ file: "player.png" });
-}
-
-func update() {
-    x = Engine.mousePosX;
-    y = Engine.mousePosY;
-}
-
-func render() {
-    Engine.draw({
-        texture: playerTex,
-        x: x,
-        y: y
+    // 100x100サイズの白いテクスチャを作ります
+    tex = Engine.createColorTexture({
+        width: 100,
+        height: 100,
+        r: 255, g: 255, b: 255, a: 255
     });
+}
+
+// フレームごとの描画の前に呼ばれます
+func update() {
+    posX = Engine.mousePosX;
+    posY = Engine.mousePosY;
+}
+
+// フレームごとの描画の際に呼ばれます
+func render() {
+    Engine.draw({ texture: tex, x: posX, y: posY });
 }
 ```
 

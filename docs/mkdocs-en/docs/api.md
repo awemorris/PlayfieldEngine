@@ -7,31 +7,35 @@ arguments must be stored as key-and-value pairs.
 ## Skelton
 
 ```
+// Called when the window is created.
 func setup() {
+    // Return the window configuration.
     return {
-        width:  1920,
-        height: 1080,
-        title:  "My Game"
+        width: 1280,
+        height: 720,
+        title: "My First Game"
     };
 }
 
+// Called once when the game starts.
 func start() {
-    posX = 0;
-    posY = 0;
-    playerTex = Engine.loadTexture({ file: "player.png" });
-}
-
-func update() {
-    x = Engine.mousePosX;
-    y = Engine.mousePosY;
-}
-
-func render() {
-    Engine.draw({
-        texture: playerTex,
-        x: x,
-        y: y
+    // Create a white 100x100 texture.
+    tex = Engine.createColorTexture({
+        width: 100,
+        height: 100,
+        r: 255, g: 255, b: 255, a: 255
     });
+}
+
+// Called every frame before rendering.
+func update() {
+    posX = Engine.mousePosX;
+    posY = Engine.mousePosY;
+}
+
+// Called every frame to render graphics.
+func render() {
+    Engine.draw({ texture: tex, x: posX, y: posY });
 }
 ```
 
