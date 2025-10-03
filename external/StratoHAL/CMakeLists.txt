@@ -595,7 +595,7 @@ if(   STRATO_TARGET_LINUX
     Xpm
     X11
     GL
-    ${GLX_LIBRARY}
+    ${GLX_LIBRARY}  # We need this on systems with older Mesa.
   )
 endif()
 

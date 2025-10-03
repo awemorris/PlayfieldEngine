@@ -545,8 +545,8 @@ Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
 
 * One of the following:
     * X11 (X11 + GLX + OpenGL 3) [Default]
-    * Wayland (Wayland + EGL + OpenGL ES 2)
-    * Framebuffer (GBM + DRM + EGL + OpenGL ES 2)
+    * Wayland (Wayland + EGL + OpenGL ES 2) [Option]
+    * Framebuffer (GBM + DRM + EGL + OpenGL ES 2) [Option]
 
 **iOS:**
 
