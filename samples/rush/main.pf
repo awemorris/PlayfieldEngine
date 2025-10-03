@@ -83,7 +83,8 @@ func update() {
     lastTime = now;
 
     var pressed = Engine.isMouseLeftPressed ||
-                  Engine.isKeyReturnPressed ||
+                  Engine.isReturnKeyPressed ||
+                  Engine.isSpaceKeyPressed ||
                   Engine.isGamepadAPressed;
 
     if (gameOver) {

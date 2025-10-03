@@ -75,11 +75,71 @@ bool on_event_start(void)
 	set_vm_int("millisec", 0);
 	set_vm_int("isMouseLeftPressed", 0);
 	set_vm_int("isMouseRightPressed", 0);
-	set_vm_int("isKeyUpPressed", 0);
-	set_vm_int("isKeyDownPressed", 0);
-	set_vm_int("isKeyLeftPressed", 0);
-	set_vm_int("isKeyRightPressed", 0);
-	set_vm_int("isKeyReturnPressed", 0);
+	set_vm_int("isEscapeKeyPressed", 0);
+	set_vm_int("isReturnKeyPressed", 0);
+	set_vm_int("isSpaceKeyPressed", 0);
+	set_vm_int("isTabKeyPressed", 0);
+	set_vm_int("isBackspaceKeyPressed", 0);
+	set_vm_int("isDeleteKeyPressed", 0);
+	set_vm_int("isHomeKeyPressed", 0);
+	set_vm_int("isEndKeyPressed", 0);
+	set_vm_int("isPageupKeyPressed", 0);
+	set_vm_int("isPagedownKeyPressed", 0);
+	set_vm_int("isShiftKeyPressed", 0);
+	set_vm_int("isControlKeyPressed", 0);
+	set_vm_int("isAltKeyPressed", 0);
+	set_vm_int("isUpKeyPressed", 0);
+	set_vm_int("isDownKeyPressed", 0);
+	set_vm_int("isLeftKeyPressed", 0);
+	set_vm_int("isRightKeyPressed", 0);
+	set_vm_int("isAKeyPressed", 0);
+	set_vm_int("isBKeyPressed", 0);
+	set_vm_int("isCKeyPressed", 0);
+	set_vm_int("isDKeyPressed", 0);
+	set_vm_int("isEKeyPressed", 0);
+	set_vm_int("isFKeyPressed", 0);
+	set_vm_int("isGKeyPressed", 0);
+	set_vm_int("isHKeyPressed", 0);
+	set_vm_int("isIKeyPressed", 0);
+	set_vm_int("isJKeyPressed", 0);
+	set_vm_int("isKKeyPressed", 0);
+	set_vm_int("isLKeyPressed", 0);
+	set_vm_int("isMKeyPressed", 0);
+	set_vm_int("isNKeyPressed", 0);
+	set_vm_int("isOKeyPressed", 0);
+	set_vm_int("isPKeyPressed", 0);
+	set_vm_int("isQKeyPressed", 0);
+	set_vm_int("isRKeyPressed", 0);
+	set_vm_int("isSKeyPressed", 0);
+	set_vm_int("isTKeyPressed", 0);
+	set_vm_int("isUKeyPressed", 0);
+	set_vm_int("isVKeyPressed", 0);
+	set_vm_int("isWKeyPressed", 0);
+	set_vm_int("isXKeyPressed", 0);
+	set_vm_int("isYKeyPressed", 0);
+	set_vm_int("isZKeyPressed", 0);
+	set_vm_int("is1KeyPressed", 0);
+	set_vm_int("is2KeyPressed", 0);
+	set_vm_int("is3KeyPressed", 0);
+	set_vm_int("is4KeyPressed", 0);
+	set_vm_int("is5KeyPressed", 0);
+	set_vm_int("is6KeyPressed", 0);
+	set_vm_int("is7KeyPressed", 0);
+	set_vm_int("is8KeyPressed", 0);
+	set_vm_int("is9KeyPressed", 0);
+	set_vm_int("is0KeyPressed", 0);
+	set_vm_int("isF1KeyPressed", 0);
+	set_vm_int("isF2KeyPressed", 0);
+	set_vm_int("isF3KeyPressed", 0);
+	set_vm_int("isF4KeyPressed", 0);
+	set_vm_int("isF5KeyPressed", 0);
+	set_vm_int("isF6KeyPressed", 0);
+	set_vm_int("isF7KeyPressed", 0);
+	set_vm_int("isF8KeyPressed", 0);
+	set_vm_int("isF9KeyPressed", 0);
+	set_vm_int("isF10KeyPressed", 0);
+	set_vm_int("isF11KeyPressed", 0);
+	set_vm_int("isF12KeyPressed", 0);
         set_vm_int("isGamepadLeftPressed", 0);
         set_vm_int("isGamepadRightPressed", 0);
         set_vm_int("isGamepadUpPressed", 0);
@@ -161,199 +221,199 @@ void on_event_key_press(int key)
 
 	switch (key) {
 	case KEY_ESCAPE:
-		set_vm_int("isKeyEscapePressed", 1);
+		set_vm_int("isEscapeKeyPressed", 1);
 		break;
 	case KEY_RETURN:
-		set_vm_int("isKeyReturnPressed", 1);
+		set_vm_int("isReturnKeyPressed", 1);
 		break;
 	case KEY_SPACE:
-		set_vm_int("isKeySpacePressed", 1);
+		set_vm_int("isSpaceKeyPressed", 1);
 		break;
 	case KEY_TAB:
-		set_vm_int("isKeyTabPressed", 1);
+		set_vm_int("isTabKeyPressed", 1);
 		break;
 	case KEY_BACKSPACE:
-		set_vm_int("isKeyBackspacePressed", 1);
+		set_vm_int("isBackspaceKeyPressed", 1);
 		break;
 	case KEY_DELETE:
-		set_vm_int("isKeyDeletePressed", 1);
+		set_vm_int("isDeleteKeyPressed", 1);
 		break;
 	case KEY_HOME:
-		set_vm_int("isKeyHomePressed", 1);
+		set_vm_int("isHomeKeyPressed", 1);
 		break;
 	case KEY_END:
-		set_vm_int("isKeyEndPressed", 1);
+		set_vm_int("isEndKeyPressed", 1);
 		break;
 	case KEY_PAGEUP:
-		set_vm_int("isKeyPageupPressed", 1);
+		set_vm_int("isPageupKeyPressed", 1);
 		break;
 	case KEY_PAGEDOWN:
-		set_vm_int("isKeyPagedownPressed", 1);
+		set_vm_int("isPagedownKeyPressed", 1);
 		break;
 	case KEY_SHIFT:
-		set_vm_int("isKeyShiftPressed", 1);
+		set_vm_int("isShiftKeyPressed", 1);
 		break;
 	case KEY_CONTROL:
-		set_vm_int("isKeyControlPressed", 1);
+		set_vm_int("isControlKeyPressed", 1);
 		break;
 	case KEY_ALT:
-		set_vm_int("isKeyAltPressed", 1);
+		set_vm_int("isAltKeyPressed", 1);
 		break;
 	case KEY_UP:
-		set_vm_int("isKeyUpPressed", 1);
+		set_vm_int("isUpKeyPressed", 1);
 		break;
 	case KEY_DOWN:
-		set_vm_int("isKeyDownPressed", 1);
+		set_vm_int("isDownKeyPressed", 1);
 		break;
 	case KEY_LEFT:
-		set_vm_int("isKeyLeftPressed", 1);
+		set_vm_int("isLeftKeyPressed", 1);
 		break;
 	case KEY_RIGHT:
-		set_vm_int("isKeyRightPressed", 1);
+		set_vm_int("isRightKeyPressed", 1);
 		break;
 	case KEY_A:
-		set_vm_int("isKeyAPressed", 1);
+		set_vm_int("isAKeyPressed", 1);
 		break;
 	case KEY_B:
-		set_vm_int("isKeyBPressed", 1);
+		set_vm_int("isBKeyPressed", 1);
 		break;
 	case KEY_C:
-		set_vm_int("isKeyCPressed", 1);
+		set_vm_int("isCKeyPressed", 1);
 		break;
 	case KEY_D:
-		set_vm_int("isKeyDPressed", 1);
+		set_vm_int("isDKeyPressed", 1);
 		break;
 	case KEY_E:
-		set_vm_int("isKeyEPressed", 1);
+		set_vm_int("isEKeyPressed", 1);
 		break;
 	case KEY_F:
-		set_vm_int("isKeyFPressed", 1);
+		set_vm_int("isFKeyPressed", 1);
 		break;
 	case KEY_G:
-		set_vm_int("isKeyGPressed", 1);
+		set_vm_int("isGKeyPressed", 1);
 		break;
 	case KEY_H:
-		set_vm_int("isKeyHPressed", 1);
+		set_vm_int("isHKeyPressed", 1);
 		break;
 	case KEY_I:
-		set_vm_int("isKeyIPressed", 1);
+		set_vm_int("isIKeyPressed", 1);
 		break;
 	case KEY_J:
-		set_vm_int("isKeyJPressed", 1);
+		set_vm_int("isJKeyPressed", 1);
 		break;
 	case KEY_K:
-		set_vm_int("isKeyKPressed", 1);
+		set_vm_int("isKKeyPressed", 1);
 		break;
 	case KEY_L:
-		set_vm_int("isKeyLPressed", 1);
+		set_vm_int("isLKeyPressed", 1);
 		break;
 	case KEY_M:
-		set_vm_int("isKeyMPressed", 1);
+		set_vm_int("isMKeyPressed", 1);
 		break;
 	case KEY_N:
-		set_vm_int("isKeyNPressed", 1);
+		set_vm_int("isNKeyPressed", 1);
 		break;
 	case KEY_O:
-		set_vm_int("isKeyOPressed", 1);
+		set_vm_int("isOKeyPressed", 1);
 		break;
 	case KEY_P:
-		set_vm_int("isKeyPPressed", 1);
+		set_vm_int("isPKeyPressed", 1);
 		break;
 	case KEY_Q:
-		set_vm_int("isKeyQPressed", 1);
+		set_vm_int("isQKeyPressed", 1);
 		break;
 	case KEY_R:
-		set_vm_int("isKeyRPressed", 1);
+		set_vm_int("isRKeyPressed", 1);
 		break;
 	case KEY_S:
-		set_vm_int("isKeySPressed", 1);
+		set_vm_int("isSKeyPressed", 1);
 		break;
 	case KEY_T:
-		set_vm_int("isKeyTPressed", 1);
+		set_vm_int("isTKeyPressed", 1);
 		break;
 	case KEY_U:
-		set_vm_int("isKeyUPressed", 1);
+		set_vm_int("isUKeyPressed", 1);
 		break;
 	case KEY_V:
-		set_vm_int("isKeyVPressed", 1);
+		set_vm_int("isVKeyPressed", 1);
 		break;
 	case KEY_W:
-		set_vm_int("isKeyWPressed", 1);
+		set_vm_int("isWKeyPressed", 1);
 		break;
 	case KEY_X:
-		set_vm_int("isKeyXPressed", 1);
+		set_vm_int("isXKeyPressed", 1);
 		break;
 	case KEY_Y:
-		set_vm_int("isKeyYPressed", 1);
+		set_vm_int("isYKeyPressed", 1);
 		break;
 	case KEY_Z:
-		set_vm_int("isKeyZPressed", 1);
+		set_vm_int("isZKeyPressed", 1);
 		break;
 	case KEY_1:
-		set_vm_int("isKey1Pressed", 1);
+		set_vm_int("is1KeyPressed", 1);
 		break;
 	case KEY_2:
-		set_vm_int("isKey2Pressed", 1);
+		set_vm_int("is2KeyPressed", 1);
 		break;
 	case KEY_3:
-		set_vm_int("isKey3Pressed", 1);
+		set_vm_int("is3KeyPressed", 1);
 		break;
 	case KEY_4:
-		set_vm_int("isKey4Pressed", 1);
+		set_vm_int("is4KeyPressed", 1);
 		break;
 	case KEY_5:
-		set_vm_int("isKey5Pressed", 1);
+		set_vm_int("is5KeyPressed", 1);
 		break;
 	case KEY_6:
-		set_vm_int("isKey6Pressed", 1);
+		set_vm_int("is6KeyPressed", 1);
 		break;
 	case KEY_7:
-		set_vm_int("isKey7Pressed", 1);
+		set_vm_int("is7KeyPressed", 1);
 		break;
 	case KEY_8:
-		set_vm_int("isKey8Pressed", 1);
+		set_vm_int("is8KeyPressed", 1);
 		break;
 	case KEY_9:
-		set_vm_int("isKey9Pressed", 1);
+		set_vm_int("is9KeyPressed", 1);
 		break;
 	case KEY_0:
-		set_vm_int("isKey0Pressed", 1);
+		set_vm_int("is0KeyPressed", 1);
 		break;
 	case KEY_F1:
-		set_vm_int("isKeyF1Pressed", 1);
+		set_vm_int("isF1KeyPressed", 1);
 		break;
 	case KEY_F2:
-		set_vm_int("isKeyF2Pressed", 1);
+		set_vm_int("isF2KeyPressed", 1);
 		break;
 	case KEY_F3:
-		set_vm_int("isKeyF3Pressed", 1);
+		set_vm_int("isF3KeyPressed", 1);
 		break;
 	case KEY_F4:
-		set_vm_int("isKeyF4Pressed", 1);
+		set_vm_int("isF4KeyPressed", 1);
 		break;
 	case KEY_F5:
-		set_vm_int("isKeyF5Pressed", 1);
+		set_vm_int("isF5KeyPressed", 1);
 		break;
 	case KEY_F6:
-		set_vm_int("isKeyF6Pressed", 1);
+		set_vm_int("isF6KeyPressed", 1);
 		break;
 	case KEY_F7:
-		set_vm_int("isKeyF7Pressed", 1);
+		set_vm_int("isF7KeyPressed", 1);
 		break;
 	case KEY_F8:
-		set_vm_int("isKeyF8Pressed", 1);
+		set_vm_int("isF8KeyPressed", 1);
 		break;
 	case KEY_F9:
-		set_vm_int("isKeyF9Pressed", 1);
+		set_vm_int("isF9KeyPressed", 1);
 		break;
 	case KEY_F10:
-		set_vm_int("isKeyF10Pressed", 1);
+		set_vm_int("isF10KeyPressed", 1);
 		break;
 	case KEY_F11:
-		set_vm_int("isKeyF11Pressed", 1);
+		set_vm_int("isF11KeyPressed", 1);
 		break;
 	case KEY_F12:
-		set_vm_int("isKeyF12Pressed", 1);
+		set_vm_int("isF12KeyPressed", 1);
 		break;
 	case KEY_GAMEPAD_LEFT:
 		set_vm_int("isGamepadLeftPressed", 1);
@@ -397,199 +457,199 @@ void on_event_key_release(int key)
 
 	switch (key) {
 	case KEY_ESCAPE:
-		set_vm_int("isKeyEscapePressed", 0);
+		set_vm_int("isEscapeKeyPressed", 0);
 		break;
 	case KEY_RETURN:
-		set_vm_int("isKeyReturnPressed", 0);
+		set_vm_int("isReturnKeyPressed", 0);
 		break;
 	case KEY_SPACE:
-		set_vm_int("isKeySpacePressed", 0);
+		set_vm_int("isSpaceKeyPressed", 0);
 		break;
 	case KEY_TAB:
-		set_vm_int("isKeyTabPressed", 0);
+		set_vm_int("isTabKeyPressed", 0);
 		break;
 	case KEY_BACKSPACE:
-		set_vm_int("isKeyBackspacePressed", 0);
+		set_vm_int("isBackspaceKeyPressed", 0);
 		break;
 	case KEY_DELETE:
-		set_vm_int("isKeyDeletePressed", 0);
+		set_vm_int("isDeleteKeyPressed", 0);
 		break;
 	case KEY_HOME:
-		set_vm_int("isKeyHomePressed", 0);
+		set_vm_int("isHomeKeyPressed", 0);
 		break;
 	case KEY_END:
-		set_vm_int("isKeyEndPressed", 0);
+		set_vm_int("isEndKeyPressed", 0);
 		break;
 	case KEY_PAGEUP:
-		set_vm_int("isKeyPageupPressed", 0);
+		set_vm_int("isPageupKeyPressed", 0);
 		break;
 	case KEY_PAGEDOWN:
-		set_vm_int("isKeyPagedownPressed", 0);
+		set_vm_int("isPagedownKeyPressed", 0);
 		break;
 	case KEY_SHIFT:
-		set_vm_int("isKeyShiftPressed", 0);
+		set_vm_int("isShiftKeyPressed", 0);
 		break;
 	case KEY_CONTROL:
-		set_vm_int("isKeyControlPressed", 0);
+		set_vm_int("isControlKeyPressed", 0);
 		break;
 	case KEY_ALT:
-		set_vm_int("isKeyAltPressed", 0);
+		set_vm_int("isAltKeyPressed", 0);
 		break;
 	case KEY_UP:
-		set_vm_int("isKeyUpPressed", 0);
+		set_vm_int("isUpKeyPressed", 0);
 		break;
 	case KEY_DOWN:
-		set_vm_int("isKeyDownPressed", 0);
+		set_vm_int("isDownKeyPressed", 0);
 		break;
 	case KEY_LEFT:
-		set_vm_int("isKeyLeftPressed", 0);
+		set_vm_int("isLeftKeyPressed", 0);
 		break;
 	case KEY_RIGHT:
-		set_vm_int("isKeyRightPressed", 0);
+		set_vm_int("isRightKeyPressed", 0);
 		break;
 	case KEY_A:
-		set_vm_int("isKeyAPressed", 0);
+		set_vm_int("isAKeyPressed", 0);
 		break;
 	case KEY_B:
-		set_vm_int("isKeyBPressed", 0);
+		set_vm_int("isBKeyPressed", 0);
 		break;
 	case KEY_C:
-		set_vm_int("isKeyCPressed", 0);
+		set_vm_int("isCKeyPressed", 0);
 		break;
 	case KEY_D:
-		set_vm_int("isKeyDPressed", 0);
+		set_vm_int("isDKeyPressed", 0);
 		break;
 	case KEY_E:
-		set_vm_int("isKeyEPressed", 0);
+		set_vm_int("isEKeyPressed", 0);
 		break;
 	case KEY_F:
-		set_vm_int("isKeyFPressed", 0);
+		set_vm_int("isFKeyPressed", 0);
 		break;
 	case KEY_G:
-		set_vm_int("isKeyGPressed", 0);
+		set_vm_int("isGKeyPressed", 0);
 		break;
 	case KEY_H:
-		set_vm_int("isKeyHPressed", 0);
+		set_vm_int("isHKeyPressed", 0);
 		break;
 	case KEY_I:
-		set_vm_int("isKeyIPressed", 0);
+		set_vm_int("isIKeyPressed", 0);
 		break;
 	case KEY_J:
-		set_vm_int("isKeyJPressed", 0);
+		set_vm_int("isJKeyPressed", 0);
 		break;
 	case KEY_K:
-		set_vm_int("isKeyKPressed", 0);
+		set_vm_int("isKKeyPressed", 0);
 		break;
 	case KEY_L:
-		set_vm_int("isKeyLPressed", 0);
+		set_vm_int("isLKeyPressed", 0);
 		break;
 	case KEY_M:
-		set_vm_int("isKeyMPressed", 0);
+		set_vm_int("isMKeyPressed", 0);
 		break;
 	case KEY_N:
-		set_vm_int("isKeyNPressed", 0);
+		set_vm_int("isNKeyPressed", 0);
 		break;
 	case KEY_O:
-		set_vm_int("isKeyOPressed", 0);
+		set_vm_int("isOKeyPressed", 0);
 		break;
 	case KEY_P:
-		set_vm_int("isKeyPPressed", 0);
+		set_vm_int("isPKeyPressed", 0);
 		break;
 	case KEY_Q:
-		set_vm_int("isKeyQPressed", 0);
+		set_vm_int("isQKeyPressed", 0);
 		break;
 	case KEY_R:
-		set_vm_int("isKeyRPressed", 0);
+		set_vm_int("isRKeyPressed", 0);
 		break;
 	case KEY_S:
-		set_vm_int("isKeySPressed", 0);
+		set_vm_int("isSKeyPressed", 0);
 		break;
 	case KEY_T:
-		set_vm_int("isKeyTPressed", 0);
+		set_vm_int("isTKeyPressed", 0);
 		break;
 	case KEY_U:
-		set_vm_int("isKeyUPressed", 0);
+		set_vm_int("isUKeyPressed", 0);
 		break;
 	case KEY_V:
-		set_vm_int("isKeyVPressed", 0);
+		set_vm_int("isVKeyPressed", 0);
 		break;
 	case KEY_W:
-		set_vm_int("isKeyWPressed", 0);
+		set_vm_int("isWKeyPressed", 0);
 		break;
 	case KEY_X:
-		set_vm_int("isKeyXPressed", 0);
+		set_vm_int("isXKeyPressed", 0);
 		break;
 	case KEY_Y:
-		set_vm_int("isKeyYPressed", 0);
+		set_vm_int("isYKeyPressed", 0);
 		break;
 	case KEY_Z:
-		set_vm_int("isKeyZPressed", 0);
+		set_vm_int("isZKeyPressed", 0);
 		break;
 	case KEY_1:
-		set_vm_int("isKey1Pressed", 0);
+		set_vm_int("is1KeyPressed", 0);
 		break;
 	case KEY_2:
-		set_vm_int("isKey2Pressed", 0);
+		set_vm_int("is2KeyPressed", 0);
 		break;
 	case KEY_3:
-		set_vm_int("isKey3Pressed", 0);
+		set_vm_int("is3KeyPressed", 0);
 		break;
 	case KEY_4:
-		set_vm_int("isKey4Pressed", 0);
+		set_vm_int("is4KeyPressed", 0);
 		break;
 	case KEY_5:
-		set_vm_int("isKey5Pressed", 0);
+		set_vm_int("is5KeyPressed", 0);
 		break;
 	case KEY_6:
-		set_vm_int("isKey6Pressed", 0);
+		set_vm_int("is6KeyPressed", 0);
 		break;
 	case KEY_7:
-		set_vm_int("isKey7Pressed", 0);
+		set_vm_int("is7KeyPressed", 0);
 		break;
 	case KEY_8:
-		set_vm_int("isKey8Pressed", 0);
+		set_vm_int("is8KeyPressed", 0);
 		break;
 	case KEY_9:
-		set_vm_int("isKey9Pressed", 0);
+		set_vm_int("is9KeyPressed", 0);
 		break;
 	case KEY_0:
-		set_vm_int("isKey0Pressed", 0);
+		set_vm_int("is0KeyPressed", 0);
 		break;
 	case KEY_F1:
-		set_vm_int("isKeyF1Pressed", 0);
+		set_vm_int("isF1KeyPressed", 0);
 		break;
 	case KEY_F2:
-		set_vm_int("isKeyF2Pressed", 0);
+		set_vm_int("isF2KeyPressed", 0);
 		break;
 	case KEY_F3:
-		set_vm_int("isKeyF3Pressed", 0);
+		set_vm_int("isF3KeyPressed", 0);
 		break;
 	case KEY_F4:
-		set_vm_int("isKeyF4Pressed", 0);
+		set_vm_int("isF4KeyPressed", 0);
 		break;
 	case KEY_F5:
-		set_vm_int("isKeyF5Pressed", 0);
+		set_vm_int("isF5KeyPressed", 0);
 		break;
 	case KEY_F6:
-		set_vm_int("isKeyF6Pressed", 0);
+		set_vm_int("isF6KeyPressed", 0);
 		break;
 	case KEY_F7:
-		set_vm_int("isKeyF7Pressed", 0);
+		set_vm_int("isF7KeyPressed", 0);
 		break;
 	case KEY_F8:
-		set_vm_int("isKeyF8Pressed", 0);
+		set_vm_int("isF8KeyPressed", 0);
 		break;
 	case KEY_F9:
-		set_vm_int("isKeyF9Pressed", 0);
+		set_vm_int("isF9KeyPressed", 0);
 		break;
 	case KEY_F10:
-		set_vm_int("isKeyF10Pressed", 0);
+		set_vm_int("isF10KeyPressed", 0);
 		break;
 	case KEY_F11:
-		set_vm_int("isKeyF11Pressed", 0);
+		set_vm_int("isF11KeyPressed", 0);
 		break;
 	case KEY_F12:
-		set_vm_int("isKeyF12Pressed", 0);
+		set_vm_int("isF12KeyPressed", 0);
 		break;
 	case KEY_GAMEPAD_LEFT:
 		set_vm_int("isGamepadLeftPressed", 0);

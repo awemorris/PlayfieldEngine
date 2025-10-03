@@ -38,13 +38,13 @@ func update() {
     // Move.
     var dx = 0;
     var dy = 0;
-    if (Engine.isKeyLeftPressed || Engine.isGamepadLeftPressed)
+    if (Engine.isLeftKeyPressed || Engine.isGamepadLeftPressed)
         dx -= 1;
-    if (Engine.isKeyRightPressed || Engine.isGamepadRightPressed)
+    if (Engine.isRightKeyPressed || Engine.isGamepadRightPressed)
         dx += 1;
-    if (Engine.isKeyUpPressed || Engine.isGamepadUpPressed)
+    if (Engine.isUpKeyPressed || Engine.isGamepadUpPressed)
         dy -= 1;
-    if (Engine.isKeyDownPressed || Engine.isGamepadDownPressed)
+    if (Engine.isDownKeyPressed || Engine.isGamepadDownPressed)
         dy += 1;
     var speed = 5;
     player.x += dx * speed;
@@ -58,7 +58,7 @@ func update() {
 
     // Shooting.
     fireCooldown -= dt;
-    if ((Engine.isKeyReturnPressed || Engine.isGamepadAPressed || Engine.isMouseLeftPressed) && fireCooldown <= 0.0) {
+    if ((Engine.isSpaceKeyPressed || Engine.isGamepadAPressed || Engine.isMouseLeftPressed) && fireCooldown <= 0.0) {
         bullets->push({ x: player.x+6, y: player.y-10, vy: -400 });
         fireCooldown = 0.08;
         // Engine.playSound({ stream:0, file:"shot.ogg" });
