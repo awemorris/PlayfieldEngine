@@ -67,6 +67,8 @@ static int screen_height;
 static int viewport_width;
 static int viewport_height;
 static float mouse_scale = 1.0f;
+static int mouse_ofs_x;
+static int mouse_ofs_y;
 static bool is_full_screen;
 static int physical_width;
 static int physical_height;
@@ -984,13 +986,13 @@ static void event_button_press(XEvent *event)
 	switch (event->xbutton.button) {
 	case Button1:
 		on_event_mouse_press(MOUSE_LEFT,
-				     (int)(event->xbutton.x / mouse_scale),
-				     (int)(event->xbutton.y / mouse_scale));
+				     (int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
+				     (int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
 		break;
 	case Button3:
 		on_event_mouse_press(MOUSE_RIGHT,
-				     (int)(event->xbutton.x / mouse_scale),
-				     (int)(event->xbutton.y / mouse_scale));
+				     (int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
+				     (int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
 		break;
 	case Button4:
 		on_event_key_press(KEY_UP);
@@ -1027,8 +1029,8 @@ static void event_button_release(XEvent *event)
 static void event_motion_notify(XEvent *event)
 {
 	/* Call an event handler. */
-	on_event_mouse_move((int)(event->xmotion.x / mouse_scale),
-			    (int)(event->xmotion.y / mouse_scale));
+	on_event_mouse_move((int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
+			    (int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
 }
 
 /* Process a ConfigureNotify event. */
@@ -1042,7 +1044,7 @@ static void event_resize(XEvent *event)
  */
 void update_viewport_size(int width, int height)
 {
-	float aspect, use_width, use_height, mouse_scale;
+	float aspect, use_width, use_height;
 	int orig_x, orig_y;
 	int viewport_width, viewport_height;
 
@@ -1064,6 +1066,8 @@ void update_viewport_size(int width, int height)
 	/* Calc the viewport origin. */
 	orig_x = (int)((((float)width - use_width) / 2.0f) + 0.5);
 	orig_y = (int)((((float)height - use_height) / 2.0f) + 0.5);
+	mouse_ofs_x = orig_x;
+	mouse_ofs_y = orig_y;
 
 	/* Calc the viewport size. */
 	viewport_width = (int)use_width;

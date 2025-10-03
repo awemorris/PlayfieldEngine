@@ -9,6 +9,7 @@ project(StratoHAL LANGUAGES C CXX)
 option(STRATO_TARGET_WINDOWS       "Build for Windows"                  OFF)
 option(STRATO_TARGET_MACOS         "Build for macOS"                    OFF)
 option(STRATO_TARGET_LINUX         "Build for Linux X11"                OFF)
+option(STRATO_TARGET_LINUX_WAYLAND "Build for Linux Wayland"            OFF)
 option(STRATO_TARGET_LINUX_GBM     "Build for Linux Framebuffer"        OFF)
 option(STRATO_TARGET_IOS           "Build for iOS"                      OFF)
 option(STRATO_TARGET_ANDROID       "Build for Android"                  OFF)
@@ -33,6 +34,7 @@ option(STRATO_ENABLE_ROT90         "Rotate screen"                      OFF)
 if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_MACOS
    OR STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_WAYLAND
    OR STRATO_TARGET_LINUX_GBM
    OR STRATO_TARGET_IOS
    OR STRATO_TARGET_ANDROID
@@ -128,6 +130,32 @@ else()
   include(cmake/freetype.cmake)
 endif()
 
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_NETBSD
+   OR STRATO_TARGET_OPENBSD)
+  find_library(X11_LIBRARY X11 REQUIRED)
+  find_library(XPM_LIBRARY Xpm REQUIRED)
+  find_library(GL_LIBRARY GL REQUIRED)
+  find_library(GLX_LIBRARY GLX)
+endif()
+
+if(STRATO_TARGET_LINUX)
+  find_library(ALSA_LIBRARY asound REQUIRED)
+endif()
+
+if(STRATO_TARGET_LINUX_GBM)
+  find_library(GBM_LIBRARY gbm REQUIRED)
+  find_library(DRM_LIBRARY drm REQUIRED)
+endif()
+
+if(STRATO_TARGET_LINUX_WAYLAND)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(WAYLAND REQUIRED wayland-client wayland-egl)
+  pkg_check_modules(EGL     REQUIRED egl)
+  pkg_check_modules(GLES2   REQUIRED glesv2)
+endif()
+
 #
 # Checks
 #
@@ -206,6 +234,20 @@ if(   STRATO_TARGET_LINUX
       src/nosound.c
       src/evgamepad.c
       src/gstplay.c
+    )
+endif()
+
+# For Linux Wayland.
+if(STRATO_TARGET_LINUX_WAYLAND)
+  set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/wlmain.c
+      src/glrender.c
+      src/asound.c
+      src/evgamepad.c
     )
 endif()
 
@@ -419,9 +461,14 @@ if(STRATO_TARGET_WINDOWS)
   )
 endif()
 
-# Linux Framebuffer: Add -DUSE_LINUX_GBM
+# Linux Wayland: Add -DUSE_GLES -DUSE_WAYLAND
+if(STRATO_TARGET_LINUX_WAYLAND)
+  target_compile_definitions(strato PRIVATE USE_GLES USE_WAYLAND)
+endif()
+
+# Linux Framebuffer: Add -DUSE_GLES
 if(STRATO_TARGET_LINUX_GBM)
-  target_compile_definitions(strato PRIVATE USE_LINUX_GBM)
+  target_compile_definitions(strato PRIVATE USE_GLES)
 endif()
 
 # Linux Framebuffer
@@ -442,6 +489,11 @@ endif()
 # OpenBSD: Add -I/usr/local/include -I/usr/X11R6/include
 if(STRATO_TARGET_OPENBSD)
   target_include_directories(strato PUBLIC /usr/local/include /usr/X11R6/include)
+endif()
+
+# Android: Add -DUSE_GLES
+if(STARATO_TARGET_ANDROID)
+  target_compile_definitions(strato PRIVATE USE_GLES)
 endif()
 
 #
@@ -534,24 +586,51 @@ if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
-  # Add -lm -lpthread -lXpm -lX11
-  target_link_libraries(strato PUBLIC m pthread Xpm X11 GL)
+  # Add -lm -lpthread -lXpm -lX11 -lGL -lGLX
+  target_link_libraries(
+    strato
+    PUBLIC
+    m
+    pthread
+    Xpm
+    X11
+    GL
+    ${GLX_LIBRARY}
+  )
+endif()
 
-  # Add -lGLX
-  if(   STRATO_TARGET_LINUX
-     OR STRATO_TARGET_FREEBSD)
-    target_link_libraries(strato PUBLIC GLX)
-  endif()
+# Linux Wayland.
+if(STRATO_TARGET_LINUX_WAYLAND)
+  target_link_libraries(
+    strato
+    PUBLIC
+    m
+    pthread
+    asound
+    ${WAYLAND_LIBRARIES}
+    ${EGL_LIBRARIES}
+    ${GLES2_LIBRARIES}
+  )
 endif()
 
 # Linux framebuffer.
 if(STRATO_TARGET_LINUX_GBM)
   # Add -lm -lpthread -lgbm -ldrm -lEGL -lGLESv2 -lasound
-  target_link_libraries(strato PUBLIC m pthread gbm drm EGL GLESv2 asound)
+  target_link_libraries(
+    strato
+    PUBLIC
+    m
+    pthread
+    gbm
+    drm
+    EGL
+    GLESv2
+    asound
+  )
   target_include_directories(strato PUBLIC /usr/include/libdrm)
 endif()
 
-# Linux: Add -lasound
+# Linux X11: Add -lasound
 if(STRATO_TARGET_LINUX)
   target_link_libraries(strato PUBLIC asound)
 endif()
@@ -574,4 +653,44 @@ endif()
 # Android: Add -lGLESv3 -lOpenSLES -llog
 if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
+endif()
+
+#
+# Custom
+#
+
+if(STRATO_TARGET_LINUX_WAYLAND)
+  find_program(WAYLAND_SCANNER NAMES wayland-scanner REQUIRED)
+
+  set(XDG_SHELL_XML
+      /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml)
+  set(XDG_DECORATION_XML
+      /usr/share/wayland-protocols/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml)
+
+  # generate xdg-shell sources
+  set(GEN_SHELL_HDR ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-client-protocol.h)
+  set(GEN_SHELL_SRC ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-protocol.c)
+  add_custom_command(
+    OUTPUT ${GEN_SHELL_HDR} ${GEN_SHELL_SRC}
+    COMMAND ${WAYLAND_SCANNER} client-header ${XDG_SHELL_XML} ${GEN_SHELL_HDR}
+    COMMAND ${WAYLAND_SCANNER} private-code ${XDG_SHELL_XML} ${GEN_SHELL_SRC}
+    DEPENDS ${XDG_SHELL_XML}
+  )
+
+  # generate xdg-decoration sources
+  set(GEN_DECORATION_HDR ${CMAKE_CURRENT_BINARY_DIR}/zxdg-decoration-unstable-v1-client-protocol.h)
+  set(GEN_DECORATION_SRC ${CMAKE_CURRENT_BINARY_DIR}/zxdg-decoration-unstable-v1-protocol.c)
+  add_custom_command(
+    OUTPUT ${GEN_DECORATION_HDR} ${GEN_DECORATION_SRC}
+    COMMAND ${WAYLAND_SCANNER} client-header ${XDG_DECORATION_XML} ${GEN_DECORATION_HDR}
+    COMMAND ${WAYLAND_SCANNER} private-code ${XDG_DECORATION_XML} ${GEN_DECORATION_SRC}
+    DEPENDS ${XDG_DECORATION_XML}
+  )
+
+  # add both generated sources
+  target_sources(strato PRIVATE
+    ${GEN_SHELL_SRC} ${GEN_SHELL_HDR}
+    ${GEN_DECORATION_SRC} ${GEN_DECORATION_HDR}
+  )
+  target_include_directories(strato PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 endif()

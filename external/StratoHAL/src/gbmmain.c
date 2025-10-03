@@ -5,7 +5,7 @@
  */
 
 /*
- * X11 Main
+ * Linux GBM Main
  */
 
 /* HAL */
@@ -127,15 +127,7 @@ static bool run_frame(void);
 static void flip(void);
 static bool wait_for_next_frame(void);
 static bool next_event(void);
-static void event_key_press(XEvent *event);
-static void event_key_release(XEvent *event);
-static int get_key_code(XEvent *event);
-static void event_button_press(XEvent *event);
-static void event_button_release(XEvent *event);
-static void event_motion_notify(XEvent *event);
-static void event_resize(XEvent *event);
 static void update_viewport_size(int width, int height);
-static Bool want_configure(Display* d, XEvent* ev, XPointer arg);
 
 /*
  * Main
@@ -217,7 +209,7 @@ static bool init_hal(int argc, char *argv[])
 		log_warn("Can't initialize sound.");
 	}
 
-	/* Open an X11 display. */
+	/* Open a display. */
 	if (!open_display()) {
 		log_error("Can't open display.");
 		return false;
@@ -244,7 +236,7 @@ static bool init_hal(int argc, char *argv[])
 	return true;
 }
 
-/* Open an X11 display. */
+/* Open a display. */
 static bool open_display(void)
 {
 	struct gbm_device *gbm;
@@ -629,7 +621,7 @@ static bool wait_for_next_frame(void)
  */
 static void update_viewport_size(int width, int height)
 {
-	float aspect, use_width, use_height, mouse_scale;
+	float aspect, use_width, use_height;
 	int orig_x, orig_y;
 	int viewport_width, viewport_height;
 

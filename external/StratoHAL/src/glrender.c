@@ -34,16 +34,16 @@
 /*
  * Linux and POSIX variant (OpenGL 3.2)
  */
-#if (defined(TARGET_LINUX) && !defined(USE_LINUX_GBM)) || defined(TARGET_POSIX)
+#if (defined(TARGET_LINUX) && !defined(USE_GLES)) || defined(TARGET_POSIX)
 #include <GL/gl.h>
 #include <GL/glext.h>
 #include "glhelper.h"
 #endif
 
 /*
- * Linux GBM (OpenGL ES 2.0)
+ * Linux GBM (OpenGL ES 2.0/3.0)
  */
-#if defined(TARGET_LINUX) && defined(USE_LINUX_GBM)
+#if defined(TARGET_LINUX) && defined(USE_GLES)
 #include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #include "glhelper.h"
@@ -663,11 +663,11 @@ void cleanup_opengl(void)
  */
 void opengl_start_rendering(void)
 {
-#if !defined(USE_QT)
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+#if defined(USE_QT) || defined(USE_WAYLAND)
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 #else
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 }

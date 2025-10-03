@@ -67,7 +67,7 @@ typedef ssize_t GLsizeiptr;
  *
  * With Qt, we use replacement macros and don't define the API symbols directly.
  */
-#if (defined(TARGET_POSIX) && !defined(USE_LINUX_GBM) && !defined(USE_QT)) || defined(TARGET_WINDOWS)
+#if (defined(TARGET_POSIX) && !defined(USE_GLES) && !defined(USE_QT)) || defined(TARGET_WINDOWS)
 extern GLuint (APIENTRY *glCreateShader)(GLenum type);
 extern void (APIENTRY *glShaderSource)(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length);
 extern void (APIENTRY *glCompileShader)(GLuint shader);

@@ -177,6 +177,19 @@
       }
     },
     {
+      "name":           "linux-wayland",
+      "displayName":    "Linux Framebuffer",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-linux-wayland",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":               "Release",
+        "PLAYFIELD_TARGET_LINUX_WAYLAND": "ON",
+        "PLAYFIELD_ENABLE_JIT":           "ON",
+        "PLAYFIELD_ENABLE_I18N":          "ON",
+        "PLAYFIELD_ENABLE_PACK":          "ON"
+      }
+    },
+    {
       "name":           "linux-gbm",
       "displayName":    "Linux Framebuffer",
       "generator":      "Ninja",
@@ -463,6 +476,10 @@
     {
       "name": "linux",
       "configurePreset": "linux"
+    },
+    {
+      "name": "linux-wayland",
+      "configurePreset": "linux-wayland"
     },
     {
       "name": "linux-gbm",
