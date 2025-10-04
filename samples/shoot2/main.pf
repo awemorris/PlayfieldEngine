@@ -8,33 +8,56 @@ func setup() {
 }
 
 func start() {
-    //////////////////////
-    // Global Variables //
-    //////////////////////
     backTex = Engine.loadTexture({ file: "back.png" });
     playerTex = Engine.loadTexture({ file: "player.png" });
     enemyTex = Engine.loadTexture({ file: "enemy.png" });
     bulletTex = Engine.loadTexture({ file: "bullet.png" });
     scoreTex = null;
+
+    Engine.loadFont({ slot: 0, file: "PixelifySans-VariableFont_wght.ttf" });
+
+    gameoverTex = Engine.createTextTexture({
+        slot: 0, text: "GAME OVER", size: 40, r: 0, g: 255, b: 0, a: 200
+    });
+
+    restart();
+}
+
+func restart() {
+    score =  0;
     player = { x: 320, y: 400, speed: 1200 };
     bullets = [];   // {x,y,vy}
     enemies = [];   // {x,y,vy,w,h}
-    lastTime = 0;
+    lastTime = Engine.millisec;
     fireCooldown = 0.0;
-    score = 0;
+    isGameover = false;
+
+    scoreTex = Engine.createTextTexture({
+        slot: 0, text: "SCORE: 0", size: 20, r: 255, g: 255, b: 255, a: 255
+    });
 
     // Put initial emenies.
-    for (i in 0..7) {
-        var ex = 40 + i*70;
+    for (i in 0..9) {
+        var ex = 25 + i*70;
         enemies->push({ x: ex, y: 40, vy: 40, w:16, h:16 });
     }
-    lastTime = Engine.millisec;
 }
 
 func update() {
     var now = Engine.millisec;
     var dt  = (now - lastTime) * 0.001; // second
     lastTime = now;
+
+    if (isGameover) {
+        if (Engine.isReturnKeyPressed || Engine.isGamepadBPressed || Engine.isMouseRightPressed) {
+            isGameover = false;
+            restart();
+        } else {
+            return;
+        }
+    }
+
+    var oldScore = score;
 
     // Move.
     var dx = 0;
@@ -61,7 +84,7 @@ func update() {
     fireCooldown -= dt;
     if ((Engine.isSpaceKeyPressed || Engine.isGamepadAPressed || Engine.isMouseLeftPressed) && fireCooldown <= 0.0) {
         bullets->push({ x: player.x+6, y: player.y-10, vy: -400 });
-        fireCooldown = 0.08;
+        fireCooldown = 0.20;
         // Engine.playSound({ stream:0, file:"shot.ogg" });
     }
 
@@ -82,8 +105,10 @@ func update() {
         // Wave.
         e.x += sin(Engine.millisec * 0.003 + e.y*0.05) * 20 * dt;
 
-        if (e.y > 480)
-            e.y = 0;
+        if (e.y > 480) {
+            isGameover = true;
+            return;
+        }
 
         aliveEnemies->push(e);
     }
@@ -92,6 +117,11 @@ func update() {
     // Collision (AABB)
     var nextEnemies = [];
     for (e in enemies) {
+        if (aabb(player.x, player.y, 20, 20, e.x, e.y, e.w, e.h)) {
+            isGameover = true;
+            return;
+        }
+
         var hit = false;
         var keepBullets = [];
         for (b in bullets) {
@@ -113,11 +143,16 @@ func update() {
     enemies = nextEnemies;
 
     // Update the score texture.
-    //if (scoreTex != null)
-    //    Engine.destroyTexture({texture: scoreTex});
-    //scoreTex = Engine.createTextTexture({
-    //    slot:0, text:"SCORE: " + score, size:20, r:255, g:255, b:255, a:255
-    //});
+    if (score != oldScore) {
+        // Destroy the previous texture.
+        if (scoreTex != null)
+            Engine.destroyTexture({texture: scoreTex});
+
+        // Create a texture.
+        scoreTex = Engine.createTextTexture({
+            slot:0, text:"SCORE: " + score, size:20, r:255, g:255, b:255, a:255
+        });
+    }
 }
 
 func render() {
@@ -136,7 +171,12 @@ func render() {
         Engine.draw({ x: e.x, y: e.y, texture: enemyTex });
 
     // Score.
-    //Engine.draw({ texture: scoreTex, x: 10, y: 10 });
+    Engine.draw({ texture: scoreTex, x: 10, y: 10 });
+
+    if (isGameover) {
+        // Game Over
+        Engine.draw({ x: 225, y: 200, texture: gameoverTex });
+    }
 }
 
 func aabb(ax, ay, aw, ah, bx, by, bw, bh) {
