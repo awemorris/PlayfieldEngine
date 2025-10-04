@@ -215,16 +215,17 @@ cb_mousemove(int eventType,
 	    const EmscriptenMouseEvent *mouseEvent,
 	    void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y;
 
 	/* Get a CSS size of canvs. */
 	emscripten_get_element_css_size("canvas", &w, &h);
 
 	/* Scale a mouse position. */
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	on_event_mouse_move(x, y);
 	return EM_TRUE;
@@ -236,14 +237,15 @@ cb_mousedown(int eventType,
 	    const EmscriptenMouseEvent *mouseEvent,
 	    void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y, button;
 
 	/* Scale a mouse position. */
 	emscripten_get_element_css_size("canvas", &w, &h);
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
 		button = MOUSE_LEFT;
@@ -260,14 +262,15 @@ cb_mouseup(int eventType,
 	   const EmscriptenMouseEvent *mouseEvent,
 	   void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y, button;
 
 	/* Scale a mouse position. */
 	emscripten_get_element_css_size("canvas", &w, &h);
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
 		button = MOUSE_LEFT;

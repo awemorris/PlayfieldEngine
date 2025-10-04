@@ -52,6 +52,9 @@ static int touch_start_y;
 static int touch_last_y;
 static bool is_continuous_swipe_enabled;
 
+/* Is full screen mode? */
+static bool is_full_screen;
+
 /* Locale */
 static const char *lang_code;
 
@@ -163,7 +166,7 @@ EM_JS(void, onResizeWindow, (void),
 	var winh = window.innerHeight;
 	var w = winw;
 	var h = winw / aspect;
-	if(h > winh) {
+	if (h > winh) {
 		h = winh;
 		w = winh * aspect;
 	}
@@ -204,7 +207,7 @@ static EM_BOOL cb_mousemove(int eventType,
 			    const EmscriptenMouseEvent *mouseEvent,
 			    void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y;
 
 	/*
@@ -214,9 +217,10 @@ static EM_BOOL cb_mousemove(int eventType,
 	emscripten_get_element_css_size("canvas", &w, &h);
 
 	/* Scale a mouse position. */
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	/* Call the event handler. */
 	on_event_mouse_move(x, y);
@@ -229,14 +233,15 @@ static EM_BOOL cb_mousedown(int eventType,
 			    const EmscriptenMouseEvent *mouseEvent,
 			    void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y, button;
 
 	/* Scale a mouse position. */
 	emscripten_get_element_css_size("canvas", &w, &h);
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
 		button = MOUSE_LEFT;
@@ -254,14 +259,15 @@ static EM_BOOL cb_mouseup(int eventType,
 			    const EmscriptenMouseEvent *mouseEvent,
 			    void *userData)
 {
-	double w, h, scale;
+	double w, h, scale_x, scale_y;
 	int x, y, button;
 
 	/* Scale a mouse position. */
 	emscripten_get_element_css_size("canvas", &w, &h);
-	scale = w / (double)screen_width;
-	x = (int)((double)mouseEvent->targetX / scale);
-	y = (int)((double)mouseEvent->targetY / scale);
+	scale_x = w / (double)screen_width;
+	scale_y = h / (double)screen_height;
+	x = (int)((double)mouseEvent->targetX / scale_x);
+	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
 		button = MOUSE_LEFT;
@@ -319,19 +325,139 @@ static EM_BOOL cb_keyup(int eventType,
 	return EM_TRUE;
 }
 
-/* Get a keycode from a keysym. */
+/* Get a key code. */
 static int get_keycode(const char *key)
 {
-	if (strcmp(key, "Enter") == 0) {
+	if (strcmp(key, "Escape") == 0) {
+		return KEY_ESCAPE;
+	} else if (strcmp(key, "Enter") == 0) {
 		return KEY_RETURN;
 	} else if (strcmp(key, " ") == 0) {
 		return KEY_SPACE;
+	} else if (strcmp(key, "Tab") == 0) {
+		return KEY_TAB;
+	} else if (strcmp(key, "Backspace") == 0) {
+		return KEY_BACKSPACE;
+	} else if (strcmp(key, "Delete") == 0) {
+		return KEY_DELETE;
+	} else if (strcmp(key, "Home") == 0) {
+		return KEY_HOME;
+	} else if (strcmp(key, "End") == 0) {
+		return KEY_END;
+	} else if (strcmp(key, "PageUp") == 0) {
+		return KEY_PAGEUP;
+	} else if (strcmp(key, "PageDown") == 0) {
+		return KEY_PAGEDOWN;
+	} else if (strcmp(key, "Shift") == 0) {
+		return KEY_SHIFT;
 	} else if (strcmp(key, "Control") == 0) {
 		return KEY_CONTROL;
+	} else if (strcmp(key, "Alt") == 0) {
+		return KEY_ALT;
 	} else if (strcmp(key, "ArrowUp") == 0) {
 		return KEY_UP;
 	} else if (strcmp(key, "ArrowDown") == 0) {
 		return KEY_DOWN;
+	} else if (strcmp(key, "ArrowLeft") == 0) {
+		return KEY_LEFT;
+	} else if (strcmp(key, "ArrowRight") == 0) {
+		return KEY_RIGHT;
+	} else if (strcmp(key, "A") == 0) {
+		return KEY_A;
+	} else if (strcmp(key, "B") == 0) {
+		return KEY_B;
+	} else if (strcmp(key, "C") == 0) {
+		return KEY_C;
+	} else if (strcmp(key, "D") == 0) {
+		return KEY_D;
+	} else if (strcmp(key, "E") == 0) {
+		return KEY_E;
+	} else if (strcmp(key, "F") == 0) {
+		return KEY_F;
+	} else if (strcmp(key, "G") == 0) {
+		return KEY_G;
+	} else if (strcmp(key, "H") == 0) {
+		return KEY_H;
+	} else if (strcmp(key, "I") == 0) {
+		return KEY_I;
+	} else if (strcmp(key, "J") == 0) {
+		return KEY_J;
+	} else if (strcmp(key, "K") == 0) {
+		return KEY_K;
+	} else if (strcmp(key, "L") == 0) {
+		return KEY_L;
+	} else if (strcmp(key, "M") == 0) {
+		return KEY_M;
+	} else if (strcmp(key, "N") == 0) {
+		return KEY_N;
+	} else if (strcmp(key, "O") == 0) {
+		return KEY_O;
+	} else if (strcmp(key, "P") == 0) {
+		return KEY_P;
+	} else if (strcmp(key, "Q") == 0) {
+		return KEY_Q;
+	} else if (strcmp(key, "R") == 0) {
+		return KEY_R;
+	} else if (strcmp(key, "S") == 0) {
+		return KEY_S;
+	} else if (strcmp(key, "T") == 0) {
+		return KEY_T;
+	} else if (strcmp(key, "U") == 0) {
+		return KEY_U;
+	} else if (strcmp(key, "V") == 0) {
+		return KEY_V;
+	} else if (strcmp(key, "W") == 0) {
+		return KEY_W;
+	} else if (strcmp(key, "X") == 0) {
+		return KEY_X;
+	} else if (strcmp(key, "Y") == 0) {
+		return KEY_Y;
+	} else if (strcmp(key, "Z") == 0) {
+		return KEY_Z;
+	} else if (strcmp(key, "1") == 0) {
+		return KEY_1;
+	} else if (strcmp(key, "2") == 0) {
+		return KEY_2;
+	} else if (strcmp(key, "3") == 0) {
+		return KEY_3;
+	} else if (strcmp(key, "4") == 0) {
+		return KEY_4;
+	} else if (strcmp(key, "5") == 0) {
+		return KEY_5;
+	} else if (strcmp(key, "6") == 0) {
+		return KEY_6;
+	} else if (strcmp(key, "7") == 0) {
+		return KEY_7;
+	} else if (strcmp(key, "8") == 0) {
+		return KEY_8;
+	} else if (strcmp(key, "9") == 0) {
+		return KEY_9;
+	} else if (strcmp(key, "0") == 0) {
+		return KEY_0;
+	} else if (strcmp(key, "F1") == 0) {
+		return KEY_F1;
+	} else if (strcmp(key, "F2") == 0) {
+		return KEY_F2;
+	} else if (strcmp(key, "F3") == 0) {
+		return KEY_F3;
+	} else if (strcmp(key, "F4") == 0) {
+		return KEY_F4;
+	} else if (strcmp(key, "F5") == 0) {
+		return KEY_F5;
+	} else if (strcmp(key, "F6") == 0) {
+		return KEY_F6;
+	} else if (strcmp(key, "F7") == 0) {
+		return KEY_F7;
+	} else if (strcmp(key, "F8") == 0) {
+		return KEY_F8;
+	} else if (strcmp(key, "F9") == 0) {
+		return KEY_F9;
+	} else if (strcmp(key, "F10") == 0) {
+		return KEY_F10;
+	} else if (strcmp(key, "F11") == 0) {
+		return KEY_F11;
+	} else if (strcmp(key, "F12") == 0) {
+		return KEY_F12;
 	}
 	return -1;
 }
@@ -716,36 +842,6 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 	return (uint64_t)(end - *t);
 }
 
-bool exit_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool title_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool delete_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool overwrite_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool default_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
 bool play_video(const char *fname, bool is_skippable)
 {
 	char *path;
@@ -799,22 +895,41 @@ bool is_video_playing(void)
 
 bool is_full_screen_supported(void)
 {
-	return false;
+	return true;
 }
 
 bool is_full_screen_mode(void)
 {
-	return false;
+	return is_full_screen;
 }
 
 void enter_full_screen_mode(void)
 {
-	/* stub */
+	is_full_screen = true;
+	EM_ASM({
+		var canvas = document.getElementById('canvas_holder');
+		const method = canvas.requestFullscreen ||
+			       canvas.webkitRequestFullscreen ||
+			       canvas.mozRequestFullScreen ||
+			       canvas.msRequestFullscreen;
+		if (method)
+			method.call(canvas);
+		onResizeWindow();
+	});
 }
 
 void leave_full_screen_mode(void)
 {
-	/* stub */
+	is_full_screen = false;
+	EM_ASM({
+		const method = document.exitFullscreen ||
+			       document.webkitExitFullscreen ||
+			       document.mozCancelFullScreen ||
+			       document.msExitFullscreen;
+		if (method)
+			method.call(document);
+		onResizeWindow();
+	});
 }
 
 const char *get_system_locale(void)
