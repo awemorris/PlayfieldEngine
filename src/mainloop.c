@@ -751,17 +751,20 @@ void on_event_analog_input(int input, int val)
 void on_event_touch_cancel(void)
 {
 	if (is_running) {
+		set_vm_int("isMouseLeftPressed", 0);
 	}
 }
 
 void on_event_swipe_down(void)
 {
 	if (is_running) {
+		set_vm_int("isMouseLeftPressed", 0);
 	}
 }
 
 void on_event_swipe_up(void)
 {
 	if (is_running) {
+		set_vm_int("isMouseLeftPressed", 0);
 	}
 }
