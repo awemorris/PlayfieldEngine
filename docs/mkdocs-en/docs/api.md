@@ -64,11 +64,13 @@ func dumpEnemies() {
 |Engine.millisec             |Time in millisec.                          |
 
 ```
-func frame() {
-    var dt = (Engine.millisec - lastTime) * 0.001;
+func update() {
+    // Get the seconds since the last call.
+    var curTime = Engine.millisec;
+    var dt = (curTime - lastTime) * 0.001;
+    lastTime = curTime;
 
-    update(dt);
-    render();
+    updateCharacters(dt);
 }
 ```
 
