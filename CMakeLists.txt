@@ -547,8 +547,8 @@ if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BUNDLE)
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
-  # Copy the assets.pak file.
-  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/assets.pak")
+  # Copy the assets.arc file.
+  set(APP_GAME_DATA "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/assets.arc")
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
