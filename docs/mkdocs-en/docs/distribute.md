@@ -3,7 +3,7 @@ Distributing Games
 
 Once your game is ready, you can bundle it into a single package for easy distribution.
 
-## Creating assets.pak
+## Creating assets.arc
 
 ### On Windows
 
@@ -11,7 +11,7 @@ You can use the packaging tool included with Playfield:
 
 1. Go to the `misc/windows/` folder.
 2. Drag and drop all your game files (such as main.pf, images, sounds, etc.) onto `playfield-pack.exe`.
-3. The tool will create an `assets.pak` file in the same folder.
+3. The tool will create an `assets.arc` file in the same folder.
 
 This file contains all of your game’s scripts and assets in one archive.
 
@@ -37,7 +37,7 @@ Use `misc/linux/playfield-pack` instead:
 To distribute your game, you only need the following two files:
 
 * `playfield.exe`
-* `assets.pak`
+* `assets.arc`
 
 Place them in the same folder. Your players can then run the game by simply double-clicking playfield.exe.
 

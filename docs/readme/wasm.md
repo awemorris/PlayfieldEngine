@@ -5,7 +5,7 @@ How To Use The Wasm Version
 
 - Game Data
     - index.html       ... Wasm File
-    - assets.pak       ... Asset File (replace this by your own)
+    - assets.arc       ... Asset File (replace this by your own)
 - Other
     - playfield-web.exe ... Launcher for Windows
 
@@ -21,4 +21,4 @@ How To Use The Wasm Version
 
 ## Uploading
 
-- Place the `assets.pak` file you generated alongside the `index.html` file.
+- Place the `assets.arc` file you generated alongside the `index.html` file.

@@ -116,9 +116,9 @@ The target `build-macos/Playfield.app` will be created.
 
 ### Steps
 
-* Pack assets into the `assets.pak` file.
+* Pack assets into the `assets.arc` file.
 * Download the [Playfield binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
-* Copy your `assets.pak` file into the `misc/ios/resources` folder.
+* Copy your `assets.arc` file into the `misc/ios/resources` folder.
 * Open the `misc/ios` folder by Xcode.
 
 ---

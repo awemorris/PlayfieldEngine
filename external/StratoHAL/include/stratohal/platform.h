@@ -17,7 +17,7 @@
  *************************/
 
 /* Package file name */
-#define PACKAGE_FILE		"assets.pak"
+#define PACKAGE_FILE		"assets.arc"
 
 /* Save directory name */
 #define SAVE_DIR		"save"

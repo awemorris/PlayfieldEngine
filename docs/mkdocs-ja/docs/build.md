@@ -91,8 +91,8 @@ cmake --build --preset macos
 
 ### 手順
 
-- あらかじめアセットを`assets.pak` にまとめる
-- 配布 SDK の `ios/resources` フォルダに `assets.pak` をコピーする
+- あらかじめアセットを`assets.arc` にまとめる
+- 配布 SDK の `ios/resources` フォルダに `assets.arc` をコピーする
 - 配布 SDK の `ios` フォルダを Xcode で開く
 
 ## Android

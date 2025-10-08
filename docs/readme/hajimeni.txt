@@ -33,13 +33,13 @@ N88-BASIC でゲームを作ったことがある方にも、最新のパソコ�
     windows/
       playfield32.exe     ... 32 ビットの本体実行ファイル
       playfield-arm64.exe ... Arm64 の本体実行ファイル
-      playfield-pack.exe  ... assets.pak を作成するパッケージャ
+      playfield-pack.exe  ... assets.arc を作成するパッケージャ
     macos/
       playfield.dmg       ... macOS 版アプリ (macOS 10.13 以降)
       playfield-pack.exe  ... パッケージャ
     wasm/
       index.html          ... ブラウザ用 WebAssembly ファイル
-      assets.pak          ... 動作確認用のアセット
+      assets.arc          ... 動作確認用のアセット
       playfield-web.exe   ... 動作確認用のブラウザ立ち上げアプリ
       readme.txt          ... 説明書
     ios/                  ... iOS Xcode プロジェクト (iOS 13.0 以降)
@@ -57,26 +57,30 @@ N88-BASIC でゲームを作ったことがある方にも、最新のパソコ�
 playfield.exe をダブルクリックして実行してください。同じフォルダにある main.pf
 スクリプトが起動します。
 
-スクリプト、画像、音声、フォントなどを１つの assets.pak パッケージファイルにま
-とめることができます。まとめたいファイルを選択して playfield-pack.exe にドロッ
-プしてください。パッケージファイルがある場合、playfield.exe はパッケージ内のファイル
-を優先します。
+スクリプト、画像、音声、フォントなどを１つの assets.arc パッケージファイルにま
+とめることができます。コマンドプロンプトで、次のようにまとめたいファイルを指定
+してください。
+
+ > C:\Playfield\misc\windows\playfield-pack.exe main.pf picture1.png font.ttf
+
+パッケージファイルがある場合、playfield.exe はパッケージ内のファイルを優先しま
+す。
 
 ■ 使い方 (macOS)
 
 　playfield.dmg を開き、中身の Playfield アプリを適当な場所にコピーします。
-コピーしたアプリを main.pf や assets.pak のあるフォルダに入れて、アプリを起動
+コピーしたアプリを main.pf や assets.arc のあるフォルダに入れて、アプリを起動
 することで、ゲームを実行できます。
 
 ■ 使い方 (Wasm)
 
-　作成した assets.pak と index.html を Web サーバにアップロードすること
+　作成した assets.arc と index.html を Web サーバにアップロードすること
 で、ゲームを公開できます。また、試しに手元のパソコンで起動してみるには、
 playfield-web.exe を実行すれば、ブラウザでゲームが表示されます。
 
 ■ 使い方 (iOS)
 
-　作成した assets.pak を Resources/ に入れてから、Xcode でプロジェクトを開きま
+　作成した assets.arc を Resources/ に入れてから、Xcode でプロジェクトを開きま
 す。iPhone や iPad などにアプリを転送することでゲームを起動できます。Mac 上で
 動作確認する場合、シミュレータが利用できます。
 

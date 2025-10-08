@@ -536,7 +536,7 @@ jobs:
       - name: Copy for Wasm.
         run: |
           cp wasm/index.html dist/misc/wasm/
-          cp resources/assets.pak dist/misc/wasm/
+          cp resources/assets.arc dist/misc/wasm/
 
       - name: Download iOS artifacts
         uses: actions/download-artifact@v4
@@ -547,7 +547,7 @@ jobs:
       - name: Copy for iOS.
         run: |
           mkdir dist/misc/ios/Resources/
-          cp resources/assets.pak dist/misc/ios/Resources/
+          cp resources/assets.arc dist/misc/ios/Resources/
           mkdir dist/misc/ios/Resources/video
           mkdir dist/misc/ios/ios.xcodeproj
           cp resources/projects/ios/ios.xcodeproj/project.pbxproj dist/misc/ios/ios.xcodeproj/

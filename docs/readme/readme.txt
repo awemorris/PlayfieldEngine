@@ -32,13 +32,13 @@ Files
     windows/
       playfield32.exe     ... 32-bit executable
       playfield-arm64.exe ... Arm64 executable
-      playfield-pack.exe  ... Tool to create assets.pak
+      playfield-pack.exe  ... Tool to create assets.arc
     macos/
       playfield.dmg       ... macOS app
-      playfield-pack.exe  ... Tool to create assets.pak on macOS
+      playfield-pack.exe  ... Tool to create assets.arc on macOS
     wasm/
       index.html          ... WebAssembly entrypoint
-      assets.pak          ... Testing package
+      assets.arc          ... Testing package
       playfield-web.exe   ... Helper app for browser testing
       readme.txt          ... WebAssembly README
     ios/                  ... iOS Xcode project
@@ -59,26 +59,30 @@ Double-click "playfield.exe".
 If a "main.pf" file exists in the same folder, it will run automatically.
 
 You can also bundle your assets (scripts, images, sounds, fonts, etc.) into a
-single package file.  Select the files and drag & drop them onto
-"playfield-pack.exe" — this will generate an "aassets.pa" file.
+single package file.  Open the command prompt and call "playfield-pack.exe"
+with file names:
+
+ > C:\Playfield\misc\windows\playfield-pack.exe main.pf picture1.png font.ttf
+
+This will generate an "aassets.arc" file in the current directory.
 
 Usage (macOS)
 -------------
 
 Open "playfield.dmg" and copy the "Playfield.app" to any folder.  Place the
-app in the same folder as "main.pf" or "assets.pak", then double-click the
+app in the same folder as "main.pf" or "assets.arc", then double-click the
 app to run it.
 
 Usage (Wasm)
 ------------
 
-Upload the generated "assets.pak" and "index.html" to a web server.
+Upload the generated "assets.arc" and "index.html" to a web server.
 To preview the game locally, use "playfield-web.exe".
 
 Usage (iOS)
 -----------
 
-Place "assets.pak" in the "misc/ios/Resources/" folder, then open the project in Xcode.
+Place "assets.arc" in the "misc/ios/Resources/" folder, then open the project in Xcode.
 
 Usage (Android)
 ---------------

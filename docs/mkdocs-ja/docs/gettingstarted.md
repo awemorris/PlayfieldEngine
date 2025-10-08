@@ -74,6 +74,6 @@ func render() {
 Playfield は下記の２通りの方法でゲームをロードできます:
 
 * `main.pf` ファイルを含むフォルダ
-* `assets.pak` ファイル (すべてのゲームアセットが入っている)
+* `assets.arc` ファイル (すべてのゲームアセットが入っている)
 
-`assets.pak` ファイルを作成するには、[ゲームの配布](distribute.md) を見てください。
+`assets.arc` ファイルを作成するには、[ゲームの配布](distribute.md) を見てください。

@@ -1,3 +1,3 @@
 Module['preRun'] = function () {
-    FS.createPreloadedFile('/', 'assets.pak', 'assets.pak', true, false);
+    FS.createPreloadedFile('/', 'assets.arc', 'assets.arc', true, false);
 };

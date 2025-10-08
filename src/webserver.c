@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
 					MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
-	if (_access("assets.pak", 0) == -1) {
+	if (_access("assets.arc", 0) == -1) {
 		MessageBoxW(NULL,
-					L"assets.pak not found.",
+					L"assets.arc not found.",
 					L"Playfield Web Server and Browser Action",
 					MB_OK | MB_ICONEXCLAMATION);
 		return 1;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	srand((unsigned)time(NULL));
 	int random_dir_number = rand();
 	snprintf(req_root, sizeof(req_root), "GET /%d/ HTTP/1.1", random_dir_number);
-	snprintf(req_data, sizeof(req_root), "GET /%d/assets.pak HTTP/1.1", random_dir_number);
+	snprintf(req_data, sizeof(req_root), "GET /%d/assets.arc HTTP/1.1", random_dir_number);
 
 	/* Initialize the WinSock2 DLL. */
 	WSADATA wsa;
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 			if (strncmp(recv_buf, req_root, strlen(req_root)) == 0) {
 				fname = "index.html";
 			} else if (strncmp(recv_buf, req_data, strlen(req_data)) == 0) {
-				fname = "assets.pak";
+				fname = "assets.arc";
 			} else if (strcmp(recv_buf, "\n") == 0 || strcmp(recv_buf, "\r\n") == 0) {
 				break;
 			}
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 		if (strcmp(fname, "index.html") == 0) {
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_index_sent = 1;
-		} else if (strcmp(fname, "assets.pak") == 0) {
+		} else if (strcmp(fname, "assets.arc") == 0) {
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: application/octet-stream\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_data_sent = 1;
 		}

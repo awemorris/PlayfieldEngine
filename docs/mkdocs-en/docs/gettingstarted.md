@@ -75,6 +75,6 @@ func render() {
 Playfield can load a game in two ways:
 
 * From a folder that contains a `main.pf` file.
-* From an `assets.pak` file that bundles all game assets.
+* From an `assets.arc` file that bundles all game assets.
 
-To create an `assets.pak` file, see [Distributing Games](distribute.md).
+To create an `assets.arc` file, see [Distributing Games](distribute.md).

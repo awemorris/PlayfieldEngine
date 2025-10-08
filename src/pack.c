@@ -36,14 +36,14 @@ int main(int argc, char *argv[])
 	if (ret == 0)
 	{
 		MessageBoxW(NULL,
-			    L"Done making the assets.pak file.",
+			    L"Done making the assets.arc file.",
 			    L"Playfield Archiver",
 			    MB_OK | MB_ICONINFORMATION);
 	}
 	else
 	{
 		MessageBoxW(NULL,
-			    L"Error(s) on making the assets.pak file. See the console.",
+			    L"Error(s) on making the assets.arc file. See the console.",
 			    L"Playfield Archiver",
 			    MB_OK | MB_ICONINFORMATION);
 	}
