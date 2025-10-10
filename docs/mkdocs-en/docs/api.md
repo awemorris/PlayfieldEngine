@@ -7,6 +7,8 @@ arguments must be stored as key-and-value pairs.
 ## Skelton
 
 ```
+// Do not define variables outside functions because it's a syntax error.
+
 // Called when the window is created.
 func setup() {
     // Return the window configuration.
@@ -19,6 +21,10 @@ func setup() {
 
 // Called once when the game starts.
 func start() {
+    // Global variables should be defined here.
+    posX = 0;
+    posY = 0;
+
     // Create a white 100x100 texture.
     tex = Engine.createColorTexture({
         width: 100,

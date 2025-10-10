@@ -351,10 +351,11 @@ var c = cos(x);
 var t = tan(x);
 ```
 
-### abs()
+### abs(), sqrt()
 
 ```
 var a = abs(x);
+var b = sqrt(x);
 ```
 
 ### random()
