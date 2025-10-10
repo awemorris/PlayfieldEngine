@@ -7,6 +7,8 @@ Playfield Script API
 ## 骨組み
 
 ```
+// 関数の外で変数を宣言しないでくささい（文法エラーです）
+
 // ウィンドウが作成されるときに呼ばれます
 func setup() {
     // ウィンドウの設定を返します
@@ -19,6 +21,10 @@ func setup() {
 
 // ゲームが開始するときに呼ばれます
 func start() {
+    // ここでグローバル変数を宣言します
+    posX = 0;
+    posY = 0;
+
     // 100x100サイズの白いテクスチャを作ります
     tex = Engine.createColorTexture({
         width: 100,
