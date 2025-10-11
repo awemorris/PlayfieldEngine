@@ -74,7 +74,11 @@ bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 		return false;
 	}
 
-	/* Install the API to the runtime. */
+	/* Install Math.* API. */
+	if (!noct_register_api_math(env))
+		return false;
+
+	/* Install the custom APIs to the runtime. */
 	if (!install_api(env))
 		return false;
 
@@ -1137,7 +1141,7 @@ bool install_api(NoctEnv *env)
 		RTFUNC(readSaveData),
 	};
 	const int tbl_size = sizeof(funcs) / sizeof(struct func);
-	struct rt_value dict;
+	NoctValue dict;
 	int i;
 
 	/* Make a global variable "Engine". */
@@ -1148,7 +1152,7 @@ bool install_api(NoctEnv *env)
 
 	/* Register functions. */
 	for (i = 0; i < tbl_size; i++) {
-		struct rt_value funcval;
+		NoctValue funcval;
 
 		/* Register a cfunc. */
 		if (!noct_register_cfunc(env, funcs[i].name, 1, params, funcs[i].func, NULL))

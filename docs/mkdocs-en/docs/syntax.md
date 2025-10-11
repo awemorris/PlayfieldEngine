@@ -284,6 +284,8 @@ func main() {
 }
 ```
 
+---
+
 ## Intrinsics
 
 ### int()
@@ -325,37 +327,49 @@ var array = [1, 2, 3];
 array->resize(2);
 ```
 
-### substring()
+### charCount()
 
 ```
-var s1 = "ABCDEFG";
-var s2 = s1.substring(1, -1); // from the char 1, to the end "BCDEFG"
-}
+var s = "ABC文あいう";
+var l = s->charCount();
 ```
 
 ### charAt()
 
 ```
-var s = "ABC";
+var s = "ABC文あいう";
 for (i in 0 .. s.length) {
    var c = s->charAt(i);
    print(c);
 }
 ```
 
-### sin(), cos(), tan()
+### substring()
 
 ```
-var s = sin(x);
-var c = cos(x);
-var t = tan(x);
+var s1 = "ABCDEFG";
+var s2 = s1.substring(0, 3); // from the char 0, three characters
+var s3 = s1.substring(2, -1); // from the char 1, to the end
+}
 ```
 
-### abs(), sqrt()
+### unset()
+
+```
+var dic = {key1: "ABC"};
+dic->unset("key1");
+```
+
+---
+
+## Math API
+
+## Math
+
+### abs()
 
 ```
 var a = abs(x);
-var b = sqrt(x);
 ```
 
 ### random()
@@ -364,22 +378,20 @@ var b = sqrt(x);
 var r = random(); // 0 .. 1.0
 ```
 
-### fast_gc(), full_gc(), compact_gc()
+### Math.sin()
 
 ```
-// Do young GC.
-fast_gc();
-
-// Do young + old GC.
-full_gc();
-
-// Do young + old + compact GC.
-compact_gc();
+var y = sin(x);
 ```
 
-### unset()
+### Math.cos()
 
 ```
-var dic = {key1: "ABC"};
-dic->unset("key1");
+var y = cos(x);
+```
+
+### Math.tan()
+
+```
+var y = tan(x);
 ```

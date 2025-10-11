@@ -103,7 +103,7 @@ func update() {
         e.y += e.vy * dt;
 
         // Wave.
-        e.x += sin(Engine.millisec * 0.003 + e.y*0.05) * 20 * dt;
+        e.x += Math.sin(Engine.millisec * 0.003 + e.y*0.05) * 20 * dt;
 
         if (e.y > 480) {
             isGameover = true;
@@ -190,5 +190,5 @@ func clamp(v, lo, hi) {
 }
 
 func randRange(a, b) {
-	return a + (b - a) * random();
+	return a + (b - a) * Math.random();
 }

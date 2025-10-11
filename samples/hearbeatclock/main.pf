@@ -78,7 +78,7 @@ func render() {
     var t = (Engine.millisec - startTime) * 0.001 * 3.14159265;
 
     // Draw the background.
-    var alpha = 0.5 * sin(0.15 * t);
+    var alpha = 0.5 * Math.sin(0.15 * t);
     if (alpha < 0)
         alpha = -alpha;
     Engine.renderTexture3D({
@@ -99,7 +99,7 @@ func render() {
     });
 
     // Draw the heartbeat.
-    var scale = 0.2 * sin(t);
+    var scale = 0.2 * Math.sin(t);
     if (scale < 0)
         scale = -scale;
     var x = screenWidth / 2.0;

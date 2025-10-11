@@ -106,7 +106,41 @@ endif()
 # NoctLang Configuration
 #
 
-# Merge subproject objects into libplayfield.
+# Use Math.* API.
+set(NOCTLANG_API_MATH)
+
+# If building with JIT.
+if(PLAYFIELD_ENABLE_JIT)
+  set(NOCTLANG_ENABLE_JIT ON)
+else()
+  set(NOCTLANG_ENABLE_JIT OFF)
+endif()
+
+# If building with translation.
+if(PLAYFIELD_ENABLE_I18N)
+  set(NOCTLANG_ENABLE_I18N ON)
+endif()
+
+# If building for Emscripten.
+if(   PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_WASM_LOCAL)
+  set(NOCTLANG_TARGET_WASM ON)
+endif()
+
+# If building for Unity.
+if(PLAYFIELD_TARGET_UNITY)
+  set(NOCTLANG_TARGET_UNITY ON)
+endif()
+
+# No `noct` CLI.
+if(NOT NOCTLANG_ENABLE_CLI)
+  set(NOCTLANG_ENABLE_CLI OFF)
+endif()
+
+# No install.
+set(NOCTLANG_DISABLE_INSTALL ON)
+
+# Magic: On iOS/Android/Unity, merge object files that consists libnoctlang.a into libplayfield.a.
 if(   PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
    OR PLAYFIELD_TARGET_UNITY
@@ -122,35 +156,6 @@ else()
     set(NOCTLANG_ENABLE_STATIC ON)
   endif()
 endif()
-
-# Emscripten
-if(   PLAYFIELD_TARGET_WASM
-   OR PLAYFIELD_TARGET_WASM_LOCAL)
-  set(NOCTLANG_TARGET_WASM ON)
-endif()
-
-# Unity
-if(PLAYFIELD_TARGET_UNITY)
-  set(NOCTLANG_TARGET_UNITY ON)
-endif()
-
-# Use JIT.
-if(PLAYFIELD_ENABLE_JIT)
-  set(NOCTLANG_ENABLE_JIT ON)
-else()
-  set(NOCTLANG_ENABLE_JIT OFF)
-endif()
-
-# Use translation.
-if(PLAYFIELD_ENABLE_I18N)
-  set(NOCTLANG_ENABLE_I18N ON)
-endif()
-
-if(NOT NOCTLANG_ENABLE_CLI)
-  set(NOCTLANG_ENABLE_CLI OFF)
-endif()
-
-set(NOCTLANG_DISABLE_INSTALL ON)
 
 #
 # Strato Configuration
@@ -482,7 +487,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
     playfield-compiler
     src/compiler.c
   )
-  target_include_directories(playfield-compiler PRIVATE external/NoctLang/src)
+  target_include_directories(playfield-compiler PRIVATE external/NoctLang/src/core)
   target_link_libraries(playfield-compiler noctlang)
   if(UNIX)
     target_link_libraries(playfield-compiler m)
