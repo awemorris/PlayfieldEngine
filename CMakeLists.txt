@@ -107,7 +107,9 @@ endif()
 #
 
 # Use Math.* API.
-set(NOCTLANG_API_MATH)
+set(NOCTLANG_API_MATH     ON)
+set(NOCTLANG_API_SYSTEM   OFF)
+set(NOCTLANG_API_CONSOLE  OFF)
 
 # If building with JIT.
 if(PLAYFIELD_ENABLE_JIT)
