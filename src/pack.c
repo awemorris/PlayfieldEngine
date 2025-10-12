@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	if (argc == 1)
 	{
 		MessageBoxW(NULL,
-			    L"Please drop files on this application to make an archive file.",
+			    L"Please specify files and folders in relative paths to make an archive file.",
 			    L"Playfield Archiver",
 			    MB_OK | MB_ICONINFORMATION);
 		return 1;
