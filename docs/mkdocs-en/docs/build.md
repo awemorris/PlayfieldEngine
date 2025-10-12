@@ -1,8 +1,10 @@
 How To Build Playfield
 ======================
 
+Playfield fully utilizes the CMake build system.
+
 * Notes
-    * Requires CMake 3.22 or later, Flex 2.6+, Bison 3.0+
+    * Requires CMake 3.22 or later
     * Windows: Visual Studio 2022 (Community or higher, tested on x64 and arm64)
     * macOS: Tested on macOS 15 (Apple Silicon, Xcode required)
     * Linux: Tested on Ubuntu 22.04, 24.04 (X11 required)
@@ -16,14 +18,10 @@ How To Build Playfield
 
 ### Steps
 
-* Install [winflexbison](https://github.com/lexxmark/winflexbison).
-    * Add the installation folder to the PATH environment variable.
-    * Rename the exe files to `flex.exe` and `bison.exe`.
 * Download the [Playfield source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
-* Open the source code folder by Visual Studio.
-    * Select one of the `MSVC` targets.
-    * Choose the `!VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
-    * Build the project.
+* Open the top of the source code folder by Visual Studio.
+* Choose the `VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
+* Build the project.
 
 The target file `out/build/windows-msvc-x64-release/playfield.exe` will be created.
 
@@ -42,7 +40,7 @@ The target file `out/build/windows-msvc-x64-release/playfield.exe` will be creat
 Open the terminal and type the following.
 
 ```
-sudo apt-get install cmake mingw-w64 flex bison
+sudo apt-get install cmake mingw-w64
 
 git clone --recursive https://github.com/awemorris/PlayfieldEngine.git
 cd PlayfieldEngine
