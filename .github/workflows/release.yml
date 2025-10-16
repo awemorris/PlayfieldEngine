@@ -663,10 +663,10 @@ jobs:
       - name: Copy documents
         run: |
           tar xzf mkdocs/documents-english.tar.gz -C dist/misc/
-          tar xzf mkdocs/documents-japanese.tar.gz -C dist/misc/
+          #tar xzf mkdocs/documents-japanese.tar.gz -C dist/misc/
           cp -R samples dist/misc/samples
           cp docs/readme/readme.txt dist/
-          cp docs/readme/hajimeni.txt dist/
+          #cp docs/readme/hajimeni.txt dist/
 
       - name: Get current date
         id: date

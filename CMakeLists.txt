@@ -489,7 +489,10 @@ if(   PLAYFIELD_TARGET_WINDOWS
     playfield-compiler
     src/compiler.c
   )
-  target_include_directories(playfield-compiler PRIVATE external/NoctLang/src/core)
+  target_include_directories(playfield-compiler PRIVATE
+    external/NoctLang/src/core
+    external/NoctLang/src/backend
+  )
   target_link_libraries(playfield-compiler noctlang)
   if(UNIX)
     target_link_libraries(playfield-compiler m)
