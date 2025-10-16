@@ -17,78 +17,24 @@ your PC — just like coding in classic BASIC, but with modern features.
 Files
 -----
 
-  playfield.exe           ... Main executable (64-bit)
+  playfield.exe           ... Main Executable (64-bit)
+  playfield-editor.exe    ... Text Editor For Convenience
   main.pf                 ... Sample main script
   readme.txt              ... This document
-  misc/
-    samples/              ... Sample games
-    windows/
-      playfield32.exe     ... 32-bit executable
-      playfield-arm64.exe ... Arm64 executable
-      playfield-pack.exe  ... Tool to create assets.arc
-    macos/
-      playfield.dmg       ... macOS app
-      playfield-pack.exe  ... Tool to create assets.arc on macOS
-    wasm/
-      index.html          ... WebAssembly entrypoint
-      assets.arc          ... Testing package
-      playfield-web.exe   ... Helper app for browser testing
-      readme.txt          ... WebAssembly README
-    ios/                  ... iOS Xcode project
-    android/              ... Android Studio project
-    unity/                ... Unity Native Plugin
-    documents/            ... Documents in English
 
 Installation
 ------------
 
 Just extract the ZIP file to any folder of your choice.
 
-Usage (Windows)
----------------
+Usage
+-----
 
-Double-click "playfield.exe".
-If a "main.pf" file exists in the same folder, it will run automatically.
+Double-click "playfield.exe".  If a "main.pf" file exists in the same folder,
+it will run automatically.
 
-You can also bundle your assets (scripts, images, sounds, fonts, etc.) into a
-single package file.  Open the command prompt and call "playfield-pack.exe"
-with file names:
-
- > C:\Playfield\misc\windows\playfield-pack.exe main.pf picture1.png font.ttf
-
-This will generate an "aassets.arc" file in the current directory.
-
-Usage (macOS)
--------------
-
-Open "playfield.dmg" and copy the "Playfield.app" to any folder.  Place the
-app in the same folder as "main.pf" or "assets.arc", then double-click the
-app to run it.
-
-Usage (Wasm)
-------------
-
-Upload the generated "assets.arc" and "index.html" to a web server.
-To preview the game locally, use "playfield-web.exe".
-
-Usage (iOS)
------------
-
-Place "assets.arc" in the "misc/ios/Resources/" folder, then open the project in Xcode.
-
-Usage (Android)
----------------
-
-  - Copy all assets into "misc/android/app/src/main/assets".
-  - Open the "misc/android" folder with Android Studio
-  - Build the project
-  - Run the app on your device or emulators
-
-Usage (Unity)
--------------
-
-Copy all assets into the "misc/unity/Assets/StreamingAssets" folder,  
-then open the project "misc/unity" in the Unity Editor.
+Please use your favorite text editor instead of "playfield-editor.exe" as it
+is just for your convenience.
 
 License / Copyright Notice
 --------------------------
@@ -102,7 +48,7 @@ Contact
 Email: Awe Morris <awe@noctvm.io>
 Project Page: https://github.com/awemorris/PlayfieldEngine
 
-I'd love to hear from you. Feel free to reach out!
+I'd love to hear from you, feel free to reach out.
 
 ==============================================================================
 
