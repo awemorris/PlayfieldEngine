@@ -444,21 +444,15 @@ jobs:
         run: |
           cd docs/mkdocs-en
           mkdocs build
-          mv site documents-english
-          tar czf ../../documents-english.tar.gz documents-english
-          cd ../..
-          cd docs/mkdocs-ja
-          mkdocs build
-          mv site documents-japanese
-          tar czf ../../documents-japanese.tar.gz documents-japanese
+          mv site documents
+          tar czf ../../documents.tar.gz documents
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: mkdocs
           path: |
-            documents-english.tar.gz
-            documents-japanese.tar.gz
+            documents.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -662,11 +656,9 @@ jobs:
 
       - name: Copy documents
         run: |
-          tar xzf mkdocs/documents-english.tar.gz -C dist/misc/
-          #tar xzf mkdocs/documents-japanese.tar.gz -C dist/misc/
+          tar xzf mkdocs/documents.tar.gz -C dist/misc/
           cp -R samples dist/misc/samples
           cp docs/readme/readme.txt dist/
-          #cp docs/readme/hajimeni.txt dist/
 
       - name: Get current date
         id: date

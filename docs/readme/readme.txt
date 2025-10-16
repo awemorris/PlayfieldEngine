@@ -1,11 +1,5 @@
-==============================================================================
 Playfield
-==============================================================================
-Version      : 0.8.8
-Date         : September 30th 2025
-Author       : Awe Morris
-Contact      : awe@noctvm.io
-==============================================================================
+=========
 
  * Load this file into ChatGPT.
  * Try entering: "Create a game in Playfield Script."
@@ -26,7 +20,6 @@ Files
   playfield.exe           ... Main executable (64-bit)
   main.pf                 ... Sample main script
   readme.txt              ... This document
-  hajimeni.txt            ... README in Japanese
   misc/
     samples/              ... Sample games
     windows/
@@ -44,8 +37,7 @@ Files
     ios/                  ... iOS Xcode project
     android/              ... Android Studio project
     unity/                ... Unity Native Plugin
-    documents-english/    ... Documents in English
-    documents-japanese/   ... Documents in Japanese
+    documents/            ... Documents in English
 
 Installation
 ------------
@@ -110,8 +102,7 @@ Contact
 Email: Awe Morris <awe@noctvm.io>
 Project Page: https://github.com/awemorris/PlayfieldEngine
 
-I'd love to hear from you!
-Feel free to reach out.
+I'd love to hear from you. Feel free to reach out!
 
 ==============================================================================
 
