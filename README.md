@@ -13,14 +13,15 @@ it can render graphics and play sounds seamlessly across platforms.
  |
 [Japanese Page](https://noctvm.io/playfield-ja/)
 
-## Download v0.8.14 now!
+## Download v0.8.15 now!
 
 | <img src="docs/img/logo-recommended.png" align="middle"> Recommended                | <img src="docs/img/logo-win.png" align="middle"> Windows Only                                 | <img src="docs/img/logo-mac.png" align="middle"> Mac Only        | <img src="docs/img/logo-linux.png" align="middle"> Linux Only                            |
 |-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| [All-in-One (Recommended)](https://noctvm.io/dl/playfield/playfield-all-0.8.14.zip) | [Windows 64-bit EXE Installer](https://noctvm.io/dl/playfield/playfield-installer-0.8.14.exe) | [macOS dmg](https://noctvm.io/dl/playfield/Playfield-0.8.14.dmg) | [Linux x86_64 AppImage](https://noctvm.io/dl/playfield/Playfield-0.8.14-x86_64.AppImage) |
-| [Source Code](https://noctvm.io/dl/playfield/playfield-src-0.8.14.zip)              | [Windows 64-bit EXE ZIP](https://noctvm.io/dl/playfield/playfield-win64-0.8.14.zip)           |                                                                  |                                                                                          |
-|                                                                                     | [Windows 32-bit EXE ZIP](https://noctvm.io/dl/playfield/playfield-win32-0.8.14.zip)           |                                                                  |                                                                                          |
-|                                                                                     | [Windows Arm64 EXE Only ZIP](https://noctvm.io/dl/playfield/playfield-winarm64-0.8.14.zip)    |                                                                  |                                                                                          |
+| [All-in-One (Recommended)](https://noctvm.io/dl/playfield/playfield-all-0.8.15.zip) | [Windows 64-bit EXE Installer](https://noctvm.io/dl/playfield/playfield-installer-0.8.15.exe) | [macOS dmg](https://noctvm.io/dl/playfield/Playfield-0.8.15.dmg) | [Linux x86_64 AppImage](https://noctvm.io/dl/playfield/Playfield-0.8.15-x86_64.AppImage) |
+| [Source Code](https://noctvm.io/dl/playfield/playfield-src-0.8.15.zip)              | [Windows 64-bit EXE ZIP](https://noctvm.io/dl/playfield/playfield-win64-0.8.15.zip)           |                                                                  |                                                                                          |
+|                                                                                     | [Windows 32-bit EXE ZIP](https://noctvm.io/dl/playfield/playfield-win32-0.8.15.zip)           |                                                                  |                                                                                          |
+|                                                                                     | [Windows Arm64 EXE Only ZIP](https://noctvm.io/dl/playfield/playfield-winarm64-0.8.15.zip)    |                                                                  |                                                                                          |
+|                                                                                     | [Windows Packer EXE ZIP](https://noctvm.io/dl/playfield/playfield-pack-0.8.15.zip)            |                                                       |                                                                                                     |
 
 ## Feature Highlights
 
