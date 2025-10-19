@@ -6,19 +6,20 @@ project(playfield LANGUAGES C CXX)
 #
 
 # Targets
-option(PLAYFIELD_TARGET_WINDOWS       "Build for Windows"                     OFF)
-option(PLAYFIELD_TARGET_MACOS         "Build for macOS"                       OFF)
-option(PLAYFIELD_TARGET_LINUX         "Build for Linux X11"                   OFF)
-option(PLAYFIELD_TARGET_LINUX_WAYLAND "Build for Linux Wayland"               OFF)
-option(PLAYFIELD_TARGET_LINUX_GBM     "Build for Linux Framebuffer"           OFF)
-Option(PLAYFIELD_TARGET_IOS           "Build for iOS"                         OFF)
-option(PLAYFIELD_TARGET_ANDROID       "Build for Android"                     OFF)
-option(PLAYFIELD_TARGET_WASM          "Build for Emscripten"                  OFF)
-option(PLAYFIELD_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"     OFF)
-option(PLAYFIELD_TARGET_UNITY         "Build for Unity"                       OFF)
-option(PLAYFIELD_TARGET_FREEBSD       "Build for FreeBSD"                     OFF)
-option(PLAYFIELD_TARGET_NETBSD        "Build for NetBSD"                      OFF)
-option(PLAYFIELD_TARGET_OPENBSD       "Build for OpenBSD"                     OFF)
+option(PLAYFIELD_TARGET_WINDOWS          "Build for Windows"                     OFF)
+option(PLAYFIELD_TARGET_MACOS            "Build for macOS"                       OFF)
+option(PLAYFIELD_TARGET_LINUX            "Build for Linux X11"                   OFF)
+option(PLAYFIELD_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"               OFF)
+option(PLAYFIELD_TARGET_LINUX_GBM        "Build for Linux Framebuffer"           OFF)
+Option(PLAYFIELD_TARGET_IOS              "Build for iOS"                         OFF)
+option(PLAYFIELD_TARGET_ANDROID          "Build for Android"                     OFF)
+option(PLAYFIELD_TARGET_WASM             "Build for Emscripten"                  OFF)
+option(PLAYFIELD_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"     OFF)
+option(PLAYFIELD_TARGET_UNITY            "Build for Unity"                       OFF)
+option(PLAYFIELD_TARGET_FREEBSD          "Build for FreeBSD X11"                 OFF)
+option(PLAYFIELD_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"             OFF)
+option(PLAYFIELD_TARGET_NETBSD           "Build for NetBSD X11"                  OFF)
+option(PLAYFIELD_TARGET_OPENBSD          "Build for OpenBSD X11"                 OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -28,7 +29,7 @@ option(PLAYFIELD_ENABLE_PACK          "Enable packager"         OFF)
 option(PLAYFIELD_ENABLE_STATIC        "Build a static library"  OFF)
 option(PLAYFIELD_ENABLE_SHARED        "Build a dynamic library" OFF)
 option(PLAYFIELD_ENABLE_DIST          "Build for packages"      OFF)
-option(PLAYFIELD_ENABLE_ROT90         "Rotate screen"           OFF)
+option(PLAYFIELD_ENABLE_ROT90         "Rotate screen for GBM"   OFF)
 
 #
 # Automatic Target Detection
@@ -46,6 +47,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_WASM_LOCAL
    OR PLAYFIELD_TARGET_UNITY
    OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
    OR PLAYFIELD_TARGET_NETBSD
    OR PLAYFIELD_TARGET_OPENBSD
 )
@@ -186,6 +188,8 @@ elseif(PLAYFIELD_TARGET_UNITY)
   set(STRATO_TARGET_UNITY ON)
 elseif(PLAYFIELD_TARGET_FREEBSD)
   set(STRATO_TARGET_FREEBSD ON)
+elseif(PLAYFIELD_TARGET_FREEBSD_WAYLAND)
+  set(STRATO_TARGET_FREEBSD_WAYLAND ON)
 elseif(PLAYFIELD_TARGET_NETBSD)
   set(STRATO_TARGET_NETBSD ON)
 elseif(PLAYFIELD_TARGET_OPENBSD)
@@ -483,6 +487,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_LINUX_WAYLAND
    OR PLAYFIELD_TARGET_LINUX_GBM
    OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
    OR PLAYFIELD_TARGET_NETBSD
    OR PLAYFIELD_TARGET_OPENBSD)
   add_executable(
@@ -573,6 +578,7 @@ if (   PLAYFIELD_TARGET_LINUX
     OR PLAYFIELD_TARGET_LINUX_WAYLAND
     OR PLAYFIELD_TARGET_LINUX_GBM
     OR PLAYFIELD_TARGET_FREEBSD
+    OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
     OR PLAYFIELD_TARGET_NETBSD
     OR PLAYFIELD_TARGET_OPENBSD)
 
@@ -583,6 +589,7 @@ if (   PLAYFIELD_TARGET_LINUX
   install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   if (   PLAYFIELD_TARGET_FREEBSD
+      OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
       OR PLAYFIELD_TARGET_NETBSD
       OR PLAYFIELD_TARGET_OPENBSD)
     install(

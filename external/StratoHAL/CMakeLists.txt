@@ -6,19 +6,20 @@ project(StratoHAL LANGUAGES C CXX)
 #
 
 # Target
-option(STRATO_TARGET_WINDOWS       "Build for Windows"                  OFF)
-option(STRATO_TARGET_MACOS         "Build for macOS"                    OFF)
-option(STRATO_TARGET_LINUX         "Build for Linux X11"                OFF)
-option(STRATO_TARGET_LINUX_WAYLAND "Build for Linux Wayland"            OFF)
-option(STRATO_TARGET_LINUX_GBM     "Build for Linux Framebuffer"        OFF)
-option(STRATO_TARGET_IOS           "Build for iOS"                      OFF)
-option(STRATO_TARGET_ANDROID       "Build for Android"                  OFF)
-option(STRATO_TARGET_WASM          "Build for Emscripten"               OFF)
-option(STRATO_TARGET_WASM_LOCAL    "Build for Emscripten (local file)"  OFF)
-option(STRATO_TARGET_UNITY         "Build for Unity"                    OFF)
-option(STRATO_TARGET_FREEBSD       "Build for FreeBSD"                  OFF)
-option(STRATO_TARGET_NETBSD        "Build for NetBSD"                   OFF)
-option(STRATO_TARGET_OPENBSD       "Build for OpenBSD"                  OFF)
+option(STRATO_TARGET_WINDOWS          "Build for Windows"                  OFF)
+option(STRATO_TARGET_MACOS            "Build for macOS"                    OFF)
+option(STRATO_TARGET_LINUX            "Build for Linux X11"                OFF)
+option(STRATO_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"            OFF)
+option(STRATO_TARGET_LINUX_GBM        "Build for Linux Framebuffer"        OFF)
+option(STRATO_TARGET_IOS              "Build for iOS"                      OFF)
+option(STRATO_TARGET_ANDROID          "Build for Android"                  OFF)
+option(STRATO_TARGET_WASM             "Build for Emscripten"               OFF)
+option(STRATO_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"  OFF)
+option(STRATO_TARGET_UNITY            "Build for Unity"                    OFF)
+option(STRATO_TARGET_FREEBSD          "Build for FreeBSD X11"              OFF)
+option(STRATO_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"          OFF)
+option(STRATO_TARGET_NETBSD           "Build for NetBSD"                   OFF)
+option(STRATO_TARGET_OPENBSD          "Build for OpenBSD"                  OFF)
 
 # Options
 option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
@@ -42,6 +43,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_WASM_LOCAL
    OR STRATO_TARGET_UNITY
    OR STRATO_TARGET_FREEBSD
+   OR STRATO_TARGET_FREEBSD_WAYLAND
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
 )
@@ -149,7 +151,8 @@ if(STRATO_TARGET_LINUX_GBM)
   find_library(DRM_LIBRARY drm REQUIRED)
 endif()
 
-if(STRATO_TARGET_LINUX_WAYLAND)
+if(   STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_FREEBSD_WAYLAND)
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(WAYLAND REQUIRED wayland-client wayland-egl)
   pkg_check_modules(EGL     REQUIRED egl)
@@ -238,7 +241,8 @@ if(   STRATO_TARGET_LINUX
 endif()
 
 # For Linux Wayland.
-if(STRATO_TARGET_LINUX_WAYLAND)
+if(   STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_FREEBSD_WAYLAND)
   set(STRATO_SOURCES
       src/image.c
       src/glyph.c
@@ -462,7 +466,8 @@ if(STRATO_TARGET_WINDOWS)
 endif()
 
 # Linux Wayland: Add -DUSE_GLES -DUSE_WAYLAND
-if(STRATO_TARGET_LINUX_WAYLAND)
+if(   STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_FREEBSD_WAYLAND)
   target_compile_definitions(strato PRIVATE USE_GLES USE_WAYLAND)
 endif()
 
@@ -600,7 +605,8 @@ if(   STRATO_TARGET_LINUX
 endif()
 
 # Linux Wayland.
-if(STRATO_TARGET_LINUX_WAYLAND)
+if(   STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_FREEBSD_WAYLAND)
   target_link_libraries(
     strato
     PUBLIC
@@ -659,7 +665,8 @@ endif()
 # Custom
 #
 
-if(STRATO_TARGET_LINUX_WAYLAND)
+if(   STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_FREEBSD_WAYLAND)
   find_program(WAYLAND_SCANNER NAMES wayland-scanner REQUIRED)
 
   set(XDG_SHELL_XML
