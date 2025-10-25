@@ -139,7 +139,9 @@ if(   STRATO_TARGET_LINUX
   find_library(X11_LIBRARY X11 REQUIRED)
   find_library(XPM_LIBRARY Xpm REQUIRED)
   find_library(GL_LIBRARY GL REQUIRED)
-  find_library(GLX_LIBRARY GLX)
+  if(NOT STRATO_TARGET_NETBSD)
+    find_library(GLX_LIBRARY GLX)
+  endif()
 endif()
 
 if(STRATO_TARGET_LINUX)
