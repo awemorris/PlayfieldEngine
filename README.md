@@ -619,6 +619,13 @@ You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
+## Contact
+
+Email: Awe Morris <awe@noctvm.io>
+Project Page: https://noctvm.io/playfield/
+
+---
+
 ## Join Us
 
 Playfield is still in its early stages. We're building the game

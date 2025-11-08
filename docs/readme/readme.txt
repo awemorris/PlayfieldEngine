@@ -46,7 +46,7 @@ Contact
 -------
 
 Email: Awe Morris <awe@noctvm.io>
-Project Page: https://github.com/awemorris/PlayfieldEngine
+Project Page: https://noctvm.io/playfield/
 
 I'd love to hear from you, feel free to reach out.
 
