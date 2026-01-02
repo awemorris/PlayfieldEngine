@@ -162,6 +162,7 @@ bool on_event_start(void)
 
 	/* Initialize the upper layer. */
 #ifdef USE_INITHOOK
+	bool playfield_init_hook(void);
 	playfield_init_hook();
 #endif
 

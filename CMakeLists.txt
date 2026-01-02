@@ -31,6 +31,9 @@ option(PLAYFIELD_ENABLE_SHARED        "Build a dynamic library" OFF)
 option(PLAYFIELD_ENABLE_DIST          "Build for packages"      OFF)
 option(PLAYFIELD_ENABLE_ROT90         "Rotate screen for GBM"   OFF)
 
+# For derived projects
+option(PLAYFIELD_ENABLE_INITHOOK    "Enable the inithook function"  OFF)
+
 #
 # Automatic Target Detection
 #
@@ -232,7 +235,7 @@ endif()
 
 # Library mode
 if(PLAYFIELD_ENABLE_INITHOOK)
-  add_definitions(-DPLAYFIELD_ENABLE_INITHOOK=1)
+  target_compile_definitions(playfield PRIVATE USE_INITHOOK)
 endif()
 
 #
