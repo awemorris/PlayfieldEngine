@@ -585,45 +585,46 @@ endif()
 # Install
 #
 
-if (   PLAYFIELD_TARGET_LINUX
-    OR PLAYFIELD_TARGET_LINUX_WAYLAND
-    OR PLAYFIELD_TARGET_LINUX_GBM
-    OR PLAYFIELD_TARGET_FREEBSD
-    OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
-    OR PLAYFIELD_TARGET_NETBSD
-    OR PLAYFIELD_TARGET_OPENBSD)
+if(   PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_LINUX_WAYLAND
+   OR PLAYFIELD_TARGET_LINUX_GBM
+   OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD)
+  if(NOT PLAYFIELD_ENABLE_STATIC OR NOT PLAYFIELD_ENABLE_SHARED)
+    include(GNUInstallDirs)
 
-  include(GNUInstallDirs)
+    install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS playfield-compiler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-  install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS playfield-compiler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-  if (   PLAYFIELD_TARGET_FREEBSD
-      OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
-      OR PLAYFIELD_TARGET_NETBSD
-      OR PLAYFIELD_TARGET_OPENBSD)
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "playfield.1"
-    )
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "playfield-compiler.1"
-    )
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "playfield-pack.1"
-    )
-  else()
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1"
-      DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
-    )
+    if(   PLAYFIELD_TARGET_FREEBSD
+       OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+       OR PLAYFIELD_TARGET_NETBSD
+       OR PLAYFIELD_TARGET_OPENBSD)
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield.1"
+      )
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield-compiler.1"
+      )
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield-pack.1"
+      )
+    else()
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1"
+        DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+      )
+    endif()
   endif()
 endif()
