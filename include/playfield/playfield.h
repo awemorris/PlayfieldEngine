@@ -4,8 +4,8 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-#ifndef PLAYFIELD_NOCT2D_H
-#define PLAYFIELD_NOCT2D_H
+#ifndef PLAYFIELD_PLAYFIELD_H
+#define PLAYFIELD_PLAYFIELD_H
 
 #include <playfield/c89compat.h>
 #include <stratohal/platform.h>
@@ -173,5 +173,65 @@ playfield_read_save_data(
 bool
 playfield_check_save_data(
 	const char *key);
+
+/*
+ * Call a VM function.
+ */
+bool call_vm_function(const char *func_name);
+
+/*
+ * Call a VM tag function.
+ */
+bool call_vm_tag_function(bool *tag_end);
+
+/*
+ * Set a VM integer.
+ */
+bool set_vm_int(const char *prop_name, int val);
+
+/*
+ * Get a VM integer.
+ */
+bool get_vm_int(const char *prop_name, int *val);
+
+/*
+ * Get the heap usage.
+ */
+size_t get_heap_usage(void);
+
+/*
+ * Do a fast GC.
+ */
+void fast_gc(void);
+
+/*
+ * Do a full GC.
+ */
+void full_gc(void);
+
+/*
+ * Load a tag file.
+ */
+bool load_tag_file(const char *file);
+
+/*
+ * Get a tag file name.
+ */
+const char *get_tag_file_name(void);
+
+/*
+ * Get a tag line.
+ */
+int get_tag_line(void);
+
+/*
+ * Get a current tag.
+ */
+struct tag *get_current_tag(void);
+
+/*
+ * Move to the next tag.
+ */
+void move_to_next_tag(void);
 
 #endif

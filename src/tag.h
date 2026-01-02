@@ -8,8 +8,8 @@
  * Tag System
  */
 
-#ifndef NOCT2D_TAG_H
-#define NOCT2D_TAG_H
+#ifndef PLAYFIELD_TAG_H
+#define PLAYFIELD_TAG_H
 
 /*
  * Maximum properties in a tag.
@@ -32,20 +32,5 @@ void init_tag(void);
 
 /* Cleanup the tag system. */
 void cleanup_tag(void);
-
-/* Load a tag file. */
-bool load_tag_file(const char *file);
-
-/* Get a tag file name. */
-const char *get_tag_file_name(void);
-
-/* Get a tag line. */
-int get_tag_line(void);
-
-/* Get a current tag. */
-struct tag *get_current_tag(void);
-
-/* Move to the next tag. */
-void move_to_next_tag(void);
 
 #endif

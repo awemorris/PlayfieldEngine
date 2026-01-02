@@ -160,6 +160,11 @@ bool on_event_start(void)
 	/* Initialize the lap timer. */
 	reset_lap_timer(&lap_origin);
 
+	/* Initialize the upper layer. */
+#ifdef USE_INITHOOK
+	playfield_init_hook();
+#endif
+
 	/* Call start(). */
 	if (!call_vm_function("start"))
 		return false;

@@ -230,6 +230,11 @@ if(PLAYFIELD_ENABLE_ROT90)
   set(STRATO_ENABLE_ROT90 ON)
 endif()
 
+# Library mode
+if(PLAYFIELD_ENABLE_INITHOOK)
+  add_definitions(-DPLAYFIELD_ENABLE_INITHOOK=1)
+endif()
+
 #
 # Release/Debug
 #
@@ -320,7 +325,7 @@ if(PLAYFIELD_ENABLE_I18N)
 endif()
 
 # Resource
-if(PLAYFIELD_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS AND NOT PLAYFIELD_ENABLE_STATIC)
   set(PLAYFIELD_RESOURCES
     resources/windows/resource.rc
   )
@@ -330,6 +335,7 @@ endif()
 if(   PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
    OR PLAYFIELD_TARGET_UNITY
+   OR PLAYFIELD_ENABLE_STATIC
 )
   # Make a library.
   if(PLAYFIELD_ENABLE_SHARED)
@@ -521,7 +527,7 @@ endif()
 # Editor Target
 #
 
-if(PLAYFIELD_TARGET_WINDOWS AND MSVC)
+if(PLAYFIELD_TARGET_WINDOWS AND MSVC AND NOT PLAYFIELD_ENABLE_STATIC)
   add_executable(
     playfield-editor
     src/editor.c
