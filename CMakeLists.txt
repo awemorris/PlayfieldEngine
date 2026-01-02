@@ -372,13 +372,13 @@ else()
 endif()
 
 # Link NoctLang and Strato
-target_link_libraries(playfield PRIVATE
+target_link_libraries(playfield PUBLIC
   noctlang
   strato
 )
 
 # -Iinclude
-target_include_directories(playfield PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(playfield PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -DUSE_JIT
 if(PLAYFIELD_ENABLE_JIT)
@@ -403,16 +403,16 @@ endif()
 # Windows quirks
 if(PLAYFIELD_TARGET_WINDOWS)
   if(MSVC)
-    target_compile_options(playfield PRIVATE /utf-8)
-    target_link_options(playfield PRIVATE /SUBSYSTEM:WINDOWS)
+    target_compile_options(playfield PUBLIC /utf-8)
+    target_link_options(playfield PUBLIC /SUBSYSTEM:WINDOWS)
   else()
-    target_compile_options(playfield PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
-    target_link_options(playfield PRIVATE -mwindows -static)
+    target_compile_options(playfield PUBLIC -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    target_link_options(playfield PUBLIC -mwindows -static)
   endif()
 endif()
 
 # Emscripten
-if(PLAYFIELD_TARGET_WASM)
+if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
@@ -437,7 +437,7 @@ if(PLAYFIELD_TARGET_WASM)
 endif()
 
 # Emscripten
-if(PLAYFIELD_TARGET_WASM_LOCAL)
+if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
   set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
@@ -496,17 +496,19 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
    OR PLAYFIELD_TARGET_NETBSD
    OR PLAYFIELD_TARGET_OPENBSD)
-  add_executable(
-    playfield-compiler
-    src/compiler.c
-  )
-  target_include_directories(playfield-compiler PRIVATE
-    external/NoctLang/src/core
-    external/NoctLang/src/backend
-  )
-  target_link_libraries(playfield-compiler noctlang)
-  if(UNIX)
-    target_link_libraries(playfield-compiler m)
+  if(NOT PLAYFIELD_ENABLE_STATIC AND NOT PLAYFIELD_ENABLE_SHARED)
+    add_executable(
+      playfield-compiler
+      src/compiler.c
+    )
+    target_include_directories(playfield-compiler PRIVATE
+      external/NoctLang/src/core
+      external/NoctLang/src/backend
+    )
+    target_link_libraries(playfield-compiler noctlang)
+    if(UNIX)
+      target_link_libraries(playfield-compiler m)
+    endif()
   endif()
 endif()
 
@@ -514,7 +516,7 @@ endif()
 # Web Server Target
 #
 
-if(PLAYFIELD_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS AND NOT PLAYFIELD_ENABLE_STATIC)
   add_executable(
     playfield-web
     src/webserver.c
@@ -547,7 +549,7 @@ endif()
 # macOS Bundle
 #
 
-if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BUNDLE)
+if(PLAYFIELD_TARGET_MACOS AND NOT PLAYFIELD_ENABLE_STATIC AND PLAYFIELD_ENABLE_BUNDLE)
   # Use capital name.
   set_target_properties(playfield PROPERTIES OUTPUT_NAME "Playfield")
 
