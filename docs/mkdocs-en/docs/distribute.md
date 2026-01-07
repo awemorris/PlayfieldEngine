@@ -7,7 +7,7 @@ Once your game is ready, you can bundle it into a single package for easy distri
 
 ### On Windows
 
-You can use the packaging tool included with Playfield:
+You can use the packaging tool included with Playfield Engine:
 
 1. Go to the `misc/windows/` folder.
 2. Drag and drop all your game files (such as main.pf, images, sounds, etc.) onto `playfield-pack.exe`.
@@ -48,19 +48,19 @@ Place them in the same folder. Your players can then run the game by simply doub
 Use a third-party tool to replace the application icon in playfield.exe.
 
 Or alternatively:
-1. Download the Playfield source code.
+1. Download the Playfield Engine source code.
 2. Replace `resources/windows/icon.ico` with your own icon.
 3. Rebuild the app.
 
 ### For macOS
 
-1. Download the Playfield source code.
+1. Download the Playfield Engine source code.
 2. Replace `resources/macos/icon512.png` with your own icon image.
 3. Rebuild the app.
 
 ### For Linux
 
-1. Download the Playfield source code.
+1. Download the Playfield Engine source code.
 2. Replace `external/StratoHAL/src/icon.c`, with your own icon data.
   * The file must contain a valid XPM image text.
 3. Rebuild the app.

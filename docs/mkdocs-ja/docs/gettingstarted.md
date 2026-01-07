@@ -5,25 +5,29 @@
 
 ## Playfield の取得
 
-**ダウンロード**
-
-* 最新の **All-in-One** の ZIP を Playfield の [ウェブサイト](https://noctvm.io/playfield/) からダウンロードしてください
-* ZIP ファイルをお好きなフォルダに展開します
 
 **Windows の場合:**
 
-* `playfield.exe` をダウンロードしてください
-* サンプルゲームが自動的に開始します
+* [Web サイト](https://noctvm.io/playfield/) から `Windows 11 64ビット ZIP` をダウンロードします
+* [Web サイト](https://noctvm.io/playfield/) から `サンプルゲーム ZIP` をダウンロードします
+* `サンプルゲーム ZIP` をお好きなフォルダに展開します
+* `Windows 11 64-bit ZIP` を展開し、`playfield.exe` をゲームフォルダにコピーします (例: "samples/shoot2")
+* `playfield.exe` をダブルクリックして、ゲームを実行します
 
 **macOS の場合:**
 
-* `misc/macos/Playfield.dmg` を開きます
-* 中に入っている `Playfield` アプリを、`playfield.exe` と同じフォルダにコピーします
+* [Web サイト](https://noctvm.io/playfield/) から `macOS Arm64/Intel DMG` をダウンロードします
+* [Web サイト](https://noctvm.io/playfield/) から `サンプルゲーム ZIP` をダウンロードします
+* `サンプルゲーム ZIP` をお好きなフォルダに展開します
+* `DMG` を展開し、`Playfield` アプリをゲームフォルダにコピーします (例: "samples/shoot2")
 * `Playfield` アプリをダブルクリックして、ゲームを実行します
 
 **Linux の場合:**
 
-* `misc/linux/Playfield-x86_64.AppImage` を `playfield.exe` と同じフォルダにコピーします
+* [Web サイト](https://noctvm.io/playfield/) から `Playfield-x86_64.AppImage` をダウンロードします
+* [Web サイト](https://noctvm.io/playfield/) から `サンプルゲーム ZIP` をダウンロードします
+* `サンプルゲーム ZIP` をお好きなフォルダに展開します
+* `AppImage` を ゲームフォルダにコピーします (例: "samples/shoot2")
 * 必要であれば、AppImage ファイルを実行可能にします (`chmod +x Playfield-x86_64.AppImage`)
 * AppImage をダブルクリックして、ゲームを実行します
 
@@ -71,7 +75,7 @@ func render() {
 
 ## ゲームの実行
 
-Playfield は下記の２通りの方法でゲームをロードできます:
+Playfield Engine は下記の２通りの方法でゲームをロードできます:
 
 * `main.pf` ファイルを含むフォルダ
 * `assets.arc` ファイル (すべてのゲームアセットが入っている)

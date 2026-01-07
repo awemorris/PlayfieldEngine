@@ -1,7 +1,7 @@
 Playfield Script の文法
 =======================
 
-`Playfield` はスクリプト言語として `Noct` を使用します。
+`Playfield Engine` はスクリプト言語として `Noct` を使用します。
 
 ## 代入
 

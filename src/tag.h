@@ -1,7 +1,8 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Copyright (c) 2025, 2026, Awe Morris. All rights reserved.
  */
 
 /*
@@ -32,5 +33,20 @@ void init_tag(void);
 
 /* Cleanup the tag system. */
 void cleanup_tag(void);
+
+/* Load a tag file. */
+bool load_tag_file(const char *file);
+
+/* Get a tag file name. */
+const char *get_tag_file_name(void);
+
+/* Get a tag line. */
+int get_tag_line(void);
+
+/* Get a current tag. */
+struct tag *get_current_tag(void);
+
+/* Move to the next tag. */
+bool move_to_next_tag(void);
 
 #endif

@@ -1,10 +1,11 @@
-Playfield Design Overview
-=========================
+Playfield Engine Design Overview
+================================
 
 ## Porting Layer
 
-Did you know that `Playfield` runs seamlessly on Windows, macOS, Linux, iPhone,
-iPad, Android, Web browsers, — and even game consoles?
+Did you know that `Playfield Engine` runs seamlessly on Windows,
+macOS, Linux, iPhone, iPad, Android, Web browsers, — and even game
+consoles?
 
 The `extern/StratoHAL` directory contains its platform abstraction layer,
 which cleanly handles all platform-specific differences.
@@ -81,8 +82,9 @@ Only enabled on x86 and x86_64 Windows target.
 
 ## Main Layer
 
-The main layer consists of `src/*.c` files, which defines API for `Playfield`.
-There are C APIs defined in `src/api.c`, and there are Noct wrappers defined in `src/vm.c`.
+The main layer consists of `src/*.c` files, which defines API for
+`Playfield Engine`. There are C APIs defined in `src/api.c`, and there
+are Noct wrappers defined in `src/vm.c`.
 
 ### Tag File
 

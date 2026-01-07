@@ -1,17 +1,19 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Copyright (c) 2025, 2026, Awe Morris. All rights reserved.
  */
 
 /*
- * C API
+ * Playfield Engine C API
  */
 
 #include <playfield/playfield.h>
 
 #include "engine.h"
 #include "common.h"
+#include "vm.h"
 #include "tag.h"
 
 #include <stdio.h>
@@ -21,7 +23,7 @@
 
 #define TEXTURE_COUNT	(256)
 
-/* Texture Struct */
+/* Texture struct. */
 struct texture_entry {
 	bool is_used;
 	struct image *img;
@@ -245,6 +247,10 @@ playfield_destroy_texture(
 	tex_tbl[tex_id].is_used = false;
 	destroy_image(tex_tbl[tex_id].img);
 }
+
+/*
+ * Rendering
+ */
 
 /*
  * Render a texture.
@@ -538,31 +544,8 @@ playfield_set_sound_volue(
 }
 
 /*
- * Tag
+ * Save Data
  */
-
-/*
- * Load a tag file and move to it.
- */
-bool
-playfield_move_to_tag_file(
-	const char *file)
-{
-	/* Load the tag file. */
-	if (!load_tag_file(file))
-		return false;
-
-	return true;
-}
-
-/*
- * Move to a next tag.
- */
-void
-playfield_move_to_next_tag(void)
-{
-	move_to_next_tag();
-}
 
 /*
  * Write save data.
@@ -755,4 +738,187 @@ static char get_hex_char(int val)
 	}
 	assert(0);
 	return -1;
+}
+
+/*
+ * VM
+ */
+
+/*
+ * Get the VM environment.
+ */
+NoctEnv *playfield_get_vm_env(void)
+{
+	NoctEnv *env;
+
+	env = get_vm_env();
+
+	return env;
+}
+
+/*
+ * Call a VM function.
+ */
+bool playfield_call_vm_function(
+	const char *func_name)
+{
+	if (!call_vm_function(func_name))
+		return false;
+
+	return true;
+}
+
+/*
+ * Call a VM tag function.
+ */
+bool playfield_call_vm_tag_function(
+	bool *tag_end)
+{
+	if (!call_vm_tag_function(tag_end))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a VM integer.
+ */
+bool playfield_set_vm_int(
+	const char *prop_name,
+	int val)
+{
+	if (!set_vm_int(prop_name, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a VM integer.
+ */
+bool playfield_get_vm_int(
+	const char *prop_name,
+	int *val)
+{
+	if (!get_vm_int(prop_name, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Tag
+ */
+
+/*
+ * Load a tag file and move to it.
+ */
+bool
+playfield_move_to_tag_file(
+	const char *file)
+{
+	if (!load_tag_file(file))
+		return false;
+
+	return true;
+}
+
+/*
+ * Move to a next tag.
+ */
+bool
+playfield_move_to_next_tag(void)
+{
+	if (!move_to_next_tag())
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a tag file name.
+ */
+const char *
+playfield_get_tag_file(void)
+{
+	const char *fname;
+
+	fname = get_tag_file_name();
+
+	return fname;
+}
+
+/*
+ * Get a tag line.
+ */
+int
+playfield_get_tag_line(void)
+{
+	int line;
+
+	line = get_tag_line();
+
+	return line;
+}
+
+/*
+ * Get the name of the current tag.
+ */
+const char*
+playfield_get_tag_name(void)
+{
+	struct tag *t;
+
+	t = get_current_tag();
+
+	return t->tag_name;
+}
+
+/*
+ * Get the property count of the current tag.
+ */
+int
+playfield_get_tag_property_count(void)
+{
+	struct tag *t;
+
+	t = get_current_tag();
+
+	return t->prop_count;
+}
+
+/*
+ * Get the property name of the current tag.
+ */
+const char *
+playfield_get_tag_property_name(
+	int index)
+{
+	struct tag *t;
+
+	t = get_current_tag();
+
+	assert(index < t->prop_count);
+	if (index >= t->prop_count)
+		return false;
+
+	return t->prop_name[index];
+}
+
+/*
+ * Get the property value of the current tag.
+ */
+const char *
+playfield_get_tag_property_value(
+	int index)
+{
+	struct tag *t;
+
+	t = get_current_tag();
+
+	assert(index < t->prop_count);
+	if (index >= t->prop_count)
+		return false;
+
+	return t->prop_value[index];
 }

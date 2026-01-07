@@ -3,27 +3,30 @@ Getting Started
 
 Follow the steps below to run your first game.
 
-## Get Playfield
-
-**Download**
-
-* Download the latest **All-in-One** ZIP of Playfield from [the website](https://noctvm.io/playfield/).
-* Extract the ZIP file to any folder you like.
+## Get Playfield Engine
 
 **On Windows:**
-
-* Double-click `playfield.exe`.
-* The sample game will start automatically.
+* Download the latest `Windows 11 64-bit ZIP` from [the website](https://noctvm.io/playfield/).
+* Download the latest `Sample Games ZIP` from [the website](https://noctvm.io/playfield/).
+* Extract the `Sample Games ZIP` file to any folder you like.
+* Extract the `Windows 11 64-bit ZIP` file, and copy `playfield.exe` to a game folder. (e.g., "samples/shoot2")
+* Double-click `playfield.exe` to run the sample game.
 
 **On macOS:**
 
-* Open `misc/macos/Playfield.dmg`.
-* Copy the `Playfield` app from the DMG into the same folder as `playfield.exe`.
+* Download the latest `macOS Arm64/Intel DMG` from [the website](https://noctvm.io/playfield/).
+* Download the latest `Sample Games ZIP` from [the website](https://noctvm.io/playfield/).
+* Extract the `Sample Games` ZIP file to any folder you like.
+* Open `Playfield.dmg`.
+* Copy the `Playfield` app from the DMG into a game folder. (e.g., "samples/shoot2")
 * Double-click the `Playfield` app to run the sample game.
 
 **On Linux:**
 
-* Copy `misc/linux/Playfield-x86_64.AppImage` into the same folder as `playfield.exe`.
+* Download the latest `macOS Arm64/Intel DMG` from [the website](https://noctvm.io/playfield/).
+* Download the latest `Playfield-x86_64.AppImage` from [the website](https://noctvm.io/playfield/).
+* Extract the `Sample Games` ZIP file to any folder you like.
+* Place the AppImage file to a game folder. (e.g., "samples/shoot2")
 * Make the AppImage executable if necessary (`chmod +x Playfield-x86_64.AppImage`).
 * Double-click the AppImage to run the sample game.
 
@@ -72,7 +75,7 @@ func render() {
 
 ## Running Games
 
-Playfield can load a game in two ways:
+Playfield Engine can load a game in two ways:
 
 * From a folder that contains a `main.pf` file.
 * From an `assets.arc` file that bundles all game assets.

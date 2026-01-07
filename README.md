@@ -1,9 +1,9 @@
-Playfield
-=========
+Playfield Engine
+================
 
 [![License: zlib](https://img.shields.io/badge/License-zlib-blue.svg)](LICENSE)
 
-`Playfield` is a 2D game scripting runtime that works everywhere.
+`Playfield Engine` is a 2D game scripting runtime that works everywhere.
 With scripts written in `Playfield Script`,
 it can render graphics and play sounds seamlessly across platforms.
 
@@ -35,7 +35,7 @@ it can render graphics and play sounds seamlessly across platforms.
 
 ## Feature Highlights
 
-Built completely from scratch, Playfield features:
+Built completely from scratch, Playfield Engine features:
 
 - **Comfortable Scripting:**
     - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
@@ -53,27 +53,27 @@ Built completely from scratch, Playfield features:
 
 ---
 
-## Why Playfield?
+## Why Playfield Engine?
 
 _"If a game engine could run anywhere, how would the world change?"_
 
-Playfield was born from this single question.
+Playfield Engine was born from this single question.
 
 Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.  Playfield was created with the belief
-that every creator deserves space to explore, no matter their
+live, or what tools you have.  Playfield Enginewas created with the
+belief that every creator deserves space to explore, no matter their
 surroundings.
 
 It runs smoothly even on older or low-spec machines — if you have a
 computer, there's a place for you to create.  It's a helpful companion
 for creators everywhere — especially in places with fewer resources.
-If you have something to make, Playfield will be here to walk with
-you.
+If you have something to make, Playfield Engine will be here to walk
+with you.
 
 Whether you're using a Raspberry Pi in a classroom, or using a
-UN-issued Chromebook in a temporary shelter, Playfield offers gentle
-tools to help bring your ideas to life — in a way that feels simple,
-thoughtful, and your own.
+UN-issued Chromebook in a temporary shelter, Playfield Engine offers
+gentle tools to help bring your ideas to life — in a way that feels
+simple, thoughtful, and your own.
 
 The goal is simple:
 **To make game development accessible, thoughtful, and within reach
@@ -99,33 +99,33 @@ These are the sample games that work on Web browsers.
 
 ## Gallery
 
-Playfield running on Windows 11:
+Playfield Engine running on Windows 11:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield running on Windows 11">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield Engine running on Windows 11">
 
-Playfield running on macOS:
+Playfield Engine running on macOS:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield running on macOS">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield Engine running on macOS">
 
-Playfield running on Linux:
+Playfield Engine running on Linux:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield running on Linux">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield Engine running on Linux">
 
-Playfield running on iOS simulator:
+Playfield Engine running on iOS simulator:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield running on iOS simulator">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield Engine running on iOS simulator">
 
-Playfield running on Android emulator:
+Playfield Engine running on Android emulator:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield running on Android emulator">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
 
-Playfield running on Windows XP — because why not:
+Playfield Engine running on Windows XP — because why not:
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield running on Windows XP">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
 
-Playfield running on NetBSD — Of course it runs!: 
+Playfield Engine running on NetBSD — Of course it runs!: 
 
-<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield running on NetBSD">
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
 
 ---
 
@@ -246,13 +246,13 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 - [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
 - [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
 - [Playfield Script API](docs/mkdocs-en/docs/api.md)
-- [How To Build Playfield](docs/mkdocs-en/docs/build.md)
+- [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
 
 ---
 
 ## Technical Overview
 
-Playfield is not merely a wrapper around SDL combined with a
+Playfield Engine is not merely a wrapper around SDL combined with a
 scripting language. It features its own rendering and audio backends,
 and its own scripting language, positioning it as a fully independent
 game engine.
@@ -313,7 +313,7 @@ Unity without relying on any NDA-restricted code.
 
 ### Console Unity Plugin Notice
 
-Playfield provides Unity Plugin binaries for platforms
+Playfield Engine provides Unity Plugin binaries for platforms
 including Windows 64-bit and game consoles.  These binaries are built
 entirely with the open-source version of LLVM/Clang toolchain (no
 proprietary SDKs).
@@ -325,8 +325,8 @@ Playfield Script = NoctLang + Playfield API
 ```
 
 **NoctLang** is a lightweight scripting language designed specifically
-for Playfield. With a game-oriented syntax, it emphasizes clarity,
-instant startup, and tight integration with the engine.
+for Playfield Engine. With a game-oriented syntax, it emphasizes
+clarity, instant startup, and tight integration with the engine.
 
 The built-in JIT compiler supports a wide range of CPU architectures,
 including both 32-bit and 64-bit of: **Intel, Arm, RISC-V, PowerPC, MIPS.**
@@ -365,7 +365,7 @@ The garbage collector allocates 256 MB at startup because currently 256 MB is th
 
 ### Garbage Collection
 
-Playfield implements a high-performance garbage collector
+Playfield Engine implements a high-performance garbage collector
 similar to the HotSpot VM in Java, so you generally don’t need to
 worry much about delays caused by garbage collection.
 
@@ -377,7 +377,8 @@ worry much about delays caused by garbage collection.
 
 ## Tests
 
-Playfield is tested on the following environments in the development.
+Playfield Engine is tested on the following environments in the
+development.
 
 |Type       |OS              |Version |Architecture    |
 |-----------|----------------|--------|----------------|
@@ -398,7 +399,8 @@ Playfield is tested on the following environments in the development.
 
 ## CMake Presets
 
-Playfield ships with CMake presets covering various platforms and build configurations.
+Playfield Engine ships with CMake presets covering various platforms
+and build configurations.
 
 |Preset                       |Platform       |Compiler   |Directory                       |Target           |Type           |
 |-----------------------------|---------------|-----------|--------------------------------|-----------------|---------------|
@@ -451,7 +453,7 @@ To generate game templates with ChatGPT, please let it load the following refere
 - [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
 - [Playfield Script API](docs/mkdocs-en/docs/api.md)
 
-ChatGPT can then create runnable Playfield games directly.
+ChatGPT can then create runnable Playfield Engine games directly.
 
 **Note:** In ChatGPT, you need to click the **"+"** button and enable
 **"Web Search"** so that it can read the above references.
@@ -460,7 +462,7 @@ ChatGPT can then create runnable Playfield games directly.
 
 ## Localization / Internationalization
 
-Playfield supports the following locales for the UI messages.
+Playfield Engine supports the following locales for the UI messages.
 
 | Language               | Locale Code | Translation Type         | Scope of Translation             |
 |------------------------|-------------|--------------------------|----------------------------------|
@@ -476,7 +478,7 @@ Playfield supports the following locales for the UI messages.
 | Japanese               | `ja-JP`     | Professional Translation | UI / Docs                        |
 
 **How to switch languages**  
-Playfield uses the system locale.
+Playfield Engine uses the system locale.
 To switch languages, set your system locale.
 
 **Contributing Translations**  
@@ -487,7 +489,7 @@ To propose a new translation or update an existing one, please open an Issue or 
 
 ## Third-party Libraries
 
-Playfield uses the following libraries.
+Playfield Engine uses the following libraries.
 The source code tarballs for the libraries are included in this repository.
 
 - zlib
@@ -595,23 +597,23 @@ Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
 
 ## NoctVM Ecosystem
 
-Playfield is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
 
 - **NoctLang** — portable scripting language (used in this project)
-- **Playfield* — go-anywhere 2D game engine (this project)
+- **Playfield Engine* — go-anywhere 2D game engine (this project)
 - NoctUI — a declarative UI library (not used in this project)
 
 Together, they form the foundation of the Noct ecosystem.
 NoctLang itself is just the core language engine with no complex runtime.
-Playfield is one of the runtimes that embeds and extends the NoctLang core.
+Playfield Engine is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
 ```
-Playfield
-© 2025 Awe Morris
+Playfield Engine
+© 2025, 2026 Awe Morris
 ```
 
 Playfield is available as open-source software under the **zlib License**.
@@ -628,14 +630,14 @@ Project Page: https://noctvm.io/playfield/
 
 ## Join Us
 
-Playfield is still in its early stages. We're building the game
+Playfield Engine is still in its early stages. We're building the game
 engine with care, hoping it will inspire and empower creators around
 the world.
 
 If you're interested in contributing — whether it's code,
 documentation, testing, or ideas — we'd be happy to have you with us.
 
-Every small step helps shape what Playfield can become. You're
+Every small step helps shape what Playfield Engine can become. You're
 welcome to join us on this journey.
 
 [Join us on Discord](https://discord.gg/ybHWSqDVEX)

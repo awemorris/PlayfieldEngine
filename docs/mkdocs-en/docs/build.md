@@ -1,7 +1,7 @@
-How To Build Playfield
-======================
+How To Build Playfield Engine
+=============================
 
-Playfield fully utilizes the CMake build system.
+Playfield Engine fully utilizes the CMake build system.
 
 * Notes
     * Requires CMake 3.22 or later
@@ -18,7 +18,7 @@ Playfield fully utilizes the CMake build system.
 
 ### Steps
 
-* Download the [Playfield source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield Engine source code](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Open the top of the source code folder by Visual Studio.
 * Choose the `VS2022 MSVC x64 Release` target. (Alternatively x86 and arm64 is available)
 * Build the project.
@@ -115,7 +115,7 @@ The target `build-macos/Playfield.app` will be created.
 ### Steps
 
 * Pack assets into the `assets.arc` file.
-* Download the [Playfield binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Copy your `assets.arc` file into the `misc/ios/resources` folder.
 * Open the `misc/ios` folder by Xcode.
 
@@ -129,7 +129,7 @@ The target `build-macos/Playfield.app` will be created.
 
 ### Steps
 
-* Download the [Playfield binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
+* Download the [Playfield Engine binary](https://github.com/awemorris/PlayfieldEngine/releases/tag/latest) and extract it.
 * Copy your asset files into the `misc/android/app/src/main/assets` folder.
 * Open the `misc/android` folde by Android Studio
 

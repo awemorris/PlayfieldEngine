@@ -1,11 +1,12 @@
 /* -*- coding: utf-8; indent-tabs-mode: t; tab-width: 4; c-basic-offset: 4; -*- */
 
 /*
- * Copyright (C) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Copyright (c) 2025, 2026, Awe Morris. All rights reserved.
  */
 
 /*
- * A simple HTTP server specialized for PlayFieldVM.
+ * A simple HTTP server specialized for Playfield Engine.
  */
 
 #include <stdio.h>

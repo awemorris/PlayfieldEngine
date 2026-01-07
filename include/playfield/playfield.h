@@ -1,7 +1,12 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Copyright (c) 2025, 2026, Awe Morris. All rights reserved.
+ */
+
+/*
+ * Playfield Engine C API
  */
 
 #ifndef PLAYFIELD_PLAYFIELD_H
@@ -9,12 +14,11 @@
 
 #include <playfield/c89compat.h>
 #include <stratohal/platform.h>
+#include <noct/noct.h>
 
 /*
- * C API
+ * Texture
  */
-
-struct image;
 
 /*
  * Create a color texture.
@@ -45,6 +49,10 @@ playfield_load_texture(
 void
 playfield_destroy_texture(
 	int tex_id);
+
+/*
+ * Rendering
+ */
 
 /*
  * Render a texture.
@@ -92,6 +100,10 @@ playfield_draw(
 	int y);
 
 /*
+ * Font
+ */
+
+/*
  * Load a font.
  */
 bool
@@ -111,6 +123,10 @@ playfield_create_text_texture(
 	int *tex_id,
 	int *width,
 	int *height);
+
+/*
+ * Sound
+ */
 
 /*
  * Play a sound on a stream.
@@ -136,17 +152,8 @@ playfield_set_volume(
 	float val);
 
 /*
- * Move to a tag file.
+ * Save Data
  */
-bool
-playfield_move_to_tag_file(
-	const char *file);
-
-/*
- * Move to a next tag.
- */
-void
-playfield_move_to_next_tag(void);
 
 /*
  * Write save data.
@@ -175,63 +182,98 @@ playfield_check_save_data(
 	const char *key);
 
 /*
+ * VM
+ */
+
+/*
+ * Get the VM environment.
+ */
+NoctEnv *
+playfield_get_vm_env(void);
+
+/*
  * Call a VM function.
  */
-bool call_vm_function(const char *func_name);
+bool
+playfield_call_vm_function(
+	const char *func_name);
 
 /*
  * Call a VM tag function.
  */
-bool call_vm_tag_function(bool *tag_end);
+bool
+playfield_call_vm_tag_function(
+	bool *tag_end);
 
 /*
  * Set a VM integer.
  */
-bool set_vm_int(const char *prop_name, int val);
+bool
+playfield_set_vm_int(
+	const char *prop_name,
+	int val);
 
 /*
  * Get a VM integer.
  */
-bool get_vm_int(const char *prop_name, int *val);
+bool
+playfield_get_vm_int(
+	const char *prop_name,
+	int *val);
 
 /*
- * Get the heap usage.
+ * Tag
  */
-size_t get_heap_usage(void);
 
 /*
- * Do a fast GC.
+ * Load a tag file and move to it.
  */
-void fast_gc(void);
-
-/*
- * Do a full GC.
- */
-void full_gc(void);
-
-/*
- * Load a tag file.
- */
-bool load_tag_file(const char *file);
-
-/*
- * Get a tag file name.
- */
-const char *get_tag_file_name(void);
-
-/*
- * Get a tag line.
- */
-int get_tag_line(void);
-
-/*
- * Get a current tag.
- */
-struct tag *get_current_tag(void);
+bool
+playfield_move_to_tag_file(
+	const char *file);
 
 /*
  * Move to the next tag.
  */
-void move_to_next_tag(void);
+bool
+playfield_move_to_next_tag(void);
+
+/*
+ * Get the current tag file name.
+ */
+const char *
+playfield_get_tag_file(void);
+
+/*
+ * Get the line number of the current tag.
+ */
+int
+playfield_get_tag_line(void);
+
+/*
+ * Get the name of the current tag.
+ */
+const char*
+playfield_get_tag_name(void);
+
+/*
+ * Get the property count of the current tag.
+ */
+int
+playfield_get_tag_property_count(void);
+
+/*
+ * Get the property name of the current tag.
+ */
+const char *
+playfield_get_tag_property_name(
+	int index);
+
+/*
+ * Get the property value of the current tag.
+ */
+const char *
+playfield_get_tag_property_value(
+	int index);
 
 #endif
