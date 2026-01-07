@@ -60,7 +60,7 @@ _"If a game engine could run anywhere, how would the world change?"_
 Playfield Engine was born from this single question.
 
 Creativity shouldn't depend on the power of your computer, where you
-live, or what tools you have.  Playfield Enginewas created with the
+live, or what tools you have.  Playfield Engine was created with the
 belief that every creator deserves space to explore, no matter their
 surroundings.
 
