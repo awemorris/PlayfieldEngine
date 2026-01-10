@@ -741,6 +741,25 @@ static char get_hex_char(int val)
 }
 
 /*
+ * Raw File Read
+ */
+
+/*
+ * Read a file.
+ */
+bool
+playfield_read_file_content(
+	const char *fname,
+	char **buf,
+	size_t *len)
+{
+	if (!load_file(fname, buf, len))
+		return false;
+
+	return true;
+}
+
+/*
  * VM
  */
 

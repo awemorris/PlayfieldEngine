@@ -182,6 +182,19 @@ playfield_check_save_data(
 	const char *key);
 
 /*
+ * Raw File Read
+ */
+
+/*
+ * Read a file.
+ */
+bool
+playfield_read_file_content(
+	const char *fname,
+	char **buf,
+	size_t *len);
+
+/*
  * VM
  */
 
