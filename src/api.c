@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #define TEXTURE_COUNT	(256)
@@ -79,7 +80,7 @@ cleanup_api(void)
  * Load a texture.
  */
 bool
-playfield_load_texture(
+pf_load_texture(
 	const char *fname,
 	int *ret,
 	int *width,
@@ -149,7 +150,7 @@ playfield_load_texture(
  * Create a color texture.
  */
 bool
-playfield_create_color_texture(
+pf_create_color_texture(
 	int width,
 	int height,
 	int r,
@@ -235,7 +236,7 @@ search_free_entry(void)
  * Destroy a texture.
  */
 void
-playfield_destroy_texture(
+pf_destroy_texture(
 	int tex_id)
 {
 	assert(tex_id >= 0);
@@ -256,7 +257,7 @@ playfield_destroy_texture(
  * Render a texture.
  */
 void
-playfield_render_texture(
+pf_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -292,7 +293,7 @@ playfield_render_texture(
  * Render a texture.
  */
 void
-playfield_render_texture_3d(
+pf_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -326,7 +327,7 @@ playfield_render_texture_3d(
  * Render a texture.
  */
 void
-playfield_draw(
+pf_draw(
 	int tex_id,
 	int x,
 	int y)
@@ -359,7 +360,7 @@ playfield_draw(
  * Load a font file to a font slot.
  */
 bool
-playfield_load_font(
+pf_load_font(
 	int slot,
 	const char *file)
 {
@@ -413,7 +414,7 @@ pixel_t color_code_to_pixel_value(const char *code)
  * Create a text texture.
  */
 bool
-playfield_create_text_texture(
+pf_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
@@ -486,7 +487,7 @@ playfield_create_text_texture(
  * Play a sound file on a stream.
  */
 bool
-playfield_play_sound(
+pf_play_sound(
 	int stream,
 	const char *file)
 {
@@ -509,7 +510,7 @@ playfield_play_sound(
  * Stop the sound on a stream.
  */
 bool
-playfield_stop_sound(
+pf_stop_sound(
 	int stream)
 {
 	if (stream < 0 || stream >= SOUND_TRACKS) {
@@ -529,7 +530,7 @@ playfield_stop_sound(
  * Set the sound volume on a stream.
  */
 bool
-playfield_set_sound_volue(
+pf_set_sound_volue(
 	int stream,
 	float vol)
 {
@@ -551,7 +552,7 @@ playfield_set_sound_volue(
  * Write save data.
  */
 bool
-playfield_write_save_data(
+pf_write_save_data(
 	const char *key,
 	const void *data,
 	size_t size)
@@ -598,7 +599,7 @@ playfield_write_save_data(
  * Read save data.
  */
 bool
-playfield_read_save_data(
+pf_read_save_data(
 	const char *key,
 	void *data,
 	size_t size,
@@ -651,7 +652,7 @@ playfield_read_save_data(
  * Check whether save data exist or not.
  */
 bool
-playfield_check_save_data(
+pf_check_save_data(
 	const char *key)
 {
 	char *fname;
@@ -748,7 +749,7 @@ static char get_hex_char(int val)
  * Read a file.
  */
 bool
-playfield_read_file_content(
+pf_read_file_content(
 	const char *fname,
 	char **buf,
 	size_t *len)
@@ -766,7 +767,8 @@ playfield_read_file_content(
 /*
  * Get the VM environment.
  */
-NoctEnv *playfield_get_vm_env(void)
+void *
+pf_get_vm_env(void)
 {
 	NoctEnv *env;
 
@@ -778,7 +780,8 @@ NoctEnv *playfield_get_vm_env(void)
 /*
  * Call a VM function.
  */
-bool playfield_call_vm_function(
+bool
+pf_call_vm_function(
 	const char *func_name)
 {
 	if (!call_vm_function(func_name))
@@ -790,7 +793,8 @@ bool playfield_call_vm_function(
 /*
  * Call a VM tag function.
  */
-bool playfield_call_vm_tag_function(
+bool
+pf_call_vm_tag_function(
 	bool *tag_end)
 {
 	if (!call_vm_tag_function(tag_end))
@@ -802,7 +806,8 @@ bool playfield_call_vm_tag_function(
 /*
  * Set a VM integer.
  */
-bool playfield_set_vm_int(
+bool
+pf_set_vm_int(
 	const char *prop_name,
 	int val)
 {
@@ -815,11 +820,547 @@ bool playfield_set_vm_int(
 /*
  * Get a VM integer.
  */
-bool playfield_get_vm_int(
+bool
+pf_get_vm_int(
 	const char *prop_name,
 	int *val)
 {
 	if (!get_vm_int(prop_name, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Scripting Interface
+ */
+
+/*
+ * Install an API function.
+ */
+bool
+pf_install_api(
+	const char *name,
+	bool (*func)(void *))
+{
+	NoctEnv *env;
+	const char *params[] = {"param"};
+
+	env = get_vm_env();
+
+	if (!noct_register_cfunc(env, name, 1, params, (bool (*)(NoctEnv *))func, NULL))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a function call parameter as an integer.
+ */
+bool
+pf_get_call_arg_int(
+	const char *name,
+	int *val)
+{
+	NoctEnv *env;
+	NoctValue param, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env, 0, &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_int(env, &param, name, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a function call parameter as a float.
+ */
+bool
+pf_get_call_arg_float(
+	const char *name,
+	float *val)
+{
+	NoctEnv *env;
+	NoctValue param, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env, 0, &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_float(env, &param, name, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a function call parameter as a string.
+ */
+bool
+pf_get_call_arg_string(
+	const char *name,
+	char **val)
+{
+	NoctEnv *env;
+	NoctValue param, value;
+	const char *s;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env, 0, &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_string(env, &param, name, &value, &s))
+		return false;
+
+	/* Duplicate the string. */
+	*val = strdup(s);
+	if (*val == NULL) {
+		log_out_of_memory();
+		return false;
+	}
+
+	return true;
+}
+
+/*
+ * Get the length of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_length(
+	const char *name,
+	int *val)
+{
+	NoctEnv *env;
+	NoctValue param, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_array(env, &param, name, &value))
+		return false;
+
+	/* Get the array size. */
+	if (!noct_get_array_size(env, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get an integer element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_int(
+	const char *name,
+	int index,
+	int *val)
+{
+	NoctEnv *env;
+	NoctValue param, array, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_array(env, &param, name, &array))
+		return false;
+
+	/* Get the array element. */
+	if (!noct_get_array_elem_check_int(env, &array, index, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a float element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_float(
+	const char *name,
+	int index,
+	float *val)
+{
+	NoctEnv *env;
+	NoctValue param, array, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_array(env, &param, name, &array))
+		return false;
+
+	/* Get the array element. */
+	if (!noct_get_array_elem_check_float(env, &array, index, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a string element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_string(
+	const char *name,
+	int index,
+	char **val)
+{
+	NoctEnv *env;
+	NoctValue param, array, value;
+	const char *s;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_array(env, &param, name, &array))
+		return false;
+
+	/* Get the array element. */
+	if (!noct_get_array_elem_check_string(env, &array, index, &value, &s))
+		return false;
+
+	/* Duplicate the string. */
+	*val = strdup(s);
+	if (*val == NULL) {
+		log_out_of_memory();
+		return false;
+	}
+	
+	return true;
+}
+
+/*
+ * Get an integer element of a dictionary of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_int(
+	const char *name,
+	const char *key,
+	int *val)
+{
+	NoctEnv *env;
+	NoctValue param, dict, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_dict(env, &param, name, &dict))
+		return false;
+
+	/* Get the dict element. */
+	if (!noct_get_dict_elem_check_int(env, &dict, key, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a float element of a dictionary of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_float(
+	const char *name,
+	const char *key,
+	float *val)
+{
+	NoctEnv *env;
+	NoctValue param, dict, value;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_dict(env, &param, name, &dict))
+		return false;
+
+	/* Get the dict element. */
+	if (!noct_get_dict_elem_check_float(env, &dict, key, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Get a string element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_string(
+	const char *name,
+	const char *key,
+	char **val)
+{
+	NoctEnv *env;
+	NoctValue param, dict, value;
+	const char *s;
+
+	env = get_vm_env();
+
+	/* Get the "param" argument. */
+	if (!noct_get_arg_check_array(env,
+				      0,
+				      &param))
+		return false;
+
+	/* Get the element by name. */
+	if (!noct_get_dict_elem_check_dict(env, &param, name, &dict))
+		return false;
+
+	/* Get the dict element. */
+	if (!noct_get_dict_elem_check_string(env, &dict, key, &value, &s))
+		return false;
+
+	/* Duplicate the string. */
+	*val = strdup(s);
+	if (*val == NULL) {
+		log_out_of_memory();
+		return false;
+	}
+
+	return true;
+}
+
+/*
+ * Set an integer return value.
+ */
+bool
+pf_set_return_int(
+	int val)
+{
+	NoctEnv *env;
+	NoctValue value;
+
+	env = get_vm_env();
+
+	if (!noct_set_return_make_int(env, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a float return value.
+ */
+bool
+pf_set_return_float(
+	float val)
+{
+	NoctEnv *env;
+	NoctValue value;
+
+	env = get_vm_env();
+
+	if (!noct_set_return_make_float(env, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a string return value.
+ */
+bool
+pf_set_return_string(
+	const char *val)
+{
+	NoctEnv *env;
+	NoctValue value;
+
+	env = get_vm_env();
+
+	if (!noct_set_return_make_string(env, &value, val))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set an integer array return value.
+ */
+bool
+pf_set_return_int_array(
+	int *val,
+	int len)
+{
+	NoctEnv *env;
+	NoctValue array, value;
+	int i;
+
+	env = get_vm_env();
+
+	if (!noct_make_empty_array(env, &array))
+		return false;
+
+	for (i = 0; i < len; i++) {
+		if (!noct_set_array_elem_make_int(env, &array, i, &value, val[i]))
+			return false;
+	}
+
+	if (!noct_set_return(env, &array))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a float array return value.
+ */
+bool
+pf_set_return_float_array(
+	float *val,
+	int len)
+{
+	NoctEnv *env;
+	NoctValue array, value;
+	int i;
+
+	env = get_vm_env();
+
+	if (!noct_make_empty_array(env, &array))
+		return false;
+
+	for (i = 0; i < len; i++) {
+		if (!noct_set_array_elem_make_float(env, &array, i, &value, val[i]))
+			return false;
+	}
+
+	if (!noct_set_return(env, &array))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a string array return value.
+ */
+bool
+pf_set_return_string_array(
+	const char **val,
+	int len)
+{
+	NoctEnv *env;
+	NoctValue array, value;
+	int i;
+
+	env = get_vm_env();
+
+	if (!noct_make_empty_array(env, &array))
+		return false;
+
+	for (i = 0; i < len; i++) {
+		if (!noct_set_array_elem_make_string(env, &array, i, &value, val[i]))
+			return false;
+	}
+
+	if (!noct_set_return(env, &array))
+		return false;
+
+	return true;
+}
+
+/*
+ * Set a dictionary return value.
+ *  - type_desc ... A string that describes data types.
+ *    "III" means 3 integers.
+ *    "IIS" means 2 integers and 1 string.
+ *    "IFS" means 1 integers, 1 float, and 1 string.
+ */
+bool
+pf_set_return_dictionary(
+	const char *type_desc,
+	const char **keys,
+	void **data)
+{
+	NoctEnv *env;
+	NoctValue dict, value;
+	int i;
+
+	env = get_vm_env();
+
+	if (!noct_make_empty_dict(env, &dict))
+		return false;
+
+	i = 0;
+	while (*type_desc) {
+		switch (*type_desc) {
+		case 'I':
+			if (!noct_set_dict_elem_make_int(env,
+							 &dict,
+							 keys[i],
+							 &value,
+							 *(int *)(data[i])))
+				return false;
+			break;
+		case 'F':
+			if (!noct_set_dict_elem_make_float(env,
+							   &dict,
+							   keys[i],
+							   &value,
+							   *(float *)(data[i])))
+				return false;
+			break;
+		case 'S':
+			if (!noct_set_dict_elem_make_string(env,
+							    &dict,
+							    keys[i],
+							    &value,
+							    (const char *)(data[i])))
+				return false;
+			break;
+		default:
+			assert(INVALID_DESC);
+			return false;
+		}
+		type_desc++;
+	}
+
+	if (!noct_set_return(env, &dict))
 		return false;
 
 	return true;
@@ -833,7 +1374,7 @@ bool playfield_get_vm_int(
  * Load a tag file and move to it.
  */
 bool
-playfield_move_to_tag_file(
+pf_move_to_tag_file(
 	const char *file)
 {
 	if (!load_tag_file(file))
@@ -846,7 +1387,7 @@ playfield_move_to_tag_file(
  * Move to a next tag.
  */
 bool
-playfield_move_to_next_tag(void)
+pf_move_to_next_tag(void)
 {
 	if (!move_to_next_tag())
 		return false;
@@ -858,7 +1399,7 @@ playfield_move_to_next_tag(void)
  * Get a tag file name.
  */
 const char *
-playfield_get_tag_file(void)
+pf_get_tag_file(void)
 {
 	const char *fname;
 
@@ -871,7 +1412,7 @@ playfield_get_tag_file(void)
  * Get a tag line.
  */
 int
-playfield_get_tag_line(void)
+pf_get_tag_line(void)
 {
 	int line;
 
@@ -884,7 +1425,7 @@ playfield_get_tag_line(void)
  * Get the name of the current tag.
  */
 const char*
-playfield_get_tag_name(void)
+pf_get_tag_name(void)
 {
 	struct tag *t;
 
@@ -897,7 +1438,7 @@ playfield_get_tag_name(void)
  * Get the property count of the current tag.
  */
 int
-playfield_get_tag_property_count(void)
+pf_get_tag_property_count(void)
 {
 	struct tag *t;
 
@@ -910,7 +1451,7 @@ playfield_get_tag_property_count(void)
  * Get the property name of the current tag.
  */
 const char *
-playfield_get_tag_property_name(
+pf_get_tag_property_name(
 	int index)
 {
 	struct tag *t;
@@ -928,7 +1469,7 @@ playfield_get_tag_property_name(
  * Get the property value of the current tag.
  */
 const char *
-playfield_get_tag_property_value(
+pf_get_tag_property_value(
 	int index)
 {
 	struct tag *t;
@@ -940,4 +1481,62 @@ playfield_get_tag_property_value(
 		return false;
 
 	return t->prop_value[index];
+}
+
+/*
+ * Misc
+ */
+
+/*
+ * Print a debug message.
+ */
+void
+pf_log_info(
+	const char *msg,
+	...)
+{
+	char buf[4096];
+	va_list ap;
+
+	va_start(ap, msg);
+	vsnprintf(buf, sizeof(buf), msg, ap);
+	va_end(ap);
+
+	log_info(buf);
+}
+
+/*
+ * Print a warning message.
+ */
+void
+pf_log_warn(
+	const char *msg,
+	...)
+{
+	char buf[4096];
+	va_list ap;
+
+	va_start(ap, msg);
+	vsnprintf(buf, sizeof(buf), msg, ap);
+	va_end(ap);
+
+	log_warn(buf);
+}
+
+/*
+ * Print an error message.
+ */
+void
+pf_log_error(
+	const char *msg,
+	...)
+{
+	char buf[4096];
+	va_list ap;
+
+	va_start(ap, msg);
+	vsnprintf(buf, sizeof(buf), msg, ap);
+	va_end(ap);
+
+	log_error(buf);
 }

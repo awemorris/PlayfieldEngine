@@ -17,6 +17,111 @@
 #include <noct/noct.h>
 
 /*
+ * Input States
+ */
+
+/*
+ * Mouse Position
+ */
+extern int pf_mouse_pos_x;
+extern int pf_mouse_pos_y;
+
+/*
+ * Mouse Button
+ */
+extern bool pf_is_mouse_left_pressed;
+extern bool pf_is_mouse_right_pressed;
+
+/*
+ * Gamepad
+ */
+extern bool pf_is_gamepad_left_pressed;
+extern bool pf_is_gamepad_right_pressed;
+extern bool pf_is_gamepad_up_pressed;
+extern bool pf_is_gamepad_down_pressed;
+extern bool pf_is_gamepad_a_pressed;
+extern bool pf_is_gamepad_b_pressed;
+extern bool pf_is_gamepad_x_pressed;
+extern bool pf_is_gamepad_y_pressed;
+extern bool pf_is_gamepad_l_pressed;
+extern bool pf_is_gamepad_r_pressed;
+extern int pf_gamepad_analog_x1;
+extern int pf_gamepad_analog_y1;
+extern int pf_gamepad_analog_x2;
+extern int pf_gamepad_analog_y2;
+extern int pf_gamepad_analog_l;
+extern int pf_gamepad_analog_r;
+
+/*
+ * Key
+ */
+extern bool pf_is_escape_key_pressed;
+extern bool pf_is_return_key_pressed;
+extern bool pf_is_space_key_pressed;
+extern bool pf_is_tab_key_pressed;
+extern bool pf_is_backspace_key_pressed;
+extern bool pf_is_delete_key_pressed;
+extern bool pf_is_home_key_pressed;
+extern bool pf_is_end_key_pressed;
+extern bool pf_is_pageup_key_pressed;
+extern bool pf_is_pagedown_key_pressed;
+extern bool pf_is_shift_key_pressed;
+extern bool pf_is_control_key_pressed;
+extern bool pf_is_alt_key_pressed;
+extern bool pf_is_left_key_pressed;
+extern bool pf_is_right_key_pressed;
+extern bool pf_is_up_key_pressed;
+extern bool pf_is_down_key_pressed;
+extern bool pf_is_a_key_pressed;
+extern bool pf_is_b_key_pressed;
+extern bool pf_is_c_key_pressed;
+extern bool pf_is_d_key_pressed;
+extern bool pf_is_e_key_pressed;
+extern bool pf_is_f_key_pressed;
+extern bool pf_is_g_key_pressed;
+extern bool pf_is_h_key_pressed;
+extern bool pf_is_i_key_pressed;
+extern bool pf_is_j_key_pressed;
+extern bool pf_is_k_key_pressed;
+extern bool pf_is_l_key_pressed;
+extern bool pf_is_m_key_pressed;
+extern bool pf_is_n_key_pressed;
+extern bool pf_is_o_key_pressed;
+extern bool pf_is_p_key_pressed;
+extern bool pf_is_q_key_pressed;
+extern bool pf_is_r_key_pressed;
+extern bool pf_is_s_key_pressed;
+extern bool pf_is_t_key_pressed;
+extern bool pf_is_u_key_pressed;
+extern bool pf_is_v_key_pressed;
+extern bool pf_is_w_key_pressed;
+extern bool pf_is_x_key_pressed;
+extern bool pf_is_y_key_pressed;
+extern bool pf_is_z_key_pressed;
+extern bool pf_is_1_key_pressed;
+extern bool pf_is_2_key_pressed;
+extern bool pf_is_3_key_pressed;
+extern bool pf_is_4_key_pressed;
+extern bool pf_is_5_key_pressed;
+extern bool pf_is_6_key_pressed;
+extern bool pf_is_7_key_pressed;
+extern bool pf_is_8_key_pressed;
+extern bool pf_is_9_key_pressed;
+extern bool pf_is_0_key_pressed;
+extern bool pf_is_f1_key_pressed;
+extern bool pf_is_f2_key_pressed;
+extern bool pf_is_f3_key_pressed;
+extern bool pf_is_f4_key_pressed;
+extern bool pf_is_f5_key_pressed;
+extern bool pf_is_f6_key_pressed;
+extern bool pf_is_f7_key_pressed;
+extern bool pf_is_f8_key_pressed;
+extern bool pf_is_f9_key_pressed;
+extern bool pf_is_f10_key_pressed;
+extern bool pf_is_f11_key_pressed;
+extern bool pf_is_f12_key_pressed;
+
+/*
  * Texture
  */
 
@@ -24,7 +129,7 @@
  * Create a color texture.
  */
 bool
-playfield_create_color_texture(
+pf_create_color_texture(
 	int width,
 	int height,
 	int r,
@@ -37,7 +142,7 @@ playfield_create_color_texture(
  * Load a texture.
  */
 bool
-playfield_load_texture(
+pf_load_texture(
 	const char *fname,
 	int *ret,
 	int *width,
@@ -47,7 +152,7 @@ playfield_load_texture(
  * Destroy a texture.
  */
 void
-playfield_destroy_texture(
+pf_destroy_texture(
 	int tex_id);
 
 /*
@@ -58,7 +163,7 @@ playfield_destroy_texture(
  * Render a texture.
  */
 void
-playfield_render_texture(
+pf_render_texture(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -74,7 +179,7 @@ playfield_render_texture(
  * Render a texture.
  */
 void
-playfield_render_texture_3d(
+pf_render_texture_3d(
 	float x1,
 	float y1,
 	float x2,
@@ -94,7 +199,7 @@ playfield_render_texture_3d(
  * Render a texture.
  */
 void
-playfield_draw(
+pf_draw(
 	int tex_id,
 	int x,
 	int y);
@@ -107,7 +212,7 @@ playfield_draw(
  * Load a font.
  */
 bool
-playfield_load_font(
+pf_load_font(
 	int slot,
 	const char *file);
 
@@ -115,7 +220,7 @@ playfield_load_font(
  * Create a text texture.
  */
 bool
-playfield_create_text_texture(
+pf_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
@@ -132,7 +237,7 @@ playfield_create_text_texture(
  * Play a sound on a stream.
  */
 bool
-playfield_play_sound(
+pf_play_sound(
 	int stream,
 	const char *file);
 
@@ -140,14 +245,14 @@ playfield_play_sound(
  * Stop a sound on a stream.
  */
 bool
-playfield_stop_sound(
+pf_stop_sound(
 	int stream);
 
 /*
  * Set a sound volume on a stream.
  */
 bool
-playfield_set_volume(
+pf_set_volume(
 	int stream,
 	float val);
 
@@ -159,7 +264,7 @@ playfield_set_volume(
  * Write save data.
  */
 bool
-playfield_write_save_data(
+pf_write_save_data(
 	const char *key,
 	const void *data,
 	size_t size);
@@ -168,7 +273,7 @@ playfield_write_save_data(
  * Read save data.
  */
 bool
-playfield_read_save_data(
+pf_read_save_data(
 	const char *key,
 	void *data,
 	size_t size,
@@ -178,7 +283,7 @@ playfield_read_save_data(
  * Check whether save data exist or not.
  */
 bool
-playfield_check_save_data(
+pf_check_save_data(
 	const char *key);
 
 /*
@@ -189,7 +294,7 @@ playfield_check_save_data(
  * Read a file.
  */
 bool
-playfield_read_file_content(
+pf_read_file_content(
 	const char *fname,
 	char **buf,
 	size_t *len);
@@ -201,28 +306,28 @@ playfield_read_file_content(
 /*
  * Get the VM environment.
  */
-NoctEnv *
-playfield_get_vm_env(void);
+void *
+pf_get_vm_env(void);
 
 /*
  * Call a VM function.
  */
 bool
-playfield_call_vm_function(
+pf_call_vm_function(
 	const char *func_name);
 
 /*
  * Call a VM tag function.
  */
 bool
-playfield_call_vm_tag_function(
+pf_call_vm_tag_function(
 	bool *tag_end);
 
 /*
  * Set a VM integer.
  */
 bool
-playfield_set_vm_int(
+pf_set_vm_int(
 	const char *prop_name,
 	int val);
 
@@ -230,9 +335,165 @@ playfield_set_vm_int(
  * Get a VM integer.
  */
 bool
-playfield_get_vm_int(
+pf_get_vm_int(
 	const char *prop_name,
 	int *val);
+
+/*
+ * Scripting Interface
+ */
+
+/*
+ * Install an API function.
+ */
+bool
+pf_install_api(
+	const char *name,
+	bool (*func)(void *));
+
+/*
+ * Get a function call parameter as an integer.
+ */
+bool
+pf_get_call_arg_int(
+	const char *name,
+	int *val);
+
+/*
+ * Get a function call parameter as a float.
+ */
+bool
+pf_get_call_arg_float(
+	const char *name,
+	float *val);
+
+/*
+ * Get a function call parameter as a string.
+ */
+bool
+pf_get_call_arg_string(
+	const char *name,
+	char **val);
+
+/*
+ * Get the length of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_length(
+	const char *name,
+	int *val);
+
+/*
+ * Get an integer element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_int(
+	const char *name,
+	int index,
+	int *val);
+
+/*
+ * Get a float element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_float(
+	const char *name,
+	int index,
+	float *val);
+
+/*
+ * Get a string element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_array_string(
+	const char *name,
+	int index,
+	char **val);
+
+/*
+ * Get an integer element of a dictionary of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_int(
+	const char *name,
+	const char *key,
+	int *val);
+
+/*
+ * Get a float element of a dictionary of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_float(
+	const char *name,
+	const char *key,
+	float *val);
+
+/*
+ * Get a string element of an array of a function call parameter.
+ */
+bool
+pf_get_call_arg_dict_string(
+	const char *name,
+	const char *key,
+	char **val);
+
+/*
+ * Set an integer return value.
+ */
+bool
+pf_set_return_int(
+	int val);
+
+/*
+ * Set a float return value.
+ */
+bool
+pf_set_return_float(
+	float val);
+
+/*
+ * Set a string return value.
+ */
+bool
+pf_set_return_string(
+	const char *val);
+
+/*
+ * Set an integer array return value.
+ */
+bool
+pf_set_return_int_array(
+	int *val,
+	int len);
+
+/*
+ * Set a float array return value.
+ */
+bool
+pf_set_return_float_array(
+	float *val,
+	int len);
+
+/*
+ * Set a string array return value.
+ */
+bool
+pf_set_return_string_array(
+	const char **val,
+	int len);
+
+/*
+ * Set a dictionary return value.
+ *  - type_desc ... A string that describes data types.
+ *    "III" means 3 integers.
+ *    "IIS" means 2 integers and 1 string.
+ *    "IFS" means 1 integers, 1 float, and 1 string.
+ */
+bool
+pf_set_return_dictionary(
+	const char *type_desc,
+	const char **keys,
+	void **data);
 
 /*
  * Tag
@@ -242,51 +503,79 @@ playfield_get_vm_int(
  * Load a tag file and move to it.
  */
 bool
-playfield_move_to_tag_file(
+pf_move_to_tag_file(
 	const char *file);
 
 /*
  * Move to the next tag.
  */
 bool
-playfield_move_to_next_tag(void);
+pf_move_to_next_tag(void);
 
 /*
  * Get the current tag file name.
  */
 const char *
-playfield_get_tag_file(void);
+pf_get_tag_file(void);
 
 /*
  * Get the line number of the current tag.
  */
 int
-playfield_get_tag_line(void);
+pf_get_tag_line(void);
 
 /*
  * Get the name of the current tag.
  */
 const char*
-playfield_get_tag_name(void);
+pf_get_tag_name(void);
 
 /*
  * Get the property count of the current tag.
  */
 int
-playfield_get_tag_property_count(void);
+pf_get_tag_property_count(void);
 
 /*
  * Get the property name of the current tag.
  */
 const char *
-playfield_get_tag_property_name(
+pf_get_tag_property_name(
 	int index);
 
 /*
  * Get the property value of the current tag.
  */
 const char *
-playfield_get_tag_property_value(
+pf_get_tag_property_value(
 	int index);
+
+/*
+ * Misc
+ */
+
+/*
+ * Print a debug message.
+ */
+void
+pf_log_info(
+	const char *msg,
+	...);
+
+/*
+ * Print a warning message.
+ */
+void
+pf_log_warn(
+	const char *msg,
+	...);
+
+/*
+ * Print an error message.
+ */
+void
+pf_log_error(
+	const char *msg,
+	...);
 
 #endif

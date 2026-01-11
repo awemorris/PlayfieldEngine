@@ -511,7 +511,7 @@ static bool Engine_moveToTagFile(NoctEnv *env)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!playfield_move_to_tag_file(file))
+	if (!pf_move_to_tag_file(file))
 		return false;
 
 	return true;
@@ -522,7 +522,7 @@ static bool Engine_moveToNextTag(NoctEnv *env)
 {
 	UNUSED_PARAMETER(env);
 
-	playfield_move_to_next_tag();
+	pf_move_to_next_tag();
 
 	return true;
 }
@@ -598,7 +598,7 @@ static bool Engine_createColorTexture(NoctEnv *env)
 	if (!get_int_param(env, "a", &a))
 		return false;
 
-	if (!playfield_create_color_texture(width, height, r, g, b, a, &tex_id))
+	if (!pf_create_color_texture(width, height, r, g, b, a, &tex_id))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))
@@ -627,7 +627,7 @@ static bool Engine_loadTexture(NoctEnv *env)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!playfield_load_texture(file, &tex_id, &tex_width, &tex_height))
+	if (!pf_load_texture(file, &tex_id, &tex_width, &tex_height))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))
@@ -652,7 +652,7 @@ static bool Engine_destroyTexture(NoctEnv *env)
 	if (!get_dict_elem_int_param(env, "texture", "id", &tex_id))
 		return false;
 
-	playfield_destroy_texture(tex_id);
+	pf_destroy_texture(tex_id);
 
 	return true;
 }
@@ -692,7 +692,7 @@ static bool Engine_renderTexture(NoctEnv *env)
 	if (!get_int_param(env, "alpha", &alpha))
 		return false;
 
-	playfield_render_texture(
+	pf_render_texture(
 		dst_left,
 		dst_top,
 		dst_width,
@@ -747,7 +747,7 @@ static bool Engine_renderTexture3D(NoctEnv *env)
 	if (!get_int_param(env, "alpha", &alpha))
 		return false;
 
-	playfield_render_texture_3d(
+	pf_render_texture_3d(
 		x1, y1, x2, y2, x3, y3, x4, y4,
 		tex_id,
 		src_left, src_top, src_width, src_height,
@@ -768,7 +768,7 @@ static bool Engine_draw(NoctEnv *env)
 	if (!get_int_param(env, "y", &y))
 		return false;
 
-	playfield_draw(tex_id, x, y);
+	pf_draw(tex_id, x, y);
 
 	return true;
 }
@@ -784,7 +784,7 @@ static bool Engine_playSound(NoctEnv *env)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!playfield_play_sound(stream, file))
+	if (!pf_play_sound(stream, file))
 		return false;
 
 	return true;
@@ -798,7 +798,7 @@ static bool Engine_stopSound(NoctEnv *env)
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
-	if (!playfield_stop_sound(stream))
+	if (!pf_stop_sound(stream))
 		return false;
 
 	return true;
@@ -812,7 +812,7 @@ static bool Engine_setSoundVolume(NoctEnv *env)
 	if (!get_int_param(env, "stream", &stream))
 		return false;
 
-	if (!playfield_stop_sound(stream))
+	if (!pf_stop_sound(stream))
 		return false;
 
 	return true;
@@ -829,7 +829,7 @@ static bool Engine_loadFont(NoctEnv *rt)
 	if (!get_string_param(env, "file", &file))
 		return false;
 
-	if (!playfield_load_font(slot, file))
+	if (!pf_load_font(slot, file))
 		return false;
 
 	return true;
@@ -863,7 +863,7 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	if (!get_int_param(env, "a", &a))
 		return false;
 
-	if (!playfield_create_text_texture(slot,
+	if (!pf_create_text_texture(slot,
 					   text,
 					   size,
 					   make_pixel(a, r, g, b),
@@ -910,7 +910,7 @@ static bool Engine_writeSaveData(NoctEnv *env)
 		return false;
 	}
 
-	if (!playfield_write_save_data(key, data, size)) {
+	if (!pf_write_save_data(key, data, size)) {
 		free(data);
 		return false;
 	}
@@ -937,7 +937,7 @@ static bool Engine_readSaveData(NoctEnv *env)
 		return false;
 	}
 
-	if (!playfield_read_save_data(key, data, SERIALIZE_SIZE, &size)) {
+	if (!pf_read_save_data(key, data, SERIALIZE_SIZE, &size)) {
 		free(data);
 		return false;
 	}
