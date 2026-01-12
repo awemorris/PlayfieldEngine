@@ -1315,6 +1315,35 @@ void render_image_add(
 }
 
 /*
+ * Render an image. (sub blend)
+ */
+void render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_add(
+		dst_left,
+		dst_top,
+		dst_width,
+		dst_height,
+		src_image,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
+		alpha
+	);
+}
+
+/*
  * Render an image. (dim blend)
  */
 void render_image_dim(
@@ -1392,7 +1421,7 @@ render_image_3d_normal(
 }
 
 /*
- * Render an image. (3d transform, alpha blending)
+ * Render an image. (3d transform, add blending)
  */
 void
 render_image_3d_add(
@@ -1418,7 +1447,7 @@ render_image_3d_add(
 }
 
 /*
- * Render an image. (3d transform, alpha blending)
+ * Render an image. (3d transform, sub blending)
  */
 void
 render_image_3d_sub(
@@ -1438,6 +1467,32 @@ render_image_3d_sub(
 	int alpha)
 {
 	opengl_render_image_3d_sub(
+		x1, y1, x2, y2, x3, y3, x4, y4,
+		src_image, src_left, src_top, src_width, src_height,
+		alpha);
+}
+
+/*
+ * Render an image. (3d transform, dim blending)
+ */
+void
+render_image_3d_dim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_dim(
 		x1, y1, x2, y2, x3, y3, x4, y4,
 		src_image, src_left, src_top, src_width, src_height,
 		alpha);

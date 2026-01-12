@@ -47,6 +47,19 @@ opengl_render_image_add(
 	int alpha);
 
 void
+opengl_render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+void
 opengl_render_image_dim(
 	int dst_left,
 	int dst_top,
@@ -107,6 +120,23 @@ opengl_render_image_3d_add(
 
 void
 opengl_render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+void
+opengl_render_image_3d_dim(
 	float x1,
 	float y1,
 	float x2,

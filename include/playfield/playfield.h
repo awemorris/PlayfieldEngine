@@ -331,6 +331,22 @@ pf_render_texture_sub(
 	int alpha);
 
 /*
+ * Render a texture. (dim blending)
+ */
+void
+pf_render_texture_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	int tex_id,
+	int src_x,
+	int src_y,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
  * Render a texture. (3D, alpha blending)
  */
 void
@@ -375,6 +391,26 @@ pf_render_texture_3d_add(
  */
 void
 pf_render_texture_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture. (3D, dim blending)
+ */
+void
+pf_render_texture_3d_dim(
 	float x1,
 	float y1,
 	float x2,
