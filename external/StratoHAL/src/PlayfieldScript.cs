@@ -192,11 +192,14 @@ public class PlayfieldScript : MonoBehaviour
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_notify_image_free(int id);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_normal(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_rule(int src_img, int rule_img, int threshold);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_melt(int src_img, int rule_img, int progress);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_reset_lap_timer(IntPtr origin);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate Int64 delegate_get_lap_timer_millisec(IntPtr origin);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_play_sound(int stream, byte *wave);
@@ -233,11 +236,14 @@ public class PlayfieldScript : MonoBehaviour
                                                       IntPtr notify_image_free,
                                                       IntPtr render_image_normal,
                                                       IntPtr render_image_add,
+                                                      IntPtr render_image_sub,
                                                       IntPtr render_image_dim,
                                                       IntPtr render_image_rule,
                                                       IntPtr render_image_melt,
                                                       IntPtr render_image_3d_normal,
                                                       IntPtr render_image_3d_add,
+                                                      IntPtr render_image_3d_sub,
+                                                      IntPtr render_image_3d_dim,
                                                       IntPtr reset_lap_timer,
                                                       IntPtr get_lap_timer_millisec,
                                                       IntPtr play_sound,
@@ -286,11 +292,14 @@ public class PlayfieldScript : MonoBehaviour
     static delegate_notify_image_free d_notify_image_free;
     static delegate_render_image_normal d_render_image_normal;
     static delegate_render_image_add d_render_image_add;
+    static delegate_render_image_add d_render_image_sub;
     static delegate_render_image_dim d_render_image_dim;
     static delegate_render_image_rule d_render_image_rule;
     static delegate_render_image_melt d_render_image_melt;
     static delegate_render_image_3d_normal d_render_image_3d_normal;
     static delegate_render_image_3d_add d_render_image_3d_add;
+    static delegate_render_image_3d_sub d_render_image_3d_sub;
+    static delegate_render_image_3d_dim d_render_image_3d_dim
     static delegate_reset_lap_timer d_reset_lap_timer;
     static delegate_get_lap_timer_millisec d_get_lap_timer_millisec;
     static delegate_play_sound d_play_sound;
@@ -344,11 +353,14 @@ public class PlayfieldScript : MonoBehaviour
     static IntPtr p_notify_image_free;
     static IntPtr p_render_image_normal;
     static IntPtr p_render_image_add;
+    static IntPtr p_render_image_sub;
     static IntPtr p_render_image_dim;
     static IntPtr p_render_image_rule;
     static IntPtr p_render_image_melt;
     static IntPtr p_render_image_3d_normal;
     static IntPtr p_render_image_3d_add;
+    static IntPtr p_render_image_3d_sub;
+    static IntPtr p_render_image_3d_dim;
     static IntPtr p_reset_lap_timer;
     static IntPtr p_get_lap_timer_millisec;
     static IntPtr p_play_sound;
@@ -423,11 +435,14 @@ public class PlayfieldScript : MonoBehaviour
         d_notify_image_free = new delegate_notify_image_free(notify_image_free);
         d_render_image_normal = new delegate_render_image_normal(render_image_normal);
         d_render_image_add = new delegate_render_image_add(render_image_add);
+        d_render_image_sub = new delegate_render_image_sub(render_image_sub);
         d_render_image_dim = new delegate_render_image_dim(render_image_dim);
         d_render_image_rule = new delegate_render_image_rule(render_image_rule);
         d_render_image_melt = new delegate_render_image_melt(render_image_melt);
         d_render_image_3d_normal = new delegate_render_image_3d_normal(render_image_3d_normal);
         d_render_image_3d_add = new delegate_render_image_3d_add(render_image_3d_add);
+        d_render_image_3d_sub = new delegate_render_image_3d_sub(render_image_3d_sub);
+        d_render_image_3d_dim = new delegate_render_image_3d_dim(render_image_3d_dim);
         d_reset_lap_timer = new delegate_reset_lap_timer(reset_lap_timer);
         d_get_lap_timer_millisec = new delegate_get_lap_timer_millisec(get_lap_timer_millisec);
         d_play_sound = new delegate_play_sound(play_sound);
@@ -477,11 +492,14 @@ public class PlayfieldScript : MonoBehaviour
         p_notify_image_free = Marshal.GetFunctionPointerForDelegate(d_notify_image_free);
         p_render_image_normal = Marshal.GetFunctionPointerForDelegate(d_render_image_normal);
         p_render_image_add = Marshal.GetFunctionPointerForDelegate(d_render_image_add);
+        p_render_image_sub = Marshal.GetFunctionPointerForDelegate(d_render_image_sub);
         p_render_image_dim = Marshal.GetFunctionPointerForDelegate(d_render_image_dim);
         p_render_image_rule = Marshal.GetFunctionPointerForDelegate(d_render_image_rule);
         p_render_image_melt = Marshal.GetFunctionPointerForDelegate(d_render_image_melt);
         p_render_image_3d_normal = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_normal);
         p_render_image_3d_add = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_add);
+        p_render_image_3d_sub = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_sub);
+        p_render_image_3d_dim = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_dim);
         p_reset_lap_timer = Marshal.GetFunctionPointerForDelegate(d_reset_lap_timer);
         p_get_lap_timer_millisec = Marshal.GetFunctionPointerForDelegate(d_get_lap_timer_millisec);
         p_play_sound = Marshal.GetFunctionPointerForDelegate(d_play_sound);
@@ -531,11 +549,14 @@ public class PlayfieldScript : MonoBehaviour
         GCHandle.Alloc(p_notify_image_free, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_normal, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_add, GCHandleType.Pinned);
+        GCHandle.Alloc(p_render_image_sub, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_dim, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_rule, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_melt, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_normal, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_add, GCHandleType.Pinned);
+        GCHandle.Alloc(p_render_image_3d_sub, GCHandleType.Pinned);
+        GCHandle.Alloc(p_render_image_3d_dim, GCHandleType.Pinned);
         GCHandle.Alloc(p_reset_lap_timer, GCHandleType.Pinned);
         GCHandle.Alloc(p_get_lap_timer_millisec, GCHandleType.Pinned);
         GCHandle.Alloc(p_play_sound, GCHandleType.Pinned);
@@ -585,11 +606,14 @@ public class PlayfieldScript : MonoBehaviour
         GC.KeepAlive(p_notify_image_free);
         GC.KeepAlive(p_render_image_normal);
         GC.KeepAlive(p_render_image_add);
+        GC.KeepAlive(p_render_image_sub);
         GC.KeepAlive(p_render_image_dim);
         GC.KeepAlive(p_render_image_rule);
         GC.KeepAlive(p_render_image_melt);
         GC.KeepAlive(p_render_image_3d_normal);
         GC.KeepAlive(p_render_image_3d_add);
+        GC.KeepAlive(p_render_image_3d_sub);
+        GC.KeepAlive(p_render_image_3d_dim);
         GC.KeepAlive(p_reset_lap_timer);
         GC.KeepAlive(p_get_lap_timer_millisec);
         GC.KeepAlive(p_play_sound);
@@ -640,11 +664,14 @@ public class PlayfieldScript : MonoBehaviour
             p_notify_image_free,
             p_render_image_normal,
             p_render_image_add,
+            p_render_image_sub,
             p_render_image_dim,
             p_render_image_rule,
             p_render_image_melt,
             p_render_image_3d_normal,
             p_render_image_3d_add,
+            p_render_image_3d_sub,
+            p_render_image_3d_dim,
             p_reset_lap_timer,
             p_get_lap_timer_millisec,
             p_play_sound,
@@ -704,11 +731,14 @@ public class PlayfieldScript : MonoBehaviour
         IntPtr notify_image_free,
         IntPtr render_image_normal,
         IntPtr render_image_add,
+        IntPtr render_image_sub,
         IntPtr render_image_dim,
         IntPtr render_image_rule,
         IntPtr render_image_melt,
         IntPtr render_image_3d_normal,
         IntPtr render_image_3d_add,
+        IntPtr render_image_3d_sub,
+        IntPtr render_image_3d_dim,
         IntPtr reset_lap_timer,
         IntPtr get_lap_timer_millisec,
         IntPtr play_sound,
@@ -1039,6 +1069,62 @@ public class PlayfieldScript : MonoBehaviour
         _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
     }
 
+    [AOT.MonoPInvokeCallback(typeof(delegate_render_image_sub))]
+    static unsafe void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+    {
+        ManagedImage srcImage = imageDict[src_img];
+        if (srcImage.need_upload)
+        {
+            srcImage.texture.SetPixels(srcImage.pixels, 0);
+            srcImage.texture.Apply();
+            srcImage.need_upload = false;
+            imageDict[src_img] = srcImage;
+        }
+
+        Vector3[] vertices = new Vector3[] {
+            new Vector3(dst_left / (float)viewportWidth * 2.0f - 1.0f, dst_top / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3((dst_left + dst_width) / (float)viewportWidth * 2.0f - 1.0f, dst_top / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(dst_left / (float)viewportWidth * 2.0f - 1.0f, (dst_top + dst_height) / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3((dst_left + dst_width) / (float)viewportWidth * 2.0f - 1.0f, (dst_top + dst_height) / (float)viewportHeight * 2.0f - 1.0f, 0),
+        };
+
+        Vector2[] uv = new Vector2[] {
+            new Vector2((float)src_left / (float)srcImage.width, (float)src_top / (float)srcImage.height),
+            new Vector2((float)(src_left + src_width) / (float)srcImage.width, (float)src_top / (float)srcImage.height),
+            new Vector2((float)src_left / (float)srcImage.width, (float)(src_top + src_height) / (float)srcImage.height),
+            new Vector2((float)(src_left + src_width) / (float)srcImage.width, (float)(src_top + src_height) / (float)srcImage.height)
+        };
+
+        Color[] colors = new Color[] {
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f)
+        };
+
+        int[] triangles = new int[] { 0, 1, 2, 1, 3, 2 };
+
+        Vector3[] normals = new Vector3[] {
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1)
+        };
+
+        Material material = new Material(_instance._addShader);
+        material.mainTexture = srcImage.texture;
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv;
+        mesh.colors = colors;
+        mesh.normals = normals;
+        mesh.RecalculateBounds();
+
+        _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
+    }
+
     [AOT.MonoPInvokeCallback(typeof(delegate_render_image_dim))]
     static unsafe void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
     {
@@ -1288,6 +1374,118 @@ public class PlayfieldScript : MonoBehaviour
 
     [AOT.MonoPInvokeCallback(typeof(delegate_render_image_3d_add))]
     static unsafe void render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+    {
+        ManagedImage srcImage = imageDict[src_img];
+        if (srcImage.need_upload)
+        {
+            srcImage.texture.SetPixels(srcImage.pixels, 0);
+            srcImage.texture.Apply();
+            srcImage.need_upload = false;
+            imageDict[src_img] = srcImage;
+        }
+
+        Vector3[] vertices = new Vector3[] {
+            new Vector3(x1 / (float)viewportWidth * 2.0f - 1.0f, y1 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x2 / (float)viewportWidth * 2.0f - 1.0f, y2 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x3 / (float)viewportWidth * 2.0f - 1.0f, y3 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x4 / (float)viewportWidth * 2.0f - 1.0f, y4 / (float)viewportHeight * 2.0f - 1.0f, 0)
+        };
+
+        Vector2[] uv = new Vector2[] {
+            new Vector2((float)x1 / (float)srcImage.width, (float)y1 / (float)srcImage.height),
+            new Vector2((float)x2 / (float)srcImage.width, (float)y2 / (float)srcImage.height),
+            new Vector2((float)x3 / (float)srcImage.width, (float)y3 / (float)srcImage.height),
+            new Vector2((float)x4 / (float)srcImage.width, (float)y4 / (float)srcImage.height)
+        };
+
+        Color[] colors = new Color[] {
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f)
+        };
+
+        int[] triangles = new int[] { 0, 1, 2, 1, 3, 2 };
+
+        Vector3[] normals = new Vector3[] {
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1)
+        };
+
+        Material material = new Material(_instance._addShader);
+        material.mainTexture = srcImage.texture;
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv;
+        mesh.colors = colors;
+        mesh.normals = normals;
+        mesh.RecalculateBounds();
+
+        _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(delegate_render_image_3d_sub))]
+    static unsafe void render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+    {
+        ManagedImage srcImage = imageDict[src_img];
+        if (srcImage.need_upload)
+        {
+            srcImage.texture.SetPixels(srcImage.pixels, 0);
+            srcImage.texture.Apply();
+            srcImage.need_upload = false;
+            imageDict[src_img] = srcImage;
+        }
+
+        Vector3[] vertices = new Vector3[] {
+            new Vector3(x1 / (float)viewportWidth * 2.0f - 1.0f, y1 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x2 / (float)viewportWidth * 2.0f - 1.0f, y2 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x3 / (float)viewportWidth * 2.0f - 1.0f, y3 / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3(x4 / (float)viewportWidth * 2.0f - 1.0f, y4 / (float)viewportHeight * 2.0f - 1.0f, 0)
+        };
+
+        Vector2[] uv = new Vector2[] {
+            new Vector2((float)x1 / (float)srcImage.width, (float)y1 / (float)srcImage.height),
+            new Vector2((float)x2 / (float)srcImage.width, (float)y2 / (float)srcImage.height),
+            new Vector2((float)x3 / (float)srcImage.width, (float)y3 / (float)srcImage.height),
+            new Vector2((float)x4 / (float)srcImage.width, (float)y4 / (float)srcImage.height)
+        };
+
+        Color[] colors = new Color[] {
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f)
+        };
+
+        int[] triangles = new int[] { 0, 1, 2, 1, 3, 2 };
+
+        Vector3[] normals = new Vector3[] {
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1)
+        };
+
+        Material material = new Material(_instance._addShader);
+        material.mainTexture = srcImage.texture;
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv;
+        mesh.colors = colors;
+        mesh.normals = normals;
+        mesh.RecalculateBounds();
+
+        _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
+    }
+
+    [AOT.MonoPInvokeCallback(typeof(delegate_render_image_3d_dim))]
+    static unsafe void render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
     {
         ManagedImage srcImage = imageDict[src_img];
         if (srcImage.need_upload)

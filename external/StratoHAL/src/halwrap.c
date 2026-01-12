@@ -36,11 +36,14 @@ void CDECL (*wrap_notify_image_update)(int id, int width, int height, UNSAFEPTR(
 void CDECL (*wrap_notify_image_free)(int id);
 void CDECL (*wrap_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void CDECL (*wrap_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_rule)(int src_img, int rule_img, int threshold);
 void CDECL (*wrap_render_image_melt)(int src_img, int rule_img, int progress);
 void CDECL (*wrap_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void CDECL (*wrap_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void CDECL (*wrap_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin);
 uint64_t CDECL (*wrap_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin);
 void CDECL (*wrap_play_sound)(int stream, UNSAFEPTR(void *) wave);
@@ -82,11 +85,14 @@ void init_hal_func_table
  void CDECL (*p_notify_image_free)(int id),
  void CDECL (*p_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+ void CDECL (*p_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_rule)(int src_img, int rule_img, int threshold),
  void CDECL (*p_render_image_melt)(int src_img, int rule_img, int progress),
  void CDECL (*p_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+ void CDECL (*p_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+ void CDECL (*p_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin),
  uint64_t CDECL (*p_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin),
  void CDECL (*p_play_sound)(int stream, UNSAFEPTR(void *) wave),
@@ -120,11 +126,14 @@ void init_hal_func_table
 	wrap_notify_image_free = p_notify_image_free;
 	wrap_render_image_normal = p_render_image_normal;
 	wrap_render_image_add = p_render_image_add;
+	wrap_render_image_sub = p_render_image_sub;
 	wrap_render_image_dim = p_render_image_dim;
 	wrap_render_image_rule = p_render_image_rule;
 	wrap_render_image_melt = p_render_image_melt;
 	wrap_render_image_3d_normal = p_render_image_3d_normal;
 	wrap_render_image_3d_add = p_render_image_3d_add;
+	wrap_render_image_3d_sub = p_render_image_3d_sub;
+	wrap_render_image_3d_dim = p_render_image_3d_dim;
 	wrap_reset_lap_timer = p_reset_lap_timer;
 	wrap_get_lap_timer_millisec = p_get_lap_timer_millisec;
 	wrap_play_sound = p_play_sound;
@@ -261,6 +270,20 @@ void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, 
 	wrap_render_image_add(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
 }
 
+void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	if (dst_width == -1)
+		dst_width = src_img->width;
+	if (dst_height == -1)
+		dst_height = src_img->height;
+	if (src_width == -1)
+		src_width = src_img->width;
+	if (src_height == -1)
+		src_height = src_img->height;
+
+	wrap_render_image_sub(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
+}
+
 void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
 	if (dst_width == -1)
@@ -293,6 +316,16 @@ void render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, fl
 void render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
 	wrap_render_image_3d_add(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+}
+
+void render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	wrap_render_image_3d_sub(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+}
+
+void render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	wrap_render_image_3d_dim(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
 }
 
 void reset_lap_timer(uint64_t *origin)

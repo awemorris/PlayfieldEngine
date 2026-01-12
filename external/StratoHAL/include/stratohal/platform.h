@@ -880,11 +880,14 @@ extern void (*wrap_notify_image_update)(int id, int width, int height, UNSAFEPTR
 extern void (*wrap_notify_image_free)(int id);
 extern void (*wrap_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 extern void (*wrap_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+extern void (*wrap_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 extern void (*wrap_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 extern void (*wrap_render_image_rule)(int src_img, int rule_img, int threshold);
 extern void (*wrap_render_image_melt)(int src_img, int rule_img, int progress);
 extern void (*wrap_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 extern void (*wrap_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+extern void (*wrap_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+extern void (*wrap_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 extern void (*wrap_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin);
 extern uint64_t (*wrap_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin);
 extern void (*wrap_play_sound)(int stream, UNSAFEPTR(void *) wave);
@@ -942,11 +945,14 @@ void init_hal_func_table(
 	void __cdecl (*p_notify_image_free)(int id),
 	void __cdecl (*p_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void __cdecl (*p_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+	void __cdecl (*p_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void __cdecl (*p_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void __cdecl (*p_render_image_rule)(int src_img, int rule_img, int threshold),
 	void __cdecl (*p_render_image_melt)(int src_img, int rule_img, int progress),
 	void __cdecl (*p_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void __cdecl (*p_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+	void __cdecl (*p_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+	void __cdecl (*p_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void __cdecl (*p_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin),
 	uint64_t __cdecl (*p_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin),
 	void __cdecl (*p_play_sound)(int stream, UNSAFEPTR(void *) wave),
