@@ -688,15 +688,15 @@ pf_create_text_texture(
 	int *width,
 	int *height)
 {
-	if (!pf_create_text_texture(slot,
-				    text,
-				    size,
-				    color,
-				    0,
-				    0,
-				    tex_id,
-				    width,
-				    height))
+	if (!pf_create_text_texture_outline(slot,
+					    text,
+					    size,
+					    color,
+					    0,
+					    0,
+					    tex_id,
+					    width,
+					    height))
 		return false;
 
 	return true;
