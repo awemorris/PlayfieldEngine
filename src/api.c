@@ -1409,7 +1409,7 @@ pf_call_vm_function(
 }
 
 /*
- * Call a VM tag function.
+ * Call a VM function that corresponds to the current tag.
  */
 bool
 pf_call_vm_tag_function(

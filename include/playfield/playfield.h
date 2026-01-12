@@ -564,7 +564,7 @@ pf_check_save_data(
 	const char *key);
 
 /*
- * Raw File Read
+ * Raw File I/O
  */
 
 /*
@@ -601,7 +601,7 @@ pf_call_vm_function(
 	const char *func_name);
 
 /*
- * Call a VM tag function.
+ * Call a VM function that corresponds to the current tag.
  */
 bool
 pf_call_vm_tag_function(
