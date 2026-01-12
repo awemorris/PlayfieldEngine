@@ -508,7 +508,7 @@ pf_stop_sound(
  * Set a sound volume on a stream.
  */
 bool
-pf_set_volume(
+pf_set_sound_volume(
 	int stream,
 	float val);
 
