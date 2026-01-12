@@ -1126,6 +1126,30 @@ pf_is_sound_finished(
 }
 
 /*
+ * Lap Timer
+ */
+
+/*
+ * Reset a lap timer and initializes it with a current time.
+ */
+void
+pf_reset_lap_timer(
+	uint64_t *origin)
+{
+	reset_lap_timer(origin);
+}
+
+/*
+ * Get a lap time in milliseconds.
+ */
+uint64_t
+pf_get_lap_timer_millisec(
+	uint64_t *origin)
+{
+	return get_lap_timer_millisec(origin);
+}
+
+/*
  * Save Data
  */
 
