@@ -81,6 +81,7 @@
 enum {
 	PIPELINE_NORMAL,
 	PIPELINE_ADD,
+	PIPELINE_SUB,
 	PIPELINE_DIM,
 	PIPELINE_RULE,
 	PIPELINE_MELT,
@@ -799,6 +800,47 @@ void opengl_render_image_add(int dst_left,
 }
 
 /*
+ * Render an image with the sub pipeline.
+ */
+void opengl_render_image_sub(int dst_left,
+			     int dst_top,
+			     int dst_width,
+			     int dst_height,
+			     struct image *src_image,
+			     int src_left,
+			     int src_top,
+			     int src_width,
+			     int src_height,
+			     int alpha)
+{
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	/* Check for the case we don't need to render. */
+	if (alpha == 0 || dst_width == 0 || dst_height == 0)
+		return;
+
+	draw_elements(dst_left,
+		      dst_top,
+		      dst_width,
+		      dst_height,
+		      src_image,
+		      NULL,
+		      src_left,
+		      src_top,
+		      src_width,
+		      src_height,
+		      alpha,
+		      PIPELINE_SUB);
+}
+
+/*
  * Render an image with the dim pipeline.
  */
 void opengl_render_image_dim(int dst_left,
@@ -952,7 +994,7 @@ opengl_render_image_3d_normal(
 }
 
 /*
- * Render an image with the normal pipeline.
+ * Render an image with the add pipeline.
  */
 void
 opengl_render_image_3d_add(
@@ -987,6 +1029,82 @@ opengl_render_image_3d_add(
 			 src_height,
 			 alpha,
 			 PIPELINE_ADD);
+}
+
+/*
+ * Render an image with the sub pipeline.
+ */
+void
+opengl_render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	draw_elements_3d(x1,
+			 y1,
+			 x2,
+			 y2,
+			 x3,
+			 y3,
+			 x4,
+			 y4,
+			 src_image,
+			 NULL,
+			 src_left,
+			 src_top,
+			 src_width,
+			 src_height,
+			 alpha,
+			 PIPELINE_SUB);
+}
+
+/*
+ * Render an image with the dim pipeline.
+ */
+void
+opengl_render_image_3d_dim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	draw_elements_3d(x1,
+			 y1,
+			 x2,
+			 y2,
+			 x3,
+			 y3,
+			 x4,
+			 y4,
+			 src_image,
+			 NULL,
+			 src_left,
+			 src_top,
+			 src_width,
+			 src_height,
+			 alpha,
+			 PIPELINE_DIM);
 }
 
 /* Render two triangle primitives. */
@@ -1072,6 +1190,7 @@ static void draw_elements_3d(float x1,
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_normal);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_normal);
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	case PIPELINE_ADD:
@@ -1080,6 +1199,16 @@ static void draw_elements_3d(float x1,
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_normal);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_normal);
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE, GL_ONE);
+		break;
+	case PIPELINE_SUB:
+		glUseProgram(program_normal);
+		glBindVertexArray(vao_normal);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_normal);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_normal);
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_SUBTRACT);
 		glBlendFunc(GL_ONE, GL_ONE);
 		break;
 	case PIPELINE_DIM:
@@ -1088,6 +1217,7 @@ static void draw_elements_3d(float x1,
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_dim);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_dim);
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	case PIPELINE_RULE:
@@ -1096,6 +1226,7 @@ static void draw_elements_3d(float x1,
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_rule);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_rule);
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	case PIPELINE_MELT:
@@ -1104,6 +1235,7 @@ static void draw_elements_3d(float x1,
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_melt);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_melt);
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		break;
 	default:

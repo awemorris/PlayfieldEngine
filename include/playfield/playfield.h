@@ -283,7 +283,7 @@ pf_draw_texture_scale(
  */
 
 /*
- * Render a texture.
+ * Render a texture. (alpha blending)
  */
 void
 pf_render_texture(
@@ -299,10 +299,82 @@ pf_render_texture(
 	int alpha);
 
 /*
- * Render a texture.
+ * Render a texture. (add blending)
+ */
+void
+pf_render_texture_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	int tex_id,
+	int src_x,
+	int src_y,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture. (sub blending)
+ */
+void
+pf_render_texture_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	int tex_id,
+	int src_x,
+	int src_y,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture. (3D, alpha blending)
  */
 void
 pf_render_texture_3d(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture. (3D, add blending)
+ */
+void
+pf_render_texture_3d_add(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Render a texture. (3D, sub blending)
+ */
+void
+pf_render_texture_3d_sub(
 	float x1,
 	float y1,
 	float x2,

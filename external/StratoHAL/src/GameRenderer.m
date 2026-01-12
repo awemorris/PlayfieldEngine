@@ -43,6 +43,7 @@ static MTKView *theMTKView;
 static id<MTLDevice> theDevice;
 static id<MTLRenderPipelineState> theNormalPipelineState;
 static id<MTLRenderPipelineState> theAddPipelineState;
+static id<MTLRenderPipelineState> theSubPipelineState;
 static id<MTLRenderPipelineState> theDimPipelineState;
 static id<MTLRenderPipelineState> theRulePipelineState;
 static id<MTLRenderPipelineState> theMeltPipelineState;
@@ -131,7 +132,7 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 
     // Construct the add shader pipeline.
     MTLRenderPipelineDescriptor *addPipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
-    addPipelineStateDescriptor.label = @"Normal Texturing Pipeline";
+    addPipelineStateDescriptor.label = @"Add Texturing Pipeline";
     addPipelineStateDescriptor.vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
     addPipelineStateDescriptor.fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentNormalShader"];
     addPipelineStateDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat;
@@ -139,12 +140,29 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     addPipelineStateDescriptor.colorAttachments[0].rgbBlendOperation = MTLBlendOperationAdd;
     addPipelineStateDescriptor.colorAttachments[0].alphaBlendOperation = MTLBlendOperationAdd;
     addPipelineStateDescriptor.colorAttachments[0].sourceRGBBlendFactor = MTLBlendFactorSourceAlpha;
-    addPipelineStateDescriptor.colorAttachments[0].sourceAlphaBlendFactor = MTLBlendFactorOne;
+    addPipelineStateDescriptor.colorAttachments[0].sourceAlphaBlendFactor = MTLBlendFactorZero;
     addPipelineStateDescriptor.colorAttachments[0].destinationRGBBlendFactor = MTLBlendFactorOne;
     addPipelineStateDescriptor.colorAttachments[0].destinationAlphaBlendFactor =  MTLBlendFactorOne;
     addPipelineStateDescriptor.depthAttachmentPixelFormat = theMTKView.depthStencilPixelFormat;
     theAddPipelineState = [theDevice newRenderPipelineStateWithDescriptor:addPipelineStateDescriptor error:&error];
     NSAssert(theAddPipelineState, @"Failed to create pipeline state: %@", error);
+
+    // Construct the sub shader pipeline.
+    MTLRenderPipelineDescriptor *subPipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
+    subPipelineStateDescriptor.label = @"Add Texturing Pipeline";
+    subPipelineStateDescriptor.vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+    subPipelineStateDescriptor.fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentNormalShader"];
+    subPipelineStateDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat;
+    subPipelineStateDescriptor.colorAttachments[0].blendingEnabled = TRUE;
+    subPipelineStateDescriptor.colorAttachments[0].rgbBlendOperation = MTLBlendOperationReverseSubtract;
+    subPipelineStateDescriptor.colorAttachments[0].alphaBlendOperation = MTLBlendOperationAdd;
+    subPipelineStateDescriptor.colorAttachments[0].sourceRGBBlendFactor = MTLBlendFactorSourceAlpha;
+    subPipelineStateDescriptor.colorAttachments[0].sourceAlphaBlendFactor = MTLBlendFactorZero;
+    subPipelineStateDescriptor.colorAttachments[0].destinationRGBBlendFactor = MTLBlendFactorOne;
+    subPipelineStateDescriptor.colorAttachments[0].destinationAlphaBlendFactor =  MTLBlendFactorOne;
+    subPipelineStateDescriptor.depthAttachmentPixelFormat = theMTKView.depthStencilPixelFormat;
+    theSubPipelineState = [theDevice newRenderPipelineStateWithDescriptor:subPipelineStateDescriptor error:&error];
+    NSAssert(theSubPipelineState, @"Failed to create pipeline state: %@", error);
 
     // Construct a dim shader pipeline.
     MTLRenderPipelineDescriptor *dimPipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -385,6 +403,24 @@ void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, 
 }
 
 //
+// Render an image to the screen with the "sub" pipeline.
+//
+void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    if (dst_width == -1)
+        dst_width = src_image->width;
+    if (dst_height == -1)
+        dst_height = src_image->height;
+    if (src_width == -1)
+        src_width = src_image->width;
+    if (src_height == -1)
+        src_height = src_image->height;
+
+    drawPrimitives(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theSubPipelineState);
+}
+
+
+//
 // Render an image to the screen with the "dim" pipeline.
 //
 void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
@@ -512,11 +548,27 @@ void render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, fl
 }
 
 //
-// Renders an image to the screen with the "normal" shader pipeline.
+// Renders an image to the screen with the "add" shader pipeline.
 //
 void render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
     drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theAddPipelineState);
+}
+
+//
+// Renders an image to the screen with the "sub" shader pipeline.
+//
+void render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theSubPipelineState);
+}
+
+//
+// Renders an image to the screen with the "dim" shader pipeline.
+//
+void render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theDimPipelineState);
 }
 
 //

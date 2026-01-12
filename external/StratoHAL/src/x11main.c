@@ -1418,6 +1418,32 @@ render_image_3d_add(
 }
 
 /*
+ * Render an image. (3d transform, alpha blending)
+ */
+void
+render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_sub(
+		x1, y1, x2, y2, x3, y3, x4, y4,
+		src_image, src_left, src_top, src_width, src_height,
+		alpha);
+}
+
+/*
  * Play a video.
  */
 bool play_video(const char *fname, bool is_skippable)

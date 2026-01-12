@@ -156,6 +156,41 @@ void GDIRenderImageAdd(
 				   alpha);
 }
 
+void GDIRenderImageSub(
+	int dst_left,				/* The X coordinate of the screen */
+	int dst_top,				/* The Y coordinate of the screen */
+	int dst_width,				/* The width of the destination rectangle */
+	int dst_height,				/* The width of the destination rectangle */
+	struct image *src_image,	/* [IN] an image to be rendered */
+	int src_left,				/* The X coordinate of a source image */
+	int src_top,				/* The Y coordinate of a source image */
+	int src_width,				/* The width of the source rectangle */
+	int src_height,				/* The height of the source rectangle */
+	int alpha)					/* The alpha value (0 to 255) */
+{
+	UNUSED_PARAMETER(dst_width);
+	UNUSED_PARAMETER(dst_height);
+
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	draw_image_sub(pBackImage,
+				   dst_left,
+				   dst_top,
+				   src_image,
+				   src_width,
+				   src_height,
+				   src_left,
+				   src_top,
+				   alpha);
+}
+
 void GDIRenderImageDim(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
@@ -229,6 +264,7 @@ VOID GDIRenderImage3DNormal(
 	int src_height,
 	int alpha)
 {
+	/* TODO */
 	UNUSED_PARAMETER(x1);
 	UNUSED_PARAMETER(y1);
 	UNUSED_PARAMETER(x2);
@@ -261,6 +297,73 @@ VOID GDIRenderImage3DAdd(
 	int src_height,
 	int alpha)
 {
+	/* TODO */
+	UNUSED_PARAMETER(x1);
+	UNUSED_PARAMETER(y1);
+	UNUSED_PARAMETER(x2);
+	UNUSED_PARAMETER(y2);
+	UNUSED_PARAMETER(x3);
+	UNUSED_PARAMETER(y3);
+	UNUSED_PARAMETER(x4);
+	UNUSED_PARAMETER(y4);
+	UNUSED_PARAMETER(src_image);
+	UNUSED_PARAMETER(src_left);
+	UNUSED_PARAMETER(src_top);
+	UNUSED_PARAMETER(src_width);
+	UNUSED_PARAMETER(src_height);
+	UNUSED_PARAMETER(alpha);
+}
+
+VOID GDIRenderImage3DSub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	/* TODO */
+	UNUSED_PARAMETER(x1);
+	UNUSED_PARAMETER(y1);
+	UNUSED_PARAMETER(x2);
+	UNUSED_PARAMETER(y2);
+	UNUSED_PARAMETER(x3);
+	UNUSED_PARAMETER(y3);
+	UNUSED_PARAMETER(x4);
+	UNUSED_PARAMETER(y4);
+	UNUSED_PARAMETER(src_image);
+	UNUSED_PARAMETER(src_left);
+	UNUSED_PARAMETER(src_top);
+	UNUSED_PARAMETER(src_width);
+	UNUSED_PARAMETER(src_height);
+	UNUSED_PARAMETER(alpha);
+}
+
+VOID GDIRenderImage3DDim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	/* TODO */
 	UNUSED_PARAMETER(x1);
 	UNUSED_PARAMETER(y1);
 	UNUSED_PARAMETER(x2);

@@ -419,10 +419,27 @@ render_image_normal(
 
 /*
  * Renders an image to the screen with the "add" shader pipeline.
- *  - The "add" shader pipeline renders pixels with alpha blending.
+ *  - The "add" shader pipeline renders pixels with add blending.
  */
 void
 render_image_add(
+	int dst_left,			/* The X coordinate of the screen */
+	int dst_top,			/* The Y coordinate of the screen */
+	int dst_width,			/* The width of the destination rectangle */
+	int dst_height,			/* The width of the destination rectangle */
+	struct image *src_image,	/* [IN] The image to be rendered */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha);			/* The alpha value (0 to 255) */
+
+/*
+ * Renders an image to the screen with the "sub" shader pipeline.
+ *  - The "sub" shader pipeline renders pixels with subtract blending.
+ */
+void
+render_image_sub(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
@@ -497,6 +514,46 @@ render_image_3d_normal(
  */
 void
 render_image_3d_add(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha);			/* The alpha value (0 to 255) */
+
+/*
+ * Renders an image to the screen as a triangle strip with the "sub" shader pipeline.
+ */
+void
+render_image_3d_sub(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha);			/* The alpha value (0 to 255) */
+
+/*
+ * Renders an image to the screen as a triangle strip with the "dim" shader pipeline.
+ */
+void
+render_image_3d_dim(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */

@@ -39,6 +39,7 @@ enum pipeline
 {
     PIPELINE_NORMAL,
     PIPELINE_ADD,
+    PIPELINE_SUB,
     PIPELINE_DIM,
     PIPELINE_RULE,
     PIPELINE_MELT,
@@ -163,6 +164,8 @@ static ComPtr<ID3D12RootSignature>          g_rootSignature;
 static ComPtr<ID3D12DescriptorHeap>         g_rtvHeap;
 static ComPtr<ID3D12DescriptorHeap>         g_srvHeap;
 static ComPtr<ID3D12PipelineState>          g_pipelineStateNormal;
+static ComPtr<ID3D12PipelineState>          g_pipelineStateAdd;
+static ComPtr<ID3D12PipelineState>          g_pipelineStateSub;
 static ComPtr<ID3D12PipelineState>          g_pipelineStateRule;
 static ComPtr<ID3D12PipelineState>          g_pipelineStateMelt;
 static ComPtr<ID3D12GraphicsCommandList>    g_commandList;
@@ -578,20 +581,50 @@ static BOOL CreatePipelineState()
         { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
-    D3D12_BLEND_DESC blendDesc = {};
+    D3D12_BLEND_DESC normalBlendDesc = {};
     for (int i = 0; i < 2; i++)
     {
-        blendDesc.RenderTarget[i].BlendEnable = TRUE;
-        blendDesc.RenderTarget[i].BlendOp = D3D12_BLEND_OP_ADD;
-        blendDesc.RenderTarget[i].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-        blendDesc.RenderTarget[i].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-        blendDesc.RenderTarget[i].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
-        blendDesc.RenderTarget[i].LogicOp = D3D12_LOGIC_OP_NOOP;
-        blendDesc.RenderTarget[i].LogicOpEnable = FALSE;
-        blendDesc.RenderTarget[i].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-        blendDesc.RenderTarget[i].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-        blendDesc.RenderTarget[i].SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+        normalBlendDesc.RenderTarget[i].BlendEnable = TRUE;
+        normalBlendDesc.RenderTarget[i].BlendOp = D3D12_BLEND_OP_ADD;
+        normalBlendDesc.RenderTarget[i].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        normalBlendDesc.RenderTarget[i].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+        normalBlendDesc.RenderTarget[i].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+        normalBlendDesc.RenderTarget[i].LogicOp = D3D12_LOGIC_OP_NOOP;
+        normalBlendDesc.RenderTarget[i].LogicOpEnable = FALSE;
+        normalBlendDesc.RenderTarget[i].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+        normalBlendDesc.RenderTarget[i].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        normalBlendDesc.RenderTarget[i].SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
     }
+
+	D3D12_BLEND_DESC addBlendDesc = {};
+	for (int i = 0; i < 2; i++)
+	{
+		addBlendDesc.RenderTarget[i].BlendEnable = TRUE;
+		addBlendDesc.RenderTarget[i].BlendOp = D3D12_BLEND_OP_ADD;
+		addBlendDesc.RenderTarget[i].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		addBlendDesc.RenderTarget[i].SrcBlend = D3D12_BLEND_ONE;
+		addBlendDesc.RenderTarget[i].SrcBlendAlpha = D3D12_BLEND_ONE;
+		addBlendDesc.RenderTarget[i].DestBlend = D3D12_BLEND_ONE;
+		addBlendDesc.RenderTarget[i].DestBlendAlpha = D3D12_BLEND_ONE;
+		addBlendDesc.RenderTarget[i].LogicOp = D3D12_LOGIC_OP_NOOP;
+		addBlendDesc.RenderTarget[i].LogicOpEnable = FALSE;
+		addBlendDesc.RenderTarget[i].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	}
+
+	D3D12_BLEND_DESC subBlendDesc = {};
+	for (int i = 0; i < 2; i++)
+	{
+		subBlendDesc.RenderTarget[i].BlendEnable = TRUE;
+		subBlendDesc.RenderTarget[i].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+		subBlendDesc.RenderTarget[i].BlendOpAlpha = D3D12_BLEND_OP_REV_SUBTRACT;
+		subBlendDesc.RenderTarget[i].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		subBlendDesc.RenderTarget[i].SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+		subBlendDesc.RenderTarget[i].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		subBlendDesc.RenderTarget[i].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+		subBlendDesc.RenderTarget[i].LogicOp = D3D12_LOGIC_OP_NOOP;
+		subBlendDesc.RenderTarget[i].LogicOpEnable = FALSE;
+		subBlendDesc.RenderTarget[i].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	}
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 
@@ -600,7 +633,7 @@ static BOOL CreatePipelineState()
     psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
     psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderNormal.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    psoDesc.BlendState = blendDesc;
+    psoDesc.BlendState = normalBlendDesc;
     psoDesc.DepthStencilState.DepthEnable = FALSE;
     psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.SampleMask = UINT_MAX;
@@ -616,9 +649,45 @@ static BOOL CreatePipelineState()
     psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
     psoDesc.pRootSignature = g_rootSignature.Get();
     psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderNormal.Get());
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = addBlendDesc;
+    psoDesc.DepthStencilState.DepthEnable = FALSE;
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.SampleDesc.Count = 1;
+
+    hr = g_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&g_pipelineStateAdd));
+    if (FAILED(hr))
+        return FALSE;
+
+    psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+    psoDesc.pRootSignature = g_rootSignature.Get();
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderNormal.Get());
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = subBlendDesc;
+    psoDesc.DepthStencilState.DepthEnable = FALSE;
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.SampleDesc.Count = 1;
+
+    hr = g_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&g_pipelineStateSub));
+    if (FAILED(hr))
+        return FALSE;
+
+    psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+    psoDesc.pRootSignature = g_rootSignature.Get();
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
     psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderRule.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    psoDesc.BlendState = blendDesc;
+    psoDesc.BlendState = normalBlendDesc;
     psoDesc.DepthStencilState.DepthEnable = FALSE;
     psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.SampleMask = UINT_MAX;
@@ -636,7 +705,7 @@ static BOOL CreatePipelineState()
     psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
     psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderMelt.Get());
     psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    psoDesc.BlendState = blendDesc;
+    psoDesc.BlendState = normalBlendDesc;
     psoDesc.DepthStencilState.DepthEnable = FALSE;
     psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.SampleMask = UINT_MAX;
@@ -878,6 +947,11 @@ VOID D3D12RenderImageAdd(int dst_left, int dst_top, int dst_width, int dst_heigh
     DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
 }
 
+VOID D3D12RenderImageSub(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
 VOID D3D12RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
     DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
@@ -901,6 +975,16 @@ VOID D3D12RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, 
 VOID D3D12RenderImage3DAdd(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
     DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+}
+
+VOID D3D12RenderImage3DSub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
+VOID D3D12RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
 }
 
 static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
@@ -987,6 +1071,12 @@ static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, fl
     case PIPELINE_NORMAL:
     case PIPELINE_DIM:
         g_commandList->SetPipelineState(g_pipelineStateNormal.Get());
+        break;
+    case PIPELINE_ADD:
+        g_commandList->SetPipelineState(g_pipelineStateAdd.Get());
+        break;
+    case PIPELINE_SUB:
+        g_commandList->SetPipelineState(g_pipelineStateSub.Get());
         break;
     case PIPELINE_RULE:
         g_commandList->SetPipelineState(g_pipelineStateRule.Get());

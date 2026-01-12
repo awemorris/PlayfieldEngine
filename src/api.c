@@ -557,7 +557,7 @@ pf_draw_texture_scale(
  */
 
 /*
- * Render a texture.
+ * Render a texture. (alpha blending)
  */
 void
 pf_render_texture(
@@ -593,7 +593,79 @@ pf_render_texture(
 }
 
 /*
- * Render a texture.
+ * Render a texture. (add blending)
+ */
+void
+pf_render_texture_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_add(dst_left,
+			 dst_top,
+			 dst_width,
+			 dst_height,
+			 t->img,
+			 src_left,
+			 src_top,
+			 src_width,
+			 src_height,
+			 alpha);
+}
+
+/*
+ * Render a texture. (sub blending)
+ */
+void
+pf_render_texture_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_add(dst_left,
+			 dst_top,
+			 dst_width,
+			 dst_height,
+			 t->img,
+			 src_left,
+			 src_top,
+			 src_width,
+			 src_height,
+			 alpha);
+}
+
+/*
+ * Render a texture. (3D, alpha blending)
  */
 void
 pf_render_texture_3d(
@@ -624,6 +696,74 @@ pf_render_texture_3d(
 			       t->img,
 			       src_left, src_top, src_width, src_height,
 			       alpha);
+}
+
+/*
+ * Render a texture. (3D, add blending)
+ */
+void
+pf_render_texture_3d_add(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_3d_add(x1, y1, x2, y2, x3, y3, x4, y4,
+			    t->img,
+			    src_left, src_top, src_width, src_height,
+			    alpha);
+}
+
+/*
+ * Render a texture. (3D, sub blending)
+ */
+void
+pf_render_texture_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	int tex_id,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	struct texture_entry *t;
+
+	assert(tex_id >= 0 &&  tex_id < TEXTURE_COUNT);
+
+	t = &tex_tbl[tex_id];
+	assert(t->is_used);
+	assert(t->img != NULL);
+
+	render_image_3d_sub(x1, y1, x2, y2, x3, y3, x4, y4,
+			    t->img,
+			    src_left, src_top, src_width, src_height,
+			    alpha);
 }
 
 /*

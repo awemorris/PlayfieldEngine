@@ -25,6 +25,7 @@ enum pipeline
 {
     PIPELINE_NORMAL,
     PIPELINE_ADD,
+    PIPELINE_SUB,
     PIPELINE_DIM,
     PIPELINE_RULE,
     PIPELINE_MELT,
@@ -126,7 +127,9 @@ static ID3D11DeviceContext1*    g_pImmediateContext1;
 static IDXGISwapChain*          g_pSwapChain;
 static IDXGISwapChain1*         g_pSwapChain1;
 static ID3D11RenderTargetView*  g_pRenderTargetView;
-static ID3D11BlendState*        g_pBlendState;
+static ID3D11BlendState*        g_pBlendStateNormal;
+static ID3D11BlendState*        g_pBlendStateAdd;
+static ID3D11BlendState*        g_pBlendStateSub;
 static ID3D11VertexShader*      g_pVertexShader;
 static ID3D11PixelShader*       g_pPixelShaderNormal;
 static ID3D11PixelShader*       g_pPixelShaderRule;
@@ -381,7 +384,7 @@ static BOOL CreateRenderTargetView()
 
 static BOOL CreateBlendState()
 {
-    // Setup a blend state
+    // Setup the normal blend state.
     D3D11_BLEND_DESC BlendState = {};
     BlendState.RenderTarget[0].BlendEnable = TRUE;
     BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -391,10 +394,29 @@ static BOOL CreateBlendState()
     BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
     BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-    g_pd3dDevice->CreateBlendState(&BlendState, &g_pBlendState);
+    g_pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateNormal);
 
-    float factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    g_pImmediateContext->OMSetBlendState(g_pBlendState, factor, 0xffffffff);
+	// Setup the add blend state.
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    g_pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateAdd);
+
+	// Setup the sub blend state.
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_REV_SUBTRACT;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    g_pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateSub);
 
     return TRUE;
 }
@@ -738,6 +760,11 @@ VOID D3D11RenderImageAdd(int dst_left, int dst_top, int dst_width, int dst_heigh
     DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
 }
 
+VOID D3D11RenderImageSub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
 VOID D3D11RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
     DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
@@ -761,6 +788,16 @@ VOID D3D11RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, 
 VOID D3D11RenderImage3DAdd(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
     DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+}
+
+VOID D3D11RenderImage3DSub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
+VOID D3D11RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
 }
 
 static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
@@ -823,22 +860,29 @@ static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_he
     g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
 
+    float factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     switch (pipeline)
     {
     case PIPELINE_NORMAL:
+    case PIPELINE_DIM:
+		g_pImmediateContext->OMSetBlendState(g_pBlendStateNormal, factor, 0xffffffff);
         g_pImmediateContext->PSSetShader(g_pPixelShaderNormal, nullptr, 0);
         break;
-    case PIPELINE_DIM:
+    case PIPELINE_ADD:
+		g_pImmediateContext->OMSetBlendState(g_pBlendStateAdd, factor, 0xffffffff);
+        g_pImmediateContext->PSSetShader(g_pPixelShaderNormal, nullptr, 0);
+        break;
+    case PIPELINE_SUB:
+		g_pImmediateContext->OMSetBlendState(g_pBlendStateSub, factor, 0xffffffff);
         g_pImmediateContext->PSSetShader(g_pPixelShaderNormal, nullptr, 0);
         break;
     case PIPELINE_RULE:
+		g_pImmediateContext->OMSetBlendState(g_pBlendStateNormal, factor, 0xffffffff);
         g_pImmediateContext->PSSetShader(g_pPixelShaderRule, nullptr, 0);
         break;
     case PIPELINE_MELT:
+		g_pImmediateContext->OMSetBlendState(g_pBlendStateNormal, factor, 0xffffffff);
         g_pImmediateContext->PSSetShader(g_pPixelShaderMelt, nullptr, 0);
-        break;
-    case PIPELINE_ADD:
-        // TODO
         break;
     }
 

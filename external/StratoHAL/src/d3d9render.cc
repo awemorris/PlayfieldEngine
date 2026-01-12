@@ -23,6 +23,7 @@ extern "C" {
 enum  {
 	PIPELINE_NORMAL,
 	PIPELINE_ADD,
+	PIPELINE_SUB,
 	PIPELINE_DIM,
 	PIPELINE_RULE,
 	PIPELINE_MELT,
@@ -426,6 +427,11 @@ VOID D3D9RenderImageAdd(int dst_left, int dst_top, int dst_width, int dst_height
 	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
 }
 
+VOID D3D9RenderImageSub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
 VOID D3D9RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
 	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
@@ -449,6 +455,16 @@ VOID D3D9RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, f
 VOID D3D9RenderImage3DAdd(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
 {
 	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+}
+
+VOID D3D9RenderImage3DSub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+}
+
+VOID D3D9RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+{
+	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
 }
 
 static VOID DrawPrimitives2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, struct image *rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
@@ -552,6 +568,7 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 	case PIPELINE_NORMAL:
 		pD3DDevice->SetPixelShader(NULL);
 		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_ADD);
 		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);
 		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		pD3DDevice->SetTextureStageState(0,	D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -564,6 +581,20 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 	case PIPELINE_ADD:
 		pD3DDevice->SetPixelShader(NULL);
 		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_ADD);
+		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_ONE);
+		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_COLOROP, D3DTOP_MODULATE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		pD3DDevice->SetTextureStageState(0,	D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+		break;
+	case PIPELINE_SUB:
+		pD3DDevice->SetPixelShader(NULL);
+		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_REVSUBTRACT);
 		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_ONE);
 		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		pD3DDevice->SetTextureStageState(0,	D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -576,6 +607,7 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 	case PIPELINE_DIM:
 		pD3DDevice->SetPixelShader(pDimShader);
 		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_ADD);
 		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);
 		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		th4[0] = th4[1] = th4[2] = 0.5f;
@@ -592,6 +624,7 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 		pD3DDevice->SetPixelShaderConstantF(2, th4, 1);
 		pD3DDevice->SetTexture(1, pTexRule);
 		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_ADD);
 		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);
 		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		break;
@@ -600,6 +633,7 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 		pD3DDevice->SetPixelShaderConstantF(2, th4, 1);
 		pD3DDevice->SetTexture(1, pTexRule);
 		pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pD3DDevice->SetRenderState(D3DRS_BLENDOP,   D3DBLENDOP_ADD);
 		pD3DDevice->SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);
 		pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		break;

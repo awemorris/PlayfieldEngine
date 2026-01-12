@@ -259,6 +259,36 @@ render_image_add(
 }
 
 void
+render_image_sub(
+	int dst_left,				/* The X coordinate of the screen */
+	int dst_top,				/* The Y coordinate of the screen */
+	int dst_width,				/* The width of the destination rectangle */
+	int dst_height,				/* The width of the destination rectangle */
+	struct image *src_image,	/* [IN] an image to be rendered */
+	int src_left,				/* The X coordinate of a source image */
+	int src_top,				/* The Y coordinate of a source image */
+	int src_width,				/* The width of the source rectangle */
+	int src_height,				/* The height of the source rectangle */
+	int alpha)					/* The alpha value (0 to 255) */
+{
+	switch (nGraphicsMode)
+	{
+	case MODE_D3D12:
+		D3D12RenderImageSub(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D11:
+		D3D11RenderImageSub(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D9:
+		D3D9RenderImageSub(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_GDI:
+		GDIRenderImageSub(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	}
+}
+
+void
 render_image_dim(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
@@ -380,16 +410,51 @@ render_image_3d_add(
 	switch (nGraphicsMode)
 	{
 	case MODE_D3D12:
-		D3D12RenderImage3DNormal(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		D3D12RenderImage3DAdd(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
 		break;
 	case MODE_D3D11:
-		D3D11RenderImage3DNormal(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		D3D11RenderImage3DAdd(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
 		break;
 	case MODE_D3D9:
-		D3D9RenderImage3DNormal(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		D3D9RenderImage3DAdd(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
 		break;
 	case MODE_GDI:
-		GDIRenderImage3DNormal(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		GDIRenderImage3DAdd(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	}
+}
+
+void
+render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	/* TODO */
+	switch (nGraphicsMode)
+	{
+	case MODE_D3D12:
+		D3D12RenderImage3DSub(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D11:
+		D3D11RenderImage3DSub(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D9:
+		D3D9RenderImage3DSub(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_GDI:
+		GDIRenderImage3DSub(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
 		break;
 	}
 }
