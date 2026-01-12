@@ -487,7 +487,7 @@ pf_draw_texture_emoji(
 }
 
 /*
- * Draw a texture image on an texture image. (50% dimming)
+ * Draw a texture image on a texture image. (50% dimming)
  */
 void
 pf_draw_texture_dim(
@@ -523,7 +523,7 @@ pf_draw_texture_dim(
 		alpha);
 }
 
-/* Draw an image with scaling. */
+/* Draw a texture image on a texture image with scaling. */
 void
 pf_draw_texture_scale(
 	int dst_tex_id,
@@ -550,6 +550,32 @@ pf_draw_texture_scale(
 		virtual_dst_left,
 		virtual_dst_top,
 		tex_tbl[src_tex_id].img);
+}
+
+/*
+ * Fill a rectangle on a texture image.
+ */
+void
+pf_fill_texture_rect(
+	int tex_id,
+	int left,
+	int top,
+	int width,
+	int height,
+	pixel_t color)
+{
+	assert(tex_id >= 0);
+	assert(tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[tex_id].is_used);
+	assert(tex_tbl[tex_id].img != NULL);
+
+	clear_image_rect(
+		tex_tbl[tex_id].img,
+		left,
+		top,
+		width,
+		height,
+		color);
 }
 
 /*

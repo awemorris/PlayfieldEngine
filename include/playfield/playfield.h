@@ -254,7 +254,7 @@ pf_draw_texture_emoji(
 	int alpha);
 
 /*
- * Draw a texture image on an texture image. (50% dimming)
+ * Draw a texture image on a texture image. (50% dimming)
  */
 void
 pf_draw_texture_dim(
@@ -268,7 +268,7 @@ pf_draw_texture_dim(
 	int src_top,
 	int alpha);
 
-/* Draw an image with scaling. */
+/* Draw a texture image  on a texture image with scaling. */
 void
 pf_draw_texture_scale(
 	int dst_tex_id,
@@ -277,6 +277,16 @@ pf_draw_texture_scale(
 	int virtual_dst_left,
 	int virtual_dst_top,
 	int src_tex_id);
+
+/* Fill a rectangle on a texture image. */
+void
+pf_fill_texture_rect(
+	int tex_id,
+	int left,
+	int top,
+	int width,
+	int height,
+	pixel_t color);
 
 /*
  * Rendering
