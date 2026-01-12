@@ -249,6 +249,20 @@ pf_destroy_texture(
 	destroy_image(tex_tbl[tex_id].img);
 }
 
+/*
+ * Notify a texture update.
+ */
+bool
+pf_notify_texture_update(
+	int tex_id)
+{
+	assert(tex_id >= 0);
+	assert(tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[tex_id].is_used);
+	assert(tex_tbl[tex_id].img != NULL);
+
+	notify_image_update(tex_tbl[tex_id].img);
+}
 
 /*
  * Draw a texture image on a texture image. (copy)
@@ -1739,6 +1753,15 @@ pf_get_tag_property_value(
  */
 
 /*
+ * Get the system locale.
+ */
+const char *
+pf_get_system_language(void)
+{
+	return get_system_language();
+}
+
+/*
  * Print a debug message.
  */
 void
@@ -1790,4 +1813,13 @@ pf_log_error(
 	va_end(ap);
 
 	log_error(buf);
+}
+
+/*
+ * Print an out-of-memory error message.
+ */
+void
+pf_log_out_of_memory(void)
+{
+	pf_log_error("Out-of-memory.");
 }

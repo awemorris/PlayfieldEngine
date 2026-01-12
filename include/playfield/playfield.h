@@ -156,6 +156,13 @@ pf_destroy_texture(
 	int tex_id);
 
 /*
+ * Notify a texture update.
+ */
+bool
+pf_notify_texture_update(
+	int tex_id);
+
+/*
  * Draw a texture image on a texture image. (copy)
  */
 void
@@ -655,6 +662,12 @@ pf_get_tag_property_value(
  */
 
 /*
+ * Get the system language.
+ */
+const char *
+pf_get_system_language(void);
+
+/*
  * Print a debug message.
  */
 void
@@ -677,5 +690,11 @@ void
 pf_log_error(
 	const char *msg,
 	...);
+
+/*
+ * Print an out-of-memory error message.
+ */
+void
+pf_log_out_of_memory(void);
 
 #endif
