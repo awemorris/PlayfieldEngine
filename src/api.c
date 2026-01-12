@@ -1087,6 +1087,19 @@ pf_set_sound_volue(
 }
 
 /*
+ * Check if a sound stream is completed.
+ */
+bool
+pf_is_sound_finished(
+	int stream)
+{
+	if (!is_sound_finished(stream))
+		return false;
+
+	return true;			
+}
+
+/*
  * Save Data
  */
 

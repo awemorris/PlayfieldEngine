@@ -503,6 +503,13 @@ pf_set_volume(
 	float val);
 
 /*
+ * Check if a sound stream is completed.
+ */
+bool
+pf_is_sound_finished(
+	int stream);
+
+/*
  * Save Data
  */
 
