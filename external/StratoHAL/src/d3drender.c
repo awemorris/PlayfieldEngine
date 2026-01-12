@@ -458,3 +458,38 @@ render_image_3d_sub(
 		break;
 	}
 }
+
+void
+render_image_3d_dim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	/* TODO */
+	switch (nGraphicsMode)
+	{
+	case MODE_D3D12:
+		D3D12RenderImage3DDim(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D11:
+		D3D11RenderImage3DDim(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_D3D9:
+		D3D9RenderImage3DDim(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	case MODE_GDI:
+		GDIRenderImage3DDim(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
+		break;
+	}
+}

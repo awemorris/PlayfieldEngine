@@ -624,13 +624,13 @@ VOID D3D11Cleanup(void)
     }
     if (g_pBlendStateAdd)
     {
-        g_pBlendStateNormal->Release();
-        g_pBlendStateNormal = nullptr;
+        g_pBlendStateAdd->Release();
+        g_pBlendStateAdd = nullptr;
     }
     if (g_pBlendStateSub)
     {
-        g_pBlendStateNormal->Release();
-        g_pBlendStateNormal = nullptr;
+        g_pBlendStateSub->Release();
+        g_pBlendStateSub = nullptr;
     }
     if (g_pRenderTargetView)
     {
