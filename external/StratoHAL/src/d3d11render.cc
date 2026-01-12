@@ -617,10 +617,20 @@ VOID D3D11Cleanup(void)
         g_pVertexShader->Release();
         g_pVertexShader = nullptr;
     }
-    if (g_pBlendState)
+    if (g_pBlendStateNormal)
     {
-        g_pBlendState->Release();
-        g_pBlendState = nullptr;
+        g_pBlendStateNormal->Release();
+        g_pBlendStateNormal = nullptr;
+    }
+    if (g_pBlendStateAdd)
+    {
+        g_pBlendStateNormal->Release();
+        g_pBlendStateNormal = nullptr;
+    }
+    if (g_pBlendStateSub)
+    {
+        g_pBlendStateNormal->Release();
+        g_pBlendStateNormal = nullptr;
     }
     if (g_pRenderTargetView)
     {
