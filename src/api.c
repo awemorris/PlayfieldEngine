@@ -249,6 +249,257 @@ pf_destroy_texture(
 	destroy_image(tex_tbl[tex_id].img);
 }
 
+
+/*
+ * Draw a texture image on a texture image. (copy)
+ */
+void
+pf_draw_texture_copy(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_copy(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top);
+}
+
+/*
+ * Draw a texture image on a texture image. (alpha-blending, dst_alpha=255)
+ */
+void
+pf_draw_texture_alpha(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_alpha(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/*
+ * Draw a texture image on a texture image. (add-blending)
+ */
+void
+pf_draw_texture_add(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_add(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/*
+ * Draw a texture image on a texture image. (add-blending)
+ */
+void
+pf_draw_texture_sub(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_sub(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/*
+ * Draw an character texture image on a texture image.
+ * (alphablending, special alpha value)
+ */
+void
+pf_draw_texture_glyph(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_glyph(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/*
+ * Draw a texture image on an texture image. (50% dimming)
+ */
+void
+pf_draw_texture_dim(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_dim(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/* Draw an image with scaling. */
+void
+pf_draw_texture_scale(
+	int dst_tex_id,
+	int virtual_dst_width,
+	int virtual_dst_height,
+	int virtual_dst_left,
+	int virtual_dst_top,
+	int src_tex_id)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_scale(
+		tex_tbl[dst_tex_id].img,
+		virtual_dst_width,
+		virtual_dst_height,
+		virtual_dst_left,
+		virtual_dst_top,
+		tex_tbl[src_tex_id].img);
+}
+
 /*
  * Rendering
  */

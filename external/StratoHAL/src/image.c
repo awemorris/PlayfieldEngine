@@ -271,9 +271,11 @@ void fill_image_alpha(struct image *img)
 #define DRAW_IMAGE_ALPHA	draw_image_alpha
 #define DRAW_IMAGE_GLYPH	draw_image_glyph
 #define DRAW_IMAGE_ADD		draw_image_add
+#define DRAW_IMAGE_SUB		draw_image_sub
 #define DRAW_IMAGE_DIM		draw_image_dim
 #define DRAW_IMAGE_RULE		draw_image_rule
 #define DRAW_IMAGE_MELT		draw_image_melt
+#define DRAW_IMAGE_SCALE	draw_image_scale
 #include "drawimage.h"
 
 #else
@@ -443,6 +445,47 @@ void draw_image_add(struct image *dst_image,
 #endif
 	else
 		draw_image_add_scalar(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+}
+
+void draw_image_sub(struct image *dst_image,
+		    int dst_left,
+		    int dst_top,
+		    struct image *src_image,
+		    int width,
+		    int height,
+		    int src_left,
+		    int src_top,
+		    int alpha)
+{
+	void draw_image_sub_avx2(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_avx(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_sse42(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_sse4(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_sse3(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_sse2(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_sse(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_sub_scalar(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+
+	if (is_avx2_available)
+		draw_image_sub_avx2(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_avx_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#if !defined(_MSC_VER)
+	else if (is_sse42_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_sse4_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_sse3_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#endif
+	else if (is_sse2_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#if !defined(_MSC_VER) && defined(ARCH_X86)
+	else if (is_sse_available)
+		draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#endif
+	else
+		draw_image_sub_scalar(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 }
 
 void draw_image_dim(struct image *dst_image,

@@ -260,6 +260,80 @@ DRAW_IMAGE_ADD(
 }
 
 void
+DRAW_IMAGE_SUB(
+	struct image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	pixel_t * RESTRICT src_ptr;
+	pixel_t * RESTRICT dst_ptr;
+	float a, src_a;
+	uint32_t src_pix, src_r, src_g, src_b;
+	uint32_t dst_pix, dst_r, dst_g, dst_b;
+	uint32_t add_r, add_g, add_b;
+	int src_line_inc, dst_line_inc, x, y, sw, dw;
+
+	if (!check_draw_image(dst_image, &dst_left, &dst_top, src_image, &width, &height, &src_left, &src_top, alpha))
+		return;
+
+	sw = src_image->width;
+	dw = dst_image->width;
+	src_ptr = src_image->pixels + sw * src_top + src_left;
+	dst_ptr = dst_image->pixels + dw * dst_top + dst_left;
+	src_line_inc = sw - width;
+	dst_line_inc = dw - width;
+	a = (float)alpha / 255.0f;
+
+	for(y = 0; y < height; y++) {
+		for(x = 0; x < width; x++) {
+			/* Get the source and destination pixel values. */
+			src_pix	= *src_ptr++;
+			dst_pix	= *dst_ptr;
+
+			/* Calc alpha values. */
+			src_a = a * ((float)get_pixel_a(src_pix) / 255.0f);
+
+			/* Multiply the alpha value and the source pixel value. */
+			src_r = (uint32_t)(src_a * ((float)get_pixel_r(src_pix) / 255.0f) * 255.0f);
+			src_g = (uint32_t)(src_a * ((float)get_pixel_g(src_pix) / 255.0f) * 255.0f);
+			src_b = (uint32_t)(src_a * ((float)get_pixel_b(src_pix) / 255.0f) * 255.0f);
+
+			/* Multiply the alpha value and the destination pixel value. */
+			dst_r = get_pixel_r(dst_pix);
+			dst_g = get_pixel_g(dst_pix);
+			dst_b = get_pixel_b(dst_pix);
+
+			/* Add with saturation. */
+			add_r = dst_r - src_r;
+			if (add_r > 255)
+				add_r = 0;
+			add_g = dst_g - src_g;
+			if (add_g > 255)
+				add_g = 0;
+			add_b = dst_b - src_b;
+			if (add_b > 255)
+				add_b = 0;
+
+			/* Store to the destination. */
+			*dst_ptr++ = make_pixel(0xff,
+						add_r,
+						add_g,
+						add_b);
+		}
+		src_ptr += src_line_inc;
+		dst_ptr += dst_line_inc;
+	}
+
+	notify_image_update(dst_image);
+}
+
+void
 DRAW_IMAGE_DIM(
 	struct image *dst_image,
 	int dst_left,

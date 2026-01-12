@@ -156,6 +156,106 @@ pf_destroy_texture(
 	int tex_id);
 
 /*
+ * Draw a texture image on a texture image. (copy)
+ */
+void
+pf_draw_texture_copy(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top);
+
+/*
+ * Draw a texture image on a texture image. (alpha-blending, dst_alpha=255)
+ */
+void
+pf_draw_texture_alpha(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/*
+ * Draw a texture image on a texture image. (add-blending)
+ */
+void
+pf_draw_texture_add(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/*
+ * Draw a texture image on a texture image. (add-blending)
+ */
+void
+pf_draw_texture_sub(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/*
+ * Draw an character texture image on a texture image.
+ * (alphablending, special alpha value)
+ */
+void
+pf_draw_texture_glyph(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/*
+ * Draw a texture image on an texture image. (50% dimming)
+ */
+void
+pf_draw_texture_dim(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/* Draw an image with scaling. */
+void
+pf_draw_texture_scale(
+	int dst_tex_id,
+	int virtual_dst_width,
+	int virtual_dst_height,
+	int virtual_dst_left,
+	int virtual_dst_top,
+	int src_tex_id);
+
+/*
  * Rendering
  */
 
