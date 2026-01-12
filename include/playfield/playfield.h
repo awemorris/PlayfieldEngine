@@ -337,6 +337,21 @@ pf_create_text_texture(
 	int *height);
 
 /*
+ * Create a text texture with outlining.
+ */
+bool
+pf_create_text_texture_outline(
+	int slot,
+	const char *text,
+	int size,
+	pixel_t color,
+	int outline_width,
+	pixel_t outline_color,
+	int *tex_id,
+	int *width,
+	int *height);
+
+/*
  * Sound
  */
 

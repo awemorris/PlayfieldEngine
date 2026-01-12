@@ -688,6 +688,35 @@ pf_create_text_texture(
 	int *width,
 	int *height)
 {
+	if (!pf_create_text_texture(slot,
+				    text,
+				    size,
+				    color,
+				    0,
+				    0,
+				    tex_id,
+				    width,
+				    height))
+		return false;
+
+	return true;
+}
+
+/*
+ * Create a text texture with outlining.
+ */
+bool
+pf_create_text_texture_outline(
+	int slot,
+	const char *text,
+	int size,
+	pixel_t color,
+	int outline_width,
+	pixel_t outline_color,
+	int *tex_id,
+	int *width,
+	int *height)
+{
 	struct image *img;
 	int w, h;
 	int x, y;
@@ -720,13 +749,13 @@ pf_create_text_texture(
 		/* Get a character width. */
 		draw_glyph(img,
 			   slot,
-			   size, 	/* font size */
-			   size, 	/* base size */
-			   0,		/* outline size */
+			   size, 		/* font size */
+			   size, 		/* base size */
+			   outline_width,
 			   x,
 			   y,
 			   color,
-			   0,		/* outline color */
+			   outline_color,
 			   codepoint,
 			   &cw,
 			   &ch,
