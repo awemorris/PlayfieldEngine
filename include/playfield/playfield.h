@@ -568,6 +568,13 @@ pf_check_save_data(
  */
 
 /*
+ * Check if a file exists.
+ */
+bool
+pf_check_file_exists(
+	const char *fname);
+
+/*
  * Read a file.
  */
 bool

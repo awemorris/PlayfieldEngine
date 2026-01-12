@@ -1351,6 +1351,19 @@ static char get_hex_char(int val)
  */
 
 /*
+ * Check if a file exists.
+ */
+bool
+pf_check_file_exists(
+	const char *fname)
+{
+	if (!check_file_exist(fname))
+		return false;
+
+	return true;
+}
+
+/*
  * Read a file.
  */
 bool
