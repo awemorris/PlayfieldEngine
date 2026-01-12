@@ -37,13 +37,16 @@ void cleanup_tag(void);
 /* Load a tag file. */
 bool load_tag_file(const char *file);
 
-/* Get a tag file name. */
+/* Get the tag file name. */
 const char *get_tag_file_name(void);
 
-/* Get a tag line. */
+/* Get the command index of the current tag. */
+int get_tag_index(void);
+
+/* Get the tag line. */
 int get_tag_line(void);
 
-/* Get a current tag. */
+/* Get the current tag. */
 struct tag *get_current_tag(void);
 
 /* Move to the next tag. */

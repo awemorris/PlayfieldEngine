@@ -112,7 +112,7 @@ bool load_tag_file(const char *file)
 }
 
 /*
- * Get a file name of the current tag.
+ * Get the file name of the current tag.
  */
 const char *get_tag_file_name(void)
 {
@@ -120,7 +120,19 @@ const char *get_tag_file_name(void)
 }
 
 /*
- * Get a line number of the current tag.
+ * Get the command index of the current tag.
+ */
+int get_tag_index(void)
+{
+	/* If the current tag index is invalid. */
+	if (cur_index >= tag_size)
+		return -1;
+	
+	return cur_index;
+}
+
+/*
+ * Get the line number of the current tag.
  */
 int get_tag_line(void)
 {
@@ -132,7 +144,7 @@ int get_tag_line(void)
 }
 
 /*
- * Get a current tag.
+ * Get the current tag.
  */
 struct tag *get_current_tag(void)
 {

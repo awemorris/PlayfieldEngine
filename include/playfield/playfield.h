@@ -803,6 +803,12 @@ const char *
 pf_get_tag_file(void);
 
 /*
+ * Get the command index of the current tag.
+ */
+int
+pf_get_tag_index(void);
+
+/*
  * Get the line number of the current tag.
  */
 int

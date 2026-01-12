@@ -1388,11 +1388,7 @@ pf_read_file_content(
 void *
 pf_get_vm_env(void)
 {
-	NoctEnv *env;
-
-	env = get_vm_env();
-
-	return env;
+	return get_vm_env();
 }
 
 /*
@@ -1402,10 +1398,7 @@ bool
 pf_call_vm_function(
 	const char *func_name)
 {
-	if (!call_vm_function(func_name))
-		return false;
-
-	return true;
+	return call_vm_function(func_name);
 }
 
 /*
@@ -1415,10 +1408,7 @@ bool
 pf_call_vm_tag_function(
 	bool *tag_end)
 {
-	if (!call_vm_tag_function(tag_end))
-		return false;
-
-	return true;
+	return call_vm_tag_function(tag_end);
 }
 
 /*
@@ -1429,10 +1419,7 @@ pf_set_vm_int(
 	const char *prop_name,
 	int val)
 {
-	if (!set_vm_int(prop_name, val))
-		return false;
-
-	return true;
+	return set_vm_int(prop_name, val);
 }
 
 /*
@@ -1443,10 +1430,7 @@ pf_get_vm_int(
 	const char *prop_name,
 	int *val)
 {
-	if (!get_vm_int(prop_name, val))
-		return false;
-
-	return true;
+	return get_vm_int(prop_name, val);
 }
 
 /*
@@ -1566,9 +1550,7 @@ pf_get_call_arg_array_length(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1597,9 +1579,7 @@ pf_get_call_arg_array_int(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1628,9 +1608,7 @@ pf_get_call_arg_array_float(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1660,9 +1638,7 @@ pf_get_call_arg_array_string(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1698,9 +1674,7 @@ pf_get_call_arg_dict_int(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1729,9 +1703,7 @@ pf_get_call_arg_dict_float(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1761,9 +1733,7 @@ pf_get_call_arg_dict_string(
 	env = get_vm_env();
 
 	/* Get the "param" argument. */
-	if (!noct_get_arg_check_array(env,
-				      0,
-				      &param))
+	if (!noct_get_arg_check_array(env, 0, &param))
 		return false;
 
 	/* Get the element by name. */
@@ -1995,10 +1965,7 @@ bool
 pf_move_to_tag_file(
 	const char *file)
 {
-	if (!load_tag_file(file))
-		return false;
-
-	return true;
+	return load_tag_file(file);
 }
 
 /*
@@ -2007,10 +1974,7 @@ pf_move_to_tag_file(
 bool
 pf_move_to_next_tag(void)
 {
-	if (!move_to_next_tag())
-		return false;
-
-	return true;
+	return move_to_next_tag();
 }
 
 /*
@@ -2019,11 +1983,16 @@ pf_move_to_next_tag(void)
 const char *
 pf_get_tag_file(void)
 {
-	const char *fname;
+	return get_tag_file_name();
+}
 
-	fname = get_tag_file_name();
-
-	return fname;
+/*
+ * Get the command index of the current tag.
+ */
+int
+pf_get_tag_index(void)
+{
+	return get_tag_index();
 }
 
 /*
@@ -2032,17 +2001,13 @@ pf_get_tag_file(void)
 int
 pf_get_tag_line(void)
 {
-	int line;
-
-	line = get_tag_line();
-
-	return line;
+	return get_tag_line();
 }
 
 /*
  * Get the name of the current tag.
  */
-const char*
+const char *
 pf_get_tag_name(void)
 {
 	struct tag *t;
