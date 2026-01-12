@@ -270,6 +270,7 @@ void fill_image_alpha(struct image *img)
 #define DRAW_IMAGE_COPY		draw_image_copy
 #define DRAW_IMAGE_ALPHA	draw_image_alpha
 #define DRAW_IMAGE_GLYPH	draw_image_glyph
+#define DRAW_IMAGE_EMOJI	draw_image_emoji
 #define DRAW_IMAGE_ADD		draw_image_add
 #define DRAW_IMAGE_SUB		draw_image_sub
 #define DRAW_IMAGE_DIM		draw_image_dim
@@ -404,6 +405,47 @@ void draw_image_glyph(struct image *dst_image,
 #endif
 	else
 		draw_image_glyph_scalar(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+}
+
+void draw_image_emoji(struct image *dst_image,
+		      int dst_left,
+		      int dst_top,
+		      struct image *src_image,
+		      int width,
+		      int height,
+		      int src_left,
+		      int src_top,
+		      int alpha)
+{
+	void draw_image_emoji_avx2(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_avx(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_sse42(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_sse4(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_sse3(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_sse2(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_sse(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+	void draw_image_emoji_scalar(struct image *, int dst_left, int, struct image *, int, int, int, int, int);
+
+	if (is_avx2_available)
+		draw_image_emoji_avx2(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_avx_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#if !defined(_MSC_VER)
+	else if (is_sse42_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_sse4_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+	else if (is_sse3_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#endif
+	else if (is_sse2_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#if !defined(_MSC_VER) && defined(ARCH_X86)
+	else if (is_sse_available)
+		draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
+#endif
+	else
+		draw_image_emoji_scalar(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 }
 
 void draw_image_add(struct image *dst_image,

@@ -237,8 +237,13 @@ void draw_image_sub(struct image *dst_image, int dst_left, int dst_top,
 		    struct image *src_image, int width, int height,
 		    int src_left, int src_top, int alpha);
 
-/* Draw an character image on an image. (alphablending, special alpha value) */
+/* Draw a glyph image on an image. (alphablending, special alpha value) */
 void draw_image_glyph(struct image *dst_image, int dst_left, int dst_top,
+		      struct image *src_image, int width, int height,
+		      int src_left, int src_top, int alpha);
+
+/* Draw an emoji image on an image. (alphablending, special alpha value) */
+void draw_image_emoji(struct image *dst_image, int dst_left, int dst_top,
 		      struct image *src_image, int width, int height,
 		      int src_left, int src_top, int alpha);
 

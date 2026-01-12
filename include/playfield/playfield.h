@@ -222,11 +222,27 @@ pf_draw_texture_sub(
 	int alpha);
 
 /*
- * Draw an character texture image on a texture image.
+ * Draw a glyph texture image on a texture image.
  * (alphablending, special alpha value)
  */
 void
 pf_draw_texture_glyph(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
+
+/*
+ * Draw an emoji texture image on a texture image.
+ * (alphablending, special alpha value)
+ */
+void
+pf_draw_texture_emoji(
 	int dst_tex_id,
 	int dst_left,
 	int dst_top,

@@ -411,7 +411,7 @@ pf_draw_texture_sub(
 }
 
 /*
- * Draw an character texture image on a texture image.
+ * Draw a glyph texture image on a texture image.
  * (alphablending, special alpha value)
  */
 void
@@ -437,6 +437,44 @@ pf_draw_texture_glyph(
 	assert(tex_tbl[src_tex_id].img != NULL);
 
 	draw_image_glyph(
+		tex_tbl[dst_tex_id].img,
+		dst_left,
+		dst_top,
+		tex_tbl[src_tex_id].img,
+		width,
+		height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+/*
+ * Draw an emoji texture image on a texture image.
+ * (alphablending, special alpha value)
+ */
+void
+pf_draw_texture_emoji(
+	int dst_tex_id,
+	int dst_left,
+	int dst_top,
+	int src_tex_id,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha)
+{
+	assert(dst_tex_id >= 0);
+	assert(dst_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[dst_tex_id].is_used);
+	assert(tex_tbl[dst_tex_id].img != NULL);
+
+	assert(src_tex_id >= 0);
+	assert(src_tex_id < TEXTURE_COUNT);
+	assert(tex_tbl[src_tex_id].is_used);
+	assert(tex_tbl[src_tex_id].img != NULL);
+
+	draw_image_emoji(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
