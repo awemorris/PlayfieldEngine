@@ -1120,7 +1120,7 @@ bool install_api(NoctEnv *env)
 		const char *field;
 		const char *name;
 	} funcs[] = {
-#define RTFUNC(name) {Engine_##name, #name, "Engine_" # name}
+#define RTFUNC(name) {Engine_##name, #name, "Engine." # name}
 		{print, NULL, "print"},
 		{import, NULL, "import"},
 		RTFUNC(moveToTagFile),
