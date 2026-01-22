@@ -431,6 +431,14 @@ if(STRATO_TARGET_UNITY)
   endif()
 endif()
 
+# For GDK (Windows or Xbox).
+if(STRATO_TARGET_GDK_WINDOWS)
+  target_compile_definitions(strato PRIVATE TARGET_GDK_WINDOWS)
+endif()
+if(STRATO_TARGET_GDK_XBOX_XS)
+  target_compile_definitions(strato PRIVATE TARGET_GDK_XBOX_XS)
+endif()
+
 #
 # Archiver Target
 #

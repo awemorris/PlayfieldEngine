@@ -16,17 +16,22 @@ extern "C" {
 
 // Windows
 #include <windows.h>
-#if !defined(TARGET_GDK_XBOX)
-#include <d3d12.h>
-#include <dxgi1_6.h>
-#include <d3dcompiler.h>
-#include <d3dcommon.h> // ID3DBlob
-#else
+
+#if defined(TARGET_GDK_WINDOWS) || defined(TARGET_GDK_XBOX)
 #include <d3d12_x.h>
 #include <dxgi_x.h>
+#else
+#include <d3d12.h>
+#include <dxgi1_6.h>
 #endif
+
+#include <d3dcommon.h>
 #include <directxmath.h>
 #include <wrl.h>
+
+#if !defined(TARGET_GDK_XBOX)
+#include <d3dcompiler.h>
+#endif
 
 // "uuidof" extension
 #if !defined(_MSC_VER)
