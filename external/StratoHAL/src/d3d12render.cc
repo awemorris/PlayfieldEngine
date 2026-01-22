@@ -1747,7 +1747,12 @@ static UINT64 GetRequiredIntermediateSize_NoD3DX(
 {
     if (!destinationResource) return 0;
 
-    D3D12_RESOURCE_DESC desc = destinationResource->GetDesc();
+    D3D12_RESOURCE_DESC desc;
+#if defined(_MSC_VER)
+    desc = destinationResource->GetDesc();
+#else
+    destinationResource->GetDesc(&desc);
+#endif
 
     ComPtr<ID3D12Device> device;
     HRESULT hr = destinationResource->GetDevice(IID_PPV_ARGS(&device));
@@ -1796,7 +1801,12 @@ static UINT64 UpdateSubresources_NoD3DX(
     if (!pCmdList || !pDestinationResource || !pIntermediate || !pSrcData || NumSubresources == 0)
         return 0;
 
-    D3D12_RESOURCE_DESC desc = pDestinationResource->GetDesc();
+    D3D12_RESOURCE_DESC desc;
+#if defined(_MSC_VER)
+    desc = pDestinationResource->GetDesc();
+#else
+    pDestinationResource->GetDesc(&desc);
+#endif
 
     ID3D12Device* device = nullptr;
     HRESULT hr = pDestinationResource->GetDevice(IID_PPV_ARGS(&device));
