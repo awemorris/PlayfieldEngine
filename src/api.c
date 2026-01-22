@@ -22,6 +22,8 @@
 #include <stdarg.h>
 #include <assert.h>
 
+#define INVALID_DESC	(0)
+
 #define TEXTURE_COUNT	(256)
 
 /* Texture struct. */
@@ -262,6 +264,8 @@ pf_notify_texture_update(
 	assert(tex_tbl[tex_id].img != NULL);
 
 	notify_image_update(tex_tbl[tex_id].img);
+
+	return true;
 }
 
 /*

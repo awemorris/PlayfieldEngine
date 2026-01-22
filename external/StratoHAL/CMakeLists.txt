@@ -20,6 +20,8 @@ option(STRATO_TARGET_FREEBSD          "Build for FreeBSD X11"              OFF)
 option(STRATO_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"          OFF)
 option(STRATO_TARGET_NETBSD           "Build for NetBSD"                   OFF)
 option(STRATO_TARGET_OPENBSD          "Build for OpenBSD"                  OFF)
+option(STRATO_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"          OFF)
+option(STRATO_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"  OFF)
 
 # Options
 option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
@@ -46,9 +48,11 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_FREEBSD_WAYLAND
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
+   OR STRATO_TARGET_GDK_WINDOWS
+   OR STRATO_TARGET_GDK_XBOX_XS
 )
   # A target and options are manually specified.
-else()   
+else()
   if(WIN32)
     set(STRATO_TARGET_WINDOWS    ON)
   endif()
@@ -72,6 +76,7 @@ else()
   #  - Android
   #  - Wasm (Emscripten)
   #  - Unity
+  #  - GDK (Windows or Xbox)
 endif()
 
 #
@@ -331,6 +336,19 @@ if(STRATO_TARGET_UNITY)
     src/glyph.c
     src/wave.c
     src/halwrap.c
+  )
+endif()
+
+# For GDK (Windows or Xbox).
+if(   STRATO_TARGET_GDK_WINDOWS
+   OR STRATO_TARGET_GDK_XBOX_XS)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/gdkmain.cpp
+    src/gdkfile.cpp
+    src/d3d12render.cc
   )
 endif()
 
@@ -661,6 +679,44 @@ endif()
 # Android: Add -lGLESv3 -lOpenSLES -llog
 if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
+endif()
+
+# GDK link options.
+if(   STRATO_TARGET_GDK_WINDOWS
+   OR STRATO_TARGET_GDK_XBOX_XS)
+
+  set(_GDK_ROOT "$ENV{GameDKCoreLatest}")
+  if(NOT _GDK_ROOT)
+    set(_GDK_ROOT "$ENV{GRDKLatest}")
+  endif()
+
+  if(NOT _GDK_ROOT)
+    message(FATAL_ERROR "GDK env var not found. Set GameDKCoreLatest or GRDKLatest.")
+  endif()
+
+  set(_GDK_GAMERUNTIME_LIB_DIR "${_GDK_ROOT}GRDK\\GameKit\\Lib\\amd64")
+  if(NOT IS_DIRECTORY "${_GDK_GAMERUNTIME_LIB_DIR}")
+    message(FATAL_ERROR "Not a directory: '${_GDK_GAMERUNTIME_LIB_DIR}'")
+  endif()
+  file(GLOB _gdk_libs "${_GDK_GAMERUNTIME_LIB_DIR}/*.lib")
+  list(FILTER _gdk_libs INCLUDE REGEX "xgame.*runtime.*\\.lib$")
+  message(STATUS "GDK runtime libs:\n  ${_gdk_libs}")
+
+  set(XGAMERUNTIME_LIB "${_GDK_GAMERUNTIME_LIB_DIR}/xgameruntime.lib")
+  if(NOT EXISTS "${XGAMERUNTIME_LIB}")
+    message(FATAL_ERROR "Not found: ${XGAMERUNTIME_LIB}")
+  endif()
+
+  target_link_libraries(strato PUBLIC "${XGAMERUNTIME_LIB}" user32 advapi32 gdi32 ole32 uuid appnotify)
+
+  # /SUBSYSTEM:WINDOWS
+  if(MSVC)
+    target_link_options(strato PUBLIC
+      /SUBSYSTEM:WINDOWS
+      /ENTRY:wWinMainCRTStartup
+      /MANIFEST:NO
+    )
+  endif()
 endif()
 
 #

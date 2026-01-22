@@ -20,6 +20,8 @@ option(PLAYFIELD_TARGET_FREEBSD          "Build for FreeBSD X11"                
 option(PLAYFIELD_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"             OFF)
 option(PLAYFIELD_TARGET_NETBSD           "Build for NetBSD X11"                  OFF)
 option(PLAYFIELD_TARGET_OPENBSD          "Build for OpenBSD X11"                 OFF)
+option(PLAYFIELD_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"             OFF)
+option(PLAYFIELD_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"     OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -53,6 +55,8 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
    OR PLAYFIELD_TARGET_NETBSD
    OR PLAYFIELD_TARGET_OPENBSD
+   OR PLAYFIELD_TARGET_GDK_WINDOWS
+   OR PLAYFIELD_TARGET_GDK_XBOX_XS
 )
   # A target and options are manually specified.
 else()   
@@ -105,6 +109,7 @@ else()
   #  - Android
   #  - Wasm (Emscripten)
   #  - Unity
+  #  - GDK (Windows or Xbox)
 endif()
 
 #
@@ -197,6 +202,10 @@ elseif(PLAYFIELD_TARGET_NETBSD)
   set(STRATO_TARGET_NETBSD ON)
 elseif(PLAYFIELD_TARGET_OPENBSD)
   set(STRATO_TARGET_OPENBSD ON)
+elseif(PLAYFIELD_TARGET_GDK_WINDOWS)
+  set(STRATO_TARGET_GDK_WINDOWS ON)
+elseif(PLAYFIELD_TARGET_GDK_XBOX_XS)
+  set(STRATO_TARGET_GDK_XBOX_XS ON)
 endif()
 
 if(PLAYFIELD_TARGET_UNITY_SWITCH)
@@ -464,6 +473,15 @@ if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
     --use-preload-plugins
     --profiling-funcs
   )
+endif()
+
+# GDK
+if(   PLAYFIELD_TARGET_GDK_WINDOWS
+   OR PLAYFIELD_TARGET_GDK_XBOX_XS)
+  set(CMAKE_VERBOSE_MAKEFILE ON)
+  target_compile_options(playfield PRIVATE /utf-8)
+  target_link_options(playfield PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
+  target_link_libraries(playfield PRIVATE user32 advapi32 gdi32 ole32 uuid xgameruntime)
 endif()
 
 #

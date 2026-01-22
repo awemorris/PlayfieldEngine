@@ -107,6 +107,144 @@
       }
     },
     {
+      "name":           "windows-vs2026-x86-debug",
+      "displayName":    "!VS2022 MSVC x86 Debug",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "Win32",
+      "toolset":        "v145",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2026-x86-release",
+      "displayName":    "!VS2022 MSVC x86 Release",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "Win32",
+      "toolset":        "v145",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2026-x64-debug",
+      "displayName":    "!VS2022 MSVC x64 Debug",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "x64",
+      "toolset":        "v145",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2026-x64-release",
+      "displayName":    "!VS2022 MSVC x64 Release",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "x64",
+      "toolset":        "v145",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2026-arm64-debug",
+      "displayName":    "!VS2022 MSVC arm64 Debug",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "arm64",
+      "toolset":        "v144",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug",
+        "CMAKE_BUILD_TYPE":          "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2026-arm64-release",
+      "displayName":    "!VS2022 MSVC arm64 Release",
+      "generator":      "Visual Studio 18 2026",
+      "architecture":   "arm64",
+      "toolset":        "v145",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_BUILD_TYPE":          "Release"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2022-gdk-desktop",
+      "displayName":    "VS2022 GDK Gaming.Desktop.x64",
+      "generator":      "Visual Studio 17 2022",
+      "architecture":   "Gaming.Desktop.x64",
+      "toolset":        "v143",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "PLAYFIELD_TARGET_GDK_WINDOWS": "ON",
+        "PLAYFIELD_ENABLE_JIT":         "ON",
+        "PLAYFIELD_ENABLE_I18N":        "OFF"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name":           "windows-vs2022-gdk-xbox-xs",
+      "displayName":    "VS2022 Xbox Series XS",
+      "generator":      "Visual Studio 17 2022",
+      "architecture":   "Gaming.Xbox.Scarlett",
+      "toolset":        "v143",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "PLAYFIELD_TARGET_GDK_XBOX_XS": "ON",
+        "PLAYFIELD_ENABLE_JIT":         "OFF",
+        "PLAYFIELD_ENABLE_I18N":        "OFF"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
       "name":           "windows-mingw-x86",
       "displayName":    "MinGW x86",
       "generator":      "Ninja",
@@ -456,6 +594,38 @@
     {
       "name": "windows-msvc-arm64-release",
       "configurePreset": "windows-msvc-arm64-release"
+    },
+    {
+      "name": "windows-vs2026-x86-debug",
+      "configurePreset": "windows-vs2026-x86-debug"
+    },
+    {
+      "name": "windows-vs2026-x86-release",
+      "configurePreset": "windows-vs2026-x86-release"
+    },
+    {
+      "name": "windows-vs2026-x64-debug",
+      "configurePreset": "windows-vs2026-x64-debug"
+    },
+    {
+      "name": "windows-vs2026-x64-release",
+      "configurePreset": "windows-vs2026-x64-release"
+    },
+    {
+      "name": "windows-vs2026-arm64-debug",
+      "configurePreset": "windows-vs2026-arm64-debug"
+    },
+    {
+      "name": "windows-vs2026-arm64-release",
+      "configurePreset": "windows-vs2026-arm64-release"
+    },
+    {
+      "name": "windows-vs2022-gdk-desktop",
+      "configurePreset": "windows-vs2022-gdk-desktop"
+    },
+    {
+      "name": "windows-vs2022-gdk-xbox-xs",
+      "configurePreset": "windows-vs2022-gdk-xbox-xs"
     },
     {
       "name": "windows-mingw-x86",
