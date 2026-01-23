@@ -236,11 +236,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	/* Correct the aspect ratio. */
-	rcClient.left = 0;
-	rcClient.top = 0;
-	rcClient.right = SCREEN_WIDTH;
-	rcClient.bottom = SCREEN_HEIGHT;
-	UpdateScreenOffsetAndScale(rcClient.right, rcClient.bottom);
+	UpdateScreenOffsetAndScale(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	/* Initialize the sound HAL. */
 	// if (!XAudio2Init())
@@ -275,6 +271,11 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
 	WNDCLASSEXW wcex;
 	DWORD dwStyle;
+
+#if defined(TARGET_GDK_WINDOWS)
+	// Enable High-DPI to avoid mismatch of the sizes of the back buffer and the window.
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+#endif
 
 	/* Register a window class. */
 	ZeroMemory(&wcex, sizeof(wcex));
@@ -596,9 +597,6 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_COMMAND:
 		OnCommand(wParam, lParam);
 		return 0;
-	case WM_SIZE:
-		OnSize();
-		return 0;
 	default:
 		break;
 	}
@@ -769,20 +767,6 @@ static void OnCommand(WPARAM wParam, LPARAM lParam)
 	UNUSED_PARAMETER(lParam);
 
 	nID = LOWORD(wParam);
-}
-
-/* WM_SIZING */
-static void OnSizing(int edge, LPRECT lpRect)
-{
-	/* Update the screen offset and scale. */
-	UpdateScreenOffsetAndScale(SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-/* WM_SIZE */
-static void OnSize(void)
-{
-	/* Update the screen offset and scale. */
-	UpdateScreenOffsetAndScale(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 /* Calculate screen offsets and scales. */

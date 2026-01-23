@@ -517,8 +517,12 @@ static UINT                                 g_tempRectCount;
 static std::vector<int>                     g_availableTextureIndexList;
 static float                                g_fDisplayWidth;
 static float                                g_fDisplayHeight;
-static int                                  g_nWindowWidth;
-static int                                  g_nWindowHeight;
+static int                                  g_nVirtualWidth;
+static int                                  g_nVirtualHeight;
+static float								g_fScale;
+static float								g_fOffsetX;
+static float								g_fOffsetY;
+
 //
 // API Pointers
 //
@@ -558,8 +562,9 @@ static void MemcpySubresource_NoD3DX(const D3D12_MEMCPY_DEST* pDest, const D3D12
 BOOL D3D12Initialize(HWND hWnd, int nWidth, int nHeight)
 {
     g_hWnd = hWnd;
-    g_nWindowWidth = nWidth;
-    g_nWindowHeight = nHeight;
+    g_nVirtualWidth = nWidth;
+    g_nVirtualHeight = nHeight;
+	g_fScale = 1.0f;
 	
     // Initialize the available texture index list.
     for (int i = 0; i < TEXTURE_COUNT; i++)
@@ -1281,18 +1286,19 @@ BOOL D3D12ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nO
     g_fDisplayWidth = (float)nScreenWidth;
     g_fDisplayHeight = (float)nScreenHeight;
 
-    float ratioX = (float)g_nWindowWidth / g_fDisplayWidth;
-    float ratioY = (float)g_nWindowHeight / g_fDisplayHeight;
+	g_fScale = scale;
+	g_fOffsetX = (float)nOffsetX;
+	g_fOffsetY = (float)nOffsetY;
 
-    g_viewport.TopLeftX = nOffsetX * ratioX;
-    g_viewport.TopLeftY = nOffsetY * ratioY;
-    g_viewport.Width = nViewportWidth;
-    g_viewport.Height = nViewportHeight;
+    g_viewport.TopLeftX = 0;
+    g_viewport.TopLeftY = 0;
+    g_viewport.Width = nScreenWidth;
+    g_viewport.Height = nScreenHeight;
 
     g_scissorRect.left = 0;
     g_scissorRect.top = 0;
-    g_scissorRect.right = nViewportWidth;
-    g_scissorRect.bottom = nViewportHeight;
+    g_scissorRect.right = nScreenWidth;
+    g_scissorRect.bottom = nScreenHeight;
 
     return TRUE;
 }
@@ -1457,12 +1463,12 @@ VOID D3D12RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_heigh
 
 VOID D3D12RenderImageRule(struct image* src_image, struct image* rule_image, int threshold)
 {
-    DrawPrimitive2D(0, 0, g_nWindowWidth, g_nWindowHeight, src_image, rule_image, 0, 0, g_nWindowWidth, g_nWindowHeight, threshold, PIPELINE_RULE);
+    DrawPrimitive2D(0, 0, g_nVirtualWidth, g_nVirtualHeight, src_image, rule_image, 0, 0, g_nVirtualWidth, g_nVirtualHeight, threshold, PIPELINE_RULE);
 }
 
 VOID D3D12RenderImageMelt(struct image* src_image, struct image* rule_image, int progress)
 {
-    DrawPrimitive2D(0, 0, g_nWindowWidth, g_nWindowHeight, src_image, rule_image, 0, 0, g_nWindowWidth, g_nWindowHeight, progress, PIPELINE_MELT);
+    DrawPrimitive2D(0, 0, g_nVirtualWidth, g_nVirtualHeight, src_image, rule_image, 0, 0, g_nVirtualWidth, g_nVirtualHeight, progress, PIPELINE_MELT);
 }
 
 VOID D3D12RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
@@ -1528,14 +1534,14 @@ static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, fl
     TextureBundle* pTextureBundle2 = rule_image != nullptr ? (TextureBundle*)rule_image->texture : nullptr;
 
     // Normalize vertices.
-    float x1_ = x1 / (g_fDisplayWidth / 2.0f) - 1.0f;
-    float y1_ = 1.0f - y1 / (g_fDisplayHeight / 2.0f);
-    float x2_ = x2 / (g_fDisplayWidth / 2.0f) - 1.0f;
-    float y2_ = 1.0f - y2 / (g_fDisplayHeight / 2.0f);
-    float x3_ = x3 / (g_fDisplayWidth / 2.0f) - 1.0f;
-    float y3_ = 1.0f - y3 / (g_fDisplayHeight / 2.0f);
-    float x4_ = x4 / (g_fDisplayWidth / 2.0f) - 1.0f;
-    float y4_ = 1.0f - y4 / (g_fDisplayHeight / 2.0f);
+    float x1_ = (x1 * g_fScale + g_fOffsetX) / (g_fDisplayWidth / 2.0f) - 1.0f;
+    float y1_ = 1.0f - (y1 * g_fScale + g_fOffsetY) / (g_fDisplayHeight / 2.0f);
+    float x2_ = (x2 * g_fScale + g_fOffsetX) / (g_fDisplayWidth / 2.0f) - 1.0f;
+    float y2_ = 1.0f - (y2 * g_fScale + g_fOffsetY) / (g_fDisplayHeight / 2.0f);
+    float x3_ = (x3 * g_fScale + g_fOffsetX) / (g_fDisplayWidth / 2.0f) - 1.0f;
+    float y3_ = 1.0f - (y3 * g_fScale + g_fOffsetY) / (g_fDisplayHeight / 2.0f);
+    float x4_ = (x4 * g_fScale + g_fOffsetX) / (g_fDisplayWidth / 2.0f) - 1.0f;
+    float y4_ = 1.0f - (y4 * g_fScale + g_fOffsetY) / (g_fDisplayHeight / 2.0f);
 
     // Normalize texture UV.
     float u1 = (float)src_left / (float)src_image->width;
