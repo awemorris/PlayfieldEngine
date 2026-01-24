@@ -4,9 +4,6 @@
     "major": 3, "minor": 22, "patch": 0
   },
   "configurePresets": [
-    //
-    // Visual Studio 2022
-    //
     {
       "name":           "windows-vs2022-x86-debug",
       "displayName":    "VS2022 MSVC x86 Debug",
@@ -146,9 +143,8 @@
       }
     },
 
-    //
-    // Visual Studio 2026
-    //
+
+
     {
       "name":           "windows-vs2026-x86-debug",
       "displayName":    "!VS2026 MSVC x86 Debug",
@@ -288,9 +284,8 @@
       }
     },
 
-    //
-    // MinGW-W64
-    //
+
+
     {
       "name":           "windows-mingw-x86",
       "displayName":    "MinGW x86",
@@ -334,9 +329,8 @@
       }
     },
 
-    //
-    // macOS
-    //
+
+
     {
       "name":           "macos",
       "displayName":    "macOS",
@@ -353,9 +347,8 @@
       }
     },
 
-    //
-    // Linux
-    //
+
+
     {
       "name":           "linux-x11",
       "displayName":    "Linux X11 OpenGL",
@@ -410,9 +403,8 @@
       }
     },
 
-    //
-    // iOS
-    //
+
+
     {
       "name":           "ios",
       "displayName":    "iOS",
@@ -449,9 +441,8 @@
       }
     },
 
-    //
-    // Android
-    //
+
+
     {
       "name":           "android-x86",
       "displayName":    "Android x86",
@@ -513,9 +504,8 @@
       }
     },
 
-    //
-    // WebAssembly
-    //
+
+
     {
       "name":           "wasm",
       "displayName":    "Wasm",
@@ -539,9 +529,8 @@
       }
     },
 
-    //
-    // Unity
-    //
+
+
     {
       "name":           "unity-win64",
       "displayName":    "Unity Win64",
@@ -606,9 +595,8 @@
       }
     },
 
-    //
-    // BSD
-    //
+
+
     {
       "name":           "freebsd",
       "displayName":    "FreeBSD",
@@ -647,9 +635,6 @@
   ],
 
   "buildPresets": [
-    //
-    // VS2022
-    //
     {
       "name": "windows-vs2022-x86-debug",
       "configurePreset": "windows-vs2022-x86-debug"
@@ -683,9 +668,8 @@
       "configurePreset": "windows-vs2022-gdk-xbox-xs"
     },
 
-    //
-    // VS2026
-    //
+
+
     {
       "name": "windows-vs2026-x86-debug",
       "configurePreset": "windows-vs2026-x86-debug"
@@ -719,9 +703,8 @@
       "configurePreset": "windows-vs2026-gdk-xbox-xs"
     },
 
-    //
-    // MinGW
-    //
+
+
     {
       "name": "windows-mingw-x86",
       "configurePreset": "windows-mingw-x86"
@@ -735,17 +718,15 @@
       "configurePreset": "windows-mingw-arm64"
     },
 
-    //
-    // macOS
-    //
+
+
     {
       "name": "macos",
       "configurePreset": "macos"
     },
 
-    //
-    // Linux
-    //
+
+
     {
       "name": "linux-x11",
       "configurePreset": "linux-x11"
@@ -763,9 +744,8 @@
       "configurePreset": "linux-gbm-rot90"
     },
 
-    //
-    // iOS
-    //
+
+
     {
       "name": "ios-device",
       "configurePreset": "ios-device"
@@ -775,9 +755,8 @@
       "configurePreset": "ios-simulator"
     },
 
-    //
-    // Android
-    //
+
+
     {
       "name": "android-x86",
       "configurePreset": "android-x86"
@@ -795,9 +774,7 @@
       "configurePreset": "android-arm64"
     },
 
-    //
-    // WebAssembly
-    //
+
 
     {
       "name": "wasm",
@@ -808,9 +785,8 @@
       "configurePreset": "wasm-local"
     },
 
-    //
-    // Unity
-    //
+
+
     {
       "name": "unity-win64",
       "configurePreset": "unity-win64"
@@ -828,9 +804,8 @@
       "configurePreset": "unity-xbox"
     },
 
-    //
-    // BSD
-    //
+
+
     {
       "name": "freebsd",
       "configurePreset": "freebsd"
