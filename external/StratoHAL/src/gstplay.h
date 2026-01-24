@@ -30,8 +30,9 @@
  *      misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-#ifndef PLATFORM_GSTPLAY_H
-#define PLATFORM_GSTPLAY_H
+
+#ifndef STRATOHAL_GSTPLAY_H
+#define STRATOHAL_GSTPLAY_H
 
 #include <X11/Xlib.h>
 

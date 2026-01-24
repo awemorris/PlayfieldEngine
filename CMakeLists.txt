@@ -591,6 +591,49 @@ if(PLAYFIELD_TARGET_MACOS AND NOT PLAYFIELD_ENABLE_STATIC AND PLAYFIELD_ENABLE_B
 endif()
 
 #
+# GDK Packaging
+#
+
+if(   PLAYFIELD_TARGET_GDK_WINDOWS
+   OR PLAYFIELD_TARGET_GDK_XBOX_XS)
+
+  set(PKG_STAGING_DIR "${CMAKE_BINARY_DIR}/gdk_staging")
+  set(PKG_OUTPUT_DIR  "${CMAKE_BINARY_DIR}/gdk_package")
+
+  # EXE
+  set(GAME_TARGET playfield)
+
+  # Path to makepkg.exe
+  set(GDK_MAKEPKG "C:/Program Files (x86)/Microsoft GDK/bin/makepkg.exe")
+  set(GDK_WDAPP   "C:/Program Files (x86)/Microsoft GDK/bin/wdapp.exe")
+
+  add_custom_command(TARGET ${GAME_TARGET} POST_BUILD
+    # Copy asset folder.
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/samples/rush" "${PKG_STAGING_DIR}"
+    # Copy EXE file.
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${GAME_TARGET}>" "${PKG_STAGING_DIR}/"
+    # Copy config files.
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/gdk/MicrosoftGame.config" "${PKG_STAGING_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/gdk/appxmanifest.xml"     "${PKG_STAGING_DIR}/"
+  )
+
+  add_custom_target(gdk_package
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${PKG_OUTPUT_DIR}"
+    COMMAND "${GDK_MAKEPKG}" pack /f "${PKG_STAGING_DIR}" /d "${PKG_OUTPUT_DIR}"
+    DEPENDS ${GAME_TARGET}
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+  )
+
+  # Install to local and run.
+  #add_custom_target(gdk_install_and_run
+  #  COMMAND "${GDK_WDAPP}" install /package "${PKG_OUTPUT_DIR}"
+  #  COMMAND "${GDK_WDAPP}" launch
+  #  DEPENDS gdk_package
+  #)
+
+endif()
+
+#
 # Install
 #
 
