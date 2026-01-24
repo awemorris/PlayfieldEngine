@@ -38,6 +38,7 @@ extern "C" {
 #include "dxguids.h"
 #endif
 
+#include <algorithm>
 #include <vector>
 
 // ComPtr

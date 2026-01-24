@@ -142,9 +142,6 @@
         "rhs": "Windows"
       }
     },
-
-
-
     {
       "name":           "windows-vs2026-x86-debug",
       "displayName":    "!VS2026 MSVC x86 Debug",
@@ -283,9 +280,6 @@
         "rhs": "Windows"
       }
     },
-
-
-
     {
       "name":           "windows-mingw-x86",
       "displayName":    "MinGW x86",
@@ -328,9 +322,6 @@
         "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
-
-
-
     {
       "name":           "macos",
       "displayName":    "macOS",
@@ -346,9 +337,6 @@
         "PLAYFIELD_ENABLE_BUNDLE":     "ON"
       }
     },
-
-
-
     {
       "name":           "linux-x11",
       "displayName":    "Linux X11 OpenGL",
@@ -402,9 +390,6 @@
         "PLAYFIELD_ENABLE_ROT90":      "ON"
       }
     },
-
-
-
     {
       "name":           "ios",
       "displayName":    "iOS",
@@ -440,9 +425,6 @@
         "PLAYFIELD_ENABLE_STATIC":     "ON"
       }
     },
-
-
-
     {
       "name":           "android-x86",
       "displayName":    "Android x86",
@@ -503,9 +485,6 @@
         "PLAYFIELD_ENABLE_SHARED":     "ON"
       }
     },
-
-
-
     {
       "name":           "wasm",
       "displayName":    "Wasm",
@@ -528,9 +507,6 @@
         "PLAYFIELD_TARGET_WASM_LOCAL": "ON"
       }
     },
-
-
-
     {
       "name":           "unity-win64",
       "displayName":    "Unity Win64",
@@ -594,9 +570,6 @@
         "PLAYFIELD_ENABLE_STATIC":          "ON"
       }
     },
-
-
-
     {
       "name":           "freebsd",
       "displayName":    "FreeBSD",
@@ -667,9 +640,6 @@
       "name": "windows-vs2022-gdk-xbox-xs",
       "configurePreset": "windows-vs2022-gdk-xbox-xs"
     },
-
-
-
     {
       "name": "windows-vs2026-x86-debug",
       "configurePreset": "windows-vs2026-x86-debug"
@@ -702,9 +672,6 @@
       "name": "windows-vs2026-gdk-xbox-xs",
       "configurePreset": "windows-vs2026-gdk-xbox-xs"
     },
-
-
-
     {
       "name": "windows-mingw-x86",
       "configurePreset": "windows-mingw-x86"
@@ -717,16 +684,10 @@
       "name": "windows-mingw-arm64",
       "configurePreset": "windows-mingw-arm64"
     },
-
-
-
     {
       "name": "macos",
       "configurePreset": "macos"
     },
-
-
-
     {
       "name": "linux-x11",
       "configurePreset": "linux-x11"
@@ -743,9 +704,6 @@
       "name": "linux-gbm-rot90",
       "configurePreset": "linux-gbm-rot90"
     },
-
-
-
     {
       "name": "ios-device",
       "configurePreset": "ios-device"
@@ -754,9 +712,6 @@
       "name": "ios-simulator",
       "configurePreset": "ios-simulator"
     },
-
-
-
     {
       "name": "android-x86",
       "configurePreset": "android-x86"
@@ -773,9 +728,6 @@
       "name": "android-arm64",
       "configurePreset": "android-arm64"
     },
-
-
-
     {
       "name": "wasm",
       "configurePreset": "wasm"
@@ -784,9 +736,6 @@
       "name": "wasm-local",
       "configurePreset": "wasm-local"
     },
-
-
-
     {
       "name": "unity-win64",
       "configurePreset": "unity-win64"
@@ -803,9 +752,6 @@
       "name": "unity-xbox",
       "configurePreset": "unity-xbox"
     },
-
-
-
     {
       "name": "freebsd",
       "configurePreset": "freebsd"
