@@ -510,6 +510,7 @@ static HANDLE                               g_fenceEvent;
 static ComPtr<ID3D12Fence>                  g_fence;
 static UINT64                               g_fenceValue;
 static ComPtr<ID3D12Resource>               g_vertexUploadHeap;
+static std::vector<TextureBundle *>         g_allTextureBundleList;
 static std::vector<TextureBundle *>         g_freeTextureBundleList;
 static std::vector<ID3D12Resource*>         g_freeUploadHeapList;
 static Vertex                               g_tempRectVertexBuffer[TEMP_RECT_COUNT * 4];
@@ -522,7 +523,7 @@ static int                                  g_nVirtualHeight;
 static float								g_fScale;
 static float								g_fOffsetX;
 static float								g_fOffsetY;
-
+static int									g_contextID;
 //
 // API Pointers
 //
@@ -539,6 +540,7 @@ HRESULT(__stdcall* pfnD3DCreateBlob)(IUnknown*, D3D_FEATURE_LEVEL, REFIID, void*
 
 static BOOL GetAPIPointers();
 static BOOL GetScreenSize();
+static BOOL RecreateD3DObjects();
 static BOOL CreateSwapchain();
 static void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter, bool requestHighPerformanceAdapter);
 static BOOL CreateSwapchain();
@@ -551,6 +553,7 @@ static HRESULT CompileShaderFromString(const char* szShader, LPCSTR szEntryPoint
 static BOOL CreateCommandList();
 static BOOL CreateVertexBuffer();
 static BOOL CreateFence();
+static void ReleaseAllD3D12Objects();
 static void WaitForPreviousFrame();
 static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline);
 static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline);
@@ -573,6 +576,16 @@ BOOL D3D12Initialize(HWND hWnd, int nWidth, int nHeight)
     // Initialize Direct3D 12.
     if (!GetAPIPointers())
         return FALSE;
+	if (!RecreateD3DObjects())
+		return FALSE;
+
+    return TRUE;
+}
+
+static BOOL RecreateD3DObjects()
+{
+	g_contextID++;
+
     if (!GetScreenSize())
         return FALSE;
     if (!CreateSwapchain())
@@ -594,12 +607,12 @@ BOOL D3D12Initialize(HWND hWnd, int nWidth, int nHeight)
     if (!CreateFence())
         return FALSE;
 
-    return TRUE;
+	return TRUE;
 }
 
 static BOOL GetAPIPointers()
 {
-#if defined(TARGET_GDK_XBOX)
+#if defined(TARGET_GDK_WINDOWS) || defined(TARGET_GDK_XBOX_XS)
 	//
 	// Xbox
 	//
@@ -1278,29 +1291,76 @@ static BOOL CreateFence()
 VOID D3D12Cleanup(void)
 {
     WaitForPreviousFrame();
-    CloseHandle(g_fenceEvent);
+	ReleaseAllD3D12Objects();
 }
 
-BOOL D3D12ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
+BOOL D3D12ResizeWindow(int nWindowWidth, int nWindowHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
 {
-    g_fDisplayWidth = (float)nScreenWidth;
-    g_fDisplayHeight = (float)nScreenHeight;
+	// g_nVirtualWidth ... virtual screen size
+    // g_nVirtualHeight ... virtual screen size
+    // nWindowWidth ... window physical size
+	// nWindowHeight ... window physcal size
+	// nViewportWidth ... nWindowWidth - nOffsetX * 2
+	// nViewportHeight ... nWindowHeight - nOffsetY * 2
+	// nOffsetX ... window physical px
+	// nOffsetY ... window physical px
 
+    g_fDisplayWidth = (float)nWindowWidth;
+    g_fDisplayHeight = (float)nWindowHeight;
 	g_fScale = scale;
 	g_fOffsetX = (float)nOffsetX;
 	g_fOffsetY = (float)nOffsetY;
 
     g_viewport.TopLeftX = 0;
     g_viewport.TopLeftY = 0;
-    g_viewport.Width = nScreenWidth;
-    g_viewport.Height = nScreenHeight;
+    g_viewport.Width = (float)nWindowWidth;
+    g_viewport.Height = (float)nWindowHeight;
 
-    g_scissorRect.left = 0;
-    g_scissorRect.top = 0;
-    g_scissorRect.right = nScreenWidth;
-    g_scissorRect.bottom = nScreenHeight;
+    g_scissorRect.left = nOffsetX;
+    g_scissorRect.top = nOffsetY;
+    g_scissorRect.right = nOffsetX + nViewportWidth;
+    g_scissorRect.bottom = nOffsetY + nViewportHeight;
+
+	ReleaseAllD3D12Objects();
+
+	if (!RecreateD3DObjects())
+			return FALSE;
 
     return TRUE;
+}
+
+static void ReleaseAllD3D12Objects()
+{
+	WaitForPreviousFrame();
+
+	// Release all textures.
+    for (TextureBundle *pTextureBundle : g_allTextureBundleList)
+	{
+        g_availableTextureIndexList.push_back(pTextureBundle->nIndex);
+        delete pTextureBundle;
+	}
+	g_allTextureBundleList.clear();
+
+	// Release other objects.
+    g_commandList.Reset();
+    g_commandAllocator.Reset();
+    for (UINT i = 0; i < FRAME_COUNT; ++i)
+        g_renderTargets[i].Reset();
+    g_pipelineStateNormal.Reset();
+    g_pipelineStateAdd.Reset();
+    g_pipelineStateSub.Reset();
+    g_pipelineStateRule.Reset();
+    g_pipelineStateMelt.Reset();
+    g_rootSignature.Reset();
+    g_rtvHeap.Reset();
+    g_srvHeap.Reset();
+    g_vertexBuffer.Reset();
+    g_vertexUploadHeap.Reset();
+    g_swapChain.Reset();
+    g_fence.Reset();
+    CloseHandle(g_fenceEvent);
+    g_commandQueue.Reset();
+    g_device.Reset();
 }
 
 VOID D3D12StartFrame(void)
@@ -1400,6 +1460,10 @@ VOID D3D12EndFrame(void)
     for (TextureBundle* pTextureBundle : g_freeTextureBundleList)
     {
         g_availableTextureIndexList.push_back(pTextureBundle->nIndex);
+		g_allTextureBundleList.erase(
+			std::find(g_allTextureBundleList.begin(),
+					  g_allTextureBundleList.end(),
+					  pTextureBundle));
         delete pTextureBundle;
     }
     g_freeTextureBundleList.clear();
@@ -1619,14 +1683,32 @@ static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, fl
 
 static BOOL UploadTextureIfNeeded(struct image* img)
 {
-    if (!img->need_upload)
-        return TRUE;
+	bool is_needed;
 
+	// Check if an upload is needed.
+	is_needed = false;
+	if (img->context != g_contextID)
+		is_needed = true;	// Device recreated.
+	if (img->need_upload)
+		is_needed = true;	// Image updated.
+	if (!is_needed)
+        return TRUE;	// Not needed.
+
+	// Schedule deleting the previous texture.
     if (img->texture != NULL)
     {
-        TextureBundle* pTextureBundle = (TextureBundle*)img->texture;
-        g_freeTextureBundleList.push_back(pTextureBundle);
-        img->texture = NULL;
+		if (img->context == g_contextID)
+		{
+			// Device is not recreated: Need to delete the texture.
+			g_freeTextureBundleList.push_back((TextureBundle*)img->texture);
+		}
+		else
+		{
+			// Device was recreated: the texture was already deleted,
+			// and the pTextureBundle is an invalid pointer that is already freed.
+		}
+
+		img->texture = NULL;
     }
 
     // Check if a texture index is available.
@@ -1642,6 +1724,8 @@ static BOOL UploadTextureIfNeeded(struct image* img)
     pTextureBundle->nIndex = textureIndex;
     img->texture = pTextureBundle;
     img->need_upload = FALSE;
+	img->context = g_contextID;
+	g_allTextureBundleList.push_back(pTextureBundle);
 
     // Describe and create a Texture2D.
     D3D12_RESOURCE_DESC textureDesc = {};
