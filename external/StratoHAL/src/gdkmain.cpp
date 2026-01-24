@@ -1,12 +1,40 @@
 /* -*- coding: utf-8; indent-tabs-mode: t; tab-width: 4; c-basic-offset: 4; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Main code for the Microsoft Game Development Kit (GDK)
+ */
+
+/*-
+ * SPDX-License-Identifier: Zlib
+ *
+ * Playfield Engine
+ * Copyright (c) 2025-2026 Awe Morris
+ *
+ * This software is derived from the codebase of Suika2.
+ * Copyright (c) 1996-2024 Keiichi Tabata
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
 //
-// GDK Main
-//
+// SCID (from MicrosoftGame.config)
+// 
+#define SCID	"PUT-YOUR-SCID-HERE"
 
 // HAL
 extern "C" {
@@ -37,31 +65,31 @@ extern "C" {
 #define SCREEN_WIDTH			(1920)
 #define SCREEN_HEIGHT			(1080)
 
-/* Buffer size for the window title. */
+// Buffer size for the window title.
 #define TITLE_BUF_SIZE	(1024)
 
-/* Millisecond of a frame. */
+// Millisecond of a frame.
 #define FRAME_MILLI		(16)
 
-/* Size of a log line. */
+// Size of a log line.
 #define LOG_BUF_SIZE	(4096)
 
-/* Buffer size of UTF-8/UTF-16 conversion. */
+// Buffer size of UTF-8/UTF-16 conversion.
 #define CONV_MESSAGE_SIZE	(65536)
 
-/* Window class names. */
+// Window class names.
 static const wchar_t wszWindowClassMain[] = L"AppMain";
 
-/* Window title. */
+// Window title.
 static wchar_t wszTitle[] = L"GDK Window";
 
-/*
- * Variables
- */
+//
+// Variables
+//
 
-/* GDK globals */
+// GDK globals.
 XUserHandle g_gdk_user = nullptr;
-const char *g_gdk_scid = "PUT-YOUR-SCID-HERE"; /* Partner Center / MicrosoftGame.config */
+const char *g_gdk_scid = SCID;
 XTaskQueueHandle g_queue = nullptr;
 
 /* Windows object. */

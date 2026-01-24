@@ -1,11 +1,34 @@
-//* -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t; -*- */
+/* -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Playfield Engine
+ * Gamepad HAL for GameInput
  */
 
-/*
- * Gamepad Input (GameInput on GDK)
+/*-
+ * SPDX-License-Identifier: Zlib
+ *
+ * Playfield Engine
+ * Copyright (c) 2025-2026 Awe Morris
+ *
+ * This software is derived from the codebase of Suika2.
+ * Copyright (c) 1996-2024 Keiichi Tabata
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
 extern "C" {
@@ -75,7 +98,7 @@ VOID GameInputUpdate(VOID)
     if (FAILED(hr))
 	return;
 
-    /* Analog */
+    // Analog
     on_event_analog_input(ANALOG_X1, stick_to_i16(pad.leftThumbstickX));
     on_event_analog_input(ANALOG_Y1, stick_to_i16(pad.leftThumbstickY));
     on_event_analog_input(ANALOG_X2, stick_to_i16(pad.rightThumbstickX));
@@ -83,7 +106,7 @@ VOID GameInputUpdate(VOID)
     on_event_analog_input(ANALOG_L,  trigger_to_u8(pad.leftTrigger));
     on_event_analog_input(ANALOG_R,  trigger_to_u8(pad.rightTrigger));
 
-    /* Buttons (GameInputGamepadButtons bitmask) */
+    // Buttons (GameInputGamepadButtons bitmask)
     if (pad.buttons & GameInputGamepadDPadUp)
 	on_event_key_press(KEY_GAMEPAD_UP);
     else

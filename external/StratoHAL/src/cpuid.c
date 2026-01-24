@@ -1,14 +1,37 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * StratoHAL
+ * Helper for CPUID instruction
  */
 
-/*
- * CPUID Check
+/*-
+ * SPDX-License-Identifier: Zlib
+ *
+ * Playfield Engine
+ * Copyright (c) 2025-2026 Awe Morris
+ *
+ * This software is derived from the codebase of Suika2.
+ * Copyright (c) 1996-2024 Keiichi Tabata
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "platform.h"
+#include "stratohal/platform.h"
 
 #include <intrin.h>
 
@@ -25,6 +48,9 @@ bool is_sse_available;
 void check_cpuid(void)
 {
 #if defined(__GNUC__)
+	/*
+	 * GCC
+	 */
 	is_avx2_available = __builtin_cpu_supports("avx2");
 	is_avx_available = __builtin_cpu_supports("avx");
 	is_sse42_available = __builtin_cpu_supports("sse4.2");
@@ -33,8 +59,10 @@ void check_cpuid(void)
 	is_sse2_available = __builtin_cpu_supports("sse2");
 	is_sse_available = __builtin_cpu_supports("sse");
 #else
+	/*
+	 * MSVC
+	 */
 	int cpuinfo[4] = {0};
-
 	__cpuid(cpuinfo, 1);
 
 	/* SSE */
