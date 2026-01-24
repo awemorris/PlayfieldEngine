@@ -38,8 +38,8 @@
 
 // HAL
 extern "C" {
-#include "stratohal/c89compat.h"
 #include "stratohal/platform.h"
+#include "gdkfile.h"
 #include "d3drender.h"
 #include "xa2sound.h"
 #include "gigamepad.h"
@@ -219,7 +219,6 @@ int WINAPI wWinMain(
 // Initialize the app.
 static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 {
-	RECT rcClient;
 	HRESULT hResult;
 
 	// Initialize COM.
@@ -236,8 +235,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 
 	// Initialize the user.
-	if (!InitGdkUser())
-		return FALSE;
+	InitGdkUser();
 
 	// Initialize the performance counter.
 	InitTimer();
@@ -251,6 +249,9 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		log_error("RegisterAppStateChangeNotification() failed.");
 		return FALSE;
 	}
+
+	// Initialize the pakcage.
+	init_file();
 
 	// Do a boot callback.
 	if (!on_event_boot(&pszWindowTitle, &nWindowWidth, &nWindowHeight))

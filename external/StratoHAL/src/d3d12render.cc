@@ -1495,12 +1495,18 @@ VOID D3D12EndFrame(void)
 
 static void WaitForPreviousFrame()
 {
+	if (g_commandQueue == nullptr ||
+		g_fence == nullptr ||
+		g_fenceEvent == nullptr ||
+		g_swapChain == nullptr)
+		return;
+
     const UINT64 fence = g_fenceValue;
     HRESULT hr = g_commandQueue->Signal(g_fence.Get(), fence);
     if (FAILED(hr))
         return;
     g_fenceValue++;
-
+ 
     if (g_fence->GetCompletedValue() < fence)
     {
         hr = g_fence->SetEventOnCompletion(fence, g_fenceEvent);

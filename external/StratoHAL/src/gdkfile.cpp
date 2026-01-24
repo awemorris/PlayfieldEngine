@@ -33,6 +33,7 @@
 
 extern "C" {
 #include "stratohal/platform.h"
+#include "gdkfile.h"
 };
 
 #include <windows.h>
@@ -99,8 +100,7 @@ static bool open_package(struct rfile *rf, const char *relative);
 
 bool init_file(void)
 {
-    // Lazy-init: package/save roots are resolved on first use.
-    package_path = NULL;
+    ensure_package_root();
     return true;
 }
 
