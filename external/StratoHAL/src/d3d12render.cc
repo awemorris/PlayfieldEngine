@@ -17,7 +17,7 @@ extern "C" {
 // Windows
 #include <windows.h>
 
-#if defined(TARGET_GDK_WINDOWS) || defined(TARGET_GDK_XBOX)
+#if defined(TARGET_GDK_XBOX)
 #include <d3d12_x.h>
 #include <dxgi_x.h>
 #else
@@ -613,7 +613,7 @@ static BOOL RecreateD3DObjects()
 
 static BOOL GetAPIPointers()
 {
-#if defined(TARGET_GDK_WINDOWS) || defined(TARGET_GDK_XBOX_XS)
+#if defined(TARGET_GDK_XBOX_XS)
 	//
 	// Xbox
 	//

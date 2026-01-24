@@ -349,6 +349,8 @@ if(   STRATO_TARGET_GDK_WINDOWS
     src/gdkmain.cpp
     src/gdkfile.cpp
     src/d3d12render.cc
+    src/gigamepad.cpp
+    src/xa2sound.cpp
   )
 endif()
 
@@ -539,7 +541,9 @@ if(STRATO_TARGET_MACOS OR STRATO_TARGET_IOS)
 endif()
 
 # Windows compile options.
-if(STRATO_TARGET_WINDOWS)
+if(   STRATO_TARGET_WINDOWS
+   OR STRATO_TARGET_GDK_WINDOWS
+   OR STRATO_TARGET_GDK_XBOX_XS)
   # -municode
   if(MINGW)
     target_compile_options(strato PUBLIC -municode)
@@ -715,7 +719,7 @@ if(   STRATO_TARGET_GDK_WINDOWS
     message(FATAL_ERROR "Not found: ${XGAMERUNTIME_LIB}")
   endif()
 
-  target_link_libraries(strato PUBLIC "${XGAMERUNTIME_LIB}" user32 advapi32 gdi32 ole32 uuid appnotify)
+  target_link_libraries(strato PUBLIC "${XGAMERUNTIME_LIB}" user32 advapi32 gdi32 ole32 uuid appnotify gameinput xaudio2)
 
   # /SUBSYSTEM:WINDOWS
   if(MSVC)

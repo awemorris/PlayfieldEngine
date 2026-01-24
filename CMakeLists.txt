@@ -475,15 +475,6 @@ if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
   )
 endif()
 
-# GDK
-if(   PLAYFIELD_TARGET_GDK_WINDOWS
-   OR PLAYFIELD_TARGET_GDK_XBOX_XS)
-  set(CMAKE_VERBOSE_MAKEFILE ON)
-  target_compile_options(playfield PRIVATE /utf-8)
-  target_link_options(playfield PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
-  target_link_libraries(playfield PRIVATE user32 advapi32 gdi32 ole32 uuid xgameruntime)
-endif()
-
 #
 # Packager Target
 #

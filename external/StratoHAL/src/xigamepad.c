@@ -25,8 +25,8 @@ VOID XInputUpdate(VOID)
 
     on_event_analog_input(ANALOG_X1, state.Gamepad.sThumbLX);
     on_event_analog_input(ANALOG_Y1, state.Gamepad.sThumbLY);
-    on_event_analog_input(ANALOG_X1, state.Gamepad.sThumbRX);
-    on_event_analog_input(ANALOG_Y1, state.Gamepad.sThumbRY);
+    on_event_analog_input(ANALOG_X2, state.Gamepad.sThumbRX);
+    on_event_analog_input(ANALOG_Y2, state.Gamepad.sThumbRY);
     on_event_analog_input(ANALOG_L, state.Gamepad.bLeftTrigger);
     on_event_analog_input(ANALOG_R, state.Gamepad.bRightTrigger);
 

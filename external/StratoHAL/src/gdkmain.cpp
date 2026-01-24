@@ -4,36 +4,36 @@
  * Copyright (c) 2025, Awe Morris. All rights reserved.
  */
 
-/*
- * Windows Main
- */
+//
+// GDK Main
+//
 
-/* HAL */
+// HAL
 extern "C" {
 #include "stratohal/c89compat.h"
 #include "stratohal/platform.h"
 #include "d3drender.h"
+#include "xa2sound.h"
+#include "gigamepad.h"
 };
-//#include "xa2sound.h"
-//#include "gigamepad.h"
 
-/* Windows */
+// Windows/GDK
 #include <windows.h>
 #include <XGameRuntime.h>
 #include <XUser.h>
 #include <appmodel.h>
 #include <appnotify.h>
 
-/* Standard C */
+// Standard C
 #include <stdio.h>
 #include <assert.h>
 #include <signal.h>
 
-/*
- * Constants
- */
+//
+// Constants
+//
 
-/* Screen size. */
+// Screen size.
 #define SCREEN_WIDTH			(1920)
 #define SCREEN_HEIGHT			(1080)
 
@@ -188,18 +188,18 @@ int WINAPI wWinMain(
 	return nRet;
 }
 
-/* Initialize the app. */
+// Initialize the app.
 static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 {
 	RECT rcClient;
 	HRESULT hResult;
 
-	/* Initialize COM. */
+	// Initialize COM.
 	hResult = CoInitialize(0);
 	if (FAILED(hResult))
 		return FALSE;
 
-	/* Create a window. */
+	// Create a window.
 	if (!InitWindow(hInstance, nCmdShow))
 		return FALSE;
 
@@ -211,10 +211,10 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	if (!InitGdkUser())
 		return FALSE;
 
-	/* Initialize the performance counter. */
+	// Initialize the performance counter.
 	InitTimer();
 
-	/* Register for OS suspend/resume (quiesce) notifications. */
+	// Register for OS suspend/resume (quiesce) notifications.
 	g_appStateReg = NULL;
 	InterlockedExchange(&g_isQuiesced, 0);
 	int status = RegisterAppStateChangeNotification(AppStateChangeRoutine, NULL, &g_appStateReg);
@@ -224,27 +224,29 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	/* Do a boot callback. */
+	// Do a boot callback.
 	if (!on_event_boot(&pszWindowTitle, &nWindowWidth, &nWindowHeight))
 		return FALSE;
 
-	/* Initialize the graphics HAL. */
+	// Initialize the graphics HAL.
 	if (!D3D12Initialize(hWndMain, nWindowWidth, nWindowHeight))
 	{
 		log_info(S_TR("Failed to initialize the graphics."));
 		return FALSE;
 	}
 
-	/* Correct the aspect ratio. */
+	// Correct the aspect ratio.
 	UpdateScreenOffsetAndScale(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	/* Initialize the sound HAL. */
-	// if (!XAudio2Init())
-	// {
-	// 	log_error(S_TR("Failed to initialize the sound."));
-    //
-	// 	/* Fall-thru. */
-	// }
+	// Initialize GameInput.
+	GameInputInitialize();
+
+	// Initialize the sound HAL.
+	if (!XA2Initialize())
+	{
+	    log_error(S_TR("Failed to initialize the sound."));
+	    return FALSE;
+	}
 
 	return TRUE;
 }
@@ -252,11 +254,14 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 /* Cleanup the app. */
 static void CleanupApp(void)
 {
-	/* Cleanup the graphics HAL. */
+	// Cleanup the graphics HAL.
 	D3D12Cleanup();
 
-	/* Cleanup the sound HAL. */
-	//XAudio2Cleanup();
+	// Cleanup GameInput.
+	GameInputCleanup();
+	
+	// Cleanup the sound HAL.
+	XA2Cleanup();
 }
 
 /* Initialize the poerformance counter. */
@@ -428,7 +433,7 @@ static BOOL RunFrame(void)
 	}
 
 	/* Update the gamepad input. */
-	//GameInputUpdate();
+	GameInputUpdate();
 
 	/* Start rendering. */
 	D3D12StartFrame();
@@ -1248,24 +1253,4 @@ render_image_3d_dim(
 	int alpha)
 {
 	D3D12RenderImage3DDim(x1, y1, x2, y2, x3, y3, x4, y4, src_image, src_left, src_top, src_width, src_height, alpha);
-}
-
-bool play_sound(int stream, struct wave *w)
-{
-	return true;
-}
-
-bool stop_sound(int stream)
-{
-	return true;
-}
-
-bool set_sound_volume(int stream, float vol)
-{
-	return true;
-}
-
-bool is_sound_finished(int stream)
-{
-	return true;
 }
