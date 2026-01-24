@@ -24,30 +24,30 @@ jobs:
 
       - name: Configure (x86)
         run: >
-          cmake --preset windows-msvc-x86-release
+          cmake --preset windows-vs2022-x86-release
           -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
           -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
       - name: Build (x86)
-        run: cmake --build --preset windows-msvc-x86-release --config Release --parallel
+        run: cmake --build --preset windows-vs2022-x86-release --config Release --parallel
 
       - name: Configure (x64)
         run: >
-          cmake --preset windows-msvc-x64-release
+          cmake --preset windows-vs2022-x64-release
           -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
           -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
       - name: Build (x64)
-        run: cmake --build --preset windows-msvc-x64-release --config Release --parallel
+        run: cmake --build --preset windows-vs2022-x64-release --config Release --parallel
 
       - name: Configure (arm64)
         run: >
-          cmake --preset windows-msvc-arm64-release
+          cmake --preset windows-vs2022-arm64-release
           -DFLEX_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_flex.exe"
           -DBISON_EXECUTABLE="C:/ProgramData/chocolatey/bin/win_bison.exe"
 
       - name: Build (arm64)
-        run: cmake --build --preset windows-msvc-arm64-release --config Release --parallel
+        run: cmake --build --preset windows-vs2022-arm64-release --config Release --parallel
 
       - name: Upload Windows EXEs
         uses: actions/upload-artifact@v4
@@ -186,7 +186,7 @@ jobs:
           git submodule update --init
 
           brew update
-          brew install mingw-w64 bison flex mkdocs-material p7zip
+          brew install bison flex
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
 
@@ -243,7 +243,7 @@ jobs:
           git submodule update --init
 
           brew update
-          brew install mingw-w64 bison flex mkdocs-material p7zip
+          brew install bison flex
           echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
           echo "/opt/homebrew/opt/flex/bin" >> $GITHUB_PATH
 
@@ -483,11 +483,11 @@ jobs:
 
       - name: Copy for Windows.
         run: |
-          cp windows/build/windows-msvc-x64-release/Release/playfield.exe dist/
-          cp windows/build/windows-msvc-x64-release/Release/playfield-editor.exe dist/
-          cp windows/build/windows-msvc-x86-release/Release/playfield-pack.exe dist/misc/windows/
-          cp windows/build/windows-msvc-x86-release/Release/playfield-web.exe dist/misc/wasm/
-          cp windows/build/windows-msvc-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
+          cp windows/build/windows-vs2022-x64-release/Release/playfield.exe dist/
+          cp windows/build/windows-vs2022msv-x64-release/Release/playfield-editor.exe dist/
+          cp windows/build/windows-vs2022-x86-release/Release/playfield-pack.exe dist/misc/windows/
+          cp windows/build/windows-vs2022-x86-release/Release/playfield-web.exe dist/misc/wasm/
+          cp windows/build/windows-vs2022-arm64-release/Release/playfield.exe dist/misc/windows/playfield-arm64.exe
           cp samples/shoot/main.pf dist/
 
       - name: Download mingw artifacts
