@@ -143,6 +143,27 @@
       }
     },
     {
+      "name":           "windows-vs2022-uwp",
+      "displayName":    "VS2022 UWP x64",
+      "generator":      "Visual Studio 17 2022",
+      "architecture":   "x64",
+      "toolset":        "v143",
+      "binaryDir":      "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME":                        "WindowsStore",
+        "CMAKE_SYSTEM_VERSION":                     "10.0",
+        "CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION": "10.0",
+        "PLAYFIELD_TARGET_UWP":                     "ON",
+        "PLAYFIELD_ENABLE_JIT":                     "OFF",
+        "PLAYFIELD_ENABLE_I18N":                    "OFF"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
       "name":           "windows-vs2026-x86-debug",
       "displayName":    "!VS2026 MSVC x86 Debug",
       "generator":      "Visual Studio 18 2026",
@@ -639,6 +660,10 @@
     {
       "name": "windows-vs2022-gdk-xbox-xs",
       "configurePreset": "windows-vs2022-gdk-xbox-xs"
+    },
+    {
+      "name": "windows-vs2022-uwp",
+      "configurePreset": "windows-vs2022-uwp"
     },
     {
       "name": "windows-vs2026-x86-debug",

@@ -22,6 +22,7 @@ option(STRATO_TARGET_NETBSD           "Build for NetBSD"                   OFF)
 option(STRATO_TARGET_OPENBSD          "Build for OpenBSD"                  OFF)
 option(STRATO_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"          OFF)
 option(STRATO_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"  OFF)
+option(STRATO_TARGET_UWP              "Build for UWP"                      OFF)
 
 # Options
 option(STRATO_ENABLE_I18N          "Enable translation"                 OFF)
@@ -50,6 +51,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_OPENBSD
    OR STRATO_TARGET_GDK_WINDOWS
    OR STRATO_TARGET_GDK_XBOX_XS
+   OR STRATO_TARGET_UWP
 )
   # A target and options are manually specified.
 else()
@@ -77,6 +79,7 @@ else()
   #  - Wasm (Emscripten)
   #  - Unity
   #  - GDK (Windows or Xbox)
+  #  - UWP
 endif()
 
 #
@@ -354,6 +357,17 @@ if(   STRATO_TARGET_GDK_WINDOWS
   )
 endif()
 
+# For UWP.
+if(STRATO_TARGET_UWP)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/uwpmain.cpp
+    src/d3d12render.cc
+  )
+endif()
+
 # For translation.
 if(STRATO_ENABLE_I18N)
   set(STRATO_I18N_SOURCES
@@ -439,6 +453,19 @@ if(STRATO_TARGET_GDK_WINDOWS)
 endif()
 if(STRATO_TARGET_GDK_XBOX_XS)
   target_compile_definitions(strato PRIVATE TARGET_GDK_XBOX_XS)
+endif()
+
+# For UWP.
+if(STRATO_TARGET_UWP)
+  target_compile_definitions(strato PRIVATE TARGET_UWP)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  file(ARCHIVE_EXTRACT
+    INPUT       ${CMAKE_CURRENT_SOURCE_DIR}/lib/archive/dx12headers.tar.gz
+    DESTINATION ${CMAKE_BINARY_DIR}
+  )
+  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+  add_compile_definitions(BZ_STRICT_ANSI)
 endif()
 
 #
@@ -729,6 +756,11 @@ if(   STRATO_TARGET_GDK_WINDOWS
       /MANIFEST:NO
     )
   endif()
+endif()
+
+# UWP.
+if(STRATO_TARGET_UWP)
+  target_link_libraries(strato PUBLIC windowsapp d3d12 dxgi dxguid xaudio2 gameinput)
 endif()
 
 #

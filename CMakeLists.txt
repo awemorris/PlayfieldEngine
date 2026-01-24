@@ -22,6 +22,7 @@ option(PLAYFIELD_TARGET_NETBSD           "Build for NetBSD X11"                 
 option(PLAYFIELD_TARGET_OPENBSD          "Build for OpenBSD X11"                 OFF)
 option(PLAYFIELD_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"             OFF)
 option(PLAYFIELD_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"     OFF)
+option(PLAYFIELD_TARGET_UWP              "Build for UWP"                         OFF)
 
 # Options
 option(PLAYFIELD_ENABLE_JIT           "Enable JIT"              OFF)
@@ -57,6 +58,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_OPENBSD
    OR PLAYFIELD_TARGET_GDK_WINDOWS
    OR PLAYFIELD_TARGET_GDK_XBOX_XS
+   OR PLAYFIELD_TARGET_UWP
 )
   # A target and options are manually specified.
 else()   
@@ -110,6 +112,7 @@ else()
   #  - Wasm (Emscripten)
   #  - Unity
   #  - GDK (Windows or Xbox)
+  #  - UWP
 endif()
 
 #
@@ -206,6 +209,8 @@ elseif(PLAYFIELD_TARGET_GDK_WINDOWS)
   set(STRATO_TARGET_GDK_WINDOWS ON)
 elseif(PLAYFIELD_TARGET_GDK_XBOX_XS)
   set(STRATO_TARGET_GDK_XBOX_XS ON)
+elseif(PLAYFIELD_TARGET_UWP)
+  set(STRATO_TARGET_UWP ON)
 endif()
 
 if(PLAYFIELD_TARGET_UNITY_SWITCH)
@@ -594,6 +599,7 @@ endif()
 # GDK Packaging
 #
 
+if(0)
 if(PLAYFIELD_TARGET_GDK_WINDOWS)
   set(PKG_STAGING_DIR "${CMAKE_BINARY_DIR}/gdk_staging")
   set(PKG_OUTPUT_DIR  "${CMAKE_BINARY_DIR}/gdk_package")
@@ -628,6 +634,7 @@ if(PLAYFIELD_TARGET_GDK_WINDOWS)
     # Install to local.
     COMMAND "${GDK_WDAPP}" install "${PKG_OUTPUT_DIR}/PlayfieldEngineSample_1.0.0.0_x64__6ng4m9yy9amvm.msixvc"
   )
+endif()
 endif()
 
 #
