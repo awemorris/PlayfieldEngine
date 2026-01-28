@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -33,14 +30,14 @@
 
 #if defined(USE_SSE_DISPATCH)
 
-#define DRAW_IMAGE_COPY		draw_image_copy_avx
-#define DRAW_IMAGE_ALPHA	draw_image_alpha_avx
-#define DRAW_IMAGE_GLYPH	draw_image_glyph_avx
-#define DRAW_IMAGE_ADD		draw_image_add_avx
-#define DRAW_IMAGE_DIM		draw_image_dim_avx
-#define DRAW_IMAGE_RULE		draw_image_rule_avx
-#define DRAW_IMAGE_MELT		draw_image_melt_avx
-#define DRAW_IMAGE_SCALE	draw_image_scale_avx
+#define DRAW_IMAGE_COPY		hal_draw_image_copy_avx
+#define DRAW_IMAGE_ALPHA	hal_draw_image_alpha_avx
+#define DRAW_IMAGE_GLYPH	hal_draw_image_glyph_avx
+#define DRAW_IMAGE_ADD		hal_draw_image_add_avx
+#define DRAW_IMAGE_DIM		hal_draw_image_dim_avx
+#define DRAW_IMAGE_RULE		hal_draw_image_rule_avx
+#define DRAW_IMAGE_MELT		hal_draw_image_melt_avx
+#define DRAW_IMAGE_SCALE	hal_draw_image_scale_avx
 
 #include "drawimage.h"
 

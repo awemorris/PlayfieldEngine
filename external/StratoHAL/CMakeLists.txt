@@ -431,12 +431,12 @@ endif()
 
 # For translation.
 if(STRATO_ENABLE_I18N)
-  target_compile_definitions(strato PRIVATE USE_TRANSLATION)
+  target_compile_definitions(strato PRIVATE HAL_USE_TRANSLATION)
 endif()
 
 # For Unity
 if(STRATO_TARGET_UNITY)
-  target_compile_definitions(strato PRIVATE USE_UNITY USE_CSHARP)
+  target_compile_definitions(strato PRIVATE HAL_USE_UNITY HAL_USE_CSHARP)
 
   if(STRATO_TARGET_UNITY_SWITCH)
     target_compile_definitions(strato PRIVATE UNITY_SWITCH)
@@ -492,9 +492,9 @@ endif()
 # -Dinclude
 target_include_directories(strato PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# -DUSE_SHARED if we use dynamic linking.
+# -DHAL_USE_SHARED if we use dynamic linking.
 if(STRATO_ENABLE_SHARED)
-  target_compile_definitions(strato PRIVATE USE_SHARED)
+  target_compile_definitions(strato PRIVATE HAL_USE_SHARED)
 endif()
 
 # -DUSE_JIT if we use JIT.
@@ -522,20 +522,20 @@ if(STRATO_TARGET_WINDOWS)
   )
 endif()
 
-# Linux Wayland: Add -DUSE_GLES -DUSE_WAYLAND
+# Linux Wayland: Add -DHAS_USE_GLES -DHAL_USE_WAYLAND
 if(   STRATO_TARGET_LINUX_WAYLAND
    OR STRATO_TARGET_FREEBSD_WAYLAND)
-  target_compile_definitions(strato PRIVATE USE_GLES USE_WAYLAND)
+  target_compile_definitions(strato PRIVATE HAL_USE_GLES HAL_USE_WAYLAND)
 endif()
 
-# Linux Framebuffer: Add -DUSE_GLES
+# Linux Framebuffer: Add -DHAL_USE_GLES
 if(STRATO_TARGET_LINUX_GBM)
-  target_compile_definitions(strato PRIVATE USE_GLES)
+  target_compile_definitions(strato PRIVATE HAL_USE_GLES)
 endif()
 
 # Linux Framebuffer
 if(STRATO_TARGET_LINUX_GBM AND STRATO_ENABLE_ROT90)
-  target_compile_definitions(strato PRIVATE USE_ROT90)
+  target_compile_definitions(strato PRIVATE HAL_USE_ROT90)
 endif()
 
 # FreeBSD: Add -I/usr/local/include
@@ -553,9 +553,9 @@ if(STRATO_TARGET_OPENBSD)
   target_include_directories(strato PUBLIC /usr/local/include /usr/X11R6/include)
 endif()
 
-# Android: Add -DUSE_GLES
+# Android: Add -DHAL_USE_GLES
 if(STARATO_TARGET_ANDROID)
-  target_compile_definitions(strato PRIVATE USE_GLES)
+  target_compile_definitions(strato PRIVATE HAL_USE_GLES)
 endif()
 
 #

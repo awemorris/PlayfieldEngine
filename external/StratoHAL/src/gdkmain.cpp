@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -217,7 +214,10 @@ int WINAPI wWinMain(
 }
 
 // Initialize the app.
-static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
+static BOOL
+InitApp(
+	HINSTANCE hInstance,
+	int nCmdShow)
 {
 	HRESULT hResult;
 
@@ -281,7 +281,8 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 }
 
 /* Cleanup the app. */
-static void CleanupApp(void)
+static void
+CleanupApp(void)
 {
 	// Cleanup the graphics HAL.
 	D3D12Cleanup();
@@ -294,14 +295,18 @@ static void CleanupApp(void)
 }
 
 /* Initialize the poerformance counter. */
-void InitTimer(void)
+void
+InitTimer(void)
 {
     QueryPerformanceFrequency(&g_qpcFreq);
 }
 
 
 /* Create a window. */
-static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
+static BOOL
+InitWindow(
+	HINSTANCE hInstance,
+	int nCmdShow)
 {
 	WNDCLASSEXW wcex;
 	DWORD dwStyle;
@@ -345,7 +350,8 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
-static int InitTaskQueue()
+static int
+InitTaskQueue()
 {
     if (g_queue) return 1;
 
@@ -362,7 +368,8 @@ static int InitTaskQueue()
 }
 
 /* Initialize the GDK user. */
-static BOOL InitGdkUser(void)
+static BOOL
+InitGdkUser(void)
 {
 	if (!IsRunningPackaged())
 		return TRUE;
@@ -388,7 +395,8 @@ static BOOL InitGdkUser(void)
     return TRUE;
 }
 
-static BOOL IsRunningPackaged()
+static BOOL
+IsRunningPackaged()
 {
     UINT32 len = 0;
     LONG rc = GetCurrentPackageFullName(&len, nullptr);
@@ -404,7 +412,8 @@ static BOOL IsRunningPackaged()
 }
 
 /* Run the game loop. */
-static void GameLoop(void)
+static void
+GameLoop(void)
 {
 	BOOL bBreak;
 
@@ -439,7 +448,8 @@ static void GameLoop(void)
 }
 
 /* Run a frame. */
-static BOOL RunFrame(void)
+static BOOL
+RunFrame(void)
 {
 	BOOL bRet;
 
@@ -483,7 +493,8 @@ static BOOL RunFrame(void)
 }
 
 /* Process events on the queue. */
-static BOOL SyncEvents(void)
+static BOOL
+SyncEvents(void)
 {
 	/* DWORD dwStopWatchPauseStart; */
 	MSG msg;
@@ -502,7 +513,8 @@ static BOOL SyncEvents(void)
 }
 
 /* Sleep until a next frame. */
-static BOOL WaitForNextFrame(void)
+static BOOL
+WaitForNextFrame(void)
 {
 	LARGE_INTEGER now;
 	double elapsedMs;
@@ -533,7 +545,12 @@ static BOOL WaitForNextFrame(void)
 }
 
 /* Window procedure. */
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK
+WndProc(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	int kc;
 
@@ -640,7 +657,9 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 /* Convert a key code. */
-static int ConvertKeyCode(int nVK)
+static int
+ConvertKeyCode(
+	int nVK)
 {
 	switch(nVK)
 	{
@@ -781,7 +800,9 @@ static int ConvertKeyCode(int nVK)
 }
 
 /* WM_PAINT */
-static void OnPaint(HWND hWnd)
+static void
+OnPaint(
+	HWND hWnd)
 {
 	HDC hDC;
 	PAINTSTRUCT ps;
@@ -794,7 +815,10 @@ static void OnPaint(HWND hWnd)
 }
 
 /* WM_COMMAND */
-static void OnCommand(WPARAM wParam, LPARAM lParam)
+static void
+OnCommand(
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	UINT nID;
 
@@ -804,7 +828,10 @@ static void OnCommand(WPARAM wParam, LPARAM lParam)
 }
 
 /* Calculate screen offsets and scales. */
-static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
+static void
+UpdateScreenOffsetAndScale(
+	int nClientWidth,
+	int nClientHeight)
 {
 	float fAspect, fUseWidth, fUseHeight;
 
@@ -836,7 +863,10 @@ static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
 	D3D12ResizeWindow(nClientWidth, nClientHeight, nViewportOffsetX, nViewportOffsetY, nViewportWidth, nViewportHeight, fMouseScale);
 }
 
-static VOID CALLBACK AppStateChangeRoutine(BOOLEAN Quiesced, PVOID Context)
+static VOID CALLBACK
+AppStateChangeRoutine(
+	BOOLEAN Quiesced,
+	PVOID Context)
 {
 	UNUSED_PARAMETER(Context);
 	InterlockedExchange(&g_isQuiesced, Quiesced ? 1 : 0);
@@ -858,7 +888,10 @@ static VOID CALLBACK AppStateChangeRoutine(BOOLEAN Quiesced, PVOID Context)
 /*
  * Show an INFO log.
  */
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	va_list ap;
 
@@ -872,7 +905,10 @@ bool log_info(const char *s, ...)
 /*
  * Show a WARN log.
  */
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	va_list ap;
 
@@ -886,7 +922,10 @@ bool log_warn(const char *s, ...)
 /*
  * Show an ERROR log.
  */
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	va_list ap;
 
@@ -900,7 +939,8 @@ bool log_error(const char *s, ...)
 /*
  * Show an Out-of-memory error.
  */
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	log_error(S_TR("Out of memory."));
 	return true;
@@ -909,7 +949,9 @@ bool log_out_of_memory(void)
 /*
  * Convert a utf-8 string to a utf-17 string.
  */
-const wchar_t *win32_utf8_to_utf16(const char *utf8_message)
+const wchar_t *
+win32_utf8_to_utf16(
+	const char *utf8_message)
 {
 	static wchar_t wszMessage[CONV_MESSAGE_SIZE];
 
@@ -971,7 +1013,9 @@ const wchar_t *win32_utf8_to_utf16(const char *utf8_message)
 /*
  * Convert a utf-16 string to a utf-8 string.
  */
-const char *win32_utf16_to_utf8(const wchar_t *utf16_message)
+const char *
+win32_utf16_to_utf8(
+	const wchar_t *utf16_message)
 {
 	static char szMessage[CONV_MESSAGE_SIZE];
 
@@ -1022,7 +1066,8 @@ const char *win32_utf16_to_utf8(const wchar_t *utf16_message)
 /*
  * Create a save directory.
  */
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	return true;
 }
@@ -1030,7 +1075,8 @@ bool make_save_directory(void)
 /*
  * Get a real path of a file.
  */
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(const char *fname)
 {
 	return NULL;
 }
@@ -1038,7 +1084,9 @@ char *make_real_path(const char *fname)
 /*
  * Reset a lap timer.
  */
-void reset_lap_timer(uint64_t *origin)
+void
+hal_reset_lap_timer(
+	uint64_t *origin)
 {
 	*origin = GetTickCount64();
 }
@@ -1046,7 +1094,9 @@ void reset_lap_timer(uint64_t *origin)
 /*
  * Get a timer lap.
  */
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *origin)
 {
 	uint64_t cur = GetTickCount64();
 	return (uint64_t)(cur - *origin);
@@ -1055,7 +1105,10 @@ uint64_t get_lap_timer_millisec(uint64_t *origin)
 /*
  * Play a video.
  */
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	return false;
 }
@@ -1063,14 +1116,16 @@ bool play_video(const char *fname, bool is_skippable)
 /*
  * Stop a video.
  */
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 }
 
 /*
  * Check if a video is playing back.
  */
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	return false;
 }
@@ -1078,7 +1133,8 @@ bool is_video_playing(void)
 /*
  * Check if the full screen mode is supported.
  */
-bool is_full_screen_supported()
+bool
+hal_is_full_screen_supported()
 {
 	return true;
 }
@@ -1086,7 +1142,8 @@ bool is_full_screen_supported()
 /*
  * Check if in the full screen mode.
  */
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	return true;
 }
@@ -1094,27 +1151,32 @@ bool is_full_screen_mode(void)
 /*
  * Enter the full screen mode.
  */
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 }
 
 /*
  * Leave the full screen mode.
  */
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 }
 
 /*
  * Get a system language.
  */
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	return "en";
 }
 
 /* Not used in Windows. */
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	UNUSED_PARAMETER(is_enabled);
 }

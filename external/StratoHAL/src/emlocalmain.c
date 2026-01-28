@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -104,7 +101,8 @@ static void init_lang_code(void);
 /*
  * Main
  */
-int main(void)
+int
+main(void)
 {
 	/* Keep the thread alive and will receive events. */
 	emscripten_exit_with_live_runtime();
@@ -115,7 +113,8 @@ int main(void)
  * Startup
  */
 EMSCRIPTEN_KEEPALIVE
-void start_engine(void)
+void
+start_engine(void)
 {
 	/* Initialize the locale. */
 	init_lang_code();
@@ -199,7 +198,9 @@ EM_JS(void, onResizeWindow, (void),
 });
 
 /* Run a frame. */
-static void loop_iter(void *userData)
+static void
+loop_iter(
+	void *userData)
 {
 	static bool is_flip_pending = false;
 
@@ -226,9 +227,11 @@ static void loop_iter(void *userData)
 }
 
 /* mousemove callback */
-static EM_BOOL cb_mousemove(int eventType,
-			    const EmscriptenMouseEvent *mouseEvent,
-			    void *userData)
+static EM_BOOL
+cb_mousemove(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y;
@@ -252,9 +255,11 @@ static EM_BOOL cb_mousemove(int eventType,
 }
 
 /* mousedown callback */
-static EM_BOOL cb_mousedown(int eventType,
-			    const EmscriptenMouseEvent *mouseEvent,
-			    void *userData)
+static EM_BOOL
+cb_mousedown(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y, button;
@@ -267,9 +272,9 @@ static EM_BOOL cb_mousedown(int eventType,
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
-		button = MOUSE_LEFT;
+		button = HAL_MOUSE_LEFT;
 	else
-		button = MOUSE_RIGHT;
+		button = HAL_MOUSE_RIGHT;
 
 	/* Call the event handler. */
 	on_event_mouse_press(button, x, y);
@@ -278,9 +283,11 @@ static EM_BOOL cb_mousedown(int eventType,
 }
 
 /* mouseup callback */
-static EM_BOOL cb_mouseup(int eventType,
-			    const EmscriptenMouseEvent *mouseEvent,
-			    void *userData)
+static EM_BOOL
+cb_mouseup(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y, button;
@@ -293,9 +300,9 @@ static EM_BOOL cb_mouseup(int eventType,
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
-		button = MOUSE_LEFT;
+		button = HAL_MOUSE_LEFT;
 	else
-		button = MOUSE_RIGHT;
+		button = HAL_MOUSE_RIGHT;
 
 	/* Call the event handler. */
 	on_event_mouse_release(button, x, y);
@@ -304,9 +311,11 @@ static EM_BOOL cb_mouseup(int eventType,
 }
 
 /* wheel callback */
-static EM_BOOL cb_wheel(int eventType,
-			const EmscriptenWheelEvent *wheelEvent,
-			void *userData)
+static EM_BOOL
+cb_wheel(
+	int eventType,
+	const EmscriptenWheelEvent *wheelEvent,
+	void *userData)
 {
 	if (wheelEvent->deltaY > 0) {
 		on_event_key_press(KEY_DOWN);
@@ -319,9 +328,11 @@ static EM_BOOL cb_wheel(int eventType,
 }
 
 /* keydown callback */
-static EM_BOOL cb_keydown(int eventType,
-			  const EmscriptenKeyboardEvent *keyEvent,
-			  void *userData)
+static EM_BOOL
+cb_keydown(
+	int eventType,
+	const EmscriptenKeyboardEvent *keyEvent,
+	void *userData)
 {
 	int keycode;
 
@@ -334,9 +345,11 @@ static EM_BOOL cb_keydown(int eventType,
 }
 
 /* keyup callback */
-static EM_BOOL cb_keyup(int eventType,
-			const EmscriptenKeyboardEvent *keyEvent,
-			void *userData)
+static EM_BOOL
+cb_keyup(
+	int eventType,
+	const EmscriptenKeyboardEvent *keyEvent,
+	void *userData)
 {
 	int keycode;
 
@@ -349,7 +362,9 @@ static EM_BOOL cb_keyup(int eventType,
 }
 
 /* Get a key code. */
-static int get_keycode(const char *key)
+static int
+get_keycode(
+	const char *key)
 {
 	if (strcmp(key, "Escape") == 0) {
 		return KEY_ESCAPE;
@@ -486,7 +501,8 @@ static int get_keycode(const char *key)
 }
 
 /* touchstart callback */
-static EM_BOOL cb_touchstart(
+static EM_BOOL
+cb_touchstart(
 	int eventType,
 	const EmscriptenTouchEvent *touchEvent,
 	void *userData)
@@ -505,13 +521,14 @@ static EM_BOOL cb_touchstart(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Call the event handler. */
-	on_event_mouse_press(MOUSE_LEFT, x, y);
+	on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
 
 	return EM_TRUE;
 }
 
 /* touchmove callback */
-static EM_BOOL cb_touchmove(
+static EM_BOOL
+cb_touchmove(
 	int eventType,
 	const EmscriptenTouchEvent *touchEvent,
 	void *userData)
@@ -544,7 +561,8 @@ static EM_BOOL cb_touchmove(
 }
 
 /* touchend callback */
-static EM_BOOL cb_touchend(
+static EM_BOOL
+cb_touchend(
 	int eventType,
 	const EmscriptenTouchEvent *touchEvent,
 	void *userData)
@@ -564,15 +582,15 @@ static EM_BOOL cb_touchend(
 
 	/* Consider a two-finger tap as a right-click. */
 	if (touchEvent->numTouches == 2) {
-		on_event_mouse_press(MOUSE_RIGHT, x, y);
-		on_event_mouse_release(MOUSE_RIGHT, x, y);
+		on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
+		on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
 		return EM_TRUE;
 	}
 
 	/* Consider a one-finger tap as a left-click. */
 	if (abs(touchEvent->touches[0].targetX - touch_start_x) < OFS &&
 	    abs(touchEvent->touches[0].targetY - touch_start_y) < OFS) {
-		on_event_mouse_release(MOUSE_LEFT, x, y);
+		on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
 		return EM_TRUE;
 	}
 	
@@ -580,9 +598,11 @@ static EM_BOOL cb_touchend(
 }
 
 /* touchcancel callback */
-static EM_BOOL cb_touchcancel(int eventType,
-			      const EmscriptenTouchEvent *touchEvent,
-			      void *userData)
+static EM_BOOL
+cb_touchcancel(
+	int eventType,
+	const EmscriptenTouchEvent *touchEvent,
+	void *userData)
 {
 	on_event_mouse_move(-1, -1);
 
@@ -613,25 +633,33 @@ EM_JS(void, resizeWindow, (void), {
 });
 
 /* Callback when a project is loaded. */
-EMSCRIPTEN_KEEPALIVE void onLoadProject(void)
+EMSCRIPTEN_KEEPALIVE
+void
+onLoadProject(void)
 {
 	start_engine();
 }
 
 /* When the tab is shown. */
-void EMSCRIPTEN_KEEPALIVE setVisible(void)
+EMSCRIPTEN_KEEPALIVE
+void
+setVisible(void)
 {
 	resume_sound();
 }
 
 /* When the tab is hidden. */
-void EMSCRIPTEN_KEEPALIVE setHidden(void)
+EMSCRIPTEN_KEEPALIVE
+void
+setHidden(void)
 {
 	pause_sound();
 }
 
 /* When the mouse pointer leaves Canvas. */
-void EMSCRIPTEN_KEEPALIVE mouseLeave(void)
+EMSCRIPTEN_KEEPALIVE
+void
+mouseLeave(void)
 {
 	on_event_touch_cancel();
 }
@@ -640,7 +668,10 @@ void EMSCRIPTEN_KEEPALIVE mouseLeave(void)
  * HAL API
  */
 
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -654,7 +685,10 @@ bool log_info(const char *s, ...)
 	return true;
 }
 
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -668,7 +702,10 @@ bool log_warn(const char *s, ...)
 	return true;
 }
 
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -686,27 +723,31 @@ bool log_error(const char *s, ...)
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	log_error("Out of memory.");
 	return true;
 }
 
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(struct image *img)
 {
 	fill_sound_buffer();
 	opengl_notify_image_update(img);
 	fill_sound_buffer();
 }
 
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(struct image *img)
 {
 	fill_sound_buffer();
 	opengl_notify_image_free(img);
 	fill_sound_buffer();
 }
 
-void render_image_normal(
+void
+hal_render_image_normal(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -721,7 +762,8 @@ void render_image_normal(
 	opengl_render_image_normal(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
 }
 
-void render_image_add(
+void
+hal_render_image_add(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -736,7 +778,8 @@ void render_image_add(
 	opengl_render_image_add(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
 }
 
-void render_image_dim(
+void
+hal_render_image_dim(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -751,7 +794,8 @@ void render_image_dim(
 	opengl_render_image_dim(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
 }
 
-void render_image_rule(
+void
+hal_render_image_rule(
 	struct image *src_img,
 	struct image *rule_img,
 	int threshold)
@@ -759,7 +803,8 @@ void render_image_rule(
 	opengl_render_image_rule(src_img, rule_img, threshold);
 }
 
-void render_image_melt(
+void
+hal_render_image_melt(
 	struct image *src_img,
 	struct image *rule_img,
 	int threshold)
@@ -768,7 +813,7 @@ void render_image_melt(
 }
 
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,
 	float y1,
 	float x2,
@@ -801,7 +846,7 @@ render_image_3d_normal(
 }
 
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,
 	float y1,
 	float x2,
@@ -833,18 +878,24 @@ render_image_3d_add(
 				   alpha);
 }
 
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	return true;
 }
 
-char *make_valid_path(const char *dir, const char *fname)
+char *
+hal_make_valid_path(
+	const char *dir,
+	const char *fname)
 {
 	/* stub */
 	return strdup("");
 }
 
-void reset_lap_timer(uint64_t *t)
+void
+hal_reset_lap_timer(
+	uint64_t *t)
 {
 	struct timeval tv;
 
@@ -853,7 +904,9 @@ void reset_lap_timer(uint64_t *t)
 	*t = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-uint64_t get_lap_timer_millisec(uint64_t *t)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *t)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -865,7 +918,10 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 	return (uint64_t)(end - *t);
 }
 
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	char *path;
 
@@ -890,7 +946,8 @@ bool play_video(const char *fname, bool is_skippable)
 	return true;
 }
 
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 	EM_ASM_({
 		var c = document.getElementById("canvas");
@@ -904,7 +961,8 @@ void stop_video(void)
 	});
 }
 
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	int ended;
 
@@ -916,17 +974,20 @@ bool is_video_playing(void)
 	return !ended;
 }
 
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
 	return true;
 }
 
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	return is_full_screen;
 }
 
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	is_full_screen = true;
 	EM_ASM({
@@ -941,7 +1002,8 @@ void enter_full_screen_mode(void)
 	});
 }
 
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	is_full_screen = false;
 	EM_ASM({
@@ -955,7 +1017,8 @@ void leave_full_screen_mode(void)
 	});
 }
 
-const char *get_system_locale(void)
+const char *
+hal_get_system_locale(void)
 {
 	int lang_code;
 
@@ -971,7 +1034,8 @@ const char *get_system_locale(void)
 	return "en";
 }
 
-void finish_frame_io(void)
+void
+finish_frame_io(void)
 {
 	opengl_start_rendering();
 }
@@ -979,7 +1043,8 @@ void finish_frame_io(void)
 /*
  * Get a system language.
  */
-const char *get_lang_code(void)
+const char *
+get_lang_code(void)
 {
 	return lang_code;
 }
@@ -1046,7 +1111,9 @@ static void init_lang_code(void)
 	}
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	is_continuous_swipe_enabled = is_enabled;
 }

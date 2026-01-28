@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -41,7 +38,7 @@
 /*
  * Android (OpenGL ES 3.0)
  */
-#if defined(TARGET_ANDROID)
+#if defined(HAL_TARGET_ANDROID)
 #include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #endif
@@ -49,7 +46,7 @@
 /*
  * Emscripten (We use OpenGL ES 3.0)
  */
-#if defined(TARGET_WASM)
+#if defined(HAL_TARGET_WASM)
 #include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #endif
@@ -57,7 +54,7 @@
 /*
  * Linux and POSIX variant (OpenGL 3.2)
  */
-#if (defined(TARGET_LINUX) && !defined(USE_GLES)) || defined(TARGET_POSIX)
+#if (defined(HAL_TARGET_LINUX) && !defined(HAL_USE_GLES)) || defined(HAL_TARGET_POSIX)
 #include <GL/gl.h>
 #include <GL/glext.h>
 #include "glhelper.h"
@@ -66,7 +63,7 @@
 /*
  * Linux GBM (OpenGL ES 2.0/3.0)
  */
-#if defined(TARGET_LINUX) && defined(USE_GLES)
+#if defined(HAL_TARGET_LINUX) && defined(HAL_USE_GLES)
 #include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
 #include "glhelper.h"
@@ -75,7 +72,7 @@
 /*
  * Windows (OpenGL 3.2)
  */
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 #include <windows.h>
 #include <GL/gl.h>
 #include "glhelper.h"
@@ -84,7 +81,7 @@
 /*
  * macOS (OpenGL 3.0)
  */
-#if defined(TARGET_MACOS)
+#if defined(HAL_TARGET_MACOS)
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl3.h>
 #include "glhelper.h"
@@ -221,7 +218,7 @@ static GLuint ibo_melt;
 
 /* The source string. */
 static const char *vertex_shader_src =
-#if !defined(TARGET_WASM) && !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                 \n"
 #endif
 	"attribute vec4 a_position;   \n" /* FIXME: vec3? */
@@ -231,7 +228,7 @@ static const char *vertex_shader_src =
 	"varying float v_alpha;       \n"
 	"void main()                  \n"
 	"{                            \n"
-#if !defined(USE_ROT90)
+#if !defined(HAL_USE_ROT90)
 	"  gl_Position = a_position;\n"
 #else
         "  vec2 rotated = vec2(-a_position.y, a_position.x); \n"
@@ -247,13 +244,13 @@ static const char *vertex_shader_src =
 
 /* The normal alpha blending shader. */
 static const char *fragment_shader_src_normal =
-#if !defined(TARGET_WASM) && !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                                        \n"
 #endif
 #if defined(USE_QT)
 	"#undef mediump                                      \n"
 #endif
-#if !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_MACOS)
 	"precision mediump float;                            \n"
 #endif
 	"varying vec2 v_texCoord;                            \n"
@@ -268,13 +265,13 @@ static const char *fragment_shader_src_normal =
 
 /* The character dimming shader. (RGB 50%) */
 static const char *fragment_shader_src_dim =
-#if !defined(TARGET_WASM) && !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                                        \n"
 #endif
 #if defined(USE_QT)
 	"#undef mediump                                      \n"
 #endif
-#if !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_MACOS)
 	"precision mediump float;                            \n"
 #endif
 	"varying vec2 v_texCoord;                            \n"
@@ -290,13 +287,13 @@ static const char *fragment_shader_src_dim =
 
 /* The rule shader. (1-bit universal transition) */
 static const char *fragment_shader_src_rule =
-#if !defined(TARGET_WASM) && !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                                        \n"
 #endif
 #if defined(USE_QT)
 	"#undef mediump                                      \n"
 #endif
-#if !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_MACOS)
 	"precision mediump float;                            \n"
 #endif
 	"varying vec2 v_texCoord;                            \n"
@@ -313,13 +310,13 @@ static const char *fragment_shader_src_rule =
 
 /* The melt shader. (8-bit universal transition) */
 static const char *fragment_shader_src_melt =
-#if !defined(TARGET_WASM) && !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                                        \n"
 #endif
 #if defined(USE_QT)
 	"#undef mediump                                      \n"
 #endif
-#if !defined(TARGET_MACOS)
+#if !defined(HAL_TARGET_MACOS)
 	"precision mediump float;                            \n"
 #endif
 	"varying vec2 v_texCoord;                            \n"
@@ -356,54 +353,40 @@ bool setup_fragment_shader(const char **fshader_src, GLuint vshader,
 			   GLuint *ibo);
 void cleanup_vertex_shader(GLuint vshader);
 void cleanup_fragment_shader(GLuint fshader, GLuint prog, GLuint vao,
-			     GLuint vbo, GLuint ibo);
+GLuint vbo, GLuint ibo);
 
 /*
  * Forward declaration.
  */
-static void draw_elements(int dst_left,
-			  int dst_top,
-			  int dst_width,
-			  int dst_height,
-			  struct image *src_image,
-			  struct image *rule_image,
-			  int src_left,
-			  int src_top,
-			  int src_width,
-			  int src_height,
-			  int alpha,
-			  int pipeline);
-static void draw_elements_3d(float x1,
-			     float y1,
-			     float x2,
-			     float y2,
-			     float x3,
-			     float y3,
-			     float x4,
-			     float y4,
-			     struct image *src_image,
-			     struct image *rule_image,
-			     int src_left,
-			     int src_top,
-			     int src_width,
-			     int src_height,
-			     int alpha,
-			     int pipeline);
-static void update_texture_if_needed(struct image *img);
+static void draw_elements(int dst_left, int dst_top, int dst_width,
+			  int dst_height, struct hal_image *src_image,
+			  struct hal_image *rule_image, int src_left,
+			  int src_top, int src_width, int src_height,
+			  int alpha, int pipeline);
+static void draw_elements_3d(float x1, float y1, float x2, float y2,
+			     float x3, float y3, float x4, float y4,
+			     struct hal_image *src_image, struct
+			     hal_image *rule_image, int src_left, int
+			     src_top, int src_width, int src_height,
+			     int alpha, int pipeline);
+static void update_texture_if_needed(struct hal_image *img);
 
 /*
  * Initialize OpenGL.
  */
-bool init_opengl(int width, int height)
+bool
+init_opengl(
+	int width,
+	int height)
 {
-#ifdef TARGET_ANDROID
+#ifdef HAL_TARGET_ANDROID
 	cleanup_opengl();
 #endif
 
 	/* Set a viewport. */
 	window_width = width;
 	window_height = height;
-#if !defined(USE_ROT90)
+#if !defined(HAL_USE_ROT90)
 	glViewport(0, 0, window_width, window_height);
 #else
 	glViewport(0, 0, window_height, window_width);
@@ -463,7 +446,7 @@ bool init_opengl(int width, int height)
 	return true;
 }
 
-#ifndef USE_QT
+#ifndef HAL_USE_QT
 
 /*
  * Setup a vertex shader.
@@ -484,9 +467,9 @@ setup_vertex_shader(
 	/* Check errors. */
 	glGetShaderiv(*vshader, GL_COMPILE_STATUS, &compiled);
 	if (!compiled) {
-		log_info("Vertex shader compile error");
+		hal_log_info("Vertex shader compile error");
 		glGetShaderInfoLog(*vshader, sizeof(buf), &len, &buf[0]);
-		log_info("%s", buf);
+		hal_log_info("%s", buf);
 		return false;
 	}
 
@@ -496,7 +479,9 @@ setup_vertex_shader(
 /*
  * Cleanup a vertex shader.
  */
-void cleanup_vertex_shader(GLuint vshader)
+void
+cleanup_vertex_shader(
+	GLuint vshader)
 {
 	glDeleteShader(vshader);
 }
@@ -530,9 +515,9 @@ setup_fragment_shader(
 	/* Check errors. */
 	glGetShaderiv(*fshader, GL_COMPILE_STATUS, &is_succeeded);
 	if (!is_succeeded) {
-		log_info("Fragment shader compile error");
+		hal_log_info("Fragment shader compile error");
 		glGetShaderInfoLog(*fshader, sizeof(err_msg), &err_len, &err_msg[0]);
-		log_info("%s", err_msg);
+		hal_log_info("%s", err_msg);
 		return false;
 	}
 
@@ -543,9 +528,9 @@ setup_fragment_shader(
 	glLinkProgram(*prog);
 	glGetProgramiv(*prog, GL_LINK_STATUS, &is_succeeded);
 	if (!is_succeeded) {
-		log_info("Program link error\n");
+		hal_log_info("Program link error\n");
 		glGetProgramInfoLog(*prog, sizeof(err_msg), &err_len, &err_msg[0]);
-		log_info("%s", err_msg);
+		hal_log_info("%s", err_msg);
 		return false;
 	}
 	glUseProgram(*prog);
@@ -636,13 +621,14 @@ cleanup_fragment_shader(
 	glDeleteBuffers(1, (const GLuint *)&a);
 }
 
-#endif	/* ifndef USE_QT */
+#endif	/* ifndef HAL_USE_QT */
 
 /*
  * Cleanup OpenGL.
  *  - Note: On Emscripten, this will never be called
  */
-void cleanup_opengl(void)
+void
+cleanup_opengl(void)
 {
 	if (fragment_shader_normal != (GLuint)-1) {
 		cleanup_fragment_shader(fragment_shader_normal,
@@ -685,9 +671,10 @@ void cleanup_opengl(void)
 /*
  * Start a frame rendering.
  */
-void opengl_start_rendering(void)
+void
+opengl_start_rendering(void)
 {
-#if defined(USE_QT) || defined(USE_WAYLAND)
+#if defined(HAL_USE_QT) || defined(HAL_USE_WAYLAND)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 #else
@@ -699,7 +686,8 @@ void opengl_start_rendering(void)
 /*
  * End a frame rendering.
  */
-void opengl_end_rendering(void)
+void
+opengl_end_rendering(void)
 {
 	glFlush();
 	is_after_reinit = false;
@@ -717,7 +705,9 @@ void opengl_end_rendering(void)
  *  - This will just allocate memory for a texture management struct
  *  - We just use pixels of a frontend image for modification
  */
-void opengl_notify_image_update(struct image *img)
+void
+opengl_notify_image_update(
+	struct hal_image *img)
 {
 	img->need_upload = true;
 }
@@ -725,7 +715,9 @@ void opengl_notify_image_update(struct image *img)
 /*
  * Destroy a texture.
  */
-void opengl_notify_image_free(struct image *img)
+void
+opengl_notify_image_free(
+	struct hal_image *img)
 {
 	GLuint id;
 
@@ -743,16 +735,18 @@ void opengl_notify_image_free(struct image *img)
 /*
  * Render an image with the normal pipeline.
  */
-void opengl_render_image_normal(int dst_left,
-				int dst_top,
-				int dst_width,
-				int dst_height,
-				struct image *src_image,
-				int src_left,
-				int src_top,
-				int src_width,
-				int src_height,
-				int alpha)
+void
+opengl_render_image_normal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_image->width;
@@ -784,16 +778,18 @@ void opengl_render_image_normal(int dst_left,
 /*
  * Render an image with the add pipeline.
  */
-void opengl_render_image_add(int dst_left,
-			     int dst_top,
-			     int dst_width,
-			     int dst_height,
-			     struct image *src_image,
-			     int src_left,
-			     int src_top,
-			     int src_width,
-			     int src_height,
-			     int alpha)
+void
+opengl_render_image_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_image->width;
@@ -825,16 +821,18 @@ void opengl_render_image_add(int dst_left,
 /*
  * Render an image with the sub pipeline.
  */
-void opengl_render_image_sub(int dst_left,
-			     int dst_top,
-			     int dst_width,
-			     int dst_height,
-			     struct image *src_image,
-			     int src_left,
-			     int src_top,
-			     int src_width,
-			     int src_height,
-			     int alpha)
+void
+opengl_render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_image->width;
@@ -866,16 +864,18 @@ void opengl_render_image_sub(int dst_left,
 /*
  * Render an image with the dim pipeline.
  */
-void opengl_render_image_dim(int dst_left,
-			     int dst_top,
-			     int dst_width,
-			     int dst_height,
-			     struct image *src_image,
-			     int src_left,
-			     int src_top,
-			     int src_width,
-			     int src_height,
-			     int alpha)
+void
+opengl_render_image_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_image->width;
@@ -907,9 +907,11 @@ void opengl_render_image_dim(int dst_left,
 /*
  * Render an image with the rule pipeline.
  */
-void opengl_render_image_rule(struct image *src_image,
-			      struct image *rule_image,
-			      int threshold)
+void
+opengl_render_image_rule(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int threshold)
 {
 	draw_elements(0,
 		      0,
@@ -928,9 +930,11 @@ void opengl_render_image_rule(struct image *src_image,
 /*
  * Render an image with the melt pipeline.
  */
-void opengl_render_image_melt(struct image *src_image,
-			      struct image *rule_image,
-			      int progress)
+void
+opengl_render_image_melt(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int progress)
 {
 	draw_elements(0,
 		      0,
@@ -947,18 +951,20 @@ void opengl_render_image_melt(struct image *src_image,
 }
 
 /* Render two triangle primitives. */
-static void draw_elements(int dst_left,
-			  int dst_top,
-			  int dst_width,
-			  int dst_height,
-			  struct image *src_image,
-			  struct image *rule_image,
-			  int src_left,
-			  int src_top,
-			  int src_width,
-			  int src_height,
-			  int alpha,
-			  int pipeline)
+static void
+draw_elements(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
 	draw_elements_3d((float)dst_left,
 			 (float)dst_top,
@@ -991,7 +997,7 @@ opengl_render_image_3d_normal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -1029,7 +1035,7 @@ opengl_render_image_3d_add(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -1067,7 +1073,7 @@ opengl_render_image_3d_sub(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -1105,7 +1111,7 @@ opengl_render_image_3d_dim(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -1131,22 +1137,24 @@ opengl_render_image_3d_dim(
 }
 
 /* Render two triangle primitives. */
-static void draw_elements_3d(float x1,
-			     float y1,
-			     float x2,
-			     float y2,
-			     float x3,
-			     float y3,
-			     float x4,
-			     float y4,
-			     struct image *src_image,
-			     struct image *rule_image,
-			     int src_left,
-			     int src_top,
-			     int src_width,
-			     int src_height,
-			     int alpha,
-			     int pipeline)
+static void
+draw_elements_3d(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
 	GLfloat pos[24];
 	float hw, hh, tw, th;
@@ -1282,7 +1290,9 @@ static void draw_elements_3d(float x1,
 }
 
 /* Upload a texture. */
-static void update_texture_if_needed(struct image *img)
+static void
+update_texture_if_needed(
+	struct hal_image *img)
 {
 	GLuint id;
 
@@ -1301,7 +1311,7 @@ static void update_texture_if_needed(struct image *img)
 	/* Create or update an OpenGL texture. */
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glBindTexture(GL_TEXTURE_2D, id);
-#ifdef TARGET_WASM
+#ifdef HAL_TARGET_WASM
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 #else
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -1321,7 +1331,7 @@ static void update_texture_if_needed(struct image *img)
  */
 void opengl_set_screen(int x, int y, int w, int h)
 {
-#if !defined(USE_ROT90)
+#if !defined(HAL_USE_ROT90)
 	glViewport(x, y, w, h);
 #else
 	glViewport(y, x, h, w);

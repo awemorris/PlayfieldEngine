@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -54,34 +51,34 @@
  * FreeType2 objects
  */
 static FT_Library library;
-static FT_Face face[GLYPH_DATA_COUNT];
-static FT_Byte *file_content[GLYPH_DATA_COUNT];
+static FT_Face face[HAL_GLYPH_DATA_COUNT];
+static FT_Byte *file_content[HAL_GLYPH_DATA_COUNT];
 
 /*
  * Forward declarations
  */
 static bool draw_glyph_with_outline(
-	struct image *img,
+	struct hal_image *img,
 	int font_index,
 	int font_size,
 	int base_font_size,
 	int outline_size,
 	int x,
 	int y,
-	pixel_t color,
-	pixel_t outline_color,
+	hal_pixel_t color,
+	hal_pixel_t outline_color,
 	uint32_t codepoint,
 	int *ret_w,
 	int *ret_h,
 	bool is_dim);
 static bool draw_glyph_without_outline(
-	struct image *img,
+	struct hal_image *img,
 	int font_type,
 	int font_size,
 	int base_font_size,
 	int x,
 	int y,
-	pixel_t color,
+	hal_pixel_t color,
 	uint32_t codepoint,
 	int *ret_w,
 	int *ret_h,
@@ -92,29 +89,30 @@ static void draw_glyph_func(
 	int font_height,
 	int margin_left,
 	int margin_top,
-	pixel_t * RESTRICT image,
+	hal_pixel_t * RESTRICT image,
 	int image_width,
 	int image_height,
 	int image_x,
 	int image_y,
-	pixel_t color);
+	hal_pixel_t color);
 static void draw_glyph_dim_func(
 	unsigned char * RESTRICT font,
 	int font_width,
 	int font_height,
 	int margin_left,
 	int margin_top,
-	pixel_t * RESTRICT image,
+	hal_pixel_t * RESTRICT image,
 	int image_width,
 	int image_height,
 	int image_x,
 	int image_y,
-	pixel_t color);
+	hal_pixel_t color);
 
 /*
  * Initialize the font render.
  */
-bool init_glyph(void)
+bool
+hal_init_glyph(void)
 {
 #ifdef USE_DLL
 	cleanup_glyph();
@@ -125,12 +123,13 @@ bool init_glyph(void)
 /*
  * Cleanup the font renderer.
  */
-void cleanup_glyph(void)
+void
+hal_cleanup_glyph(void)
 {
 	int i;
 
-	for (i = 0; i < GLYPH_DATA_COUNT; i++)
-		destroy_glyph_data(i);
+	for (i = 0; i < HAL_GLYPH_DATA_COUNT; i++)
+		hal_destroy_glyph_data(i);
 
 	if (library != NULL) {
 		FT_Done_FreeType(library);
@@ -141,7 +140,11 @@ void cleanup_glyph(void)
 /*
  * Load a font file.
  */
-bool load_glyph_data(int index, const uint8_t *data, size_t len)
+bool
+hal_load_glyph_data(
+	int index,
+	const uint8_t *data,
+	size_t len)
 {
 	FT_Error err;
 
@@ -151,18 +154,18 @@ bool load_glyph_data(int index, const uint8_t *data, size_t len)
 	if (library == NULL) {
 		err = FT_Init_FreeType(&library);
 		if (err != 0) {
-			log_error("FT_Init_FreeType() failed.");
+			hal_log_error("FT_Init_FreeType() failed.");
 			return false;
 		}
 	}
 
 	/* Destroy a font if required. */
-	destroy_glyph_data(index);
+	hal_destroy_glyph_data(index);
 
 	/* Allocate a buffer to hold the data. */
 	file_content[index] = malloc(len);
 	if (file_content[index] == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -176,12 +179,12 @@ bool load_glyph_data(int index, const uint8_t *data, size_t len)
 				 0,
 				 &face[index]);
 	if (err != 0) {
-		log_error("Failed to load a font file.");
+		hal_log_error("Failed to load a font file.");
 		return false;
 	}
 
 	/* Preload font glyphs. */
-	get_glyph_width(index, 8, 'A');
+	hal_get_glyph_width(index, 8, 'A');
 
 	return true;
 }
@@ -189,7 +192,9 @@ bool load_glyph_data(int index, const uint8_t *data, size_t len)
 /*
  * Destroy a font.
  */
-void destroy_glyph_data(int index)
+void
+hal_destroy_glyph_data(
+	int index)
 {
 	if (face[index] != NULL) {
 		FT_Done_Face(face[index]);
@@ -204,7 +209,10 @@ void destroy_glyph_data(int index)
 /*
  * Get a top character of a utf-8 string as a utf-32.
  */
-int utf8_to_utf32(const char *mbs, uint32_t *wc)
+int
+hal_utf8_to_utf32(
+	const char *mbs,
+	uint32_t *wc)
 {
 	size_t mbslen, octets, i;
 	uint32_t ret;
@@ -280,14 +288,16 @@ int utf8_to_utf32(const char *mbs, uint32_t *wc)
 /*
  * Get a characters of a utf-8 string.
  */
-int count_utf8_chars(const char *mbs)
+int
+hal_count_utf8_chars(
+	const char *mbs)
 {
 	int count;
 	int mblen;
 
 	count = 0;
 	while (*mbs != '\0') {
-		mblen = utf8_to_utf32(mbs, NULL);
+		mblen = hal_utf8_to_utf32(mbs, NULL);
 		if (mblen == -1)
 			return -1;
 		count++;
@@ -299,22 +309,26 @@ int count_utf8_chars(const char *mbs)
 /*
  * Get a width for a character.
  */
-int get_glyph_width(int slot, int size, uint32_t codepoint)
+int
+hal_get_glyph_width(
+	int slot,
+	int size,
+	uint32_t codepoint)
 {
 	int w, h;
 
 	w = h = 0;
 
-	draw_glyph(NULL,
-		   slot,
-		   size,
-		   size,
-		   0,
-		   0,
-		   0,
-		   0,
-		   0,
-		   codepoint, &w, &h, false);
+	hal_draw_glyph(NULL,
+		       slot,
+		       size,
+		       size,
+		       0,
+		       0,
+		       0,
+		       0,
+		       0,
+		       codepoint, &w, &h, false);
 
 	return w;
 }
@@ -322,25 +336,29 @@ int get_glyph_width(int slot, int size, uint32_t codepoint)
 /*
  * Get a height for a character.
  */
-int get_glyph_height(int slot, int size, uint32_t codepoint)
+int
+hal_get_glyph_height(
+	int slot,
+	int size,
+	uint32_t codepoint)
 {
 	int w, h;
 
 	w = h = 0;
 
-	draw_glyph(NULL,
-		   slot,
-		   size,
-		   size,
-		   0,
-		   0,
-		   0,
-		   0,
-		   0,
-		   codepoint,
-		   &w,
-		   &h,
-		   false);
+	hal_draw_glyph(NULL,
+		       slot,
+		       size,
+		       size,
+		       0,
+		       0,
+		       0,
+		       0,
+		       0,
+		       codepoint,
+		       &w,
+		       &h,
+		       false);
 
 	return h;
 }
@@ -348,22 +366,28 @@ int get_glyph_height(int slot, int size, uint32_t codepoint)
 /*
  * Get a width for a character.
  */
-void get_glyph_width_and_height(int slot, int size, uint32_t codepoint, int *width, int *height)
+void
+hal_get_glyph_width_and_height(
+	int slot,
+	int size,
+	uint32_t codepoint,
+	int *width,
+	int *height)
 {
 	int w, h;
 
 	w = h = 0;
 
-	draw_glyph(NULL,
-		   slot,
-		   size,
-		   size,
-		   0,
-		   0,
-		   0,
-		   0,
-		   0,
-		   codepoint, &w, &h, false);
+	hal_draw_glyph(NULL,
+		       slot,
+		       size,
+		       size,
+		       0,
+		       0,
+		       0,
+		       0,
+		       0,
+		       codepoint, &w, &h, false);
 
 	*width = w;
 	*height = h;
@@ -372,7 +396,11 @@ void get_glyph_width_and_height(int slot, int size, uint32_t codepoint, int *wid
 /*
  * Get a width for a string.
  */
-int get_string_width(int font_index, int font_size, const char *mbs)
+int
+hal_get_string_width(
+	int font_index,
+	int font_size,
+	const char *mbs)
 {
 	uint32_t c;
 	int mblen, w;
@@ -382,12 +410,12 @@ int get_string_width(int font_index, int font_size, const char *mbs)
 	c = 0; /* warning avoidance on gcc 5.3.1 */
 	while (*mbs != '\0') {
 		/* Get a character. */
-		mblen = utf8_to_utf32(mbs, &c);
+		mblen = hal_utf8_to_utf32(mbs, &c);
 		if (mblen == -1)
 			return -1;
 
 		/* Get a character width. */
-		w += get_glyph_width(font_index, font_size, c);
+		w += hal_get_glyph_width(font_index, font_size, c);
 
 		/* Move to a next character. */
 		mbs += mblen;
@@ -398,7 +426,11 @@ int get_string_width(int font_index, int font_size, const char *mbs)
 /*
  * Get a height for a string.
  */
-int get_string_height(int font_type, int font_size, const char *mbs)
+int
+hal_get_string_height(
+	int font_type,
+	int font_size,
+	const char *mbs)
 {
 	uint32_t c;
 	int mblen, w;
@@ -408,12 +440,12 @@ int get_string_height(int font_type, int font_size, const char *mbs)
 	c = 0; /* warning avoidance on gcc 5.3.1 */
 	while (*mbs != '\0') {
 		/* Get a character. */
-		mblen = utf8_to_utf32(mbs, &c);
+		mblen = hal_utf8_to_utf32(mbs, &c);
 		if (mblen == -1)
 			return -1;
 
 		/* Get a character height. */
-		w += get_glyph_height(font_type, font_size, c);
+		w += hal_get_glyph_height(font_type, font_size, c);
 
 		/* Move to a next character. */
 		mbs += mblen;
@@ -424,7 +456,13 @@ int get_string_height(int font_type, int font_size, const char *mbs)
 /*
  * Get a width and a height for a string.
  */
-void get_string_width_and_height(int slot, int size, const char *mbs, int *width, int *height)
+void
+hal_get_string_width_and_height(
+	int slot,
+	int size,
+	const char *mbs,
+	int *width,
+	int *height)
 {
 	uint32_t c;
 	int mblen, w, h;
@@ -437,7 +475,7 @@ void get_string_width_and_height(int slot, int size, const char *mbs, int *width
 		int cw, ch;
 
 		/* Get a character. */
-		mblen = utf8_to_utf32(mbs, &c);
+		mblen = hal_utf8_to_utf32(mbs, &c);
 		if (mblen == -1) {
 			*width = 0;
 			*height = 1;
@@ -445,7 +483,7 @@ void get_string_width_and_height(int slot, int size, const char *mbs, int *width
 		}
 
 		/* Get a character width. */
-		get_glyph_width_and_height(slot, size, c, &cw, &ch);
+		hal_get_glyph_width_and_height(slot, size, c, &cw, &ch);
 		w += cw;
 		if (ch > h)
 			h = ch;
@@ -465,19 +503,21 @@ void get_string_width_and_height(int slot, int size, const char *mbs, int *width
 /*
  * Draw a glyph.
  */
-bool draw_glyph(struct image *img,
-		int font_index,
-		int font_size,
-		int base_font_size,
-		int outline_size,
-		int x,
-		int y,
-		pixel_t color,
-		pixel_t outline_color,
-		uint32_t codepoint,
-		int *ret_w,
-		int *ret_h,
-		bool is_dim)
+bool
+hal_draw_glyph(
+	struct hal_image *img,
+	int font_index,
+	int font_size,
+	int base_font_size,
+	int outline_size,
+	int x,
+	int y,
+	hal_pixel_t color,
+	hal_pixel_t outline_color,
+	uint32_t codepoint,
+	int *ret_w,
+	int *ret_h,
+	bool is_dim)
 {
 	if (outline_size == 0) {
 		if (!draw_glyph_without_outline(img, font_index, font_size,
@@ -496,19 +536,21 @@ bool draw_glyph(struct image *img,
 }
 
 /* Draw a glyph with outline. */
-static bool draw_glyph_with_outline(struct image *img,
-				    int font_index,
-				    int font_size,
-				    int base_font_size,
-				    int outline_size,
-				    int x,
-				    int y,
-				    pixel_t color,
-				    pixel_t outline_color,
-				    uint32_t codepoint,
-				    int *ret_w,
-				    int *ret_h,
-				    bool is_dim)
+static bool
+draw_glyph_with_outline(
+	struct hal_image *img,
+	int font_index,
+	int font_size,
+	int base_font_size,
+	int outline_size,
+	int x,
+	int y,
+	hal_pixel_t color,
+	hal_pixel_t outline_color,
+	uint32_t codepoint,
+	int *ret_w,
+	int *ret_h,
+	bool is_dim)
 {
 	FT_Stroker stroker;
 	FT_UInt glyphIndex;
@@ -639,23 +681,25 @@ static bool draw_glyph_with_outline(struct image *img,
 
 	/* Update a GPU texture. */
 	if (img != NULL)
-		notify_image_update(img);
+		hal_notify_image_update(img);
 
 	return true;
 }
 
 /* Draw glyph without outline. */
-static bool draw_glyph_without_outline(struct image *img,
-				       int font_index,
-				       int font_size,
-				       int base_font_size,
-				       int x,
-				       int y,
-				       pixel_t color,
-				       uint32_t codepoint,
-				       int *ret_w,
-				       int *ret_h,
-				       bool is_dim)
+static bool
+draw_glyph_without_outline(
+	struct hal_image *img,
+	int font_index,
+	int font_size,
+	int base_font_size,
+	int x,
+	int y,
+	hal_pixel_t color,
+	uint32_t codepoint,
+	int *ret_w,
+	int *ret_h,
+	bool is_dim)
 {
 	FT_Error err;
 	int descent;
@@ -663,14 +707,14 @@ static bool draw_glyph_without_outline(struct image *img,
 	/* Set a font size. */
 	err = FT_Set_Pixel_Sizes(face[font_index], 0, (FT_UInt)font_size);
 	if (err != 0) {
-		log_error("FT_Set_Pixel_Sizes() failed.");
+		hal_log_error("FT_Set_Pixel_Sizes() failed.");
 		return false;
 	}
 
 	/* Get a character as a grayscaled image. */
 	err = FT_Load_Char(face[font_index], codepoint, FT_LOAD_RENDER);
 	if (err != 0) {
-		log_error("FT_Load_Char() failed.");
+		hal_log_error("FT_Load_Char() failed.");
 		return false;
 	}
 
@@ -713,13 +757,16 @@ static bool draw_glyph_without_outline(struct image *img,
 
 	/* Update a GPU texture. */
 	if (img != NULL)
-		notify_image_update(img);
+		hal_notify_image_update(img);
 
 	return true;
 }
 
 /* Check if a supported alphabet. */
-bool isgraph_extended(const char **mbs, uint32_t *wc)
+bool
+hal_isgraph_extended(
+	const char **mbs,
+	uint32_t *wc)
 {
 	int len;
 
@@ -731,7 +778,7 @@ bool isgraph_extended(const char **mbs, uint32_t *wc)
 	}
 
 	/* Get a utf-32 character. */
-	len = utf8_to_utf32(*mbs, wc);
+	len = hal_utf8_to_utf32(*mbs, wc);
 	if (len < 1)
 		return false;
 	*mbs += len;
@@ -753,20 +800,22 @@ bool isgraph_extended(const char **mbs, uint32_t *wc)
 }
 
 /* Draw a glyph to an image. */
-static void draw_glyph_func(unsigned char *font,
-			    int font_width,
-			    int font_height,
-			    int margin_left,
-			    int margin_top,
-			    pixel_t * RESTRICT image,
-			    int image_width,
-			    int image_height,
-			    int image_x,
-			    int image_y,
-			    pixel_t color)
+static void
+draw_glyph_func(
+	unsigned char *font,
+	int font_width,
+	int font_height,
+	int margin_left,
+	int margin_top,
+	hal_pixel_t * RESTRICT image,
+	int image_width,
+	int image_height,
+	int image_x,
+	int image_y,
+	hal_pixel_t color)
 {
 	unsigned char *src_ptr, src_pix;
-	pixel_t *dst_ptr, dst_pix, dst_a2;
+	hal_pixel_t *dst_ptr, dst_pix, dst_a2;
 	float color_r, color_g, color_b;
 	float src_a, src_r, src_g, src_b;
 	float dst_a, dst_r, dst_g, dst_b;
@@ -812,9 +861,9 @@ static void draw_glyph_func(unsigned char *font,
 	}
 
 	/* Draw. */
-	color_r = (float)get_pixel_r(color);
-	color_g = (float)get_pixel_g(color);
-	color_b = (float)get_pixel_b(color);
+	color_r = (float)hal_get_pixel_r(color);
+	color_g = (float)hal_get_pixel_g(color);
+	color_b = (float)hal_get_pixel_b(color);
 	dst_ptr = image + image_real_y * image_width + image_real_x;
 	src_ptr = font + font_real_y * font_width + font_real_x;
 	for (py = font_real_y; py < font_real_y + font_real_height; py++) {
@@ -831,18 +880,18 @@ static void draw_glyph_func(unsigned char *font,
 
 			/* Get a destination pixel. */
 			dst_pix	= *dst_ptr;
-			dst_r  = dst_a * (float)get_pixel_r(dst_pix);
-			dst_g  = dst_a * (float)get_pixel_g(dst_pix);
-			dst_b  = dst_a * (float)get_pixel_b(dst_pix);
-			dst_a2 = src_pix + get_pixel_a(dst_pix);
+			dst_r  = dst_a * (float)hal_get_pixel_r(dst_pix);
+			dst_g  = dst_a * (float)hal_get_pixel_g(dst_pix);
+			dst_b  = dst_a * (float)hal_get_pixel_b(dst_pix);
+			dst_a2 = src_pix + hal_get_pixel_a(dst_pix);
 			if (dst_a2 > 255)
 				dst_a2 = 255;
 
 			/* Compose and store. */
-			*dst_ptr++ = make_pixel((uint32_t)dst_a2,
-						(uint32_t)(src_r + dst_r),
-						(uint32_t)(src_g + dst_g),
-						(uint32_t)(src_b + dst_b));
+			*dst_ptr++ = hal_make_pixel((uint32_t)dst_a2,
+						    (uint32_t)(src_r + dst_r),
+						    (uint32_t)(src_g + dst_g),
+						    (uint32_t)(src_b + dst_b));
 		}
 		dst_ptr += image_width - font_real_width;
 		src_ptr += font_width - font_real_width;
@@ -850,20 +899,22 @@ static void draw_glyph_func(unsigned char *font,
 }
 
 /* Draw a glyph to an image. */
-static void draw_glyph_dim_func(unsigned char *font,
-				int font_width,
-				int font_height,
-				int margin_left,
-				int margin_top,
-				pixel_t * RESTRICT image,
-				int image_width,
-				int image_height,
-				int image_x,
-				int image_y,
-				pixel_t color)
+static void
+draw_glyph_dim_func(
+	unsigned char *font,
+	int font_width,
+	int font_height,
+	int margin_left,
+	int margin_top,
+	hal_pixel_t * RESTRICT image,
+	int image_width,
+	int image_height,
+	int image_x,
+	int image_y,
+	hal_pixel_t color)
 {
 	unsigned char *src_ptr;
-	pixel_t *dst_ptr;
+	hal_pixel_t *dst_ptr;
 	int image_real_x, image_real_y;
 	int font_real_x, font_real_y;
 	int font_real_width, font_real_height;
@@ -905,10 +956,10 @@ static void draw_glyph_dim_func(unsigned char *font,
 				    image_height;
 	}
 
-	color = make_pixel(255,
-			   get_pixel_r(color),
-			   get_pixel_g(color),
-			   get_pixel_b(color));
+	color = hal_make_pixel(255,
+			       hal_get_pixel_r(color),
+			       hal_get_pixel_g(color),
+			       hal_get_pixel_b(color));
 
 	/* Draw. */
 	dst_ptr = image + image_real_y * image_width + image_real_x;

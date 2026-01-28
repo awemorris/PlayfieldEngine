@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -54,13 +51,13 @@ static AudioUnit au;
 static pthread_mutex_t mutex;
 
 /* Input streams. */
-static struct wave *wave[SOUND_TRACKS];
+static struct hal_wave *wave[HAL_SOUND_TRACKS];
 
 /* Volumes. */
-static float volume[SOUND_TRACKS];
+static float volume[HAL_SOUND_TRACKS];
 
 /* Playback finish flags. */
-static bool finish[SOUND_TRACKS];
+static bool finish[HAL_SOUND_TRACKS];
 
 /* Temporary sample buffer. */
 static uint32_t tmpBuf[TMP_SAMPLES];
@@ -85,7 +82,8 @@ static void mul_add_pcm(uint32_t *dst, uint32_t *src, float vol, int samples);
 /*
  * Initialize Audio Unit.
  */
-bool init_aunit(void)
+bool
+init_aunit(void)
 {
     int n;
     bool ret;
@@ -98,7 +96,7 @@ bool init_aunit(void)
     pthread_mutex_init(&mutex, NULL);
 
     /* Initialize the volumes. */
-    for (n = 0; n < SOUND_TRACKS; n++)
+    for (n = 0; n < HAL_SOUND_TRACKS; n++)
         volume[n] = 1.0f;
 
     /* Set initialized. */
@@ -115,7 +113,8 @@ bool init_aunit(void)
 }
 
 /* Create Audio Unit. */
-static bool create_audio_unit(void)
+static bool
+create_audio_unit(void)
 {
     AudioComponentDescription cd;
     AudioComponent comp;
@@ -180,7 +179,8 @@ static bool create_audio_unit(void)
 /*
  * Cleanup Audio Unit.
  */
-void cleanup_aunit(void)
+void
+cleanup_aunit(void)
 {
     if(isInitialized) {
         /* Stop playback by destroying Audio Unit. */
@@ -192,7 +192,8 @@ void cleanup_aunit(void)
 }
 
 /* Destroy Audio Unit. */
-static void destroy_audio_unit(void)
+static void
+destroy_audio_unit(void)
 {
     AudioOutputUnitStop(au);
     AudioUnitUninitialize(au);
@@ -202,7 +203,10 @@ static void destroy_audio_unit(void)
 /*
  * Start playback on a stream.
  */
-bool play_sound(int stream, struct wave *w)
+bool
+hal_play_sound(
+    int stream,
+    struct hal_wave *w)
 {
     bool ret;
 
@@ -231,7 +235,9 @@ bool play_sound(int stream, struct wave *w)
 /*
  * Stop playback on a stream.
  */
-bool stop_sound(int stream)
+bool
+hal_stop_sound(
+    int stream)
 {
     bool ret;
 
@@ -252,7 +258,10 @@ bool stop_sound(int stream)
 /*
  * Set a volume of a stream.
  */
-bool set_sound_volume(int stream, float vol)
+bool
+hal_set_sound_volume(
+    int stream,
+    float vol)
 {
     /*
      * pthread_mutex_lock(&mutex);
@@ -272,7 +281,9 @@ bool set_sound_volume(int stream, float vol)
 /*
  * Check if playback is finished on a stream.
  */
-bool is_sound_finished(int stream)
+bool
+hal_is_sound_finished(
+    int stream)
 {
     if (finish[stream])
         return true;
@@ -285,12 +296,14 @@ bool is_sound_finished(int stream)
  */
 
 /* Callback function. */
-static OSStatus callback(void *inRef,
-                         AudioUnitRenderActionFlags *ioActionFlags,
-                         const AudioTimeStamp *inTimeStamp,
-                         UInt32 inBusNumber,
-                         UInt32 inNumberFrames,
-                         AudioBufferList *ioData)
+static OSStatus
+callback(
+    void *inRef,
+    AudioUnitRenderActionFlags *ioActionFlags,
+    const AudioTimeStamp *inTimeStamp,
+    UInt32 inBusNumber,
+    UInt32 inNumberFrames,
+    AudioBufferList *ioData)
 {
     uint32_t *samplePtr;
     int stream, ret, remain, readSamples;
@@ -312,7 +325,7 @@ static OSStatus callback(void *inRef,
             readSamples = remain > TMP_SAMPLES ? TMP_SAMPLES : remain;
 
             /* For each stream: */
-            for (stream = 0; stream < SOUND_TRACKS; stream++) {
+            for (stream = 0; stream < HAL_SOUND_TRACKS; stream++) {
                 /* If not playing on the stream, ignore. */
                 if (wave[stream] == NULL)
                     continue;
@@ -349,7 +362,8 @@ static OSStatus callback(void *inRef,
 /*
  * Pause playback.
  */
-void pause_sound(void)
+void
+pause_sound(void)
 {
     pthread_mutex_lock(&mutex);
     {
@@ -364,7 +378,8 @@ void pause_sound(void)
 /*
  * Resume playback.
  */
-void resume_sound(void)
+void
+resume_sound(void)
 {
     pthread_mutex_lock(&mutex);
     {
@@ -376,7 +391,9 @@ void resume_sound(void)
     pthread_mutex_unlock(&mutex);
 }
 
-static void mul_add_pcm(uint32_t *dst, uint32_t *src, float vol, int samples)
+/* Do mixing. */
+static void
+mul_add_pcm(uint32_t *dst, uint32_t *src, float vol, int samples)
 {
     float scale;
     int i;

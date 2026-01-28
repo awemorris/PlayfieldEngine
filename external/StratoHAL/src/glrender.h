@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -40,8 +37,8 @@ bool init_opengl(int width, int height);
 void cleanup_opengl(void);
 void opengl_start_rendering(void);
 void opengl_end_rendering(void);
-void opengl_notify_image_update(struct image *img);
-void opengl_notify_image_free(struct image *img);
+void opengl_notify_image_update(struct hal_image *img);
+void opengl_notify_image_free(struct hal_image *img);
 
 void
 opengl_render_image_normal(
@@ -49,7 +46,7 @@ opengl_render_image_normal(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -62,7 +59,7 @@ opengl_render_image_add(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -75,7 +72,7 @@ opengl_render_image_sub(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -88,7 +85,7 @@ opengl_render_image_dim(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -97,14 +94,14 @@ opengl_render_image_dim(
 
 void
 opengl_render_image_rule(
-	struct image *src_image,
-	struct image *rule_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
 	int threshold);
 
 void
 opengl_render_image_melt(
-	struct image *src_image,
-	struct image *rule_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
 	int progress);
 
 void
@@ -117,7 +114,7 @@ opengl_render_image_3d_normal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -134,7 +131,7 @@ opengl_render_image_3d_add(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -151,7 +148,7 @@ opengl_render_image_3d_sub(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -168,7 +165,7 @@ opengl_render_image_3d_dim(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,

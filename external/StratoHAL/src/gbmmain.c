@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -155,21 +152,24 @@ static void update_viewport_size(int width, int height);
 /*
  * Main
  */
-int main(int argc, char *argv[])
+int
+main(
+	int argc,
+	char *argv[])
 {
 	/* Initialize HAL. */
 	if (!init_hal(argc, argv))
 		return 1;
 
 	/* Do a start callback. */
-	if (!on_event_start())
+	if (!hal_callback_on_event_start())
 		return 1;
 
 	/* Run game loop. */
 	run_game_loop();
 
 	/* Do a stop callback.. */
-	on_event_stop();
+	hal_callback_on_event_stop();
 
 	/* Cleanup HAL. */
 	cleanup_hal();
@@ -178,7 +178,8 @@ int main(int argc, char *argv[])
 }
 
 /* Initialize the locale. */
-static void init_locale(void)
+static void
+init_locale(void)
 {
 	const char *locale;
 
@@ -213,7 +214,10 @@ static void init_locale(void)
 }
 
 /* Initialize HAL. */
-static bool init_hal(int argc, char *argv[])
+static bool
+init_hal(
+	int argc,
+	char *argv[])
 {
 	/* Initialize the locale. */
 	init_locale();
@@ -223,7 +227,9 @@ static bool init_hal(int argc, char *argv[])
 		return false;
 
 	/* Do a boot callback. */
-	if (!on_event_boot(&window_title, &screen_width, &screen_height))
+	if (!hal_callback_on_event_boot(&window_title,
+					&screen_width,
+					&screen_height))
 		return false;
 
 	/* Initialize the sound HAL. */
@@ -260,7 +266,8 @@ static bool init_hal(int argc, char *argv[])
 }
 
 /* Open a display. */
-static bool open_display(void)
+static bool
+open_display(void)
 {
 	struct gbm_device *gbm;
 	PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT;
@@ -464,7 +471,11 @@ static bool open_display(void)
 	return true;
 }
 
-static drmModeConnector* find_conn(int fd, drmModeRes *res, drmModeEncoder **out_enc)
+static drmModeConnector*
+find_conn(
+	int fd,
+	drmModeRes *res,
+	drmModeEncoder **out_enc)
 {
 	int i;
 
@@ -482,7 +493,8 @@ static drmModeConnector* find_conn(int fd, drmModeRes *res, drmModeEncoder **out
 }
 
 /* Cleanup the subsystems. */
-static void cleanup_hal(void)
+static void
+cleanup_hal(void)
 {
 	/* Cleanup sound. */
 	cleanup_sound();
@@ -495,7 +507,8 @@ static void cleanup_hal(void)
 }
 
 /* Close the display. */
-static void close_display(void)
+static void
+close_display(void)
 {
     drmModeSetCrtc(fd, orig->crtc_id, orig->buffer_id, orig->x, orig->y, &conn->connector_id, 1, &orig->mode);
     drmModeFreeCrtc(orig);
@@ -506,14 +519,16 @@ static void close_display(void)
 }
 
 /* Close the log file. */
-static void close_log_file(void)
+static void
+close_log_file(void)
 {
 	if (log_fp != NULL)
 		fclose(log_fp);
 }
 
 /* Run the event loop. */
-static void run_game_loop(void)
+static void
+run_game_loop(void)
 {
 	/* Get the frame start time. */
 	gettimeofday(&tv_start, NULL);
@@ -545,7 +560,8 @@ static void run_game_loop(void)
 }
 
 /* Run a frame. */
-static bool run_frame(void)
+static bool
+run_frame(void)
 {
 	bool cont;
 
@@ -578,7 +594,8 @@ static bool run_frame(void)
 }
 
 /* Flip buffers. */
-static void flip(void)
+static void
+flip(void)
 {
 	struct gbm_bo *nbo;
 	uint32_t nh;
@@ -608,7 +625,8 @@ static void flip(void)
 }
 
 /* Wait for the next frame timing. */
-static bool wait_for_next_frame(void)
+static bool
+wait_for_next_frame(void)
 {
 	struct timeval tv_end;
 	uint32_t lap, wait, span;
@@ -642,7 +660,10 @@ static bool wait_for_next_frame(void)
 /*
  * Sets the window size.
  */
-static void update_viewport_size(int width, int height)
+static void
+update_viewport_size(
+	int width,
+	int height)
 {
 	float aspect, use_width, use_height;
 	int orig_x, orig_y;
@@ -682,7 +703,10 @@ static void update_viewport_size(int width, int height)
 /*
  * Put an INFO log.
  */
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -707,7 +731,10 @@ bool log_info(const char *s, ...)
 /*
  * Put a WARN log.
  */
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -732,7 +759,10 @@ bool log_warn(const char *s, ...)
 /*
  * Put an ERROR log.
  */
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -757,14 +787,16 @@ bool log_error(const char *s, ...)
 /*
  * Put an out-of-memory error.
  */
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	log_error(S_TR("Out of memory."));
 	return true;
 }
 
 /* Open the log file. */
-static bool open_log_file(void)
+static bool
+open_log_file(void)
 {
 	if (log_fp == NULL) {
 		log_fp = fopen(LOG_FILE, "w");
@@ -779,7 +811,8 @@ static bool open_log_file(void)
 /*
  * Make a save directory.
  */
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	struct stat st = {0};
 
@@ -792,7 +825,9 @@ bool make_save_directory(void)
 /*
  * Make an effective path from a directory name and a file name.
  */
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(
+	const char *fname)
 {
 	char *buf;
 	size_t len;
@@ -814,7 +849,9 @@ char *make_real_path(const char *fname)
 /*
  * Reset a timer.
  */
-void reset_lap_timer(uint64_t *t)
+void
+hal_reset_lap_timer(
+	uint64_t *t)
 {
 	struct timeval tv;
 
@@ -826,7 +863,9 @@ void reset_lap_timer(uint64_t *t)
 /*
  * Get a timer lap.
  */
-uint64_t get_lap_timer_millisec(uint64_t *t)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *t)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -841,7 +880,9 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 /*
  * Notify an image update.
  */
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+	struct image *img)
 {
 	opengl_notify_image_update(img);
 }
@@ -849,7 +890,9 @@ void notify_image_update(struct image *img)
 /*
  * Notify an image free.
  */
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(
+	struct image *img)
 {
 	opengl_notify_image_free(img);
 }
@@ -857,12 +900,13 @@ void notify_image_free(struct image *img)
 /*
  * Render an image. (alpha blend)
  */
-void render_image_normal(
+void
+hal_render_image_normal(
 	int dst_left,
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -886,7 +930,8 @@ void render_image_normal(
 /*
  * Render an image. (add blend)
  */
-void render_image_add(
+void
+hal_render_image_add(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -915,7 +960,8 @@ void render_image_add(
 /*
  * Render an image. (dim blend)
  */
-void render_image_dim(
+void
+hal_render_image_dim(
 	int dst_left,
 	int dst_top,
 	int dst_width,
@@ -944,7 +990,8 @@ void render_image_dim(
 /*
  * Render an image. (rule universal transition)
  */
-void render_image_rule(
+void
+hal_render_image_rule(
 	struct image *src_img,
 	struct image *rule_img,
 	int threshold)
@@ -955,7 +1002,8 @@ void render_image_rule(
 /*
  * Render an image. (melt universal transition)
  */
-void render_image_melt(
+void
+hal_render_image_melt(
 	struct image *src_img,
 	struct image *rule_img,
 	int progress)
@@ -967,7 +1015,7 @@ void render_image_melt(
  * Render an image. (3d transform, alpha blending)
  */
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,
 	float y1,
 	float x2,
@@ -993,7 +1041,7 @@ render_image_3d_normal(
  * Render an image. (3d transform, alpha blending)
  */
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,
 	float y1,
 	float x2,
@@ -1018,7 +1066,10 @@ render_image_3d_add(
 /*
  * Play a video.
  */
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 #if 0
 	char *path;
@@ -1039,7 +1090,8 @@ bool play_video(const char *fname, bool is_skippable)
 /*
  * Stop the video.
  */
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 #if 0
 	gstplay_stop();
@@ -1051,7 +1103,8 @@ void stop_video(void)
 /*
  * Check whether a video is playing.
  */
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 #if 0
 	return is_gst_playing;
@@ -1062,7 +1115,8 @@ bool is_video_playing(void)
 /*
  * Check whether full screen mode is supported.
  */
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
 	return false;
 }
@@ -1070,7 +1124,8 @@ bool is_full_screen_supported(void)
 /*
  * Check whether we are in full screen mode.
  */
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	return false;
 }
@@ -1078,7 +1133,8 @@ bool is_full_screen_mode(void)
 /*
  * Enter full screen mode.
  */
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	/* stub */
 }
@@ -1086,7 +1142,8 @@ void enter_full_screen_mode(void)
 /*
  * Leave full screen mode.
  */
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	/* stub */
 }
@@ -1094,7 +1151,8 @@ void leave_full_screen_mode(void)
 /*
  * Get the system locale.
  */
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	return playfield_lang_code;
 }
@@ -1102,7 +1160,8 @@ const char *get_system_language(void)
 /*
  * Enable/disable message skip by touch move.
  */
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(bool is_enabled)
 {
 	UNUSED_PARAMETER(is_enabled);
 }

@@ -1,17 +1,14 @@
 /* -*- coding: utf-8; tab-width: 4; indent-tabs-mode: nil; -*- */
 
 /*
- * Playfield Engine
+ * StratoHAL
  * Main code for Qt6
  */
 
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied

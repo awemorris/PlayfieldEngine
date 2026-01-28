@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -41,7 +38,7 @@
 #define WM_GRAPHNOTIFY	(WM_APP + 13)
 
 BOOL DShowPlayVideo(HWND hWnd, const char *pszFileName, int nOfsX, int nOfsY, int nWidth, int nHeight);
-VOID DShowStopVideo(void);
-BOOL DShowProcessEvent(void);
+VOID DShowStopVideo(VOID);
+BOOL DShowProcessEvent(VOID);
 
 #endif

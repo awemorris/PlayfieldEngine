@@ -126,6 +126,11 @@ extern bool pf_is_f12_key_pressed;
  */
 
 /*
+ * Pixel
+ */
+typedef uint32_t pf_pixel_t;
+
+/*
  * Create a color texture.
  */
 bool
@@ -290,12 +295,12 @@ pf_fill_texture_rect(
 	int top,
 	int width,
 	int height,
-	pixel_t color);
+	pf_pixel_t color);
 
 /*
  * Get a raw pixel pointer.
  */
-pixel_t *
+pf_pixel_t *
 pf_get_texture_pixels(
 	int tex_id);
 
@@ -476,7 +481,7 @@ pf_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
-	pixel_t color,
+	pf_pixel_t color,
 	int *tex_id,
 	int *width,
 	int *height);
@@ -489,9 +494,9 @@ pf_create_text_texture_outline(
 	int slot,
 	const char *text,
 	int size,
-	pixel_t color,
+	pf_pixel_t color,
 	int outline_width,
-	pixel_t outline_color,
+	pf_pixel_t outline_color,
 	int *tex_id,
 	int *width,
 	int *height);

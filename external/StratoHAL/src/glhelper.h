@@ -15,10 +15,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -92,7 +89,7 @@ typedef ssize_t GLsizeiptr;
  *
  * With Qt, we use replacement macros and don't define the API symbols directly.
  */
-#if (defined(TARGET_POSIX) && !defined(USE_GLES) && !defined(USE_QT)) || defined(TARGET_WINDOWS)
+#if (defined(HAL_TARGET_POSIX) && !defined(HAL_USE_GLES) && !defined(HAL_USE_QT)) || defined(HAL_TARGET_WINDOWS)
 extern GLuint (APIENTRY *glCreateShader)(GLenum type);
 extern void (APIENTRY *glShaderSource)(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length);
 extern void (APIENTRY *glCompileShader)(GLuint shader);
@@ -122,7 +119,7 @@ extern void (APIENTRY *glDeleteBuffers)(GLsizei n, const GLuint *buffers);
 /* Note: only Windows lacks glActiveTexture(), libOpenGL.so exports one that actually works. */
 extern void (APIENTRY *glActiveTexture)(GLenum texture);
 #endif
-#endif /* if (defined(TARGET_POSIX) && !defined(USE_QT) || defined(TARGET_WINDOWS)*/
+#endif /* if (defined(HAL_TARGET_POSIX) && !defined(HAL_USE_GLES) && !defined(HAL_USE_QT)) || defined(HAL_TARGET_WINDOWS) */
 
 /*
  * With Qt, we use a wrapper to call the Qt's OpenGL functions.
@@ -131,7 +128,7 @@ extern void (APIENTRY *glActiveTexture)(GLenum texture);
  *  - q_gl*() are defined in openglwidget.cpp
  *  - We use setup_*() functions for initialization
  */
-#ifdef USE_QT
+#ifdef HAL_USE_QT
 /* OpenGL 1.1 */
 #define glViewport q_glViewport
 #define glClear q_glClear

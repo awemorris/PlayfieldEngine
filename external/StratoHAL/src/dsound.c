@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -70,8 +67,8 @@
  * DirectSound Objects
  */
 static LPDIRECTSOUND pDS;
-static LPDIRECTSOUNDBUFFER pDSBuffer[SOUND_TRACKS];
-static LPDIRECTSOUNDNOTIFY pDSNotify[SOUND_TRACKS];
+static LPDIRECTSOUNDBUFFER pDSBuffer[HAL_SOUND_TRACKS];
+static LPDIRECTSOUNDNOTIFY pDSNotify[HAL_SOUND_TRACKS];
 static WAVEFORMATEX wfPrimary;
 
 /*
@@ -82,41 +79,41 @@ static HANDLE hEventThread;
 /*
  * For thread communication.
  */
-static HANDLE hNotifyEvent[SOUND_TRACKS];
+static HANDLE hNotifyEvent[HAL_SOUND_TRACKS];
 static HANDLE hQuitEvent;
 
 /*
  * Input streams and critical sections for them.
  */
-static struct wave *pStream[SOUND_TRACKS];
+static struct hal_wave *pStream[HAL_SOUND_TRACKS];
 static CRITICAL_SECTION	StreamCritical;
 
 /*
  * Finish flags.
  */
-static BOOL bFinish[SOUND_TRACKS];
+static BOOL bFinish[HAL_SOUND_TRACKS];
 
 /*
  * Current update area.
  *  - (-1) for the first time
  */
-static int nPosCurArea[SOUND_TRACKS];
+static int nPosCurArea[HAL_SOUND_TRACKS];
 
 /*
  * Area of the end of a stream.
  *  - (-1) before the end-of-stream
  */
-static int nPosEndArea[SOUND_TRACKS];
+static int nPosEndArea[HAL_SOUND_TRACKS];
 
 /*
  * Flags to show whether touched the EOS area.
  */
-static int bLastTouch[SOUND_TRACKS];
+static int bLastTouch[HAL_SOUND_TRACKS];
 
 /*
  * Initial volumes.
  */
-static float fInitialVol[SOUND_TRACKS] = {1.0f, 1.0f, 1.0f, 1.0f};
+static float fInitialVol[HAL_SOUND_TRACKS] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 /*
  * Successfully initialized?
@@ -129,7 +126,7 @@ static BOOL bInitialized;
 static BOOL CreatePrimaryBuffer();
 static BOOL CreateSecondaryBuffers();
 static BOOL RestoreBuffers(int nBuffer);
-static BOOL PlaySoundBuffer(int nBuffer, struct wave *pStr);
+static BOOL PlaySoundBuffer(int nBuffer, struct hal_wave *pStr);
 static VOID StopSoundBuffer(int nBuffer);
 static BOOL SetBufferVolume(int nBuffer, float Vol);
 static BOOL WriteNext(int nBuffer);
@@ -139,7 +136,9 @@ static VOID OnNotifyPlayPos(int nBuffer);
 /*
  * Initialize DirectSound
  */
-BOOL DSInitialize(HWND hWnd)
+BOOL
+DSInitialize(
+	HWND hWnd)
 {
 	HRESULT hRet;
 	int i;
@@ -190,7 +189,8 @@ BOOL DSInitialize(HWND hWnd)
 /*
  * Cleanup DirectSound.
  */
-VOID DSCleanup()
+VOID
+DSCleanup(VOID)
 {
 	int i;
 
@@ -242,7 +242,10 @@ VOID DSCleanup()
 /*
  * Start playback on a stream.
  */
-bool play_sound(int stream, struct wave *w)
+bool
+hal_play_sound(
+	int stream,
+	struct hal_wave *w)
 {
 	if (!bInitialized)
 		return true;
@@ -262,7 +265,9 @@ bool play_sound(int stream, struct wave *w)
 /*
  * Stop playing on a stream.
  */
-bool stop_sound(int stream)
+bool
+hal_stop_sound(
+	int stream)
 {
 	if (!bInitialized)
 		return true;
@@ -279,7 +284,10 @@ bool stop_sound(int stream)
 /*
  * Set a volume on a stream.
  */
-bool set_sound_volume(int stream, float vol)
+bool
+hal_set_sound_volume(
+	int stream,
+	float vol)
 {
 	if (!bInitialized)
 		return true;
@@ -298,7 +306,9 @@ bool set_sound_volume(int stream, float vol)
 /*
  * Check if playback is finished.
  */
-bool is_sound_finished(int stream)
+bool
+hal_is_sound_finished(
+	int stream)
 {
 	if (!bInitialized)
 		return true;
@@ -312,7 +322,8 @@ bool is_sound_finished(int stream)
 /*
  * Create a primary buffer and set a format.
  */
-static BOOL CreatePrimaryBuffer()
+static BOOL
+CreatePrimaryBuffer(VOID)
 {
 	DSBUFFERDESC dsbd;
 	LPDIRECTSOUNDBUFFER pDSPrimary;
@@ -350,7 +361,8 @@ static BOOL CreatePrimaryBuffer()
 /*
  * Create a secondary buffer and enable a notification of playback position.
  */
-static BOOL CreateSecondaryBuffers()
+static BOOL
+CreateSecondaryBuffers(VOID)
 {
 	DSBPOSITIONNOTIFY pn[4];
 	DSBUFFERDESC dsbd;
@@ -405,7 +417,8 @@ static BOOL CreateSecondaryBuffers()
 /*
  * Restore buffers.
  */
-static BOOL RestoreBuffers(int nBuffer)
+static BOOL
+RestoreBuffers(int nBuffer)
 {
 	DWORD dwStatus;
 	HRESULT hRet;
@@ -435,7 +448,9 @@ static BOOL RestoreBuffers(int nBuffer)
 /*
  * Start playing a buffer.
  */
-static BOOL PlaySoundBuffer(int nBuffer, struct wave *pStr)
+static BOOL
+PlaySoundBuffer(int nBuffer,
+				struct hal_wave *pStr)
 {
 	HRESULT hRet;
 	int i;
@@ -484,7 +499,9 @@ static BOOL PlaySoundBuffer(int nBuffer, struct wave *pStr)
 /*
  * Stop playback on a stream.
  */
-static VOID StopSoundBuffer(int nBuffer)
+static VOID
+StopSoundBuffer(
+	int nBuffer)
 {
 	assert(pDSBuffer[nBuffer] != NULL);
 	assert(nBuffer >= 0 && nBuffer < SOUND_TRACKS);
@@ -509,7 +526,10 @@ static VOID StopSoundBuffer(int nBuffer)
 /*
  * Set a buffer volume.
  */
-BOOL SetBufferVolume(int nBuffer, float Vol)
+BOOL
+SetBufferVolume(
+	int nBuffer,
+	float Vol)
 {
 	LONG dB;
 
@@ -538,7 +558,9 @@ BOOL SetBufferVolume(int nBuffer, float Vol)
  * Read data from a PCM stream.
  *  - This function is called inside a critical section on the event thread.
  */
-static BOOL WriteNext(int nBuffer)
+static BOOL
+WriteNext(
+	int nBuffer)
 {
 	VOID *pBuf[2];
 	DWORD dwLockedBytes[2];
@@ -629,7 +651,9 @@ static BOOL WriteNext(int nBuffer)
 /*
  * Main loop of the event thread.
  */
-static DWORD WINAPI EventThread(LPVOID lpParameter)
+static DWORD WINAPI
+EventThread(
+	LPVOID lpParameter)
 {
 	HANDLE hEvents[SOUND_TRACKS+1];
 	DWORD dwResult;
@@ -681,7 +705,9 @@ static DWORD WINAPI EventThread(LPVOID lpParameter)
 /*
  * Handler for playback position notification.
  */
-static VOID OnNotifyPlayPos(int nBuffer)
+static VOID
+OnNotifyPlayPos(
+	int nBuffer)
 {
 	DWORD dwPlayPos;
 	HRESULT hRet;

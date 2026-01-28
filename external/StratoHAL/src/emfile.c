@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -42,14 +39,14 @@
 #define PATH_SIZE	(1024)
 
 /* File read stream. */
-struct rfile {
+struct hal_rfile {
 	char *data;
 	uint64_t size;
 	uint64_t pos;
 };
 
 /* File write stream. */
-struct wfile {
+struct hal_wfile {
 	char *buf;
 	uint64_t buf_size;
 	uint64_t size;
@@ -99,7 +96,9 @@ EM_ASYNC_JS(int, jsReadFile, (const char *file_name, char *data),
 /*
  * Check whether a file exists.
  */
-bool check_file_exist(const char *file)
+bool
+hal_check_file_exist(
+	const char *file)
 {
 	uint64_t size;
 
@@ -117,9 +116,12 @@ bool check_file_exist(const char *file)
 /*
  * Open a file read stream.
  */
-bool open_rfile(const char *file, struct rfile **f)
+bool
+hal_open_rfile(
+	const char *file,
+	struct hal_rfile **f)
 {
-	struct rfile *rf;
+	struct hal_rfile *rf;
 	uint64_t size;
 	int result;
 
@@ -165,7 +167,10 @@ bool open_rfile(const char *file, struct rfile **f)
 /*
  * Get a file size.
  */
-bool get_rfile_size(struct rfile *rf, size_t *ret)
+bool
+hal_get_rfile_size(
+	struct hal_rfile *rf,
+	size_t *ret)
 {
 	*ret = rf->size;
 	return true;
@@ -174,7 +179,9 @@ bool get_rfile_size(struct rfile *rf, size_t *ret)
 /*
  * Enable de-obfuscation on a read file stream.
  */
-void decode_rfile(struct rfile *f)
+void
+hal_decode_rfile(
+	struct hal_rfile *f)
 {
 	UNUSED_PARAMETER(f);
 }
@@ -182,7 +189,12 @@ void decode_rfile(struct rfile *f)
 /*
  * Read from a file read stream.
  */
-bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
+bool
+hal_read_rfile(
+	struct hal_rfile *rf,
+	void *buf,
+	size_t size,
+	size_t *ret)
 {
 	if (rf->pos + size > rf->size)
 		size = (size_t)(rf->size - rf->pos);
@@ -197,7 +209,10 @@ bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
 /*
  * Read a u64 from a file read stream.
  */
-bool get_rfile_u64(struct rfile *f, uint64_t *data)
+bool
+hal_get_rfile_u64(
+	struct hal_rfile *f,
+	uint64_t *data)
 {
 	uint64_t val;
 	size_t ret;
@@ -212,7 +227,10 @@ bool get_rfile_u64(struct rfile *f, uint64_t *data)
 }
 
 /* Read a u32 from a file read stream. */
-bool get_rfile_u32(struct rfile *f, uint32_t *data)
+bool
+get_rfile_u32(
+	struct hal_rfile *f,
+	uint32_t *data)
 {
 	uint32_t val;
 	size_t ret;
@@ -227,7 +245,10 @@ bool get_rfile_u32(struct rfile *f, uint32_t *data)
 }
 
 /* Read a u16 from a file read stream. */
-bool get_rfile_u16(struct rfile *f, uint16_t *data)
+bool
+hal_get_rfile_u16(
+	struct hal_rfile *f,
+	uint16_t *data)
 {
 	uint16_t val;
 	size_t ret;
@@ -242,7 +263,10 @@ bool get_rfile_u16(struct rfile *f, uint16_t *data)
 }
 
 /* Read a u8 from a file read stream. */
-bool get_rfile_u8(struct rfile *f, uint8_t *data)
+bool
+hal_get_rfile_u8(
+	struct hal_rfile *f,
+	uint8_t *data)
 {
 	uint8_t val;
 	size_t ret;
@@ -259,7 +283,11 @@ bool get_rfile_u8(struct rfile *f, uint8_t *data)
 /*
  * Read a line from a read file stream.
  */
-bool get_rfile_string(struct rfile *f, char *buf, size_t size)
+bool
+hal_get_rfile_string(
+	struct hal_rfile *f,
+	char *buf,
+	size_t size)
 {
 	char *ptr;
 	size_t len, read_size;
@@ -306,7 +334,10 @@ bool get_rfile_string(struct rfile *f, char *buf, size_t size)
 }
 
 /* Push back a character to a read file stream. */
-static void ungetc_rfile(struct rfile *rf, char c)
+static void
+ungetc_rfile(
+	struct hal_rfile *rf,
+	char c)
 {
 	rf->pos--;
 }
@@ -314,7 +345,9 @@ static void ungetc_rfile(struct rfile *rf, char c)
 /*
  * Rewind a read stream.
  */
-void rewind_rfile(struct rfile *rf)
+void
+hal_rewind_rfile(
+	struct hal_rfile *rf)
 {
 	rf->pos = 0;
 }
@@ -322,7 +355,9 @@ void rewind_rfile(struct rfile *rf)
 /*
  * Close a file read stream.
  */
-void close_rfile(struct rfile *rf)
+void
+hal_close_rfile(
+	struct hal_rfile *rf)
 {
 	assert(rf != NULL);
 
@@ -333,7 +368,10 @@ void close_rfile(struct rfile *rf)
 /*
  * Open a file write stream.
  */
-bool open_wfile(const char *file, struct wfile **f)
+bool
+hal_open_wfile(
+	const char *file,
+	struct hal_wfile **f)
 {
 	/* TODO */
 	return false;
@@ -342,7 +380,12 @@ bool open_wfile(const char *file, struct wfile **f)
 /*
  * Write to a file write stream.
  */
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
+bool
+hal_write_wfile(
+	struct hal_wfile *wf,
+	const void *buf,
+	size_t size,
+	size_t *ret)
 {
 	/* TODO */
 	return false;
@@ -351,7 +394,9 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 /*
  * Close a file write stream.
  */
-void close_wfile(struct wfile *wf)
+void
+hal_close_wfile(
+	struct wfile *wf)
 {
 	/* TODO */
 }
@@ -359,8 +404,9 @@ void close_wfile(struct wfile *wf)
 /*
  * Remove a real file.
  */
-void remove_file(const char *file)
+void
+remove_file(
+	const char *file)
 {
 	/* TODO */
 }
-

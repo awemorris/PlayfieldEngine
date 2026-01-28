@@ -44,30 +44,30 @@
  */
 bool load_file(const char *file, char **buf, size_t *size)
 {
-	struct rfile *f;
+	struct hal_rfile *f;
 	size_t file_size, read_size;
 
 	assert(buf != NULL);
 
-	if (!open_rfile(file, &f)) {
-		log_error(PPS_TR("Cannot open file \"%s\"."), file);
+	if (!hal_open_rfile(file, &f)) {
+		hal_log_error(PPS_TR("Cannot open file \"%s\"."), file);
 		return false;
 	}
 
-	if (!get_rfile_size(f, &file_size)) {
-		log_error(PPS_TR("Cannot get the size of file \"%s\"."), file);
+	if (!hal_get_rfile_size(f, &file_size)) {
+		hal_log_error(PPS_TR("Cannot get the size of file \"%s\"."), file);
 		return false;
 	}
 
 	if (buf != NULL) {
 		*buf = malloc(file_size + 1);
 		if (*buf == NULL) {
-			log_out_of_memory();
+			hal_log_out_of_memory();
 			return false;
 		}
 
-		if (!read_rfile(f, *buf, file_size, &read_size)) {
-			log_error(PPS_TR("Cannot read file \"%s\"."), file);
+		if (!hal_read_rfile(f, *buf, file_size, &read_size)) {
+			hal_log_error(PPS_TR("Cannot read file \"%s\"."), file);
 			free(*buf);
 			return false;
 		}
@@ -75,7 +75,7 @@ bool load_file(const char *file, char **buf, size_t *size)
 		(*buf)[file_size] = '\0';
 	}
 
-	close_rfile(f);
+	hal_close_rfile(f);
 
 	if (size != NULL)
 		*size = file_size;

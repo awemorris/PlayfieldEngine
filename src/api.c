@@ -50,18 +50,18 @@
 /* Texture struct. */
 struct texture_entry {
 	bool is_used;
-	struct image *img;
+	struct hal_image *img;
 };
 
 /* Texture table. */
 static struct texture_entry tex_tbl[TEXTURE_COUNT];
 
 /* Wave table. */
-static struct wave *wave_tbl[SOUND_TRACKS];
+static struct hal_wave *wave_tbl[HAL_SOUND_TRACKS];
 
 /* Forward Declaration */
 static int search_free_entry(void);
-static bool create_texture(int width, int height, int *ret, struct image **img);
+static bool create_texture(int width, int height, int *ret, struct hal_image **img);
 static char *make_save_file_name(const char *key);
 static char get_hex_char(int val);
 
@@ -89,7 +89,7 @@ cleanup_api(void)
 	for (i = 0; i < TEXTURE_COUNT; i++) {
 		if (tex_tbl[i].is_used) {
 			tex_tbl[i].is_used = false;
-			destroy_image(tex_tbl[i].img);
+			hal_destroy_image(tex_tbl[i].img);
 		}
 	}
 	
@@ -117,14 +117,14 @@ pf_load_texture(
 	/* Allocate a texture entry. */
 	index = search_free_entry();
 	if (index == -1) {
-		log_error("Too many textures.");
+		hal_log_error("Too many textures.");
 		return false;
 	}
 
 	/* Get a file extension. */
 	ext = strrchr(fname, '.');
 	if (ext == NULL) {
-		log_error(PPS_TR("Cannot determine the file type for \"%s\"."), fname);
+		hal_log_error(PPS_TR("Cannot determine the file type for \"%s\"."), fname);
 		return false;
 	}
 
@@ -137,27 +137,27 @@ pf_load_texture(
 	    strcmp(ext, ".JPG") == 0 ||
 	    strcmp(ext, ".jpeg") == 0 ||
 	    strcmp(ext, ".JPEG") == 0) {
-		if (!create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+		if (!hal_create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
+			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else if (strcmp(ext, ".webp") == 0 ||
 		   strcmp(ext, ".WebP") == 0 ||
 		   strcmp(ext, ".WEBP") == 0) {
-		if (!create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+		if (!hal_create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
+			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else {
-		if (!create_image_with_png((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+		if (!hal_create_image_with_png((const uint8_t *)data, size, &tex_tbl[index].img)) {
+			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	}
 	free(data);
 
 	/* Fill alpha channel. */
-	notify_image_update(tex_tbl[index].img);
+	hal_notify_image_update(tex_tbl[index].img);
 
 	/* Mark as used. */
 	tex_tbl[index].is_used = true;
@@ -187,12 +187,12 @@ pf_create_color_texture(
 	/* Allocate a texture entry. */
 	index = search_free_entry();
 	if (index == -1) {
-		log_error("Too many textures.");
+		hal_log_error("Too many textures.");
 		return false;
 	}
 
 	/* Create an image. */
-	if (!create_image(width, height, &tex_tbl[index].img))
+	if (!hal_create_image(width, height, &tex_tbl[index].img))
 		return false;
 
 	/* Mark as used. */
@@ -200,8 +200,8 @@ pf_create_color_texture(
 	tex_tbl[index].img = tex_tbl[index].img;
 
 	/* Clear the image. */
-	clear_image(tex_tbl[index].img, make_pixel(a, r, g, b));
-	notify_image_update(tex_tbl[index].img);
+	hal_clear_image(tex_tbl[index].img, hal_make_pixel(a, r, g, b));
+	hal_notify_image_update(tex_tbl[index].img);
 
 	/* Succeeded. */
 	*ret = index;
@@ -215,19 +215,19 @@ create_texture(
 	int width,
 	int height,
 	int *ret,
-	struct image **img)
+	struct hal_image **img)
 {
 	int index;
 
 	/* Allocate a texture entry. */
 	index = search_free_entry();
 	if (index == -1) {
-		log_error(PPS_TR("Too many textures."));
+		hal_log_error(PPS_TR("Too many textures."));
 		return false;
 	}
 
 	/* Create an image. */
-	if (!create_image(width, height, img))
+	if (!hal_create_image(width, height, img))
 		return false;
 	
 	memset((*img)->pixels, 0, width * height * 4);
@@ -269,7 +269,7 @@ pf_destroy_texture(
 
 	/* Mark as used. */
 	tex_tbl[tex_id].is_used = false;
-	destroy_image(tex_tbl[tex_id].img);
+	hal_destroy_image(tex_tbl[tex_id].img);
 }
 
 /*
@@ -284,7 +284,7 @@ pf_notify_texture_update(
 	assert(tex_tbl[tex_id].is_used);
 	assert(tex_tbl[tex_id].img != NULL);
 
-	notify_image_update(tex_tbl[tex_id].img);
+	hal_notify_image_update(tex_tbl[tex_id].img);
 
 	return true;
 }
@@ -313,7 +313,7 @@ pf_draw_texture_copy(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_copy(
+	hal_draw_image_copy(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -349,7 +349,7 @@ pf_draw_texture_alpha(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_alpha(
+	hal_draw_image_alpha(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -386,7 +386,7 @@ pf_draw_texture_add(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_add(
+	hal_draw_image_add(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -423,7 +423,7 @@ pf_draw_texture_sub(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_sub(
+	hal_draw_image_sub(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -461,7 +461,7 @@ pf_draw_texture_glyph(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_glyph(
+	hal_draw_image_glyph(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -499,7 +499,7 @@ pf_draw_texture_emoji(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_emoji(
+	hal_draw_image_emoji(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -536,7 +536,7 @@ pf_draw_texture_dim(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_dim(
+	hal_draw_image_dim(
 		tex_tbl[dst_tex_id].img,
 		dst_left,
 		dst_top,
@@ -568,7 +568,7 @@ pf_draw_texture_scale(
 	assert(tex_tbl[src_tex_id].is_used);
 	assert(tex_tbl[src_tex_id].img != NULL);
 
-	draw_image_scale(
+	hal_draw_image_scale(
 		tex_tbl[dst_tex_id].img,
 		virtual_dst_width,
 		virtual_dst_height,
@@ -587,14 +587,14 @@ pf_fill_texture_rect(
 	int top,
 	int width,
 	int height,
-	pixel_t color)
+	pf_pixel_t color)
 {
 	assert(tex_id >= 0);
 	assert(tex_id < TEXTURE_COUNT);
 	assert(tex_tbl[tex_id].is_used);
 	assert(tex_tbl[tex_id].img != NULL);
 
-	clear_image_rect(
+	hal_clear_image_rect(
 		tex_tbl[tex_id].img,
 		left,
 		top,
@@ -606,7 +606,7 @@ pf_fill_texture_rect(
 /*
  * Get a raw pixel pointer.
  */
-pixel_t *
+pf_pixel_t *
 pf_get_texture_pixels(
 	int tex_id)
 {
@@ -646,16 +646,16 @@ pf_render_texture(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_normal(dst_left,
-			    dst_top,
-			    dst_width,
-			    dst_height,
-			    t->img,
-			    src_left,
-			    src_top,
-			    src_width,
-			    src_height,
-			    alpha);
+	hal_render_image_normal(dst_left,
+				dst_top,
+				dst_width,
+				dst_height,
+				t->img,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
 }
 
 /*
@@ -682,16 +682,16 @@ pf_render_texture_add(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_add(dst_left,
-			 dst_top,
-			 dst_width,
-			 dst_height,
-			 t->img,
-			 src_left,
-			 src_top,
-			 src_width,
-			 src_height,
-			 alpha);
+	hal_render_image_add(dst_left,
+			     dst_top,
+			     dst_width,
+			     dst_height,
+			     t->img,
+			     src_left,
+			     src_top,
+			     src_width,
+			     src_height,
+			     alpha);
 }
 
 /*
@@ -718,16 +718,16 @@ pf_render_texture_sub(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_sub(dst_left,
-			 dst_top,
-			 dst_width,
-			 dst_height,
-			 t->img,
-			 src_left,
-			 src_top,
-			 src_width,
-			 src_height,
-			 alpha);
+	hal_render_image_sub(dst_left,
+			     dst_top,
+			     dst_width,
+			     dst_height,
+			     t->img,
+			     src_left,
+			     src_top,
+			     src_width,
+			     src_height,
+			     alpha);
 }
 
 /*
@@ -754,16 +754,16 @@ pf_render_texture_dim(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_dim(dst_left,
-			 dst_top,
-			 dst_width,
-			 dst_height,
-			 t->img,
-			 src_left,
-			 src_top,
-			 src_width,
-			 src_height,
-			 alpha);
+	hal_render_image_dim(dst_left,
+			     dst_top,
+			     dst_width,
+			     dst_height,
+			     t->img,
+			     src_left,
+			     src_top,
+			     src_width,
+			     src_height,
+			     alpha);
 }
 
 /*
@@ -794,10 +794,10 @@ pf_render_texture_3d(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_3d_normal(x1, y1, x2, y2, x3, y3, x4, y4,
-			       t->img,
-			       src_left, src_top, src_width, src_height,
-			       alpha);
+	hal_render_image_3d_normal(x1, y1, x2, y2, x3, y3, x4, y4,
+				   t->img,
+				   src_left, src_top, src_width, src_height,
+				   alpha);
 }
 
 /*
@@ -828,10 +828,10 @@ pf_render_texture_3d_add(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_3d_add(x1, y1, x2, y2, x3, y3, x4, y4,
-			    t->img,
-			    src_left, src_top, src_width, src_height,
-			    alpha);
+	hal_render_image_3d_add(x1, y1, x2, y2, x3, y3, x4, y4,
+				t->img,
+				src_left, src_top, src_width, src_height,
+				alpha);
 }
 
 /*
@@ -862,10 +862,10 @@ pf_render_texture_3d_sub(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_3d_sub(x1, y1, x2, y2, x3, y3, x4, y4,
-			    t->img,
-			    src_left, src_top, src_width, src_height,
-			    alpha);
+	hal_render_image_3d_sub(x1, y1, x2, y2, x3, y3, x4, y4,
+				t->img,
+				src_left, src_top, src_width, src_height,
+				alpha);
 }
 
 /*
@@ -896,10 +896,10 @@ pf_render_texture_3d_dim(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_3d_dim(x1, y1, x2, y2, x3, y3, x4, y4,
-			    t->img,
-			    src_left, src_top, src_width, src_height,
-			    alpha);
+	hal_render_image_3d_dim(x1, y1, x2, y2, x3, y3, x4, y4,
+				t->img,
+				src_left, src_top, src_width, src_height,
+				alpha);
 }
 
 /*
@@ -919,16 +919,16 @@ pf_draw(
 	assert(t->is_used);
 	assert(t->img != NULL);
 
-	render_image_normal(x,
-			    y,
-			    t->img->width,
-			    t->img->height,
-			    t->img,
-			    0,
-			    0,
-			    t->img->width,
-			    t->img->height,
-			    255);
+	hal_render_image_normal(x,
+				y,
+				t->img->width,
+				t->img->height,
+				t->img,
+				0,
+				0,
+				t->img->width,
+				t->img->height,
+				255);
 }
 
 /*
@@ -947,8 +947,8 @@ pf_load_font(
 	size_t len;
 
 	/* Check the font slot index. */
-	if (slot < 0 || slot >= GLYPH_DATA_COUNT) {
-		log_error(PPS_TR("Invalid font slot index."));
+	if (slot < 0 || slot >= HAL_GLYPH_DATA_COUNT) {
+		hal_log_error(PPS_TR("Invalid font slot index."));
 		return false;
 	}
 
@@ -957,7 +957,7 @@ pf_load_font(
 		return false;
 
 	/* Load the glyph date. */
-	if (!load_glyph_data(slot, data, len)) {
+	if (!hal_load_glyph_data(slot, data, len)) {
 		free(data);
 		return false;
 	}
@@ -969,10 +969,12 @@ pf_load_font(
 /*
  * Convert a color code (#rrggbb) to a pixel value.
  */
-pixel_t color_code_to_pixel_value(const char *code)
+pf_pixel_t
+pf_color_code_to_pixel_value(
+	const char *code)
 {
 	uint32_t r, g, b;
-	pixel_t cl;
+	hal_pixel_t cl;
 	int rgb;
 
 	if (code[0] != '#')
@@ -984,7 +986,7 @@ pixel_t color_code_to_pixel_value(const char *code)
 	r = (rgb >> 16) & 0xff;
 	g = (rgb >> 8) & 0xff;
 	b = rgb & 0xff;
-	cl = make_pixel(0xff, r, g, b);
+	cl = hal_make_pixel(0xff, r, g, b);
 
 	return cl;
 }
@@ -997,7 +999,7 @@ pf_create_text_texture(
 	int slot,
 	const char *text,
 	int size,
-	pixel_t color,
+	pf_pixel_t color,
 	int *tex_id,
 	int *width,
 	int *height)
@@ -1024,20 +1026,20 @@ pf_create_text_texture_outline(
 	int slot,
 	const char *text,
 	int size,
-	pixel_t color,
+	pf_pixel_t color,
 	int outline_width,
-	pixel_t outline_color,
+	pf_pixel_t outline_color,
 	int *tex_id,
 	int *width,
 	int *height)
 {
-	struct image *img;
+	struct hal_image *img;
 	int w, h;
 	int x, y;
 	int tid;
 
 	/* Get the rendered width and height of the text. */
-	get_string_width_and_height(slot, size, text, &w, &h);
+	hal_get_string_width_and_height(slot, size, text, &w, &h);
 	if (w == 0)
 		w = 1;
 	if (h == 0)
@@ -1056,24 +1058,24 @@ pf_create_text_texture_outline(
 		int cw, ch;
 
 		/* Get a character. */
-		mblen = utf8_to_utf32(text, &codepoint);
+		mblen = hal_utf8_to_utf32(text, &codepoint);
 		if (mblen == -1)
 			return -1;
 
 		/* Get a character width. */
-		draw_glyph(img,
-			   slot,
-			   size, 		/* font size */
-			   size, 		/* base size */
-			   outline_width,
-			   x,
-			   y,
-			   color,
-			   outline_color,
-			   codepoint,
-			   &cw,
-			   &ch,
-			   false);
+		hal_draw_glyph(img,
+			       slot,
+			       size, 		/* font size */
+			       size, 		/* base size */
+			       outline_width,
+			       x,
+			       y,
+			       color,
+			       outline_color,
+			       codepoint,
+			       &cw,
+			       &ch,
+			       false);
 		x += cw;
 
 		/* Move to a next character. */
@@ -1099,16 +1101,15 @@ pf_play_sound(
 	int stream,
 	const char *file)
 {
-	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error(PPS_TR("Invalid sound stream index."));
+	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
+		hal_log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
-	wave_tbl[stream] = create_wave_from_file(file, false);
-	if (wave_tbl[stream] == NULL)
+	if (!hal_create_wave_from_file(file, false, &wave_tbl[stream]))
 		return false;
 
-	if (!play_sound(stream, wave_tbl[stream]))
+	if (!hal_play_sound(stream, wave_tbl[stream]))
 		return false;
 
 	return true;
@@ -1121,14 +1122,14 @@ bool
 pf_stop_sound(
 	int stream)
 {
-	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error(PPS_TR("Invalid sound stream index."));
+	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
+		hal_log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
-	stop_sound(stream);
+	hal_stop_sound(stream);
 
-	destroy_wave(wave_tbl[stream]);
+	hal_destroy_wave(wave_tbl[stream]);
 	wave_tbl[stream] = NULL;
 
 	return true;
@@ -1142,12 +1143,12 @@ pf_set_sound_volume(
 	int stream,
 	float vol)
 {
-	if (stream < 0 || stream >= SOUND_TRACKS) {
-		log_error(PPS_TR("Invalid sound stream index."));
+	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
+		hal_log_error(PPS_TR("Invalid sound stream index."));
 		return false;
 	}
 
-	set_sound_volume(stream, vol);
+	hal_set_sound_volume(stream, vol);
 
 	return true;
 }
@@ -1159,7 +1160,7 @@ bool
 pf_is_sound_finished(
 	int stream)
 {
-	if (!is_sound_finished(stream))
+	if (!hal_is_sound_finished(stream))
 		return false;
 
 	return true;			
@@ -1176,7 +1177,7 @@ void
 pf_reset_lap_timer(
 	uint64_t *origin)
 {
-	reset_lap_timer(origin);
+	hal_reset_lap_timer(origin);
 }
 
 /*
@@ -1186,7 +1187,7 @@ uint64_t
 pf_get_lap_timer_millisec(
 	uint64_t *origin)
 {
-	return get_lap_timer_millisec(origin);
+	return hal_get_lap_timer_millisec(origin);
 }
 
 /*
@@ -1203,39 +1204,39 @@ pf_write_save_data(
 	size_t size)
 {
 	char *fname;
-	struct wfile *wf;
+	struct hal_wfile *wf;
 	size_t ret;
 
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Make the save directory. */
-	if (!make_save_directory()) {
-		log_error(PPS_TR("Cannot make the save directory."));
+	if (!hal_make_save_directory()) {
+		hal_log_error(PPS_TR("Cannot make the save directory."));
 		free(fname);
 		return false;
 	}
 
 	/* Open a save file. */
-	if (!open_wfile(fname, &wf)) {
-		log_error(PPS_TR("Cannot open a save file."));
+	if (!hal_open_wfile(fname, &wf)) {
+		hal_log_error(PPS_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
 	free(fname);
 
 	/* Write data to the save file. */
-	if (!write_wfile(wf, data, size, &ret)) {
-		log_error(PPS_TR("Cannot write to a save file."));
+	if (!hal_write_wfile(wf, data, size, &ret)) {
+		hal_log_error(PPS_TR("Cannot write to a save file."));
 		return false;
 	}
 
 	/* Close the save file. */
-	close_wfile(wf);
+	hal_close_wfile(wf);
 
 	return true;
 }
@@ -1251,44 +1252,44 @@ pf_read_save_data(
 	size_t *ret)
 {
 	char *fname;
-	struct rfile *rf;
+	struct hal_rfile *rf;
 
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Open a save file. */
-	if (!open_rfile(fname, &rf)) {
-		log_error(PPS_TR("Cannot open a save file."));
+	if (!hal_open_rfile(fname, &rf)) {
+		hal_log_error(PPS_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
 	free(fname);
 
 	/* Enable de-obfuscation. */
-	decode_rfile(rf);
+	hal_decode_rfile(rf);
 
 	/* Get a file size. */
-	if (!get_rfile_size(rf, ret)) {
-		log_error(PPS_TR("Cannot get the size of a save file."));
+	if (!hal_get_rfile_size(rf, ret)) {
+		hal_log_error(PPS_TR("Cannot get the size of a save file."));
 		return false;
 	}
 	if (size < *ret) {
-		log_error(PPS_TR("Save file too large."));
+		hal_log_error(PPS_TR("Save file too large."));
 		return false;
 	}
 
 	/* Read data to the save file. */
-	if (!read_rfile(rf, data, *ret, ret)) {
-		log_error(PPS_TR("Cannot read a save file."));
+	if (!hal_read_rfile(rf, data, *ret, ret)) {
+		hal_log_error(PPS_TR("Cannot read a save file."));
 		return false;
 	}
 
 	/* Close the save file. */
-	close_rfile(rf);
+	hal_close_rfile(rf);
 
 	return true;
 }
@@ -1306,11 +1307,11 @@ pf_check_save_data(
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
 
-	ret = check_file_exist(fname);
+	ret = hal_check_file_exist(fname);
 	free(fname);
 
 	return ret;
@@ -1325,31 +1326,31 @@ pf_get_save_data_size(
 	size_t *ret)
 {
 	char *fname;
-	struct rfile *rf;
+	struct hal_rfile *rf;
 
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PPS_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Open a save file. */
-	if (!open_rfile(fname, &rf)) {
-		log_error(PPS_TR("Cannot open a save file."));
+	if (!hal_open_rfile(fname, &rf)) {
+		hal_log_error(PPS_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
 	free(fname);
 
 	/* Get a file size. */
-	if (!get_rfile_size(rf, ret)) {
-		log_error(PPS_TR("Cannot get the size of a save file."));
+	if (!hal_get_rfile_size(rf, ret)) {
+		hal_log_error(PPS_TR("Cannot get the size of a save file."));
 		return false;
 	}
 
 	/* Close the save file. */
-	close_rfile(rf);
+	hal_close_rfile(rf);
 
 	return true;
 }
@@ -1362,7 +1363,7 @@ make_save_file_name(
 	char buf[1024];
 	int i, len, pos;
 
-	strcpy(buf, SAVE_DIR "/");
+	strcpy(buf, HAL_SAVE_DIR "/");
 
 	len = strlen(key);
 	if (len * 2 > sizeof(buf) - strlen(buf) - 1) {
@@ -1435,7 +1436,7 @@ bool
 pf_check_file_exists(
 	const char *fname)
 {
-	if (!check_file_exist(fname))
+	if (!hal_check_file_exist(fname))
 		return false;
 
 	return true;
@@ -1607,7 +1608,7 @@ pf_get_call_arg_string(
 	/* Duplicate the string. */
 	*val = strdup(s);
 	if (*val == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -1730,7 +1731,7 @@ pf_get_call_arg_array_string(
 	/* Duplicate the string. */
 	*val = strdup(s);
 	if (*val == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 	
@@ -1825,7 +1826,7 @@ pf_get_call_arg_dict_string(
 	/* Duplicate the string. */
 	*val = strdup(s);
 	if (*val == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -2154,7 +2155,7 @@ pf_get_tag_property_value(
 const char *
 pf_get_system_language(void)
 {
-	return get_system_language();
+	return hal_get_system_language();
 }
 
 /*
@@ -2172,7 +2173,7 @@ pf_log_info(
 	vsnprintf(buf, sizeof(buf), msg, ap);
 	va_end(ap);
 
-	log_info(buf);
+	hal_log_info(buf);
 }
 
 /*
@@ -2190,7 +2191,7 @@ pf_log_warn(
 	vsnprintf(buf, sizeof(buf), msg, ap);
 	va_end(ap);
 
-	log_warn(buf);
+	hal_log_warn(buf);
 }
 
 /*
@@ -2208,7 +2209,7 @@ pf_log_error(
 	vsnprintf(buf, sizeof(buf), msg, ap);
 	va_end(ap);
 
-	log_error(buf);
+	hal_log_error(buf);
 }
 
 /*
@@ -2217,5 +2218,5 @@ pf_log_error(
 void
 pf_log_out_of_memory(void)
 {
-	pf_log_error("Out-of-memory.");
+	hal_log_error("Out-of-memory.");
 }

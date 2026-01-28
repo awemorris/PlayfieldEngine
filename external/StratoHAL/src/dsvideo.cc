@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -52,7 +49,14 @@ static BOOL DisplayRenderFileErrorMessage(HRESULT hr);
 //
 // Play a video.
 //
-BOOL DShowPlayVideo(HWND hWnd, const char *pszFileName, int nOfsX, int nOfsY, int nWidth, int nHeight)
+BOOL
+DShowPlayVideo(
+	HWND hWnd,
+	const char *pszFileName,
+	int nOfsX,
+	int nOfsY,
+	int nWidth,
+	int nHeight)
 {
 	HRESULT hRes;
 
@@ -110,7 +114,9 @@ BOOL DShowPlayVideo(HWND hWnd, const char *pszFileName, int nOfsX, int nOfsY, in
 	return TRUE;
 }
 
-static BOOL DisplayRenderFileErrorMessage(HRESULT hr)
+static BOOL
+DisplayRenderFileErrorMessage(
+	HRESULT hr)
 {
 	switch(hr)
 	{
@@ -155,7 +161,8 @@ static BOOL DisplayRenderFileErrorMessage(HRESULT hr)
 //
 // Stop a video playback.
 //
-VOID DShowStopVideo(void)
+VOID
+DShowStopVideo(VOID)
 {
 	if(pControl != NULL)
 	{
@@ -189,7 +196,8 @@ VOID DShowStopVideo(void)
 //
 // Process events (Called from WndProc)
 //
-BOOL DShowProcessEvent(void)
+BOOL
+DShowProcessEvent(VOID)
 {
 	assert(pEvent != NULL);
 

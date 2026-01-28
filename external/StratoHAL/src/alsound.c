@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -65,22 +62,22 @@ static ALuint buffer[SOUND_TRACKS][BUFFER_COUNT];
 /*
  * Source
  */
-static ALuint source[SOUND_TRACKS];
+static ALuint source[HAL_SOUND_TRACKS];
 
 /*
  * PCM Stream
  */
-static struct wave *stream[SOUND_TRACKS];
+static struct hal_wave *stream[HAL_SOUND_TRACKS];
 
 /*
  * Finish Flag
  */
-static bool finish[SOUND_TRACKS];
+static bool finish[HAL_SOUND_TRACKS];
 
 /*
  * Written Area Count When Reached End-of-Stream
  */
-static bool remain[SOUND_TRACKS];
+static bool remain[HAL_SOUND_TRACKS];
 
 /*
  * Temporary Buffer
@@ -90,7 +87,8 @@ static uint32_t tmp_buf[SAMPLES];
 /*
  * Initialize OpenAL
  */
-bool init_openal(void)
+bool
+init_openal(void)
 {
 	ALenum error;
 	int i;
@@ -104,12 +102,12 @@ bool init_openal(void)
 	alGetError();
 
 	/* Create buffers. */
-	for (i = 0; i < SOUND_TRACKS; i++)
+	for (i = 0; i < HAL_SOUND_TRACKS; i++)
 		alGenBuffers(BUFFER_COUNT, buffer[i]);
 
 	/* Create sources. */
-	alGenSources(SOUND_TRACKS, source);
-	for (i = 0; i < SOUND_TRACKS; i++) {
+	alGenSources(HAL_SOUND_TRACKS, source);
+	for (i = 0; i < HAL_SOUND_TRACKS; i++) {
 		alSourcef(source[i], AL_GAIN, 1);
 		alSource3f(source[i], AL_POSITION, 0, 0, 0);
 	}
@@ -120,7 +118,8 @@ bool init_openal(void)
 /*
  * Cleanup OpenAL.
  */
-void cleanup_openal(void)
+void
+cleanup_openal(void)
 {
 	/* TODO */
 }
@@ -128,7 +127,10 @@ void cleanup_openal(void)
 /*
  * Start sound playback on a sound track.
  */
-bool play_sound(int n, struct wave *w)
+bool
+hal_play_sound(
+	int n,
+	struct hal_wave *w)
 {
 	ALuint buf[BUFFER_COUNT];
 	int i, samples;
@@ -165,7 +167,9 @@ bool play_sound(int n, struct wave *w)
 /*
  * Stop a playback.
  */
-bool stop_sound(int n)
+bool
+hal_stop_sound(
+	int n)
 {
 	ALuint buf[BUFFER_COUNT];
 
@@ -182,7 +186,10 @@ bool stop_sound(int n)
 /*
  * Set a volume.
  */
-bool set_sound_volume(int n, float vol)
+bool
+hal_set_sound_volume(
+	int n,
+	float vol)
 {
 	alSourcef(source[n], AL_GAIN, vol);
 
@@ -192,7 +199,9 @@ bool set_sound_volume(int n, float vol)
 /*
  * Check if finished.
  */
-bool is_sound_finished(int n)
+bool
+is_sound_finished(
+	int n)
 {
 	if(finish[n] && remain[n] == 0)
 		return true;
@@ -203,13 +212,14 @@ bool is_sound_finished(int n)
 /*
  * Fill sound buffers.
  */
-void fill_sound_buffer(void)
+void
+fill_sound_buffer(void)
 {
 	ALuint buf;
 	ALint state;
 	int n, i, processed, samples;
 
-	for (n = 0; n < SOUND_TRACKS; n++) {
+	for (n = 0; n < HAL_SOUND_TRACKS; n++) {
 		/* Resume if dropped due to high loads. */
 		alGetSourcei(source[n], AL_SOURCE_STATE, &state);
 		if (state != AL_PLAYING && !finish[n])
@@ -251,10 +261,11 @@ void fill_sound_buffer(void)
 /*
  * Pause sound.
  */
-void pause_sound(void)
+void
+hal_pause_sound(void)
 {
 	int i;
-	for (i = 0; i < SOUND_TRACKS; i++)
+	for (i = 0; i < HAL_SOUND_TRACKS; i++)
 		if (stream[i] != NULL)
 			alSourceStop(source[i]);
 }
@@ -262,10 +273,11 @@ void pause_sound(void)
 /*
  * Resume sound.
  */
-void resume_sound(void)
+void
+hal_resume_sound(void)
 {
 	int i;
-	for (i = 0; i < SOUND_TRACKS; i++)
+	for (i = 0; i < HAL_SOUND_TRACKS; i++)
 		if (stream[i] != NULL)
 			alSourcePlay(source[i]);
 }

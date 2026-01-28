@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -68,9 +65,9 @@ char *window_title;
 int window_width;
 int window_height;
 
-BSoundPlayer *sound_player[SOUND_TRACKS];
-struct wave *wave[SOUND_TRACKS];
-bool is_finished[SOUND_TRACKS];
+BSoundPlayer *sound_player[HAL_SOUND_TRACKS];
+struct hal_wave *wave[HAL_SOUND_TRACKS];
+bool is_finished[HAL_SOUND_TRACKS];
 
 extern "C" void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_format& format);
 
@@ -105,9 +102,9 @@ class NoctView : public BView
 		if (Window()->CurrentMessage() &&
 		    Window()->CurrentMessage()->FindInt32("buttons", (int32*)&buttons) == B_OK) {
 			if (buttons & B_PRIMARY_MOUSE_BUTTON)
-				on_event_mouse_press(MOUSE_LEFT, (int)where.x, (int)where.y);
+				on_event_mouse_press(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
 			if (buttons & B_SECONDARY_MOUSE_BUTTON)
-				on_event_mouse_press(MOUSE_RIGHT, (int)where.x, (int)where.y);
+				on_event_mouse_press(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
 		}
 	}
 
@@ -119,9 +116,9 @@ class NoctView : public BView
 		if (Window()->CurrentMessage() &&
 		    Window()->CurrentMessage()->FindInt32("buttons", (int32*)&buttons) == B_OK) {
 			if (buttons & B_PRIMARY_MOUSE_BUTTON)
-				on_event_mouse_release(MOUSE_LEFT, (int)where.x, (int)where.y);
+				on_event_mouse_release(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
 			if (buttons & B_SECONDARY_MOUSE_BUTTON)
-				on_event_mouse_release(MOUSE_RIGHT, (int)where.x, (int)where.y);
+				on_event_mouse_release(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
 		}
 	}
 
@@ -197,7 +194,7 @@ public:
 		media_raw_audio_format format = {
 			44100.0, 2, media_raw_audio_format::B_AUDIO_SHORT, B_MEDIA_LITTLE_ENDIAN, 4
 		};
-		for (int i = 0; i < SOUND_TRACKS; i++) {
+		for (int i = 0; i < HAL_SOUND_TRACKS; i++) {
 			sound_player[i] = new BSoundPlayer(&format, "SoundPlayer", fill_buffer, NULL, (void*)(intptr_t)i);
 			sound_player[i]->Start();
 		}
@@ -217,20 +214,24 @@ int main(int argc, char *argv[])
 
 extern "C" {
 
-void notify_image_update(struct image *img)
-{
-}
-
-void notify_image_free(struct image *img)
+void
+hal_notify_image_update(
+    struct hal_image *img)
 {
 }
 
 void
-render_image_normal(
+hal_notify_image_free(
+    struct hal_image *img)
+{
+}
+
+void
+hal_render_image_normal(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
@@ -259,11 +260,11 @@ render_image_normal(
 }
 
 void
-render_image_add(
+hal_render_image_add(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
@@ -274,11 +275,11 @@ render_image_add(
 }
 
 void
-render_image_dim(
+hal_render_image_dim(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
@@ -289,14 +290,15 @@ render_image_dim(
 }
 
 void
-render_image_rule(
+hal_render_image_rule(
 	struct image *src_img,		/* [IN] The source image */
 	struct image *rule_img,		/* [IN] The rule image */
 	int threshold)			/* The threshold (0 to 255) */
 {
 }
 
-void render_image_melt(
+void
+hal_render_image_melt(
 	struct image *src_img,		/* [IN] The source image */
 	struct image *rule_img,		/* [IN] The rule image */
 	int progress)			/* The progress (0 to 255) */
@@ -304,7 +306,7 @@ void render_image_melt(
 }
 
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -323,7 +325,7 @@ render_image_3d_normal(
 }
 
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -341,7 +343,9 @@ render_image_3d_add(
 {
 }
 
-void reset_lap_timer(uint64_t *origin)
+void
+hal_reset_lap_timer(
+    uint64_t *origin)
 {
 	struct timeval tv;
 
@@ -350,7 +354,9 @@ void reset_lap_timer(uint64_t *origin)
 	*origin = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+uint64_t
+hal_get_lap_timer_millisec(
+    uint64_t *origin)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -362,74 +368,91 @@ uint64_t get_lap_timer_millisec(uint64_t *origin)
 	return (uint64_t)(end - *origin);
 }
 
-bool play_video(const char *fname,	/* file name */
-		bool is_skippable)	/* allow skip for a unseen video */
+bool
+hal_play_video(
+    const char *fname,	/* file name */
+    bool is_skippable)	/* allow skip for a unseen video */
 {
 	return true;
 }
 
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 }
 
-bool is_video_playing(void)
-{
-	return false;
-}
-
-bool is_full_screen_supported(void){
-	return false;
-}
-
-bool is_full_screen_mode(void)
+bool
+hal_is_video_playing(void)
 {
 	return false;
 }
 
-void enter_full_screen_mode(void)
+bool
+hal_is_full_screen_supported(void){
+	return false;
+}
+
+bool
+hal_is_full_screen_mode(void)
+{
+	return false;
+}
+
+void
+hal_enter_full_screen_mode(void)
 {
 }
 
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 }
 
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	return true;
 }
 
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(const char *fname)
 {
 	return strdup(fname);
 }
 
-bool log_info(const char *s, ...)
+bool
+hal_log_info(const char *s, ...)
 {
 	return true;
 }
 
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(const char *s, ...)
 {
 	return true;
 }
 
-bool log_error(const char *s, ...)
+bool
+hal_log_error(const char *s, ...)
 {
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	return true;
 }
 
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	return "en";
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+    bool is_enabled)
 {
 }
 
@@ -437,7 +460,12 @@ void set_continuous_swipe_enabled(bool is_enabled)
  * Sound
  */
 
-void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_format& format)
+void
+fill_buffer(
+    void *cookie,
+    void *buffer,
+    size_t size,
+    const media_raw_audio_format& format)
 {
 	int n = (intptr_t)cookie;
 
@@ -445,32 +473,42 @@ void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_
 		return;
 
 	uint32_t *buf = (uint32_t*)buffer;
-    memset(buffer, 0, size);
-	int rsize = get_wave_samples(wave[n], buf, size / 4);
-	if (is_wave_eos(wave[n])) {
+	memset(buffer, 0, size);
+	int rsize = hal_get_wave_samples(wave[n], buf, size / 4);
+	if (hal_is_wave_eos(wave[n])) {
 		wave[n] = NULL;
 		is_finished[n] = true;
 	}
 }
 
-bool play_sound(int n, struct wave *w)
+bool
+hal_play_sound(
+    int n,
+    struct hal_wave *w)
 {
 	wave[n] = w;
 	return true;
 }
 
-bool stop_sound(int n)
+bool
+hal_stop_sound(
+    int n)
 {
 	wave[n] = NULL;
 	return true;
 }
 
-bool set_sound_volume(int n, float vol)
+bool
+hal_set_sound_volume(
+    int n,
+    float vol)
 {
 	return true;
 }
 
-bool is_sound_finished(int n)
+bool
+hal_is_sound_finished(
+    int n)
 {
 	return is_finished[n];
 }

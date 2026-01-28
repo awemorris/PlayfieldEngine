@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -96,7 +93,10 @@ static void process_input(void);
 static void process_event(int index);
 static bool open_log_file(void);
 
-int main(int argc, char *argv[])
+int
+main(
+	int argc,
+	char *argv[])
 {
 	int x, y;
 
@@ -109,22 +109,22 @@ int main(int argc, char *argv[])
 	if (!init_file())
 		return 1;
 
-	if (!on_event_boot(&window_title, &screen_width, &screen_height))
+	if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height))
 		return 1;
 
-	create_image(screen_width, screen_height, &image);
+	hal_create_image(screen_width, screen_height, &image);
 
 	init_sound();
 	init_input();
 
-	if (!on_event_start())
+	if (!hal_callback_on_event_start())
 		return 1;
 
 	while (1) {
 		process_input();
 
-		clear_image(image, 0);
-		if (!on_event_frame())
+		hal_clear_image(image, 0);
+		if (!hal_callback_on_event_frame())
 			break;
 
 		for (y = 0; y < screen_height; y++) {
@@ -256,14 +256,14 @@ static void process_event(int index)
 		/* XXX: currently only mouse buttons are supported. */
 		if (e.code == 272) {
 			if (e.value == 1)
-				on_event_mouse_press(MOUSE_LEFT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_press(MOUSE_LEFT, mouse_x, mouse_y);
 			else
-				on_event_mouse_release(MOUSE_LEFT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_release(MOUSE_LEFT, mouse_x, mouse_y);
 		} else if (e.code ==273) {
 			if (e.value == 1)
-				on_event_mouse_press(MOUSE_RIGHT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_press(MOUSE_RIGHT, mouse_x, mouse_y);
 			else
-				on_event_mouse_release(MOUSE_RIGHT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_release(MOUSE_RIGHT, mouse_x, mouse_y);
 		}
 	}
 }
@@ -272,18 +272,52 @@ static void process_event(int index)
  * HAL
  */
 
-void notify_image_update(struct image *img)
+void hal_notify_image_update(struct image *img)
 {
 	UNUSED_PARAMETER(img);
 }
 
-void notify_image_free(struct image *img)
+void hal_notify_image_free(struct image *img)
 {
 	UNUSED_PARAMETER(img);
 }
 
 void
-render_image_normal(
+hal_render_image_normal(
+	int dst_left,			/* The X coordinate of the screen */
+	int dst_top,			/* The Y coordinate of the screen */
+	int dst_width,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
+	struct image *src_image,	/* [IN] The image to be rendered */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	hal_draw_image_alpha(
+		image,
+		dst_left,
+		dst_top,
+		src_image,
+		src_width,
+		src_height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+void
+hal_render_image_add(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
@@ -304,23 +338,24 @@ render_image_normal(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_alpha(image,
-			 dst_left,
-			 dst_top,
-			 src_image,
-			 src_width,
-			 src_height,
-			 src_left,
-			 src_top,
-			 alpha);
+	hal_draw_image_add(
+		image,
+		dst_left,
+		dst_top,
+		src_image,
+		src_width,
+		src_height,
+		src_left,
+		src_top,
+		alpha);
 }
 
 void
-render_image_add(
+hal_render_image_dim(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
@@ -337,69 +372,38 @@ render_image_add(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_add(image,
-		       dst_left,
-		       dst_top,
-		       src_image,
-		       src_width,
-		       src_height,
-		       src_left,
-		       src_top,
-		       alpha);
+	hal_draw_image_dim(
+		image,
+		dst_left,
+		dst_top,
+		src_image,
+		src_width,
+		src_height,
+		src_left,
+		src_top,
+		alpha);
 }
 
 void
-render_image_dim(
-	int dst_left,			/* The X coordinate of the screen */
-	int dst_top,			/* The Y coordinate of the screen */
-	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
-	int src_left,			/* The X coordinate of a source image */
-	int src_top,			/* The Y coordinate of a source image */
-	int src_width,			/* The width of the source rectangle */
-	int src_height,			/* The height of the source rectangle */
-	int alpha)			/* The alpha value (0 to 255) */
-{
-	if (dst_width == -1)
-		dst_width = src_image->width;
-	if (dst_height == -1)
-		dst_height = src_image->height;
-	if (src_width == -1)
-		src_width = src_image->width;
-	if (src_height == -1)
-		src_height = src_image->height;
-
-	draw_image_dim(image,
-		       dst_left,
-		       dst_top,
-		       src_image,
-		       src_width,
-		       src_height,
-		       src_left,
-		       src_top,
-		       alpha);
-}
-
-void
-render_image_rule(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
+hal_render_image_rule(
+	struct hal_image *src_img,	/* [IN] The source image */
+	struct hal_image *rule_img,	/* [IN] The rule image */
 	int threshold)			/* The threshold (0 to 255) */
 {
-	draw_image_rule(image, src_img, rule_img, threshold);
-}
-
-void render_image_melt(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
-	int progress)			/* The progress (0 to 255) */
-{
-	draw_image_melt(image, src_img, rule_img, progress);
+	hal_draw_image_rule(image, src_img, rule_img, threshold);
 }
 
 void
-render_image_3d_normal(
+hal_render_image_melt(
+	struct hal_image *src_img,	/* [IN] The source image */
+	struct hal_image *rule_img,	/* [IN] The rule image */
+	int progress)			/* The progress (0 to 255) */
+{
+	hal_draw_image_melt(image, src_img, rule_img, progress);
+}
+
+void
+hal_render_image_3d_normal(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -432,7 +436,7 @@ render_image_3d_normal(
 }
 
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -467,7 +471,9 @@ render_image_3d_add(
 /*
  * Reset a timer.
  */
-void reset_lap_timer(uint64_t *t)
+void
+hal_reset_lap_timer(
+	uint64_t *t)
 {
 	struct timeval tv;
 
@@ -479,7 +485,9 @@ void reset_lap_timer(uint64_t *t)
 /*
  * Get a timer lap.
  */
-uint64_t get_lap_timer_millisec(uint64_t *t)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *t)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -491,8 +499,10 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 	return (uint64_t)(end - *t);
 }
 
-bool play_video(const char *fname,	/* file name */
-		bool is_skippable)	/* allow skip for a unseen video */
+bool
+hal_play_video(
+	const char *fname,	/* file name */
+	bool is_skippable)	/* allow skip for a unseen video */
 {
 	UNUSED_PARAMETER(fname);
 	UNUSED_PARAMETER(is_skippable);
@@ -500,38 +510,47 @@ bool play_video(const char *fname,	/* file name */
 	return true;
 }
 
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 }
 
-bool is_video_playing(void)
-{
-	return false;
-}
-
-bool is_full_screen_supported(void){
-	return false;
-}
-
-bool is_full_screen_mode(void)
+bool
+hal_is_video_playing(void)
 {
 	return false;
 }
 
-void enter_full_screen_mode(void)
+bool
+hal_is_full_screen_supported(void)
+{
+	return false;
+}
+
+bool
+hal_is_full_screen_mode(void)
+{
+	return false;
+}
+
+void
+hal_enter_full_screen_mode(void)
 {
 }
 
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 }
 
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	return true;
 }
 
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(const char *fname)
 {
 	return strdup(fname);
 }
@@ -539,7 +558,10 @@ char *make_real_path(const char *fname)
 /*
  * Put an INFO log.
  */
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[1024];
 	va_list ap;
@@ -563,7 +585,10 @@ bool log_info(const char *s, ...)
 /*
  * Put a WARN log.
  */
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[1024];
 	va_list ap;
@@ -587,7 +612,10 @@ bool log_warn(const char *s, ...)
 /*
  * Put an ERROR log.
  */
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[1024];
 	va_list ap;
@@ -609,7 +637,8 @@ bool log_error(const char *s, ...)
 }
 
 /* Open the log file. */
-static bool open_log_file(void)
+static bool
+open_log_file(void)
 {
 	if (log_fp == NULL) {
 		log_fp = fopen(LOG_FILE, "w");
@@ -621,17 +650,21 @@ static bool open_log_file(void)
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	return true;
 }
 
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	return "en";
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	UNUSED_PARAMETER(is_enabled);
 }

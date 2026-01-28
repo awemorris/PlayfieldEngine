@@ -380,8 +380,8 @@ typedef unsigned long long uint64_t;
  */
 #if !defined(PPS_TR)
 #if defined(USE_TRANSLATION)
-#define PPS_TR(s)	playfield_gettext(s)
-const char *playfield_gettext(const char *msg);
+#define PPS_TR(s)	pf_gettext(s)
+const char *pf_gettext(const char *msg);
 #else
 #define PPS_TR(s)	(s)
 #endif

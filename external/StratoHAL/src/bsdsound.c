@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -88,7 +85,7 @@
 static int dsp_fd;
 
 /* Input Streams */
-static struct wave *wave[SOUND_TRACKS];
+static struct hal_wave *wave[HAL_SOUND_TRACKS];
 
 /* Sound Thread */
 static pthread_t thread;
@@ -100,10 +97,10 @@ static pthread_mutex_t mutex;
 static bool exit_req;
 
 /* Volume Values */
-static float volume[SOUND_TRACKS];
+static float volume[HAL_SOUND_TRACKS];
 
 /* Finish Flags */
-static bool finish[SOUND_TRACKS];
+static bool finish[HAL_SOUND_TRACKS];
 
 /* Forward Declaration */
 static void *sound_thread(void *p);
@@ -113,7 +110,8 @@ static void mul_add_pcm(uint32_t *dst, uint32_t *src, float vol, int samples);
 /*
  * Initialize sound.
  */
-bool init_sound(void)
+bool
+init_sound(void)
 {
 	int i, ret;
 
@@ -204,7 +202,7 @@ bool init_sound(void)
 #endif
 
 	/* Clear volumes and flags. */
-	for (i = 0; i < SOUND_TRACKS; i++) {
+	for (i = 0; i < HAL_SOUND_TRACKS; i++) {
 		volume[i] = 1.0f;
 		finish[i] = false;
 	}
@@ -222,7 +220,8 @@ bool init_sound(void)
 /*
  * Cleanup sound.
  */
-void cleanup_sound(void)
+void
+cleanup_sound(void)
 {
 	void *p;
 
@@ -244,9 +243,12 @@ void cleanup_sound(void)
 /*
  * Start sound playback on a stream.
  */
-bool play_sound(int n, struct wave *w)
+bool
+play_sound(
+	int n,
+	struct hal_wave *w)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 	assert(w != NULL);
 
 	/* If /dev/dsp is not available, just return. */
@@ -269,9 +271,11 @@ bool play_sound(int n, struct wave *w)
 /*
  * Stop sound playback on a stream.
  */
-bool stop_sound(int n)
+bool
+hal_stop_sound(
+	int n)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 
 	/* If /dev/dsp is not available, just return. */
 	if (dsp_fd <= 0)
@@ -292,9 +296,12 @@ bool stop_sound(int n)
 /*
  * Set a sound volume for a stream.
  */
-bool set_sound_volume(int n, float vol)
+bool
+hal_set_sound_volume(
+	int n,
+	float vol)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 	assert(vol >= 0 && vol <= 1.0f);
 
 	volume[n] = vol;
@@ -308,7 +315,9 @@ bool set_sound_volume(int n, float vol)
 /*
  * Check if a sound stream is finished.
  */
-bool is_sound_finished(int n)
+bool
+hal_is_sound_finished(
+	int n)
 {
 	/* If /dev/dsp is not available, just return. */
 	if (dsp_fd <= 0)
@@ -328,7 +337,8 @@ bool is_sound_finished(int n)
  */
 
 /* The entrypoint of the sound thread. */
-static void *sound_thread(void *p)
+static void *
+sound_thread(void *p)
 {
 	UNUSED_PARAMETER(p);
 
@@ -339,7 +349,8 @@ static void *sound_thread(void *p)
 }
 
 /* Write to the buffer. */
-static bool fill_buffer(void)
+static bool
+fill_buffer(void)
 {
 	static uint32_t period_buf[TMP_SAMPLES];
 	static uint32_t channel_buf[TMP_SAMPLES];
@@ -349,7 +360,7 @@ static bool fill_buffer(void)
 	memset(channel_buf, 0, sizeof(uint32_t) * TMP_SAMPLES);
 
 	/* For each stream. */
-	for (stream = 0; stream < SOUND_TRACKS; stream++) {
+	for (stream = 0; stream < HAL_SOUND_TRACKS; stream++) {
 		pthread_mutex_lock(&mutex);
 		{
 			/* Don't get samples if the stream is not in playback. */
@@ -384,7 +395,12 @@ static bool fill_buffer(void)
 	return true;
 }
 
-static void mul_add_pcm(uint32_t *dst, uint32_t *src, float vol, int samples)
+static void
+mul_add_pcm(
+	uint32_t *dst,
+	uint32_t *src,
+	float vol,
+	int samples)
 {
     float scale;
     int i;

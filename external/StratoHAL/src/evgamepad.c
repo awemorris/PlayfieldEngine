@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -160,22 +157,22 @@ static void on_press_button(int button)
 {
 	switch (button) {
 	case 304:
-		on_event_key_press(KEY_GAMEPAD_A);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_A);
 		break;
 	case 305:
-		on_event_key_press(KEY_GAMEPAD_B);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_B);
 		break;
 	case 307:
-		on_event_key_press(KEY_GAMEPAD_X);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_X);
 		break;
 	case 308:
-		on_event_key_press(KEY_GAMEPAD_Y);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_Y);
 		break;
 	case 310:
-		on_event_key_press(KEY_GAMEPAD_L);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_L);
 		break;
 	case 311:
-		on_event_key_press(KEY_GAMEPAD_R);
+		hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_R);
 		break;
 	default:
 		break;
@@ -186,22 +183,22 @@ static void on_release_button(int button)
 {
 	switch (button) {
 	case 304:
-		on_event_key_release(KEY_GAMEPAD_A);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_A);
 		break;
 	case 305:
-		on_event_key_release(KEY_GAMEPAD_B);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_B);
 		break;
 	case 307:
-		on_event_key_release(KEY_GAMEPAD_X);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_X);
 		break;
 	case 308:
-		on_event_key_release(KEY_GAMEPAD_Y);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_Y);
 		break;
 	case 310:
-		on_event_key_release(KEY_GAMEPAD_L);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_L);
 		break;
 	case 311:
-		on_event_key_release(KEY_GAMEPAD_R);
+		hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_R);
 		break;
 	default:
 		break;
@@ -212,45 +209,45 @@ static void on_change_analog(int axis, int value)
 {
 	switch (axis) {
 	case 0:
-		on_event_analog_input(ANALOG_X1, value);
+		hal_callback_on_event_analog_input(HAL_ANALOG_X1, value);
 		break;
 	case 1:
-		on_event_analog_input(ANALOG_Y1, value);
+		hal_callback_on_event_analog_input(HAL_ANALOG_Y1, value);
 		break;
 	case 2:
-		on_event_analog_input(ANALOG_L, value * 256);
+		hal_callback_on_event_analog_input(HAL_ANALOG_L, value * 256);
 		break;
 	case 3:
-		on_event_analog_input(ANALOG_X2, value);
+		hal_callback_on_event_analog_input(HAL_ANALOG_X2, value);
 		break;
 	case 4:
-		on_event_analog_input(ANALOG_Y2, value);
+		hal_callback_on_event_analog_input(HAL_ANALOG_Y2, value);
 		break;
 	case 5:
-		on_event_analog_input(ANALOG_R, value * 256);
+		hal_callback_on_event_analog_input(HAL_ANALOG_R, value * 256);
 		break;
 	case 16:
 		if (value == -1) {
-			on_event_key_press(KEY_GAMEPAD_LEFT);
-			on_event_key_release(KEY_GAMEPAD_RIGHT);
+			hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_LEFT);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
 		} else if (value == 1) {
-			on_event_key_release(KEY_GAMEPAD_LEFT);
-			on_event_key_press(KEY_GAMEPAD_RIGHT);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
+			hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_RIGHT);
 		} else {
-			on_event_key_release(KEY_GAMEPAD_LEFT);
-			on_event_key_release(KEY_GAMEPAD_RIGHT);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
 		}
 		break;
 	case 17:
 		if (value == -1) {
-			on_event_key_press(KEY_GAMEPAD_UP);
-			on_event_key_release(KEY_GAMEPAD_DOWN);
+			hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_UP);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
 		} else if (value == 1) {
-			on_event_key_release(KEY_GAMEPAD_UP);
-			on_event_key_press(KEY_GAMEPAD_DOWN);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+			hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_DOWN);
 		} else {
-			on_event_key_release(KEY_GAMEPAD_UP);
-			on_event_key_release(KEY_GAMEPAD_DOWN);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+			hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
 		}
 		break;
 	default:

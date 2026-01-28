@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -68,28 +65,28 @@
  */
 
 /* ALSA Devices */
-static snd_pcm_t *pcm[SOUND_TRACKS];
+static snd_pcm_t *pcm[HAL_SOUND_TRACKS];
 
 /* Input Streams */
-static struct wave *wave[SOUND_TRACKS];
+static struct hal_wave *wave[HAL_SOUND_TRACKS];
 
 /* Sound Threads */
-static pthread_t thread[SOUND_TRACKS];
+static pthread_t thread[HAL_SOUND_TRACKS];
 
 /* Mutex Objects (mutually exclude between the main thread and a sound thread) */
-static pthread_mutex_t mutex[SOUND_TRACKS];
+static pthread_mutex_t mutex[HAL_SOUND_TRACKS];
 
 /* Exit Requst */
 static bool exit_req;
 
 /* Buffers */
-static uint32_t period_buf[SOUND_TRACKS][PERIOD_FRAMES + PERIOD_FRAMES_PAD];
+static uint32_t period_buf[HAL_SOUND_TRACKS][PERIOD_FRAMES + PERIOD_FRAMES_PAD];
 
 /* Volume Values */
-static float volume[SOUND_TRACKS];
+static float volume[HAL_SOUND_TRACKS];
 
 /* Finish Flags */
-static bool finish[SOUND_TRACKS];
+static bool finish[HAL_SOUND_TRACKS];
 
 /*
  * Forward Declarations
@@ -102,13 +99,14 @@ static void scale_samples(uint32_t *buf, int frames, float vol);
 /*
  * Initialize ALSA.
  */
-bool init_sound(void)
+bool
+init_sound(void)
 {
 	int n, ret;
 
 	exit_req = false;
 
-	for (n = 0; n < SOUND_TRACKS; n++) {
+	for (n = 0; n < HAL_SOUND_TRACKS; n++) {
 		/* Initialize per stream data. */
 		pcm[n] = NULL;
 		wave[n] = NULL;
@@ -136,18 +134,19 @@ bool init_sound(void)
 /*
  * Cleanup ALSA.
  */
-void cleanup_sound(void)
+void
+cleanup_sound(void)
 {
 	void *p1;
 	int n;
 
 	exit_req = true;
 
-	for (n = 0; n < SOUND_TRACKS; n++) {
+	for (n = 0; n < HAL_SOUND_TRACKS; n++) {
 		if (pcm[n] == NULL)
 			continue;
 
-		stop_sound(n);
+		hal_stop_sound(n);
 
 		/* Wait for an exit of the sound thread. */
 		pthread_join(thread[n], &p1);
@@ -167,9 +166,12 @@ void cleanup_sound(void)
 /*
  * Start sound playback on a stream.
  */
-bool play_sound(int n, struct wave *w)
+bool
+hal_play_sound(
+	int n,
+	struct hal_wave *w)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 	assert(w != NULL);
 
 	/* If ALSA is not available, just return. */
@@ -195,9 +197,11 @@ bool play_sound(int n, struct wave *w)
 /*
  * Stop sound playback on a stream.
  */
-bool stop_sound(int n)
+bool
+hal_stop_sound(
+	int n)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 
 	/* If ALSA is not available, just return. */
 	if (pcm[n] == NULL)
@@ -221,9 +225,12 @@ bool stop_sound(int n)
 /*
  * Set a sound volume for a stream.
  */
-bool set_sound_volume(int n, float vol)
+bool
+hal_set_sound_volume(
+	int n,
+	float vol)
 {
-	assert(n < SOUND_TRACKS);
+	assert(n < HAL_SOUND_TRACKS);
 	assert(vol >= 0 && vol <= 1.0f);
 
 	volume[n] = vol;
@@ -237,7 +244,9 @@ bool set_sound_volume(int n, float vol)
 /*
  * Check if a sound stream is finished.
  */
-bool is_sound_finished(int n)
+bool
+hal_is_sound_finished(
+	int n)
 {
 	/* If ALSA is not available, just return. */
 	if (pcm[n] == NULL)
@@ -253,13 +262,15 @@ bool is_sound_finished(int n)
 }
 
 /* Initialize a device for a stream. */
-static bool init_pcm(int n)
+static bool
+init_pcm(
+	int n)
 {
 	/* Open a device. */
 	int ret;
 	ret = snd_pcm_open(&pcm[n], "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (ret < 0) {
-		log_error("snd_pcm_open() failed.");
+		hal_log_error("snd_pcm_open() failed.");
 		return false;
 	}
 
@@ -269,39 +280,39 @@ static bool init_pcm(int n)
 	snd_pcm_hw_params_alloca(&params);
 	ret = snd_pcm_hw_params_any(pcm[n], params);
 	if (ret < 0) {
-		log_error("snd_pcm_hw_params_any() failed.");
+		hal_log_error("snd_pcm_hw_params_any() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_access(pcm[n], params,
 					 SND_PCM_ACCESS_RW_INTERLEAVED) < 0) {
-		log_error("snd_pcm_hw_params_set_access() failed.");
+		hal_log_error("snd_pcm_hw_params_set_access() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_format(pcm[n], params, SND_PCM_FORMAT_S16_LE) < 0) {
-		log_error("snd_pcm_hw_params_set_format() failed.");
+		hal_log_error("snd_pcm_hw_params_set_format() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_rate(pcm[n], params, SAMPLING_RATE, 0) < 0) {
-		log_error("snd_pcm_hw_params_set_rate() failed.");
+		hal_log_error("snd_pcm_hw_params_set_rate() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_channels(pcm[n], params, 2) < 0) {
-		log_error("snd_pcm_hw_params_set_channels() failed.");
+		hal_log_error("snd_pcm_hw_params_set_channels() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_periods(pcm[n], params, PERIODS, 0) < 0) {
-		log_error("snd_pcm_hw_params_set_periods() failed.");
+		hal_log_error("snd_pcm_hw_params_set_periods() failed.");
 		return false;
 	}
 	if (snd_pcm_hw_params_set_buffer_size(pcm[n], params, BUF_FRAMES) < 0) {
 		frames = BUF_FRAMES;
 		if (snd_pcm_hw_params_set_buffer_size_near(pcm[n], params, &frames) < 0) {
-			log_error("snd_pcm_hw_params_set_buffer_size_near() failed.");
+			hal_log_error("snd_pcm_hw_params_set_buffer_size_near() failed.");
 			return false;
 		}
 	}
 	if (snd_pcm_hw_params(pcm[n], params) < 0) {
-		log_error("snd_pcm_hw_params() failed.");
+		hal_log_error("snd_pcm_hw_params() failed.");
 		return false;
 	}
 
@@ -359,7 +370,7 @@ static bool playback_period(int n)
 		}
 
 		/* Get PCM samples. */
-		size = get_wave_samples(wave[n], period_buf[n], PERIOD_FRAMES);
+		size = hal_get_wave_samples(wave[n], period_buf[n], PERIOD_FRAMES);
 
 		/* Fill the remaining samples by zeros for a case where we have reached an end-of-stream. */
 		if (size < PERIOD_FRAMES)
@@ -373,7 +384,7 @@ static bool playback_period(int n)
 			snd_pcm_prepare(pcm[n]);
 
 		/* Return false if we reached an end-of-stream. */
-		if (is_wave_eos(wave[n])) {
+		if (hal_is_wave_eos(wave[n])) {
 			wave[n] = NULL;
 			finish[n] = true;
 			pthread_mutex_unlock(&mutex[n]);

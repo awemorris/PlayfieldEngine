@@ -1,152 +1,278 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Strato HAL
+ * Public header
  */
 
-/*
- * Main Header of Game Porting Layer
+/*-
+ * SPDX-License-Identifier: Zlib
+ *
+ * Playfield Engine
+ * Copyright (c) 2025-2026 Awe Morris
+ *
+ * This software is derived from the codebase of Suika2.
+ * Copyright (c) 1996-2024 Keiichi Tabata
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *      claim that you wrote the original software. If you use this software
+ *      in a product, an acknowledgment in the product documentation would be
+ *      appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *      misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
+
 #ifndef STRATOHAL_PLATFORM_H
 #define STRATOHAL_PLATFORM_H
 
-#include <stratohal/c89compat.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stratohal/c89compat.h"
 
 /*************************
  * Files and Directories *
  *************************/
 
 /* Package file name */
-#define PACKAGE_FILE		"assets.arc"
+#define HAL_PACKAGE_FILE	"assets.arc"
 
 /* Save directory name */
-#define SAVE_DIR		"save"
+#define HAL_SAVE_DIR		"save"
 
 /*************
  * File Read *
  *************/
 
-struct rfile;
+struct hal_rfile;
 
-/* Initialize file read. */
-bool init_rfile(void);
+/*
+ * Check whether a file exists.
+ */
+bool
+hal_check_file_exist(
+	const char *file);
 
-/* Check whether a file exists. */
-bool check_file_exist(const char *file);
+/*
+ * Open a file stream.
+ */
+bool
+hal_open_rfile(
+	const char *file,
+	struct hal_rfile **f);
 
-/* Open a file stream. */
-bool open_rfile(const char *file, struct rfile **f);
+/*
+ * Enable de-obfuscation on a read file stream.
+ */
+void
+hal_decode_rfile(
+	struct hal_rfile *f);
 
-/* Enable de-obfuscation on a read file stream. */
-void decode_rfile(struct rfile *f);
+/*
+ * Get a file size.
+ */
+bool
+hal_get_rfile_size(
+	struct hal_rfile *rf,
+	size_t *ret);
 
-/* Get a file size. */
-bool get_rfile_size(struct rfile *rf, size_t *ret);
+/*
+ * Read from a file stream.
+ */
+bool
+hal_read_rfile(
+	struct hal_rfile *rf,
+	void *buf,
+	size_t size,
+	size_t *ret);
 
-/* Read from a file stream. */
-bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret);
+/*
+ * Read a u64 from a file stream.
+ */
+bool
+hal_get_rfile_u64(
+	struct hal_rfile *rf,
+	uint64_t *data);
 
-/* Read a u64 from a file stream. */
-bool get_rfile_u64(struct rfile *rf, uint64_t *data);
+/*
+ * Read a u32 from a file stream.
+ */
+bool
+hal_get_rfile_u32(
+	struct hal_rfile *rf,
+	uint32_t *data);
 
-/* Read a u32 from a file stream. */
-bool get_rfile_u32(struct rfile *rf, uint32_t *data);
+/*
+ * Read a u16 from a file stream.
+ */
+bool
+hal_get_rfile_u16(
+	struct hal_rfile *rf,
+	uint16_t *data);
 
-/* Read a u16 from a file stream. */
-bool get_rfile_u16(struct rfile *rf, uint16_t *data);
+/*
+ * Read a u8 from a file stream.
+ */
+bool
+hal_get_rfile_u8(
+	struct hal_rfile *rf,
+	uint8_t *data);
 
-/* Read a u8 from a file stream. */
-bool get_rfile_u8(struct rfile *rf, uint8_t *data);
+/*
+ * Read a string from a file stream.
+ */
+bool
+hal_get_rfile_string(
+	struct hal_rfile *rf,
+	char *buf,
+	size_t size);
 
-/* Read a string from a file stream. */
-bool get_rfile_string(struct rfile *rf, char *buf, size_t size);
+/*
+ * Close a file stream.
+ */
+void
+hal_close_rfile(
+	struct hal_rfile *rf);
 
-/* Close a file stream. */
-void close_rfile(struct rfile *rf);
-
-/* Rewind a file stream. */
-void rewind_rfile(struct rfile *rf);
+/*
+ * Rewind a file stream.
+ */
+void
+hal_rewind_rfile(
+	struct hal_rfile *rf);
 
 /**************
  * File Write *
  **************/
 
-struct wfile;
+struct hal_wfile;
 
-/* Open a write file stream. */
-bool open_wfile(const char *file, struct wfile **wf);
+/*
+ * Open a write file stream.
+ */
+bool
+hal_open_wfile(
+	const char *file,
+	struct hal_wfile **wf);
 
-/* Write to a file stream. */
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret);
+/*
+ * Write to a file stream.
+ */
+bool
+hal_write_wfile(
+	struct hal_wfile *wf,
+	const void *buf,
+	size_t size,
+	size_t *ret);
 
-/* Close a write file stream. */
-void close_wfile(struct wfile *wf);
+/*
+ * Close a write file stream.
+ */
+void
+hal_close_wfile(
+	struct hal_wfile *wf);
 
-/* Remove a file. */
-void remove_file(const char *file);
+/*
+ * Remove a file.
+ */
+bool
+hal_remove_file(
+	const char *file);
 
 /*********
  * Image *
  *********/
 
-/* Pixel value type. */
-typedef uint32_t pixel_t;
+/*
+ * Pixel value type.
+ */
+typedef uint32_t hal_pixel_t;
 
-/* Image Structure */
-struct image {
-	/* Size. */
+/*
+ * Image structure.
+ */
+struct hal_image {
+	/* Members are all private. */
+
+	/* Size. (public) */
 	int width;
 	int height;
 
 	/* Pixels. */
-	pixel_t *pixels;
+	hal_pixel_t *pixels;
+
+	/* Externally managed pixels? */
 	bool no_free;
 
-	/* Texture pointer. */
+	/* Need to upload pixels to GPU? */
+	bool need_upload;
+
+	/* Texture pointer. (platform handle) */
 	void *texture;
 
-	/* Texture ID. */
+	/* Texture ID. (platform handle) */
 	int id;
 
-	/* Context ID. (for graphics reinit) */
+	/* Context ID. (platform handle) */
 	int context;
-
-	/* Upload flag. */
-	bool need_upload;
 };
 
-#if !defined(USE_QT) && \
+#if !defined(HAL_USE_QT) && \
     ( \
-        defined(TARGET_WINDOWS) || \
-        defined(TARGET_MACOS) || \
-        defined(TARGET_IOS) || \
-        (defined(TARGET_POSIX) && defined(USE_X11_SOFTRENDER)) || \
-	defined(TARGET_UNITY) \
+        defined(HAL_TARGET_WINDOWS) || \
+        defined(HAL_TARGET_MACOS) || \
+        defined(HAL_TARGET_IOS) || \
+        (defined(HAL_TARGET_POSIX) && defined(HAL_USE_X11_SOFTRENDER)) || \
+	defined(HAL_TARGET_UNITY) \
     )
-#define ORDER_BGRA	/* Use RGBA on Direct3D and Metal */
+#define ORDER_BGRA	/* Use BGRA on Direct3D and Metal. */
 #else
-#define ORDER_RGBA	/* Use BGRA on OpenGL */
-#define ORDER_OPENGL
+#define ORDER_RGBA	/* Use RGBA on OpenGL. */
 #endif
 
-/* Compose a pixel value. */
-static INLINE pixel_t make_pixel(uint32_t a, uint32_t r, uint32_t g, uint32_t b)
+/*
+ * Compose a pixel value.
+ */
+static INLINE hal_pixel_t
+hal_make_pixel(
+	uint32_t a,
+	uint32_t r,
+	uint32_t g,
+	uint32_t b)
 {
 #ifdef ORDER_RGBA
-	return (((pixel_t)a) << 24) | (((pixel_t)b) << 16) | (((pixel_t)g) << 8) | ((pixel_t)r);
+	return (((hal_pixel_t)a) << 24) | (((hal_pixel_t)b) << 16) | (((hal_pixel_t)g) << 8) | ((hal_pixel_t)r);
 #else
-	return (((pixel_t)a) << 24) | (((pixel_t)r) << 16) | (((pixel_t)g) << 8) | ((pixel_t)b);
+	return (((hal_pixel_t)a) << 24) | (((hal_pixel_t)r) << 16) | (((hal_pixel_t)g) << 8) | ((hal_pixel_t)b);
 #endif
 }
 
-/* Get an alpha component value from a pixel value. */
-static INLINE uint32_t get_pixel_a(pixel_t p)
+/*
+ * Get an alpha component value from a pixel value.
+ */
+static INLINE uint32_t
+hal_get_pixel_a(
+	hal_pixel_t p)
 {
 	return (p >> 24) & 0xff;
 }
 
-/* Get a red component value from a pixel value. */
-static INLINE uint32_t get_pixel_r(pixel_t p)
+/*
+ * Get a red component value from a pixel value.
+ */
+static INLINE uint32_t
+hal_get_pixel_r(
+	hal_pixel_t p)
 {
 #ifdef ORDER_RGBA
 	return (p >> 16) & 0xff;
@@ -155,8 +281,12 @@ static INLINE uint32_t get_pixel_r(pixel_t p)
 #endif
 }
 
-/* Get a green component value from a pixel value. */
-static INLINE uint32_t get_pixel_g(pixel_t p)
+/*
+ * Get a green component value from a pixel value.
+ */
+static INLINE uint32_t
+hal_get_pixel_g(
+	hal_pixel_t p)
 {
 #ifdef ORDER_RGBA
 	return (p >> 8) & 0xff;
@@ -165,8 +295,12 @@ static INLINE uint32_t get_pixel_g(pixel_t p)
 #endif
 }
 
-/* Get a blue component value from a pixel value. */
-static INLINE uint32_t get_pixel_b(pixel_t p)
+/*
+ * Get a blue component value from a pixel value.
+ */
+static INLINE uint32_t
+hal_get_pixel_b(
+	hal_pixel_t p)
 {
 #ifdef ORDER_RGBA
 	return p & 0xff;
@@ -178,219 +312,479 @@ static INLINE uint32_t get_pixel_b(pixel_t p)
 #undef ORDER_RGBA
 #undef ORDER_BGRA
 
-/* Create an image. */
-bool create_image(int w, int h, struct image **img);
+/*
+ * Create an image.
+ */
+bool
+hal_create_image(
+	int w,
+	int h,
+	struct hal_image **img);
 
-/* Creata an image with a color string. (#rrggbb) */
-struct image *create_image_from_color_string(int w, int h, const char *color);
+/*
+ * Create an image with a pixel buffer.
+ */
+bool
+hal_create_image_with_pixels(
+	int w,
+	int h,
+	hal_pixel_t *pixels,
+	struct hal_image **img);
 
-/* Create an image with a pixel buffer. */
-bool create_image_with_pixels(int w, int h, pixel_t *pixels, struct image **img);
+/*
+ * Create an image with a PNG file.
+ */
+bool
+hal_create_image_with_png(
+	const uint8_t *data,
+	size_t size,
+	struct hal_image **img);
 
-/* Create an image with a PNG file. */
-bool create_image_with_png(const uint8_t *data, size_t size, struct image **img);
+/*
+ * Create an image with a JPEG file.
+ */
+bool
+hal_create_image_with_jpeg(
+	const uint8_t *data,
+	size_t size,
+	struct hal_image **img);
 
-/* Create an image with a JPEG file. */
-bool create_image_with_jpeg(const uint8_t *data, size_t size, struct image **img);
+/*
+ * Create an image with a WebP file.
+ */
+bool
+hal_create_image_with_webp(
+	const uint8_t *data,
+	size_t size,
+	struct hal_image **img);
 
-/* Create an image with a WebP file. */
-bool create_image_with_webp(const uint8_t *data, size_t size, struct image **img);
+/*
+ * Destroy an image.
+ */
+void
+hal_destroy_image(
+	struct hal_image *img);
 
-/* Destroy an image. */
-void destroy_image(struct image *img);
+/*
+ * Get an image width.
+ */
+int
+hal_get_image_width(
+	struct hal_image *img);
 
-/* Get an image width. */
-int get_image_width(struct image *img);
+/*
+ * Get an image height.
+ */
+int
+hal_get_image_height(
+	struct hal_image *img);
 
-/* Get an image height. */
-int get_image_height(struct image *img);
+/*
+ * Get image pixels.
+ */
+hal_pixel_t *
+hal_get_image_pixels(
+	struct hal_image *img);
 
-/* Get image pixels. */
-pixel_t *get_image_pixels(struct image *img);
+/*
+ * Clear an image with a uniform color.
+ */
+void
+hal_clear_image(
+	struct hal_image *img,
+	hal_pixel_t color);
 
-/* Clear an image with a uniform color. */
-void clear_image(struct image *img, pixel_t color);
+/*
+ * Clear an image rectangle with a uniform color.
+ */
+void
+hal_clear_image_rect(
+	struct hal_image *img,
+	int x,
+	int y,
+	int w,
+	int h,
+	hal_pixel_t color);
 
-/* Clear an image rectangle with a uniform color. */
-void clear_image_rect(struct image *img, int x, int y, int w, int h, pixel_t color);
+/*
+ * Clear alpha channel with 255.
+ */
+void
+hal_fill_image_alpha(
+	struct hal_image *img);
 
-/* Clear alpha channel with 255. */
-void fill_image_alpha(struct image *img);
+/*
+ * Draw an image on an image. (copy)
+ */
+void
+hal_draw_image_copy(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top);
 
-/* Draw an image on an image. (copy) */
-void draw_image_copy(struct image *dst_image, int dst_left, int dst_top,
-		     struct image *src_image, int width, int height,
-		     int src_left, int src_top);
+/*
+ * Draw an image on an image. (alpha-blending, dst_alpha=255)
+ */
+void
+hal_draw_image_alpha(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw an image on an image. (alpha-blending, dst_alpha=255) */
-void draw_image_alpha(struct image *dst_image, int dst_left, int dst_top,
-		      struct image *src_image, int width, int height,
-		      int src_left, int src_top, int alpha);
+/*
+ * Draw an image on an image. (add-blending)
+ */
+void
+hal_draw_image_add(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw an image on an image. (add-blending) */
-void draw_image_add(struct image *dst_image, int dst_left, int dst_top,
-		    struct image *src_image, int width, int height,
-		    int src_left, int src_top, int alpha);
+/*
+ * Draw an image on an image. (add-blending)
+ */
+void
+hal_draw_image_sub(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw an image on an image. (add-blending) */
-void draw_image_sub(struct image *dst_image, int dst_left, int dst_top,
-		    struct image *src_image, int width, int height,
-		    int src_left, int src_top, int alpha);
+/*
+ * Draw a glyph image on an image. (alphablending, special alpha value)
+ */
+void
+hal_draw_image_glyph(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw a glyph image on an image. (alphablending, special alpha value) */
-void draw_image_glyph(struct image *dst_image, int dst_left, int dst_top,
-		      struct image *src_image, int width, int height,
-		      int src_left, int src_top, int alpha);
+/*
+ * Draw an emoji image on an image. (alphablending, special alpha value)
+ */
+void
+hal_draw_image_emoji(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw an emoji image on an image. (alphablending, special alpha value) */
-void draw_image_emoji(struct image *dst_image, int dst_left, int dst_top,
-		      struct image *src_image, int width, int height,
-		      int src_left, int src_top, int alpha);
+/*
+ * Draw an image on an image. (50% dimming)
+ */
+void
+hal_draw_image_dim(
+	struct hal_image *dst_image,
+	int dst_left,
+	int dst_top,
+	struct hal_image *src_image,
+	int width,
+	int height,
+	int src_left,
+	int src_top,
+	int alpha);
 
-/* Draw an image on an image. (50% dimming) */
-void draw_image_dim(struct image *dst_image, int dst_left, int dst_top,
-		    struct image *src_image, int width, int height,
-		    int src_left, int src_top, int alpha);
+/*
+ * Draw an image with 1-bit rule image.
+ */
+void
+hal_draw_image_rule(
+	struct hal_image *dst_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int threshold);
 
-/* Draw an image with 1-bit rule image. */
-void draw_image_rule(struct image *dst_image,
-		     struct image *src_image,
-		     struct image *rule_image,
-		     int threshold);
+/*
+ * Draw an image with 8-bit rule image.
+ */
+void
+hal_draw_image_melt(
+	struct hal_image *dst_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int threshold);
 
-/* Draw an image with 8-bit rule image. */
-void draw_image_melt(struct image *dst_image,
-		     struct image *src_image,
-		     struct image *rule_image,
-		     int threshold);
+/*
+ * Draw an image with scaling.
+ */
+void
+hal_draw_image_scale(
+	struct hal_image *dst_image,
+	int virtual_dst_width,
+	int virtual_dst_height,
+	int virtual_dst_left,
+	int virtual_dst_top,
+	struct hal_image *src_image);
 
-/* Draw an image with scaling. */
-void draw_image_scale(struct image *dst_image,
-		      int virtual_dst_width,
-		      int virtual_dst_height,
-		      int virtual_dst_left,
-		      int virtual_dst_top,
-		      struct image *src_image);
-
-/* Clip a rectangle by a source size. */
-bool clip_by_source(int src_cx, int src_cy, int *cx, int *cy,
-		    int *dst_x, int *dst_y, int *src_x, int *src_y);
+/*
+ * Clip a rectangle by a source size.
+ */
+bool
+hal_clip_by_source(
+	int src_cx,
+	int src_cy,
+	int *cx,
+	int *cy,
+	int *dst_x,
+	int *dst_y, int *src_x, int *src_y);
 
 /* Clip a rectangle by a destination size. */
-bool clip_by_dest(int dst_cx, int dst_cy, int *cx, int *cy,
-		  int *dst_x, int *dst_y, int *src_x, int *src_y);
+bool
+hal_clip_by_dest(
+	int dst_cx,
+	int dst_cy,
+	int *cx,
+	int *cy,
+	int *dst_x,
+	int *dst_y,
+	int *src_x,
+	int *src_y);
 
 /*********
  * Glyph *
  *********/
 
-/* Unicode Codepoints */
-#define CHAR_TOUTEN		(0x3001)
-#define CHAR_KUTEN		(0x3002)
-#define CHAR_YENSIGN		(0x00a5)
+/*
+ * Unicode Codepoints
+ */
+#define HAL_CHAR_TOUTEN		(0x3001)
+#define HAL_CHAR_KUTEN		(0x3002)
+#define HAL_CHAR_YENSIGN	(0x00a5)
 
-/* Maximum Font Index */
-#define GLYPH_DATA_COUNT	(4)
+/*
+ * Maximum Font Index
+ */
+#define HAL_GLYPH_DATA_COUNT	(4)
 
-/* Initialize the font renderer. */
-bool init_glyph(void);
+/*
+ * Initialize the font renderer.
+ */
+bool
+hal_init_glyph(void);
 
-/* Cleanup the font renderer. */
-void cleanup_glyph(void);
+/*
+ * Cleanup the font renderer.
+ */
+void
+hal_cleanup_glyph(void);
 
-/* Load a glyph data. (TTF) */
-bool load_glyph_data(int slot, const uint8_t *data, size_t len);
+/*
+ * Load a glyph data. (TTF)
+ */
+bool
+hal_load_glyph_data(
+	int slot,
+	const uint8_t *data,
+	size_t len);
 
-/* Destroy a glyph data. */
-void destroy_glyph_data(int index);
+/*
+ * Destroy a glyph data.
+ */
+void
+hal_destroy_glyph_data(
+	int index);
 
-/* Get a top character of a utf-8 string as utf-32. */
-int utf8_to_utf32(const char *mbs, uint32_t *wc);
+/*
+ * Get a top character of a utf-8 string as utf-32.
+ */
+int
+hal_utf8_to_utf32(
+	const char *mbs,
+	uint32_t *wc);
 
-/* Get a character count of a utf-8 string. */
-int count_utf8_chars(const char *mbs);
+/*
+ * Get a character count of a utf-8 string.
+ */
+int
+hal_count_utf8_chars(
+	const char *mbs);
 
-/* Get a width for a character. */
-int get_glyph_width(int slot, int size, uint32_t codepoint);
+/*
+ * Get a width for a character.
+ */
+int
+hal_get_glyph_width(
+	int slot,
+	int size,
+	uint32_t codepoint);
 
-/* Get a height for a character. */
-int get_glyph_height(int slot, int size, uint32_t codepoint);
+/*
+ * Get a height for a character.
+ */
+int
+hal_get_glyph_height(
+	int slot,
+	int size,
+	uint32_t codepoint);
 
-/* Get a width and a height for a character. */
-void get_glyph_width_and_height(int slot, int size, uint32_t codepoint, int *width, int *height);
+/*
+ * Get a width and a height for a character.
+ */
+void
+hal_get_glyph_width_and_height(
+	int slot,
+	int size,
+	uint32_t codepoint,
+	int *width,
+	int *height);
 
-/* Get a width for a string. */
-int get_string_width(int font_type, int font_size, const char *mbs);
+/*
+ * Get a width for a string.
+ */
+int
+hal_get_string_width(
+	int font_type,
+	int font_size,
+	const char *mbs);
 
-/* Get a height for a string. */
-int get_string_height(int font_type, int font_size, const char *mbs);
+/*
+ * Get a height for a string.
+ */
+int
+hal_get_string_height(
+	int font_type,
+	int font_size,
+	const char *mbs);
 
-/* Get a width and a height for a string. */
-void get_string_width_and_height(int slot, int size, const char *mbs, int *width, int *height);
+/*
+ * Get a width and a height for a string.
+ */
+void
+hal_get_string_width_and_height(
+	int slot,
+	int size,
+	const char *mbs,
+	int *width,
+	int *height);
 
-/* Draw a character. */
-bool draw_glyph(struct image *img,
-		int font_index,
-		int font_size,
-		int base_font_size,
-		int outline_size,
-		int x,
-		int y,
-		pixel_t color,
-		pixel_t outline_color,
-		uint32_t codepoint,
-		int *ret_w,
-		int *ret_h,
-		bool is_dim);
+/*
+ * Draw a character.
+ */
+bool
+hal_draw_glyph(
+	struct hal_image *img,
+	int font_index,
+	int font_size,
+	int base_font_size,
+	int outline_size,
+	int x,
+	int y,
+	hal_pixel_t color,
+	hal_pixel_t outline_color,
+	uint32_t codepoint,
+	int *ret_w,
+	int *ret_h,
+	bool is_dim);
 
 /*********
  * Sound *
  *********/
 
-/* Sound Tracks */
-#define SOUND_TRACKS	(4)
+/*
+ * PCM Stream
+ */
+struct hal_wave;
 
-/* PCM Stream */
-struct wave;
+/*
+ * Create a wave stream from a file.
+ */
+bool
+hal_create_wave_from_file(
+	const char *file,
+	bool loop,
+	struct hal_wave **w);
 
-/* Create a wave stream from a file. */
-struct wave *create_wave_from_file(const char *file, bool loop);
+/*
+ * Destroy a wave stream.
+ */
+void
+hal_destroy_wave(
+	struct hal_wave *w);
 
-/* Destroy a wave stream. */
-void destroy_wave(struct wave *w);
+/*
+ * Set a repeat count of a wave stream.
+ */
+void
+hal_set_wave_repeat_times(
+	struct hal_wave *w,
+	int n);
 
-/* Set a repeat count of a wave stream. */
-void set_wave_repeat_times(struct wave *w, int n);
+/*
+ * Get whether a wave stream is reached end-of-stream or not.
+ */
+bool
+hal_is_wave_eos(
+	struct hal_wave *w);
 
-/* Get whether a wave stream is reached end-of-stream or not. */
-bool is_wave_eos(struct wave *w);
-
-/* Get PCM samples from a wave stream. */
-int get_wave_samples(struct wave *w, uint32_t *buf, int samples);
+/*
+ * Get PCM samples from a wave stream.
+ */
+int
+hal_get_wave_samples(
+	struct hal_wave *w,
+	uint32_t *buf,
+	int samples);
 
 /************************
  * Texture Manipulation *
  ************************/
 
 /*
- * Notifies an image update.
+ * Notify an image update.
  *  - This function tells a HAL that an image needs to be uploaded to GPU.
  */
-void notify_image_update(struct image *img);
+void
+hal_notify_image_update(
+	struct hal_image *img);
 
 /*
- * Notifies an image free.
+ * Notify an image free.
  *  - This function tells a HAL that an image is no longer used.
  *  - This function must be called from destroy_image() only.
  */
-void notify_image_free(struct image *img);
+void
+hal_notify_image_free(
+	struct hal_image *img);
 
 /*
- * Returns if RGBA values have to be reversed to BGRA.
+ * Return if RGBA values have to be reversed to BGRA.
  */
-#if defined(TARGET_ANDROID) || \
-    defined(TARGET_WASM) || \
-    (defined(TARGET_LINUX) && (defined(USE_X11_OPENGL) || defined(USE_QT)))
+#if defined(HAL_TARGET_ANDROID) || \
+    defined(HAL_TARGET_WASM) || \
+    (defined(HAL_TARGET_LINUX) && (defined(HAL_USE_X11_OPENGL) || defined(HAL_USE_QT)))
 #define IS_OPENGL_BYTE_ORDER()	true
 #else
 #define IS_OPENGL_BYTE_ORDER()	false
@@ -401,16 +795,16 @@ void notify_image_free(struct image *img);
  *************/
 
 /*
- * Renders an image to the screen with the "normal" shader pipeline.
+ * Render an image to the screen with the "normal" shader pipeline.
  *  - The "normal" shader pipeline renders pixels with alpha blending.
  */
 void
-render_image_normal(
+hal_render_image_normal(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	int dst_height,			/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -418,16 +812,16 @@ render_image_normal(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen with the "add" shader pipeline.
+ * Render an image to the screen with the "add" shader pipeline.
  *  - The "add" shader pipeline renders pixels with add blending.
  */
 void
-render_image_add(
+hal_render_image_add(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	int dst_height,			/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -435,16 +829,16 @@ render_image_add(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen with the "sub" shader pipeline.
+ * Render an image to the screen with the "sub" shader pipeline.
  *  - The "sub" shader pipeline renders pixels with subtract blending.
  */
 void
-render_image_sub(
+hal_render_image_sub(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	int dst_height,			/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -452,16 +846,16 @@ render_image_sub(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen with the "dim" shader pipeline.
+ * Render an image to the screen with the "dim" shader pipeline.
  *  - The "dim" shader pipeline renders pixels at 50% value for each RGB component.
  */
 void
-render_image_dim(
+hal_render_image_dim(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
-	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	int dst_height,			/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -469,31 +863,32 @@ render_image_dim(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen with the "rule" shader pipeline.
+ * Render an image to the screen with the "rule" shader pipeline.
  *  - The "rule" shader pipeline is a variation of "universal transition" with a threshold value.
  *  - A rule image must have the same size as the screen.
  */
 void
-render_image_rule(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
+hal_render_image_rule(
+	struct hal_image *src_img,	/* [IN] The source image */
+	struct hal_image *rule_img,	/* [IN] The rule image */
 	int threshold);			/* The threshold (0 to 255) */
 
 /*
- * Renders an image to the screen with the "melt" shader pipeline.
+ * Render an image to the screen with the "melt" shader pipeline.
  *  - The "melt" shader pipeline is a variation of "universal transition" with a progress value
  *  - A rule image must have the same size as the screen
  */
-void render_image_melt(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
+void
+hal_render_image_melt(
+	struct hal_image *src_img,	/* [IN] The source image */
+	struct hal_image *rule_img,	/* [IN] The rule image */
 	int progress);			/* The progress (0 to 255) */
 
 /*
- * Renders an image to the screen as a triangle strip with the "normal" shader pipeline.
+ * Render an image to the screen as a triangle strip with the "normal" shader pipeline.
  */
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -502,7 +897,7 @@ render_image_3d_normal(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -510,10 +905,10 @@ render_image_3d_normal(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen as a triangle strip with the "add" shader pipeline.
+ * Render an image to the screen as a triangle strip with the "add" shader pipeline.
  */
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -522,7 +917,7 @@ render_image_3d_add(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -530,10 +925,10 @@ render_image_3d_add(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen as a triangle strip with the "sub" shader pipeline.
+ * Render an image to the screen as a triangle strip with the "sub" shader pipeline.
  */
 void
-render_image_3d_sub(
+hal_render_image_3d_sub(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -542,7 +937,7 @@ render_image_3d_sub(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -550,10 +945,10 @@ render_image_3d_sub(
 	int alpha);			/* The alpha value (0 to 255) */
 
 /*
- * Renders an image to the screen as a triangle strip with the "dim" shader pipeline.
+ * Render an image to the screen as a triangle strip with the "dim" shader pipeline.
  */
 void
-render_image_3d_dim(
+hal_render_image_3d_dim(
 	float x1,			/* x1 */
 	float y1,			/* y1 */
 	float x2,			/* x2 */
@@ -562,7 +957,7 @@ render_image_3d_dim(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -574,140 +969,173 @@ render_image_3d_dim(
  *************/
 
 /*
- * Resets a lap timer and initializes it with a current time.
+ * Reset a lap timer and initializes it with a current time.
  */
-void reset_lap_timer(uint64_t *origin);
+void
+hal_reset_lap_timer(
+	uint64_t *origin);
 
 /*
- * Gets a lap time in milliseconds.
+ * Get a lap time in milliseconds.
  */
-uint64_t get_lap_timer_millisec(uint64_t *origin);
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *origin);
 
 /******************
  * Sound Playback *
  ******************/
 
 /*
- * Note: we have the following sound streams:
- *  - SOUND_BGM:   background music
- *  - SOUND_SE:    sound effect
- *  - SOUND_VOICE: character voice
- *  - SOUND_SYS1:  system sound
- *  - SOUND_SYS2:  system sound
+ * Sound Tracks
  */
+#define HAL_SOUND_BGM		(0)
+#define HAL_SOUND_SE		(1)
+#define HAL_SOUND_VOICE		(2)
+#define HAL_SOUND_SYS1		(3)		
+#define HAL_SOUND_SYS2		(4)
+#define HAL_SOUND_TRACKS	(5)
 
 /*
- * Starts playing a sound file on a track.
+ * Start playing a sound file on a track.
  */
 bool
-play_sound(int stream,		/* A sound stream index */
-	   struct wave *w);	/* [IN] A sound object, ownership will be delegated to the callee */
+hal_play_sound(
+	int stream,		/* A sound stream index */
+	struct hal_wave *w);	/* [IN] A sound object, ownership will be delegated to the callee */
 
 /*
- * Stops playing a sound track.
+ * Stop playing a sound track.
  */
-bool stop_sound(int stream);
+bool
+hal_stop_sound(
+	int stream);
 
 /*
- * Sets sound volume.
+ * Set sound volume.
  */
-bool set_sound_volume(int stream, float vol);
+bool
+hal_set_sound_volume(
+	int stream,
+	float vol);
 
 /*
- * Returns whether a sound playback for a stream is already finished.
+ * Return whether a sound playback for a stream is already finished.
  */
-bool is_sound_finished(int stream);
+bool
+hal_is_sound_finished(
+	int stream);
 
 /******************
  * Video Playback *
  ******************/
 
 /*
- * Starts playing a video file.
+ * Start playing a video file.
  */
-bool play_video(const char *fname,	/* file name */
-		bool is_skippable);	/* allow skip for a unseen video */
+bool
+hal_play_video(
+	const char *fname,	/* File name */
+	bool is_skippable);	/* Allow skip for a unseen video */
 
 /*
- * Stops playing music stream.
+ * Stop playing music stream.
  */
-void stop_video(void);
+void
+hal_stop_video(void);
 
 /*
- * Returns whether a video playcack is running.
+ * Return whether a video playback is running.
  */
-bool is_video_playing(void);
+bool
+hal_is_video_playing(void);
 
 /***********************
  * Window Manipulation *
  ***********************/
 
 /*
- * Returns whether the current HAL supports the "full screen mode".
+ * Return whether the current HAL supports the "full screen mode".
  *  - The "full screen mode" includes the dock-in of some game consoles.
  *  - A HAL can implement the "full screen mode" but it is optional.
  */
-bool is_full_screen_supported(void);
+bool
+hal_is_full_screen_supported(void);
 
 /*
- * Returns whether the current HAL is in the "full screen mode".
+ * Return whether the current HAL is in the "full screen mode".
  */
-bool is_full_screen_mode(void);
+bool
+hal_is_full_screen_mode(void);
 
 /*
- * Enters the full screen mode.
+ * Enter the full screen mode.
  *  - A HAL can ignore this call.
  */
-void enter_full_screen_mode(void);
+void
+hal_enter_full_screen_mode(void);
 
 /*
- * Leaves the full screen mode.
+ * Leave the full screen mode.
  *  - A HAL can ignore this call.
  */
-void leave_full_screen_mode(void);
+void
+hal_leave_full_screen_mode(void);
 
 /*********************
  * Path Manipulation *
  *********************/
 
 /*
- * Creates a save directory if it does not exist.
+ * Create a save directory if it does not exist.
  */
-bool make_save_directory(void);
+bool
+hal_make_save_directory(void);
 
 /*
  * Creates a real path string from a file name.
  *  - Return value must be freed by callers with free().
  */
-char *make_real_path(const char *fname);
+char *
+hal_make_real_path(const char *fname);
 
 /***********
  * Logging *
  ***********/
 
 /*
- * Note that sound threads cannot use logging
+ * Note that sound threads cannot use these logging functions.
  */
 
 /*
- * Puts a "info" level log with printf formats.
+ * Put a "info" level log with printf formats.
  */
-bool log_info(const char *s, ...);
+bool
+hal_log_info(
+	const char *s,
+	...);
 
 /*
- * Puts a "warn" level log with printf formats.
+ * Put a "warn" level log with printf formats.
  */
-bool log_warn(const char *s, ...);
+bool
+hal_log_warn(
+	const char *s,
+	...);
 
 /*
- * Puts an "error" level log with printf formats.
+ * Put an "error" level log with printf formats.
  */
-bool log_error(const char *s, ...);
+bool
+hal_log_error(
+	const char *s,
+	...);
 
 /*
  * Log out-of-memory.
  */
-bool log_out_of_memory(void);
+bool
+hal_log_out_of_memory(void);
 
 /**********
  * Locale *
@@ -728,7 +1156,8 @@ bool log_out_of_memory(void);
  *    - "ru": Russian
  *    - "other": Other (must fallback to English)
  */
-const char *get_system_language(void);
+const char *
+hal_get_system_language(void);
 
 /****************
  * Touch Screen *
@@ -737,7 +1166,9 @@ const char *get_system_language(void);
 /*
  * Enable/disable message skip by touch move.
  */
-void set_continuous_swipe_enabled(bool is_enabled);
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled);
 
 /*************
  * Callbacks *
@@ -748,134 +1179,134 @@ void set_continuous_swipe_enabled(bool is_enabled);
  */
 
 /* Keycode. */
-enum key_code {
-	KEY_ESCAPE,
-	KEY_RETURN,
-	KEY_SPACE,
-	KEY_TAB,
-	KEY_BACKSPACE,
-	KEY_DELETE,
-	KEY_HOME,
-	KEY_END,
-	KEY_PAGEUP,
-	KEY_PAGEDOWN,
-	KEY_SHIFT,
-	KEY_CONTROL,
-	KEY_ALT,
-	KEY_UP,
-	KEY_DOWN,
-	KEY_LEFT,
-	KEY_RIGHT,
-	KEY_A,
-	KEY_B,
-	KEY_C,
-	KEY_D,
-	KEY_E,
-	KEY_F,
-	KEY_G,
-	KEY_H,
-	KEY_I,
-	KEY_J,
-	KEY_K,
-	KEY_L,
-	KEY_M,
-	KEY_N,
-	KEY_O,
-	KEY_P,
-	KEY_Q,
-	KEY_R,
-	KEY_S,
-	KEY_T,
-	KEY_U,
-	KEY_V,
-	KEY_W,
-	KEY_X,
-	KEY_Y,
-	KEY_Z,
-	KEY_1,
-	KEY_2,
-	KEY_3,
-	KEY_4,
-	KEY_5,
-	KEY_6,
-	KEY_7,
-	KEY_8,
-	KEY_9,
-	KEY_0,
-	KEY_F1,
-	KEY_F2,
-	KEY_F3,
-	KEY_F4,
-	KEY_F5,
-	KEY_F6,
-	KEY_F7,
-	KEY_F8,
-	KEY_F9,
-	KEY_F10,
-	KEY_F11,
-	KEY_F12,
-	KEY_GAMEPAD_UP,
-	KEY_GAMEPAD_DOWN,
-	KEY_GAMEPAD_LEFT,
-	KEY_GAMEPAD_RIGHT,
-	KEY_GAMEPAD_A,
-	KEY_GAMEPAD_B,
-	KEY_GAMEPAD_X,
-	KEY_GAMEPAD_Y,
-	KEY_GAMEPAD_L,
-	KEY_GAMEPAD_R,
-	KEY_MAX,
+enum hal_key_code {
+	HAL_KEY_ESCAPE,
+	HAL_KEY_RETURN,
+	HAL_KEY_SPACE,
+	HAL_KEY_TAB,
+	HAL_KEY_BACKSPACE,
+	HAL_KEY_DELETE,
+	HAL_KEY_HOME,
+	HAL_KEY_END,
+	HAL_KEY_PAGEUP,
+	HAL_KEY_PAGEDOWN,
+	HAL_KEY_SHIFT,
+	HAL_KEY_CONTROL,
+	HAL_KEY_ALT,
+	HAL_KEY_UP,
+	HAL_KEY_DOWN,
+	HAL_KEY_LEFT,
+	HAL_KEY_RIGHT,
+	HAL_KEY_A,
+	HAL_KEY_B,
+	HAL_KEY_C,
+	HAL_KEY_D,
+	HAL_KEY_E,
+	HAL_KEY_F,
+	HAL_KEY_G,
+	HAL_KEY_H,
+	HAL_KEY_I,
+	HAL_KEY_J,
+	HAL_KEY_K,
+	HAL_KEY_L,
+	HAL_KEY_M,
+	HAL_KEY_N,
+	HAL_KEY_O,
+	HAL_KEY_P,
+	HAL_KEY_Q,
+	HAL_KEY_R,
+	HAL_KEY_S,
+	HAL_KEY_T,
+	HAL_KEY_U,
+	HAL_KEY_V,
+	HAL_KEY_W,
+	HAL_KEY_X,
+	HAL_KEY_Y,
+	HAL_KEY_Z,
+	HAL_KEY_1,
+	HAL_KEY_2,
+	HAL_KEY_3,
+	HAL_KEY_4,
+	HAL_KEY_5,
+	HAL_KEY_6,
+	HAL_KEY_7,
+	HAL_KEY_8,
+	HAL_KEY_9,
+	HAL_KEY_0,
+	HAL_KEY_F1,
+	HAL_KEY_F2,
+	HAL_KEY_F3,
+	HAL_KEY_F4,
+	HAL_KEY_F5,
+	HAL_KEY_F6,
+	HAL_KEY_F7,
+	HAL_KEY_F8,
+	HAL_KEY_F9,
+	HAL_KEY_F10,
+	HAL_KEY_F11,
+	HAL_KEY_F12,
+	HAL_KEY_GAMEPAD_UP,
+	HAL_KEY_GAMEPAD_DOWN,
+	HAL_KEY_GAMEPAD_LEFT,
+	HAL_KEY_GAMEPAD_RIGHT,
+	HAL_KEY_GAMEPAD_A,
+	HAL_KEY_GAMEPAD_B,
+	HAL_KEY_GAMEPAD_X,
+	HAL_KEY_GAMEPAD_Y,
+	HAL_KEY_GAMEPAD_L,
+	HAL_KEY_GAMEPAD_R,
+	HAL_KEY_MAX,
 };
 
 /* Mouse button. */
-enum mouse_button {
-	MOUSE_LEFT,
-	MOUSE_RIGHT,
+enum hal_mouse_button {
+	HAL_MOUSE_LEFT,
+	HAL_MOUSE_RIGHT,
 };
 
 /* Analog input. */
-enum analog_input {
-	ANALOG_X1,
-	ANALOG_Y1,
-	ANALOG_X2,
-	ANALOG_Y2,
-	ANALOG_L,
-	ANALOG_R,
+enum hal_analog_input {
+	HAL_ANALOG_X1,
+	HAL_ANALOG_Y1,
+	HAL_ANALOG_X2,
+	HAL_ANALOG_Y2,
+	HAL_ANALOG_L,
+	HAL_ANALOG_R,
 };
 
 /* Callbacks. */
-bool on_event_boot(char **title, int *width, int *height);
-bool on_event_start(void);
-void on_event_stop(void);
-bool on_event_frame(void);
-void on_event_key_press(int key);
-void on_event_key_release(int key);
-void on_event_mouse_press(int button, int x, int y);
-void on_event_mouse_release(int button, int x, int y);
-void on_event_mouse_move(int x, int y);
-void on_event_analog_input(int input, int val);
-void on_event_touch_cancel(void);
-void on_event_swipe_down(void);
-void on_event_swipe_up(void);
+bool hal_callback_on_event_boot(char **title, int *width, int *height);
+bool hal_callback_on_event_start(void);
+void hal_callback_on_event_stop(void);
+bool hal_callback_on_event_frame(void);
+void hal_callback_on_event_key_press(int key);
+void hal_callback_on_event_key_release(int key);
+void hal_callback_on_event_mouse_press(int button, int x, int y);
+void hal_callback_on_event_mouse_release(int button, int x, int y);
+void hal_callback_on_event_mouse_move(int x, int y);
+void hal_callback_on_event_analog_input(int input, int val);
+void hal_callback_on_event_touch_cancel(void);
+void hal_callback_on_event_swipe_down(void);
+void hal_callback_on_event_swipe_up(void);
 
 /***************************
- * Forein Language Support *
+ * Foreign Language Support *
  ***************************/
 
-#if !defined(USE_CSHARP) && !defined(USE_SWIFT)
+#if !defined(HAL_USE_CSHARP) && !defined(HAL_USE_SWIFT)
 #define UNSAFEPTR(t) t
 #endif
 
 /*
  * Swift Support (Swift Function Pointers)
  */
-#if defined(USE_SWIFT)
+#if defined(HAL_USE_SWIFT)
 #define UNSAFEPTR(t)  t	/* For Swift */
 extern void (*wrap_log_info)(UNSAFEPTR(const char *) s);
 extern void (*wrap_log_warn)(UNSAFEPTR(const char *) s);
 extern void (*wrap_log_error)(UNSAFEPTR(const char *) s);
-extern void (*wrap_make_sav_dir)(void);
-extern void (*wrap_make_valid_path)(UNSAFEPTR(const char *) dir, UNSAFEPTR(const char *) fname, UNSAFEPTR(const char *) dst, int len);
+extern void (*wrap_make_save_directory)(void);
+extern void (*wrap_make_real_path)(UNSAFEPTR(const char *) dir, UNSAFEPTR(const char *) fname, UNSAFEPTR(const char *) dst, int len);
 extern void (*wrap_notify_image_update)(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels);
 extern void (*wrap_notify_image_free)(int id);
 extern void (*wrap_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
@@ -909,24 +1340,12 @@ extern UNSAFEPTR(void *) (*wrap_get_file_contents)(UNSAFEPTR(const char *) file_
 extern void (*wrap_open_save_file)(UNSAFEPTR(const char *) file_name);
 extern void (*wrap_write_save_file)(int b);
 extern void (*wrap_close_save_file)(void);
-extern void (*wrap_set_continuous_swipe_enabled)(bool is_enabled);
-extern bool (*wrap_is_continue_pushed)(void);
-extern bool (*wrap_is_next_pushed)(void);
-extern bool (*wrap_is_stop_pushed)(void);
-extern bool (*wrap_is_script_opened)(void);
-extern UNSAFEPTR(const char *) (*wrap_get_opened_script)(void);
-extern bool (*wrap_is_exec_line_changed)(void);
-extern bool (*wrap_get_changed_exec_line)(void);
-extern void (*wrap_on_change_running_state)(int running, int request_stop);
-extern void (*wrap_on_load_script)(void);
-extern void (*wrap_on_change_position)(void);
-extern void (*wrap_on_update_variable)(void);
-#endif /* defined(USE_SWIFT) */
+#endif /* defined(HAL_USE_SWIFT) */
 
 /*
- * C# Support (init_hal_func_table() is called from C#)
+ * C# Support (hal_init_func_table() is called from C#)
  */
-#if defined(USE_CSHARP)
+#if defined(HAL_USE_CSHARP)
 
 #define UNSAFEPTR(t)  intptr_t	/* For C# */
 
@@ -934,11 +1353,11 @@ extern void (*wrap_on_update_variable)(void);
 #define __cdecl
 #endif
 
-void init_hal_func_table(
+void hal_init_func_table(
 	void __cdecl (*p_log_info)(UNSAFEPTR(const char *) s),
 	void __cdecl (*p_log_warn)(UNSAFEPTR(const char *) s),
 	void __cdecl (*p_log_error)(UNSAFEPTR(const char *) s),
-	void __cdecl (*p_log_out_of_memory)(UNSAFEPTR(const char *) s),
+	void __cdecl (*p_log_out_of_memory)(void),
 	void __cdecl (*p_make_save_directory)(void),
 	void __cdecl (*p_make_real_path)(UNSAFEPTR(const char *) fname, UNSAFEPTR(const char *) dst, int len),
 	void __cdecl (*p_notify_image_update)(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels),
@@ -980,15 +1399,19 @@ void init_hal_func_table(
 #undef __cdecl
 #endif
 
-#endif /* deinfed(USE_CSHARP) */
+#endif /* defined(HAL_USE_CSHARP) */
 
 /***********
  * Helpers *
  ***********/
 
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 const wchar_t *win32_utf8_to_utf16(const char *s);
 const char *win32_utf16_to_utf8(const wchar_t *s);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

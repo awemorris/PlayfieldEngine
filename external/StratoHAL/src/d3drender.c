@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -183,7 +180,7 @@ BOOL D3DIsSoftRendering(void)
 	return FALSE;
 }
 
-void notify_image_update(struct image *img)
+void hal_notify_image_update(struct image *img)
 {
 	switch (nGraphicsMode)
 	{
@@ -202,7 +199,7 @@ void notify_image_update(struct image *img)
 	}
 }
 
-void notify_image_free(struct image *img)
+void hal_notify_image_free(struct image *img)
 {
 	switch (nGraphicsMode)
 	{
@@ -222,11 +219,11 @@ void notify_image_free(struct image *img)
 }
 
 void
-render_image_normal(
+hal_render_image_normal(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
 	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
+	int dst_height,				/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] an image to be rendered */
 	int src_left,				/* The X coordinate of a source image */
 	int src_top,				/* The Y coordinate of a source image */
@@ -252,11 +249,11 @@ render_image_normal(
 }
 
 void
-render_image_add(
+hal_render_image_add(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
 	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
+	int dst_height,				/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] an image to be rendered */
 	int src_left,				/* The X coordinate of a source image */
 	int src_top,				/* The Y coordinate of a source image */
@@ -282,11 +279,11 @@ render_image_add(
 }
 
 void
-render_image_sub(
+hal_render_image_sub(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
 	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
+	int dst_height,				/* The height of the destination rectangle */
 	struct image *src_image,	/* [IN] an image to be rendered */
 	int src_left,				/* The X coordinate of a source image */
 	int src_top,				/* The Y coordinate of a source image */
@@ -312,7 +309,7 @@ render_image_sub(
 }
 
 void
-render_image_dim(
+hal_render_image_dim(
 	int dst_left,				/* The X coordinate of the screen */
 	int dst_top,				/* The Y coordinate of the screen */
 	int dst_width,				/* The width of the destination rectangle */
@@ -341,7 +338,11 @@ render_image_dim(
 	}
 }
 
-void render_image_rule(struct image *src_image, struct image *rule_image, int threshold)
+void
+hal_render_image_rule(
+	struct image *src_image,
+	struct image *rule_image,
+	int threshold)
 {
 	switch (nGraphicsMode)
 	{
@@ -360,7 +361,7 @@ void render_image_rule(struct image *src_image, struct image *rule_image, int th
 	}
 }
 
-void render_image_melt(struct image *src_image, struct image *rule_image, int progress)
+hal_void render_image_melt(struct image *src_image, struct image *rule_image, int progress)
 {
 	switch (nGraphicsMode)
 	{
@@ -380,7 +381,7 @@ void render_image_melt(struct image *src_image, struct image *rule_image, int pr
 }
 
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,
 	float y1,
 	float x2,
@@ -414,7 +415,7 @@ render_image_3d_normal(
 }
 
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,
 	float y1,
 	float x2,
@@ -448,7 +449,7 @@ render_image_3d_add(
 }
 
 void
-render_image_3d_sub(
+hal_render_image_3d_sub(
 	float x1,
 	float y1,
 	float x2,
@@ -483,7 +484,7 @@ render_image_3d_sub(
 }
 
 void
-render_image_3d_dim(
+hal_render_image_3d_dim(
 	float x1,
 	float y1,
 	float x2,

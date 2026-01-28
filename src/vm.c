@@ -91,7 +91,7 @@ bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -132,7 +132,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -209,7 +209,7 @@ static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -231,7 +231,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -266,9 +266,9 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		log_error(PPS_TR("In tag %s:%d: runtime error."),
-			  get_tag_file_name(),
-			  get_tag_line());
+		hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+			      get_tag_file_name(),
+			      get_tag_line());
 		return false;
 	}
 
@@ -276,15 +276,15 @@ bool call_vm_tag_function(bool *tag_end)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			log_error(PPS_TR("In tag %s:%d: runtime error."),
-				  get_tag_file_name(),
-				  get_tag_line());
+			hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+				      get_tag_file_name(),
+				      get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			log_error(PPS_TR("In tag %s:%d: runtime error."),
-				  get_tag_file_name(),
-				  get_tag_line());
+			hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+				      get_tag_file_name(),
+				      get_tag_line());
 			return false;
 		}
 	}
@@ -294,17 +294,17 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		log_error(PPS_TR("%s:%d: Tag \"%s\" not found."),
-			  get_tag_file_name(),
-			  get_tag_line(),
-			  t->tag_name);
+		hal_log_error(PPS_TR("%s:%d: Tag \"%s\" not found."),
+			      get_tag_file_name(),
+			      get_tag_line(),
+			      t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function."),
-			  get_tag_file_name(),
-			  get_tag_line(),
-			  t->tag_name);
+		hal_log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function."),
+			      get_tag_file_name(),
+			      get_tag_line(),
+			      t->tag_name);
 		return false;
 	}
 
@@ -314,15 +314,15 @@ bool call_vm_tag_function(bool *tag_end)
 		int line;
 		const char *msg;
 
-		log_error(PPS_TR("In tag %s:%d: Tag \"%s\" execution error."),
-			  get_tag_file_name(),
-			  get_tag_line(),
-			  t->tag_name);
+		hal_log_error(PPS_TR("In tag %s:%d: Tag \"%s\" execution error."),
+			      get_tag_file_name(),
+			      get_tag_line(),
+			      t->tag_name);
 
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -391,7 +391,7 @@ static bool print(NoctEnv *env)
 	memset(buf, 0, sizeof(buf));
 	serialize_printer(env, buf, sizeof(buf), &value, false);
 
-	log_info("%s", buf);
+	hal_log_info("%s", buf);
 
 	return true;
 }
@@ -502,7 +502,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+			hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	} else {
@@ -513,7 +513,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+			hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	}
@@ -886,7 +886,7 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	if (!pf_create_text_texture(slot,
 					   text,
 					   size,
-					   make_pixel(a, r, g, b),
+					   hal_make_pixel(a, r, g, b),
 					   &tex_id,
 					   &tex_width,
 					   &tex_height))
@@ -921,7 +921,7 @@ static bool Engine_writeSaveData(NoctEnv *env)
 
 	data = malloc(SERIALIZE_SIZE);
 	if (data == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -953,7 +953,7 @@ static bool Engine_readSaveData(NoctEnv *env)
 
 	data = malloc(SERIALIZE_SIZE);
 	if (data == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -1323,7 +1323,7 @@ static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, stru
 		}
 		return true;
 	case NOCT_VALUE_FUNC:
-		log_error(PPS_TR("Cannot deserialize function."));
+		hal_log_error(PPS_TR("Cannot deserialize function."));
 		return false;
 	default:
 		assert(0);
@@ -1415,7 +1415,7 @@ static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, st
 		}
 		return true;
 	default:
-		log_error(PPS_TR("Invalid save data."));
+		hal_log_error(PPS_TR("Invalid save data."));
 		return false;
 	}
 	return false;
@@ -1456,7 +1456,7 @@ static bool ser_put_string(struct ser_ctx *ctx, const char *val)
 
 	len = strlen(val);
 	if (len > SER_STRING_MAX) {
-		log_error(PPS_TR("String too long."));
+		hal_log_error(PPS_TR("String too long."));
 		return false;
 	}
 
@@ -1517,7 +1517,7 @@ static bool ser_get_string(struct ser_ctx *ctx, char **val)
 	ctx->pos += 4;
 
 	if (len >= SER_STRING_MAX) {
-		log_error(PPS_TR("String too long."));
+		hal_log_error(PPS_TR("String too long."));
 		return false;
 	}
 

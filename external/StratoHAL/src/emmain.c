@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -96,7 +93,8 @@ static void init_lang_code(void);
 /*
  * main()
  */
-int main(void)
+int
+main(void)
 {
 	/* Initialize the locale. */
 	init_lang_code();
@@ -123,7 +121,9 @@ int main(void)
 /*
  * Main (continued)
  */
-EMSCRIPTEN_KEEPALIVE void main_continue(void)
+EMSCRIPTEN_KEEPALIVE
+void
+main_continue(void)
 {
 	/* Initialize the sound HAL. */
 	if (!init_openal())
@@ -205,7 +205,8 @@ EM_JS(void, onResizeWindow, (void),
 });
 
 /* Process a frame. */
-static EM_BOOL loop_iter(double time, void *userData)
+static EM_BOOL
+loop_iter(double time, void *userData)
 {
 	static bool stop = false;
 
@@ -271,9 +272,9 @@ cb_mousedown(int eventType,
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
-		button = MOUSE_LEFT;
+		button = HAL_MOUSE_LEFT;
 	else
-		button = MOUSE_RIGHT;
+		button = HAL_MOUSE_RIGHT;
 
 	on_event_mouse_press(button, x, y);
 	return EM_TRUE;
@@ -296,9 +297,9 @@ cb_mouseup(int eventType,
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	if (mouseEvent->button == 0)
-		button = MOUSE_LEFT;
+		button = HAL_MOUSE_LEFT;
 	else
-		button = MOUSE_RIGHT;
+		button = HAL_MOUSE_RIGHT;
 
 	on_event_mouse_release(button, x, y);
 	return EM_TRUE;
@@ -353,7 +354,9 @@ cb_keyup(int eventType,
 }
 
 /* Get a key code. */
-static int get_keycode(const char *key)
+static int
+get_keycode(
+	const char *key)
 {
 	if (strcmp(key, "Escape") == 0) {
 		return KEY_ESCAPE;
@@ -491,9 +494,10 @@ static int get_keycode(const char *key)
 
 /* touchstart callback */
 static EM_BOOL
-cb_touchstart(int eventType,
-	      const EmscriptenTouchEvent *touchEvent,
-	      void *userData)
+cb_touchstart(
+	int eventType,
+	const EmscriptenTouchEvent *touchEvent,
+	void *userData)
 {
 	double w, h, scale;
 	int x, y;
@@ -512,16 +516,17 @@ cb_touchstart(int eventType,
 	on_event_touch_cancel();
 
 	/* Process as a mouse down. (even if it's a touch start) */
-	on_event_mouse_press(MOUSE_LEFT, x, y);
+	on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
 
 	return EM_TRUE;
 }
 
 /* touchmove callback */
 static EM_BOOL
-cb_touchmove(int eventType,
-	     const EmscriptenTouchEvent *touchEvent,
-	     void *userData)
+cb_touchmove(
+	int eventType,
+	const EmscriptenTouchEvent *touchEvent,
+	void *userData)
 {
 	const int FLICK_X_DISTANCE = 10;
 	const int FLICK_Y_DISTANCE = 30;
@@ -553,9 +558,10 @@ cb_touchmove(int eventType,
 
 /* touchend callback */
 static EM_BOOL
-cb_touchend(int eventType,
-	    const EmscriptenTouchEvent *touchEvent,
-	    void *userData)
+cb_touchend(
+	int eventType,
+	const EmscriptenTouchEvent *touchEvent,
+	void *userData)
 {
 	const int FLICK_Y_DISTANCE = 50;
 	const int FINGER_DISTANCE = 10;
@@ -589,16 +595,16 @@ cb_touchend(int eventType,
 	    abs(touchEvent->touches[0].targetX - touch_start_x) < FINGER_DISTANCE &&
 	    abs(touchEvent->touches[0].targetY - touch_start_y) < FINGER_DISTANCE) {
 		on_event_touch_cancel();
-		on_event_mouse_press(MOUSE_LEFT, x, y);
-		on_event_mouse_release(MOUSE_LEFT, x, y);
+		on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+		on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
 		return EM_TRUE;
 	}
 
 	/* Process as a right click if two-figer. */
 	if (touchEvent->numTouches == 2) {
 		on_event_touch_cancel();
-		on_event_mouse_press(MOUSE_RIGHT, x, y);
-		on_event_mouse_release(MOUSE_RIGHT, x, y);
+		on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
+		on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
 		return EM_TRUE;
 	}
 
@@ -610,9 +616,10 @@ cb_touchend(int eventType,
 
 /* touchcancel callback */
 static EM_BOOL
-cb_touchcancel(int eventType,
-	       const EmscriptenTouchEvent *touchEvent,
-	       void *userData)
+cb_touchcancel(
+	int eventType,
+	const EmscriptenTouchEvent *touchEvent,
+	void *userData)
 {
 	/* FIXME: When is this called? */
 	on_event_touch_cancel();
@@ -624,19 +631,25 @@ cb_touchcancel(int eventType,
  */
 
 /* When the tab is shown. */
-void EMSCRIPTEN_KEEPALIVE setVisible(void)
+EMSCRIPTEN_KEEPALIVE
+void
+setVisible(void)
 {
 	resume_sound();
 }
 
 /* When the tab is hidden. */
-void EMSCRIPTEN_KEEPALIVE setHidden(void)
+EMSCRIPTEN_KEEPALIVE
+void
+setHidden(void)
 {
 	pause_sound();
 }
 
 /* When the mouse pointer leaves Canvas. */
-void EMSCRIPTEN_KEEPALIVE mouseLeave(void)
+EMSCRIPTEN_KEEPALIVE
+void
+mouseLeave(void)
 {
 	on_event_touch_cancel();
 }
@@ -648,7 +661,10 @@ void EMSCRIPTEN_KEEPALIVE mouseLeave(void)
 /*
  * Show an INFO log.
  */
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -667,7 +683,10 @@ bool log_info(const char *s, ...)
 /*
  * Show a WARN log.
  */
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -686,7 +705,10 @@ bool log_warn(const char *s, ...)
 /*
  * Show an ERROR log.
  */
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[1024];
 
@@ -702,7 +724,8 @@ bool log_error(const char *s, ...)
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
 	log_error("Out of memory.");
 	return true;
@@ -711,7 +734,9 @@ bool log_out_of_memory(void)
 /*
  * Notify an image update.
  */
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+	struct image *img)
 {
 	fill_sound_buffer();
 	opengl_notify_image_update(img);
@@ -721,7 +746,9 @@ void notify_image_update(struct image *img)
 /*
  * Notify an image destroy.
  */
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(
+	struct image *img)
 {
 	opengl_notify_image_free(img);
 }
@@ -729,60 +756,95 @@ void notify_image_free(struct image *img)
 /*
  * Render an image.
  */
-void render_image_normal(int dst_left,
-			 int dst_top,
-			 int dst_width,
-			 int dst_height,
-			 struct image *src_image,
-			 int src_left,
-			 int src_top,
-			 int src_width,
-			 int src_height,
-			 int alpha)
+void
+hal_render_image_normal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	opengl_render_image_normal(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+	opengl_render_image_normal(dst_left,
+				   dst_top,
+				   dst_width,
+				   dst_height,
+				   src_image,
+				   src_left,
+				   src_top,
+				   src_width,
+				   src_height,
+				   alpha);
 }
 
 /*
  * Render an image.
  */
-void render_image_add(int dst_left,
-		      int dst_top,
-		      int dst_width,
-		      int dst_height,
-		      struct image *src_image,
-		      int src_left,
-		      int src_top,
-		      int src_width,
-		      int src_height,
-		      int alpha)
+void
+hal_render_image_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	opengl_render_image_add(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+	opengl_render_image_add(dst_left,
+				dst_top,
+				dst_width,
+				dst_height,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
 }
 
 /*
  * Render an image.
  */
-void render_image_dim(int dst_left,
-		      int dst_top,
-		      int dst_width,
-		      int dst_height,
-		      struct image *src_image,
-		      int src_left,
-		      int src_top,
-		      int src_width,
-		      int src_height,
-		      int alpha)
+void
+hal_render_image_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	opengl_render_image_dim(dst_left, dst_top, dst_width, dst_height, src_image, src_left, src_top, src_width, src_height, alpha);
+	opengl_render_image_dim(dst_left,
+				dst_top,
+				dst_width,
+				dst_height,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
 }
 
 /*
  * Render an image.
  */
-void render_image_rule(struct image * RESTRICT src_img,
-		       struct image * RESTRICT rule_img,
-		       int threshold)
+void
+hal_render_image_rule(
+	struct hal_image * RESTRICT src_img,
+	struct hal_image * RESTRICT rule_img,
+	int threshold)
 {
 	opengl_render_image_rule(src_img, rule_img, threshold);
 }
@@ -790,18 +852,20 @@ void render_image_rule(struct image * RESTRICT src_img,
 /*
  * Render an image.
  */
-void render_image_melt(struct image * RESTRICT src_img,
-		       struct image * RESTRICT rule_img,
-		       int threshold)
+void
+hal_render_image_melt(
+	struct hal_image * RESTRICT src_img,
+	struct hal_image * RESTRICT rule_img,
+	int threshold)
 {
 	opengl_render_image_melt(src_img, rule_img, threshold);
 }
 
 /*
- * Renders an image to the screen with the "normal" shader pipeline.
+ * Render an image to the screen with the "normal" shader pipeline.
  */
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,
 	float y1,
 	float x2,
@@ -810,7 +874,7 @@ render_image_3d_normal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -834,10 +898,10 @@ render_image_3d_normal(
 }
 
 /*
- * Renders an image to the screen with the "add" shader pipeline.
+ * Render an image to the screen with the "add" shader pipeline.
  */
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,
 	float y1,
 	float x2,
@@ -872,7 +936,8 @@ render_image_3d_add(
 /*
  * Create a save directory.
  */
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	return true;
 }
@@ -880,7 +945,9 @@ bool make_save_directory(void)
 /*
  * Create a real path.
  */
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(
+	const char *fname)
 {
 	char buf[1204];
 	char *ret;
@@ -913,7 +980,9 @@ char *make_real_path(const char *fname)
 /*
  * Reset a lap timer.
  */
-void reset_lap_timer(uint64_t *t)
+void
+hal_reset_lap_timer(
+	uint64_t *t)
 {
 	struct timeval tv;
 
@@ -925,7 +994,9 @@ void reset_lap_timer(uint64_t *t)
 /*
  * Get a timer lap.
  */
-uint64_t get_lap_timer_millisec(uint64_t *t)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *t)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -940,11 +1011,14 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 /*
  * Play a video.
  */
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	char *path;
 
-	path = make_real_path(fname);
+	path = hal_make_real_path(fname);
 
 	EM_ASM_({
 		document.getElementById("canvas").style.display = "none";
@@ -968,7 +1042,8 @@ bool play_video(const char *fname, bool is_skippable)
 /*
  * Stop a video.
  */
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 	EM_ASM_(
 		var c = document.getElementById("canvas");
@@ -985,7 +1060,8 @@ void stop_video(void)
 /*
  * Check if video is playing back.
  */
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	int ended;
 
@@ -1000,7 +1076,8 @@ bool is_video_playing(void)
 /*
  * Check if the full screen mode is supported.
  */
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
 	return true;
 }
@@ -1008,7 +1085,8 @@ bool is_full_screen_supported(void)
 /*
  * Check if in the full screen mode.
  */
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	return is_full_screen;
 }
@@ -1016,7 +1094,8 @@ bool is_full_screen_mode(void)
 /*
  * Start the full screen mode.
  */
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	is_full_screen = true;
 	EM_ASM({
@@ -1034,7 +1113,8 @@ void enter_full_screen_mode(void)
 /*
  * Leave the full screen mode.
  */
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	is_full_screen = false;
 	EM_ASM({
@@ -1051,7 +1131,8 @@ void leave_full_screen_mode(void)
 /*
  * Get a system language.
  */
-const char *get_lang_code(void)
+const char *
+get_lang_code(void)
 {
 	return lang_code;
 }
@@ -1118,7 +1199,9 @@ void init_lang_code(void)
 	}
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	is_continuous_swipe_enabled = is_enabled;
 }

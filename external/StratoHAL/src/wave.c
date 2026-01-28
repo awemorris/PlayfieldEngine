@@ -1,17 +1,14 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Playfield Engine
+ * StratoHAL
  * Wave HAL for Ogg Vorbis
  */
 
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -59,10 +56,10 @@
 /*
  * PCM stream with a format of 44.1kHz, 16bit, stereo
  */
-struct wave {
+struct hal_wave {
 	/* Input file. */
 	char *file;
-	struct rfile *rf;
+	struct hal_rfile *rf;
 	bool loop;
 	uint32_t loop_start;
 	uint32_t loop_length;
@@ -88,18 +85,21 @@ struct wave {
 /*
  * Forward declarations.
  */
-static bool reopen(struct wave *w, bool loop);
+static bool reopen(struct hal_wave *w, bool loop);
 static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource);
-static int get_wave_samples_monaural(struct wave *w, uint32_t *buf, int samples);
-static int get_wave_samples_stereo(struct wave *w, uint32_t *buf, int samples);
-static void skip_if_needed(struct wave *w, int sample_bytes);
+static int get_wave_samples_monaural(struct hal_wave *w, uint32_t *buf, int samples);
+static int get_wave_samples_stereo(struct hal_wave *w, uint32_t *buf, int samples);
+static void skip_if_needed(struct hal_wave *w, int sample_bytes);
 
 /*
  * Create a PCM stream from a file.
  */
-struct wave *create_wave_from_file(const char *fname, bool loop)
+bool
+hal_create_wave_from_file(
+	const char *fname,
+	bool loop,
+	struct hal_wave **w)
 {
-	struct wave *w;
 	vorbis_info *vi;
 	vorbis_comment *vc;
 	int i;
@@ -117,72 +117,75 @@ struct wave *create_wave_from_file(const char *fname, bool loop)
 	UNUSED_PARAMETER(OV_CALLBACKS_DEFAULT);
 
 	/* Alloc a wave struct. */
-	w = malloc(sizeof(struct wave));
-	if (w == NULL) {
-		log_out_of_memory();
-		return NULL;
+	*w = malloc(sizeof(struct hal_wave));
+	if (*w == NULL) {
+		hal_log_out_of_memory();
+		return false;
 	}
-	memset(w, 0, sizeof(struct wave));
+	memset(*w, 0, sizeof(struct hal_wave));
 
 	/* Save a file name. */
-	w->file = strdup(fname);
-	if (w->file == NULL) {
-		log_out_of_memory();
-		free(w);
-		return NULL;
+	(*w)->file = strdup(fname);
+	if ((*w)->file == NULL) {
+		hal_log_out_of_memory();
+		free(*w);
+		return false;
 	}
 
 	/* Open a file. */
-	if (!reopen(w, false))
-		return NULL;
+	if (!reopen(*w, false))
+		return false;
 
 	/* TODO: Check sampling rate and channel count by using ov_info(). */
-	vi = ov_info(&w->ovf, -1);
-	w->monaural = vi->channels == 1 ? true : false;
+	vi = ov_info(&(*w)->ovf, -1);
+	(*w)->monaural = vi->channels == 1 ? true : false;
 
 	/* Alloc a wave struct. */
-	w->loop = loop;
-	w->loop_start = 0;
-	w->loop_length = 0;
-	w->times = -1;
-	w->eos = false;
-	w->err = false;
-	w->do_skip = false;
-	w->consumed_bytes = 0;
+	(*w)->loop = loop;
+	(*w)->loop_start = 0;
+	(*w)->loop_length = 0;
+	(*w)->times = -1;
+	(*w)->eos = false;
+	(*w)->err = false;
+	(*w)->do_skip = false;
+	(*w)->consumed_bytes = 0;
 
 	/* Get LOOPSTART and LOOPLENGTH. */
-	vc = ov_comment(&w->ovf, -1);
+	vc = ov_comment(&(*w)->ovf, -1);
 	if (vc != NULL) {
 		for (i = 0; i < vc->comments; i++) {
 			if (strncmp(vc->user_comments[i], LOOPSTART, LOOPSTART_LEN) == 0) {
-				w->loop = true;
-				w->loop_start = (uint32_t)atol(vc->user_comments[i] + LOOPSTART_LEN);
+				(*w)->loop = true;
+				(*w)->loop_start = (uint32_t)atol(vc->user_comments[i] + LOOPSTART_LEN);
 			} else if (strncmp(vc->user_comments[i], LOOPLENGTH, LOOPLENGTH_LEN) == 0) {
-				w->loop = true;
-				w->loop_length = (uint32_t)atol(vc->user_comments[i] + LOOPLENGTH_LEN);
+				(*w)->loop = true;
+				(*w)->loop_length = (uint32_t)atol(vc->user_comments[i] + LOOPLENGTH_LEN);
 			}
 		}
 	}
 
 	/* Succeeded. */
-	return w;
+	return true;
 }
 
 /* Reopen a file. */
-static bool reopen(struct wave *w, bool loop)
+static bool
+reopen(
+	struct hal_wave *w,
+	bool loop)
 {
 	ov_callbacks cb;
 	int err;
 
 	if (w->rf == NULL) {
 		/* Open a file input stream. */
-		if (!open_rfile(w->file, &w->rf)) {
+		if (!hal_open_rfile(w->file, &w->rf)) {
 			free(w->file);
 			free(w);
 			return false;
 		}
 	} else {
-		rewind_rfile(w->rf);
+		hal_rewind_rfile(w->rf);
 	}
 
 	/* Open a file by a callback. */
@@ -193,7 +196,7 @@ static bool reopen(struct wave *w, bool loop)
 	cb.tell_func = NULL;
 	err = ov_open_callbacks(w, &w->ovf, NULL, 0, cb);
 	if (err != 0) {
-		log_error("Audio file format error (%s).", w->file);
+		hal_log_error("Audio file format error (%s).", w->file);
 		free(w->file);
 		free(w);
 		return false;
@@ -206,17 +209,22 @@ static bool reopen(struct wave *w, bool loop)
 }
 
 /* File input callback. */
-static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+static size_t
+read_func(
+	void *ptr,
+	size_t size,
+	size_t nmemb,
+	void *datasource)
 {
-	struct wave *w;	
+	struct hal_wave *w;	
 	size_t len;
 
 	assert(ptr != NULL);
 	assert(datasource != NULL);
 
-	w = (struct wave *)datasource;
+	w = (struct hal_wave *)datasource;
 
-	if (!read_rfile(w->rf, ptr, size * nmemb, &len))
+	if (!hal_read_rfile(w->rf, ptr, size * nmemb, &len))
 		return 0;
 
 	return len / size;
@@ -224,13 +232,15 @@ static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 
 #if 0
 /* File close callback. */
-static int close_func(void *datasource)
+static int
+close_func(
+	void *datasource)
 {
-	struct wave *w;
+	struct hal_wave *w;
 
 	assert(datasource != NULL);
 
-	w = (struct wave *)datasource;
+	w = (struct hal_wave *)datasource;
 
 	if (w->loop && w->times != -1) {
 		close_rfile(w->rf);
@@ -244,7 +254,10 @@ static int close_func(void *datasource)
 /*
  * Set a loop count for a PCM stream.
  */
-void set_wave_repeat_times(struct wave *w, int n)
+void
+hal_set_wave_repeat_times(
+	struct hal_wave *w,
+	int n)
 {
 	assert(w != NULL);
 	assert(n > 0);
@@ -255,19 +268,23 @@ void set_wave_repeat_times(struct wave *w, int n)
 /*
  * Destroy a PCM stream.
  */
-void destroy_wave(struct wave *w)
+void
+hal_destroy_wave(
+	struct hal_wave *w)
 {
 	ov_clear(&w->ovf);
 	free(w->file);
 	if (w->rf != NULL)
-		close_rfile(w->rf);
+		hal_close_rfile(w->rf);
 	free(w);
 }
 
 /*
  * Check if a PCM stream reached end-of-stream.
  */
-bool is_wave_eos(struct wave *w)
+bool
+hal_is_wave_eos(
+	struct hal_wave *w)
 {
 	return w->eos;
 }
@@ -275,7 +292,11 @@ bool is_wave_eos(struct wave *w)
 /*
  * Get PCM samples from a stream.
  */
-int get_wave_samples(struct wave *w, uint32_t *buf, int samples)
+int
+hal_get_wave_samples(
+	struct hal_wave *w,
+	uint32_t *buf,
+	int samples)
 {
 	/* If already reached end-of-stream. */
 	if (w->eos)
@@ -290,7 +311,11 @@ int get_wave_samples(struct wave *w, uint32_t *buf, int samples)
 }
 
 /* Get samples from a monaural stream. */
-static int get_wave_samples_monaural(struct wave *w, uint32_t *buf, int samples)
+static int
+get_wave_samples_monaural(
+	struct hal_wave *w,
+	uint32_t *buf,
+	int samples)
 {
 	unsigned char mbuf[IOSIZE];
 	long read_bytes, ret_bytes, last_ret_bytes;
@@ -350,7 +375,11 @@ static int get_wave_samples_monaural(struct wave *w, uint32_t *buf, int samples)
 }
 
 /* Get samples from a stereo stream. */
-static int get_wave_samples_stereo(struct wave *w, uint32_t *buf, int samples)
+static int
+get_wave_samples_stereo(
+	struct hal_wave *w,
+	uint32_t *buf,
+	int samples)
 {
 	long read_bytes, ret_bytes, last_ret_bytes;
 	int retain, bitstream;
@@ -400,7 +429,10 @@ static int get_wave_samples_stereo(struct wave *w, uint32_t *buf, int samples)
 }
 
 /* Skip for LOOPSTART. */
-static void skip_if_needed(struct wave *w, int sample_bytes)
+static void
+skip_if_needed(
+	struct hal_wave *w,
+	int sample_bytes)
 {
 	uint32_t buf[1024];
 	size_t remain_samples;

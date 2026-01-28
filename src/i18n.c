@@ -49,7 +49,7 @@ extern const char *noct_lang_code;
 void playfield_init_locale(void)
 {
 	/* Initialize the NoctLang's i18n system manually. */
-	noct_lang_code = get_system_language();
+	noct_lang_code = hal_get_system_language();
 }
 
 #endif	/* defined(USE_TRANSLATION) */

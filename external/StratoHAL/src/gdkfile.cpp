@@ -8,10 +8,7 @@
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -53,7 +50,7 @@ extern "C" {
 //
 // File read stream.
 //
-struct rfile {
+struct hal_rfile {
     // Win32 file handle.
     HANDLE handle;
 
@@ -65,7 +62,7 @@ struct rfile {
 //
 // File write stream.
 //
-struct wfile {
+struct hal_wfile {
     // Win32 file handle.
     HANDLE handle;
 };
@@ -92,19 +89,21 @@ static const char *k_save_container = "save"; // must be a sub-path
 //
 // Forward declarations.
 //
-static void ungetc_rfile(struct rfile *rf, char c);
+static void ungetc_rfile(struct hal_rfile *rf, char c);
 static bool ensure_save_root(void);
 static bool build_save_path(char *dst, size_t dst_size, const char *relative);
 static bool ensure_package_root(void);
-static bool open_package(struct rfile *rf, const char *relative);
+static bool open_package(struct hal_rfile *rf, const char *relative);
 
-bool init_file(void)
+bool
+init_file(void)
 {
     ensure_package_root();
     return true;
 }
 
-void cleanup_file(void)
+void
+cleanup_file(void)
 {
     // Best-effort close of the mount handle.
     if (g_package_root_ready && g_package_mount_handle != NULL) {
@@ -117,7 +116,9 @@ void cleanup_file(void)
 //
 // Check whether a file exists.
 //
-bool check_file_exist(const char *file)
+bool
+hal_check_file_exist(
+    const char *file)
 {
     //
     // If package_path is set, we assume assets were mounted and package_path
@@ -146,11 +147,14 @@ bool check_file_exist(const char *file)
 //
 // Open a read file stream.
 //
-bool open_rfile(const char *path, struct rfile **f)
+bool
+hal_open_rfile(
+    const char *path,
+    struct hal_rfile **f)
 {
-    struct rfile *fs;
+    struct hal_rfile *fs;
 
-    fs = (struct rfile *)malloc(sizeof(struct rfile));
+    fs = (struct hal_rfile *)malloc(sizeof(struct hal_rfile));
     if (fs == NULL) {
         log_out_of_memory();
         return false;
@@ -199,7 +203,10 @@ bool open_rfile(const char *path, struct rfile **f)
 }
 
 // Open a packaged asset under package_path.
-static bool open_package(struct rfile *rf, const char *relative)
+static bool
+open_package(
+    struct hal_rfile *rf,
+    const char *relative)
 {
     assert(rf != NULL);
     assert(relative != NULL);
@@ -220,7 +227,8 @@ static bool open_package(struct rfile *rf, const char *relative)
     return true;
 }
 
-static bool ensure_package_root(void)
+static bool
+ensure_package_root(void)
 {
     if (g_package_root_ready)
         return true;
@@ -276,7 +284,11 @@ static bool ensure_package_root(void)
     return true;
 }
 
-static bool build_save_path(char *dst, size_t dst_size, const char *relative)
+static bool
+build_save_path(
+    char *dst,
+    size_t dst_size,
+    const char *relative)
 {
     if (!ensure_save_root()) {
         _snprintf_s(dst, dst_size, _TRUNCATE, "save\\%s", relative);
@@ -288,7 +300,8 @@ static bool build_save_path(char *dst, size_t dst_size, const char *relative)
     return true;
 }
 
-static bool ensure_save_root(void)
+static bool
+ensure_save_root(void)
 {
     if (g_save_root_ready)
         return true;
@@ -350,7 +363,9 @@ static bool ensure_save_root(void)
 //
 // Enable de-obfuscation on a read file stream.
 //
-void decode_rfile(struct rfile *f)
+void
+hal_decode_rfile(
+    struct hal_rfile *f)
 {
     UNUSED_PARAMETER(f);
 }
@@ -358,7 +373,10 @@ void decode_rfile(struct rfile *f)
 //
 // Get a file size.
 //
-bool get_rfile_size(struct rfile *f, size_t *ret)
+bool
+hal_get_rfile_size(
+    struct hal_rfile *f,
+    size_t *ret)
 {
     assert(f != NULL);
     assert(f->handle != NULL);
@@ -377,7 +395,12 @@ bool get_rfile_size(struct rfile *f, size_t *ret)
 //
 // Read bytes from a read file stream.
 //
-bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
+bool
+hal_read_rfile(
+    struct hal_rfile *f,
+    void *buf,
+    size_t size,
+    size_t *ret)
 {
     assert(f != NULL);
     assert(f->handle != NULL);
@@ -410,7 +433,10 @@ bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
 //
 // Read a u64 from a file stream.
 //
-bool get_rfile_u64(struct rfile *f, uint64_t *data)
+bool
+hal_get_rfile_u64(
+    struct hal_rfile *f,
+    uint64_t *data)
 {
     uint64_t val;
     size_t ret;
@@ -425,7 +451,10 @@ bool get_rfile_u64(struct rfile *f, uint64_t *data)
 }
 
 // Read a u32 from a file stream.
-bool get_rfile_u32(struct rfile *f, uint32_t *data)
+bool
+hal_get_rfile_u32(
+    struct hal_rfile *f,
+    uint32_t *data)
 {
     uint32_t val;
     size_t ret;
@@ -440,7 +469,10 @@ bool get_rfile_u32(struct rfile *f, uint32_t *data)
 }
 
 // Read a u16 from a file stream.
-bool get_rfile_u16(struct rfile *f, uint16_t *data)
+bool
+hal_get_rfile_u16(
+    struct hal_rfile *f,
+    uint16_t *data)
 {
     uint16_t val;
     size_t ret;
@@ -455,7 +487,10 @@ bool get_rfile_u16(struct rfile *f, uint16_t *data)
 }
 
 // Read a u8 from a file stream.
-bool get_rfile_u8(struct rfile *f, uint8_t *data)
+bool
+hal_get_rfile_u8(
+    struct hal_rfile *f,
+    uint8_t *data)
 {
     uint8_t val;
     size_t ret;
@@ -472,7 +507,11 @@ bool get_rfile_u8(struct rfile *f, uint8_t *data)
 //
 // Read a line from a read file stream.
 //
-bool get_rfile_string(struct rfile *f, char *buf, size_t size)
+bool
+hal_get_rfile_string(
+    struct hal_rfile *f,
+    char *buf,
+    size_t size)
 {
     char *ptr;
     size_t len, read_size;
@@ -519,7 +558,10 @@ bool get_rfile_string(struct rfile *f, char *buf, size_t size)
 }
 
 // Push back a character to a read file stream.
-static void ungetc_rfile(struct rfile *f, char c)
+static void
+ungetc_rfile(
+    struct hal_rfile *f,
+    char c)
 {
     assert(f != NULL);
     assert(f->handle != NULL);
@@ -532,7 +574,9 @@ static void ungetc_rfile(struct rfile *f, char c)
 //
 // Close a read file stream.
 //
-void close_rfile(struct rfile *f)
+void
+hal_close_rfile(
+    struct hal_rfile *f)
 {
     assert(f != NULL);
     assert(f->handle != NULL);
@@ -548,7 +592,9 @@ void close_rfile(struct rfile *f)
 //
 // Rewind a read file stream.
 //
-void rewind_rfile(struct rfile *f)
+void
+hal_rewind_rfile(
+    struct hal_rfile *f)
 {
     assert(f != NULL);
     assert(f->handle != NULL);
@@ -564,7 +610,10 @@ void rewind_rfile(struct rfile *f)
 //
 // Open a write file stream.
 //
-bool open_wfile(const char *file, struct wfile **wf)
+bool
+hal_open_wfile(
+    const char *file,
+    struct hal_wfile **wf)
 {
     char full[MAX_PATH];
 
@@ -596,7 +645,12 @@ bool open_wfile(const char *file, struct wfile **wf)
 //
 // Write bytes to a write file stream.
 //
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
+bool
+hal_write_wfile(
+    struct wfile *wf,
+    const void *buf,
+    size_t size,
+    size_t *ret)
 {
     assert(wf != NULL);
     assert(wf->handle != NULL);
@@ -623,7 +677,9 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 //
 // Close a write file stream.
 //
-void close_wfile(struct wfile *wf)
+void
+hal_close_wfile(
+    struct hal_wfile *wf)
 {
     assert(wf != NULL);
 
@@ -638,7 +694,9 @@ void close_wfile(struct wfile *wf)
 //
 // Remove a real file.
 //
-void remove_file(const char *file)
+void
+hal_remove_file(
+    const char *file)
 {
     UNUSED_PARAMETER(file);
 

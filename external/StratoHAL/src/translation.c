@@ -1,10 +1,10 @@
 #include <string.h>
 
-const char *get_system_language(void);
+const char *hal_get_system_language(void);
 
-const char *stratohal_gettext(const char *msg)
+const char *hal_gettext(const char *msg)
 {
-    const char *lang_code = get_system_language();
+    const char *lang_code = hal_get_system_language();
     if (strcmp(msg, "Out of memory.") == 0) {
         if (strcmp(lang_code, "es") == 0) return "Memoria insuficiente.";
         if (strcmp(lang_code, "fr") == 0) return "Mémoire insuffisante.";

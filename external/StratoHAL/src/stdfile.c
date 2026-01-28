@@ -1,17 +1,14 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Playfield Engine
+ * StratoHAL
  * File HAL for standard C I/O
  */
 
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- *
- * This software is derived from the codebase of Suika2.
  * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
@@ -119,7 +116,7 @@ static struct file_entry entry[ENTRY_SIZE];
 /*
  * File read stream.
  */
-struct rfile {
+struct hal_rfile {
 	/* Is a packaged file? */
 	bool is_packaged;
 
@@ -143,7 +140,7 @@ struct rfile {
 /*
  * File write stream.
  */
-struct wfile {
+struct hal_wfile {
 	FILE *fp;
 	uint64_t next_random;
 };
@@ -151,11 +148,11 @@ struct wfile {
 /*
  * Forward declarations.
  */
-static bool open_package(struct rfile *rf, const char *path);
+static bool open_package(struct hal_rfile *rf, const char *path);
 #if !defined(TARGET_IOS) && !defined(TARGET_WASM)
-static bool open_real(struct rfile *rf, const char *path);
+static bool open_real(struct hal_rfile *rf, const char *path);
 #endif
-static void ungetc_rfile(struct rfile *rf, char c);
+static void ungetc_rfile(struct hal_rfile *rf, char c);
 static void set_random_seed(uint64_t index, uint64_t *next_random);
 static char get_next_random(uint64_t *next_random, uint64_t *prev_random);
 static void rewind_random(uint64_t *next_random, uint64_t *prev_random);
@@ -163,14 +160,15 @@ static void rewind_random(uint64_t *next_random, uint64_t *prev_random);
 /*
  * Initialize the stdfile module.
  */
-bool init_file(void)
+bool
+init_file(void)
 {
 	FILE *fp;
 	uint64_t i, next_random;
 	int j;
 
 	/* Get a real path to a package file. */
-	package_path = make_real_path(PACKAGE_FILE);
+	package_path = hal_make_real_path(HAL_PACKAGE_FILE);
 	if (package_path == NULL)
 		return false;
 
@@ -196,12 +194,12 @@ bool init_file(void)
 
 	/* Read the number of the file entries. */
 	if (fread(&entry_count, sizeof(uint64_t), 1, fp) < 1) {
-		log_error("Corrupted package file.");
+		hal_log_error("Corrupted package file.");
 		fclose(fp);
 		return false;
 	}
 	if (entry_count > ENTRY_SIZE) {
-		log_error("Corrupted package file.");
+		hal_log_error("Corrupted package file.");
 		fclose(fp);
 		return false;
 	}
@@ -219,7 +217,7 @@ bool init_file(void)
 			break;
 	}
 	if (i != entry_count) {
-		log_error("Package file corrupted.");
+		hal_log_error("Package file corrupted.");
 		fclose(fp);
 		return false;
 	}
@@ -236,7 +234,8 @@ bool init_file(void)
 /*
  * Cleanup the stdfile module.
  */
-void cleanup_file(void)
+void
+cleanup_file(void)
 {
 	if (package_path != NULL) {
 		free(package_path);
@@ -247,7 +246,9 @@ void cleanup_file(void)
 /*
  * Check whether a file exists.
  */
-bool check_file_exist(const char *file)
+bool
+hal_check_file_exist(
+	const char *file)
 {
 	FILE *fp;
 	uint64_t i;
@@ -269,7 +270,7 @@ bool check_file_exist(const char *file)
 #else
 	/* Make a real file path. */
 	char *real_path;
-	real_path = make_real_path(file);
+	real_path = hal_make_real_path(file);
 	if (real_path == NULL)
 		return false;
 
@@ -297,14 +298,17 @@ bool check_file_exist(const char *file)
 /*
  * Open a read file stream.
  */
-bool open_rfile(const char *path, struct rfile **f)
+bool
+hal_open_rfile(
+	const char *path,
+	struct hal_rfile **f)
 {
-	struct rfile *fs;
+	struct hal_rfile *fs;
 
 	/* Allocate a file struct. */
-	fs = malloc(sizeof(struct rfile));
+	fs = malloc(sizeof(struct hal_rfile));
 	if (fs == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
@@ -337,7 +341,10 @@ bool open_rfile(const char *path, struct rfile **f)
 }
 
 /* Open a file in the package. */
-static bool open_package(struct rfile *f, const char *path)
+static bool
+open_package(
+	struct hal_rfile *f,
+	const char *path)
 {
 	uint64_t i;
 		
@@ -366,7 +373,7 @@ static bool open_package(struct rfile *f, const char *path)
 
 	/* Seek to the offset. */
 	if (fseek(f->fp, (long)entry[i].offset, SEEK_SET) != 0) {
-		log_error("Cannot read file \"%s\".", PACKAGE_FILE);
+		hal_log_error("Cannot read file \"%s\".", HAL_PACKAGE_FILE);
 		fclose(f->fp);
 		return false;
 	}
@@ -386,12 +393,15 @@ static bool open_package(struct rfile *f, const char *path)
 
 #if !defined(TARGET_IOS) && !defined(TARGET_WASM)
 /* Open a real file on a file system. */
-static bool open_real(struct rfile *f, const char *path)
+static bool
+open_real(
+	struct hal_rfile *f,
+	const char *path)
 {
 	char *real_path;
 
 	/* Make a real path on the OS's file system. */
-	real_path = make_real_path(path);
+	real_path = hal_make_real_path(path);
 	if (real_path == NULL)
 		return false;
 
@@ -416,7 +426,10 @@ static bool open_real(struct rfile *f, const char *path)
 /*
  * Get a file size.
  */
-bool get_rfile_size(struct rfile *f, size_t *ret)
+bool
+hal_get_rfile_size(
+	struct hal_rfile *f,
+	size_t *ret)
 {
 	long pos, len;
 
@@ -438,7 +451,9 @@ bool get_rfile_size(struct rfile *f, size_t *ret)
 /*
  * Enable de-obfuscation on a read file stream.
  */
-void decode_rfile(struct rfile *f)
+void
+hal_decode_rfile(
+	struct hal_rfile *f)
 {
 	/* Setup the file struct. */
 	f->is_obfuscated = true;
@@ -448,7 +463,12 @@ void decode_rfile(struct rfile *f)
 /*
  * Read bytes from a read file stream.
  */
-bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
+bool
+hal_read_rfile(
+	struct hal_rfile *f,
+	void *buf,
+	size_t size,
+	size_t *ret)
 {
 	size_t len, obf;
 
@@ -497,57 +517,75 @@ bool read_rfile(struct rfile *f, void *buf, size_t size, size_t *ret)
 /*
  * Read a u64 from a file stream.
  */
-bool get_rfile_u64(struct rfile *f, uint64_t *data)
+bool
+get_rfile_u64(
+	struct hal_rfile *f,
+	uint64_t *data)
 {
 	uint64_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 8, &ret))
+	if (!hal_read_rfile(f, &val, 8, &ret))
 		return false;
 	if (ret != 8)
 		return false;
 
-	*data = LETOHOST64(val);
+	*data = hal_le_to_host_64(val);
 	return true;
 }
 
-/* Read a u32 from a file stream. */
-bool get_rfile_u32(struct rfile *f, uint32_t *data)
+/*
+ * Read a u32 from a file stream.
+ */
+bool
+hal_get_rfile_u32(
+	struct hal_rfile *f,
+	uint32_t *data)
 {
 	uint32_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 4, &ret))
+	if (!hal_read_rfile(f, &val, 4, &ret))
 		return false;
 	if (ret != 4)
 		return false;
 
-	*data = LETOHOST32(val);
+	*data = hal_le_to_host_32(val);
 	return true;
 }
 
-/* Read a u16 from a file stream. */
-bool get_rfile_u16(struct rfile *f, uint16_t *data)
+/*
+ * Read a u16 from a file stream.
+ */
+bool
+hal_get_rfile_u16(
+	struct hal_rfile *f,
+	uint16_t *data)
 {
 	uint16_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 2, &ret))
+	if (!hal_read_rfile(f, &val, 2, &ret))
 		return false;
 	if (ret != 2)
 		return false;
 
-	*data = LETOHOST16(val);
+	*data = hal_le_to_host_16(val);
 	return true;
 }
 
-/* Read a u8 from a file stream. */
-bool get_rfile_u8(struct rfile *f, uint8_t *data)
+/*
+ * Read a u8 from a file stream.
+ */
+bool
+hal_get_rfile_u8(
+	struct hal_rfile *f,
+	uint8_t *data)
 {
 	uint8_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 1, &ret))
+	if (!hal_read_rfile(f, &val, 1, &ret))
 		return false;
 	if (ret != 1)
 		return false;
@@ -559,7 +597,11 @@ bool get_rfile_u8(struct rfile *f, uint8_t *data)
 /*
  * Read a line from a read file stream.
  */
-bool get_rfile_string(struct rfile *f, char *buf, size_t size)
+bool
+hal_get_rfile_string(
+	struct hal_rfile *f,
+	char *buf,
+	size_t size)
 {
 	char *ptr;
 	size_t len, read_size;
@@ -572,7 +614,7 @@ bool get_rfile_string(struct rfile *f, char *buf, size_t size)
 
 	ptr = buf;
 	for (len = 0; len < size - 1; len++) {
-		if (!read_rfile(f, &c, 1, &read_size)) {
+		if (!hal_read_rfile(f, &c, 1, &read_size)) {
 			*ptr = '\0';
 			if (len == 0)
 				return false;
@@ -583,7 +625,7 @@ bool get_rfile_string(struct rfile *f, char *buf, size_t size)
 			return true;
 		}
 		if (c == '\r') {
-			if (!read_rfile(f, &c, 1, &read_size)) {
+			if (!hal_read_rfile(f, &c, 1, &read_size)) {
 				*ptr = '\0';
 				return true;
 			}
@@ -606,7 +648,10 @@ bool get_rfile_string(struct rfile *f, char *buf, size_t size)
 }
 
 /* Push back a character to a read file stream. */
-static void ungetc_rfile(struct rfile *f, char c)
+static void
+ungetc_rfile(
+	struct hal_rfile *f,
+	char c)
 {
 	assert(f != NULL);
 	assert(f->fp != NULL);
@@ -626,7 +671,9 @@ static void ungetc_rfile(struct rfile *f, char c)
 /*
  * Close a read file stream.
  */
-void close_rfile(struct rfile *f)
+void
+hal_close_rfile(
+	struct hal_rfile *f)
 {
 	assert(f != NULL);
 	assert(f->fp != NULL);
@@ -638,7 +685,9 @@ void close_rfile(struct rfile *f)
 /*
  * Rewind a read file stream.
  */
-void rewind_rfile(struct rfile *f)
+void
+hal_rewind_rfile(
+	struct hal_rfile *f)
 {
 	assert(f != NULL);
 	assert(f->fp != NULL);
@@ -657,7 +706,10 @@ void rewind_rfile(struct rfile *f)
 }
 
 /* Set a random seed. */
-static void set_random_seed(uint64_t index, uint64_t *next_random)
+static void
+set_random_seed(
+	uint64_t index,
+	uint64_t *next_random)
 {
 	uint64_t i, next, lsb;
 
@@ -682,7 +734,10 @@ static void set_random_seed(uint64_t index, uint64_t *next_random)
 }
 
 /* Get a next random mask. */
-static char get_next_random(uint64_t *next_random, uint64_t *prev_random)
+static char
+get_next_random(
+	uint64_t *next_random,
+	uint64_t *prev_random)
 {
 	uint64_t next;
 	char ret;
@@ -701,7 +756,10 @@ static char get_next_random(uint64_t *next_random, uint64_t *prev_random)
 }
 
 /* Go back to the previous random mask. */
-static void rewind_random(uint64_t *next_random, uint64_t *prev_random)
+static void
+rewind_random(
+	uint64_t *next_random,
+	uint64_t *prev_random)
 {
 	*next_random = *prev_random;
 	*prev_random = 0;
@@ -714,21 +772,24 @@ static void rewind_random(uint64_t *next_random, uint64_t *prev_random)
 /*
  * Open a write file stream.
  */
-bool open_wfile(const char *file, struct wfile **wf)
+bool
+hal_open_wfile(
+	const char *file,
+	struct hal_wfile **wf)
 {
 	char *path;
 
 	/* Allocate wfile struct. */
-	*wf = malloc(sizeof(struct wfile));
+	*wf = malloc(sizeof(struct hal_wfile));
 	if (*wf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
 	/* Make a real file path. */
-	path = make_real_path(file);
+	path = hal_make_real_path(file);
 	if (path == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		free(*wf);
 		*wf = NULL;
 		return false;
@@ -759,7 +820,12 @@ bool open_wfile(const char *file, struct wfile **wf)
 /*
  * Write bytes to a write file stream.
  */
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
+bool
+hal_write_wfile(
+	struct hal_wfile *wf,
+	const void *buf,
+	size_t size,
+	size_t *ret)
 {
 	char obf[1024];
 	const char *src;
@@ -798,7 +864,9 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 /*
  * Close a write file stream.
  */
-void close_wfile(struct wfile *wf)
+void
+hal_close_wfile(
+	struct hal_wfile *wf)
 {
 	assert(wf != NULL);
 	assert(wf->fp != NULL);
@@ -811,15 +879,17 @@ void close_wfile(struct wfile *wf)
 /*
  * Remove a real file.
  */
-void remove_file(const char *file)
+bool
+hal_remove_file(
+	const char *file)
 {
 	char *path;
 
 	/* Make a real path. */
-	path = make_real_path(file);
+	path = hal_make_real_path(file);
 	if (path == NULL) {
-		log_out_of_memory();
-		return;
+		hal_log_out_of_memory();
+		return false;
 	}
 
 	/* Remove the file from the file system. */
@@ -827,4 +897,6 @@ void remove_file(const char *file)
 
 	/* Free the memory of the path. */
 	free(path);
+
+	return true;
 }
