@@ -38,7 +38,7 @@
 /*
  * Region Size
  */
-#if !defined(USE_WASM)
+#if !defined(NOCT_TARGET_WASM)
 #define RT_GC_NURSERY_SIZE		(2 * 1024 * 1024)
 #define RT_GC_GRADUATE_SIZE		(256 * 1024)
 #define RT_GC_TENURE_SIZE		(256 * 1024 * 1024)

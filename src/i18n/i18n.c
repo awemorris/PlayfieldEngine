@@ -8,7 +8,7 @@
  * Pseudo gettext support.
  */
 
-#if defined(USE_TRANSLATION)
+#if defined(NOCT_USE_TRANSLATION)
 
 #include <stdio.h>
 #include <string.h>
@@ -104,4 +104,4 @@ void noct_init_locale(void)
 #endif	/* !defined(_WIN32) */
 }
 
-#endif	/* defined(USE_TRANSLATION) */
+#endif	/* defined(NOCT_USE_TRANSLATION) */

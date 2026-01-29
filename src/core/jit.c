@@ -13,36 +13,36 @@
 /*
  * Use the architecture specific source.
  */
-#if defined(USE_JIT)
-#if defined(ARCH_X86)
+#if defined(NOCT_USE_JIT)
+#if defined(NOCT_ARCH_X86)
 #include "jit-x86.c"
-#elif defined(ARCH_X86_64)
+#elif defined(NOCT_ARCH_X86_64)
 #include "jit-x86_64.c"
-#elif defined(ARCH_ARM32)
+#elif defined(NOCT_ARCH_ARM32)
 #include "jit-arm32.c"
-#elif defined(ARCH_ARM64)
+#elif defined(NOCT_ARCH_ARM64)
 #include "jit-arm64.c"
-#elif defined(ARCH_MIPS32)
+#elif defined(NOCT_ARCH_MIPS32)
 #include "jit-mips32.c"
-#elif defined(ARCH_MIPS64)
+#elif defined(NOCT_ARCH_MIPS64)
 #include "jit-mips64.c"
-#elif defined(ARCH_PPC32)
+#elif defined(NOCT_ARCH_PPC32)
 #include "jit-ppc32.c"
-#elif defined(ARCH_PPC64)
+#elif defined(NOCT_ARCH_PPC64)
 #include "jit-ppc64.c"
-#elif defined(ARCH_RISCV32)
+#elif defined(NOCT_ARCH_RISCV32)
 #include "jit-riscv32.c"
-#elif defined(ARCH_RISCV64)
+#elif defined(NOCT_ARCH_RISCV64)
 #include "jit-riscv64.c"
 #else
-#undef USE_JIT
+#undef NOCT_USE_JIT
 #endif
 #endif
 
 /*
  * Architecture Independent
  */
-#if defined(USE_JIT)
+#if defined(NOCT_USE_JIT)
 
 #include "runtime.h"
 
@@ -138,7 +138,7 @@ jit_map_executable(
 #endif
 }
 
-#else /* defined(USE_JIT) */
+#else /* defined(NOCT_USE_JIT) */
 
 /*
  * Stub for non-JIT build.
@@ -185,4 +185,4 @@ jit_free(
 	/* stub */
 }
 
-#endif /* defined(USE_JIT) */
+#endif /* defined(NOCT_USE_JIT) */

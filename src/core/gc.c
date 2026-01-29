@@ -104,7 +104,7 @@ static void *nursery_alloc(struct rt_env *env, size_t size);
 static void *graduate_alloc(struct rt_env *env, size_t size);
 static void *rt_gc_tenure_alloc(struct rt_env *env, size_t size);
 static void rt_gc_tenure_free(struct rt_env *env, void *p);
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 static void rt_gc_multithread_gc_wrapper(struct rt_env *env, void (*gc)(struct rt_env *));
 #endif
 
@@ -384,7 +384,7 @@ rt_gc_alloc_array(
 		arr->size = 0;
 		arr->table = table;
 		arr->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		arr->counter = 0;
 #endif
 
@@ -434,7 +434,7 @@ rt_gc_alloc_array_graduate(
 		arr->size = 0;
 		arr->table = table;
 		arr->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		arr->counter = 0;
 #endif
 
@@ -498,7 +498,7 @@ rt_gc_alloc_array_tenure(
 		arr->size = 0;
 		arr->table = table;
 		arr->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		arr->counter = 0;
 #endif
 
@@ -569,7 +569,7 @@ rt_gc_alloc_dict(
 		dict->key = key_table;
 		dict->value = value_table;
 		dict->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		dict->counter = 0;
 #endif
 
@@ -627,7 +627,7 @@ rt_gc_alloc_dict_graduate(
 		dict->key = key_table;
 		dict->value = value_table;
 		dict->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		dict->counter = 0;
 #endif
 
@@ -699,7 +699,7 @@ rt_gc_alloc_dict_tenure(
 		dict->key = key_table;
 		dict->value = value_table;
 		dict->newer = NULL;
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 		dict->counter = 0;
 #endif
 
@@ -772,7 +772,7 @@ static void
 rt_gc_young_gc(
 	struct rt_env *env)
 {
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	rt_gc_multithread_gc_wrapper(env, rt_gc_young_gc_body);
 #else
 	rt_gc_young_gc_body(env);
@@ -1419,7 +1419,7 @@ static void
 rt_gc_old_gc(
 	struct rt_env *env)
 {
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	rt_gc_multithread_gc_wrapper(env, rt_gc_old_gc_body);
 #else
 	rt_gc_old_gc_body(env);
@@ -2069,7 +2069,7 @@ rt_gc_tenure_free(
  * Multithread Support
  */
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 
 #include "atomic.h"
 
@@ -2222,4 +2222,4 @@ back_to_inflight:
 	}
 }
 
-#endif /* defined(USE_MULTITHREAD) */
+#endif /* defined(NOCT_USE_MULTITHREAD) */

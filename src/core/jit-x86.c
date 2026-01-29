@@ -8,9 +8,9 @@
  * JIT (x86): Just-In-Time native code generation
  */
 
-#include <noct/c89compat.h>        /* ARCH_X86 */
+#include <noct/c89compat.h>        /* NOCT_ARCH_X86 */
 
-#if defined(ARCH_X86) && defined(USE_JIT)
+#if defined(NOCT_ARCH_X86) && defined(NOCT_USE_JIT)
 
 #include "runtime.h"
 #include "jit.h"
@@ -1789,4 +1789,4 @@ jit_patch_branch(
         return true;
 }
 
-#endif /* defined(ARCH_X86_64) && defined(USE_JIT) */
+#endif /* defined(NOCT_ARCH_X86_64) && defined(NOCT_USE_JIT) */

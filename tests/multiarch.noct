@@ -32,15 +32,15 @@ func arch_test(name, toolchain, qemu) {
     print("[" + name + "]");
 
     // Build a binary for a specified architecture.
-    if (shell("cd .. && " +
-              "cmake -B build-" + name + " .  -DCMAKE_TOOLCHAIN_FILE=cmake/" + toolchain + " && " +
-              "cmake --build build-" + name + " --parallel") != 0) {
+    if (System.shell("cd .. && " +
+                     "cmake -B build-" + name + " .  -DCMAKE_TOOLCHAIN_FILE=cmake/" + toolchain + " && " +
+                     "cmake --build build-" + name + " --parallel") != 0) {
         print("Build failed.");
         return 0;
     }
 
     // Copy a binary.
-    if (shell("cp ../build-" + name + "/noct ./noct-arch") != 0) {
+    if (System.shell("cp ../build-" + name + "/noct ./noct-arch") != 0) {
         print("Copy failed.");
         return 0;
     }
@@ -109,19 +109,19 @@ func run_testcase(qemu, option, file) {
     print("Running " + file + " ... ");
 
     // Run a testcase.
-    if (shell(qemu + " ./noct-arch " + option + " " + file + " > out") != 0) {
+    if (System.shell(qemu + " ./noct-arch " + option + " " + file + " > out") != 0) {
         print("Run failed.");
         return 0;
     }
 
     // Compare the result and the correct answer.
-    if (shell("diff " + file + ".out out") != 0) {
+    if (System.shell("diff " + file + ".out out") != 0) {
         print("Diff.");
         return 0;
     }
 	
     // Remove a temporary file.
-    if (shell("rm -f out") != 0) {
+    if (System.shell("rm -f out") != 0) {
         return 0;
     }
 

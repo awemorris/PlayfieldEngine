@@ -19,7 +19,7 @@
 #include "gc.h"
 #include "hash.h"
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 #include "atomic.h"
 #endif
 
@@ -100,7 +100,7 @@ rt_create_vm(
 	(*default_env)->frame->tmpvar_size = RT_TMPVAR_MAX;
 	memset((*default_env)->frame->tmpvar, 0, sizeof(struct rt_value) * RT_TMPVAR_MAX);
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* Initialize for GC. */
 	rt_gc_init_env(*default_env);
 #endif
@@ -197,7 +197,7 @@ rt_free_func(
 		func->jit_code = NULL;
 }
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 /*
  * Create an environment for the current thread.
  */
@@ -690,7 +690,7 @@ rt_call(
 	char old_file_name[256];
 	int i;
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* Make a GC safe point. */
 	rt_gc_safepoint(env);
 #endif
@@ -880,7 +880,7 @@ rt_cache_string_hash(
  * Arrays and Dictionaries
  */
 
-#if !defined(USE_MULTITHREAD)
+#if !defined(NOCT_USE_MULTITHREAD)
 
 #define ACQUIRE_OBJ(obj, real_obj)							\
 	/* Get the newer reference. */							\
@@ -1772,7 +1772,7 @@ rt_make_dict_copy(
  * Global Variable
  */
 
-#if !defined(USE_MULTITHREAD)
+#if !defined(NOCT_USE_MULTITHREAD)
 
 #define ACQUIRE_GLOBAL()
 #define RELEASE_GLOBAL()
