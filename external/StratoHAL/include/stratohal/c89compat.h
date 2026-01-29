@@ -278,7 +278,7 @@ extern "C" {
     !defined(HAL_TARGET_ANDROID) &&              \
     !defined(HAL_TARGET_WASM) &&                 \
     !defined(HAL_TARGET_BEOS) &&                 \
-    !defined(HAL_TARGTE_UNITY)
+    !defined(HAL_TARGET_UNITY)
 #error "No target detected."
 #endif
 

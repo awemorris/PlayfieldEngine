@@ -414,7 +414,7 @@ endif()
 
 # -DUSE_UNITY
 if(PLAYFIELD_TARGET_UNITY)
-  target_compile_definitions(playfield PRIVATE HAL_USE_UNITY)
+  target_compile_definitions(playfield PRIVATE HAL_TARGET_UNITY)
 endif()
 
 # Windows quirks
