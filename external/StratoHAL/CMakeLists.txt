@@ -436,7 +436,7 @@ endif()
 
 # For Unity
 if(STRATO_TARGET_UNITY)
-  target_compile_definitions(strato PRIVATE HAL_TARGET_UNITY HAL_USE_CSHARP)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_UNITY HAL_USE_CSHARP)
 
   if(STRATO_TARGET_UNITY_SWITCH)
     target_compile_definitions(strato PRIVATE HAL_UNITY_SWITCH)

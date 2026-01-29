@@ -354,8 +354,8 @@ jobs:
         id: cache-llvm
         uses: actions/cache@v4
         with:
-          path: llvm-20
-          key: llvm-20
+          path: llvm-21
+          key: llvm-21
 
       - name: Set up dependencies
         run: git submodule update --init

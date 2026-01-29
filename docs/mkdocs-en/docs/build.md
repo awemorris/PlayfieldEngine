@@ -226,7 +226,7 @@ The target file `build-openbsd/playfield` will be created.
 
 ### Prerequisite
 
-* Full build of `LLVM` installed.
+* Full build of `LLVM-21` installed.
 
 ### Steps
 

@@ -935,5 +935,6 @@ hal_remove_file(
 	const char *file)
 {
 	// TODO
+	return false;
 }
 #endif
