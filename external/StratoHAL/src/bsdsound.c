@@ -244,7 +244,7 @@ cleanup_sound(void)
  * Start sound playback on a stream.
  */
 bool
-play_sound(
+hal_play_sound(
 	int n,
 	struct hal_wave *w)
 {
