@@ -370,7 +370,7 @@ fill_buffer(void)
 			}
 
 			/* Get samples from an input wave stream. */
-			ret = get_wave_samples(wave[stream], channel_buf, TMP_SAMPLES);
+			ret = hal_get_wave_samples(wave[stream], channel_buf, TMP_SAMPLES);
 
 			/* If we reached the end-of-stream. */
 			if(ret < TMP_SAMPLES) {
