@@ -14,7 +14,7 @@
 #define BYTECODE_HEADER		"Noct Bytecode"
 
 /* i18n.c */
-#if defined(USE_TRANSLATION)
+#if defined(NOCT_USE_TRANSLATION)
 void noct_init_locale(void);
 #endif
 

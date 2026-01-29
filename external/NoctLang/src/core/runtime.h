@@ -69,7 +69,7 @@ struct rt_array {
 	/* Copy-On-Resize forwarding. (RCU-style) */
 	struct rt_array *newer;
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* Atomic counter. */
 	int counter;
 #endif
@@ -96,7 +96,7 @@ struct rt_dict {
 	/* Copy-On-Resize forwarding. (RCU-style) */
 	struct rt_dict *newer;
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* Atomic counter. */
 	int counter;
 #endif
@@ -229,7 +229,7 @@ struct rt_env {
 	 */
 	struct rt_env *next;
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* Atomic counter for GC. */
 	int gc_in_progress_counter;
 #endif
@@ -260,7 +260,7 @@ struct rt_vm {
 	/* Is JIT code written and not commited? */
 	bool is_jit_dirty;
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 	/* In-flight counter for GC exclusion. */
 	int in_flight_counter;
 

@@ -98,7 +98,7 @@ noct_register_cfunc(
 	return true;
 }
 
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 NOCT_DLL
 bool
 noct_create_thread_env(
@@ -696,7 +696,7 @@ noct_set_dict_elem(
 /*
  * The following is not thread-safe.
  */
-#if !defined(USE_MULTITHREAD)
+#if !defined(NOCT_USE_MULTITHREAD)
 NOCT_DLL
 bool
 noct_remove_dict_elem(

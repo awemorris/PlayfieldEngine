@@ -162,22 +162,22 @@ target_include_directories(noctlang PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core
 
 # Add macros.
 if(NOCTLANG_ENABLE_SHARED)
-  target_compile_definitions(noctlang PRIVATE USE_DLL DLL_IMPL)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_DLL NOCT_DLL_IMPL)
 endif()
 if(NOCTLANG_ENABLE_JIT)
-  target_compile_definitions(noctlang PRIVATE USE_JIT)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_JIT)
 endif()
 if(NOCTLANG_ENABLE_MULTITHREAD)
-  target_compile_definitions(noctlang PRIVATE USE_MULTITHREAD)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_MULTITHREAD)
 endif()
 if(NOCTLANG_ENABLE_I18N)
-  target_compile_definitions(noctlang PRIVATE USE_TRANSLATION)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_TRANSLATION)
 endif()  
 if(NOCTLANG_TARGET_WASM)
-  target_compile_definitions(noctlang PRIVATE USE_WASM)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_WASM)
 endif()
 if(NOCTLANG_TARGET_UNITY)
-  target_compile_definitions(noctlang PRIVATE USE_UNITY)
+  target_compile_definitions(noctlang PRIVATE NOCT_USE_UNITY)
 endif()
 
 # Win32 Unicode settings.
@@ -215,13 +215,13 @@ if(NOCTLANG_ENABLE_CLI)
 
   # Define feature macros.
   if(NOCTLANG_ENABLE_SHARED)
-    target_compile_definitions(noct PRIVATE USE_DLL)
+    target_compile_definitions(noct PRIVATE NOCT_USE_DLL)
   endif()
   if(NOCTLANG_ENABLE_JIT)
-    target_compile_definitions(noct PRIVATE USE_JIT)
+    target_compile_definitions(noct PRIVATE NOCT_USE_JIT)
   endif()
   if(NOCTLANG_ENABLE_I18N)
-    target_compile_definitions(noct PRIVATE USE_TRANSLATION)
+    target_compile_definitions(noct PRIVATE NOCT_USE_TRANSLATION)
   endif()  
 
   # Include include/noct/, src/core/, and src/backend/

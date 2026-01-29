@@ -139,7 +139,7 @@ noct_destroy_vm(
 /*
  * Creates a thread-local environment for the current thread.
  */
-#if defined(USE_MULTITHREAD)
+#if defined(NOCT_USE_MULTITHREAD)
 NOCT_DLL
 bool
 noct_create_thread_env(

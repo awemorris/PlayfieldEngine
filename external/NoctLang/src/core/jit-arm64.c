@@ -8,9 +8,9 @@
  * JIT (arm64): Just-In-Time native code generation
  */
 
-#include <noct/c89compat.h>        /* ARCH_ARM64 */
+#include <noct/c89compat.h>        /* NOCT_ARCH_ARM64 */
 
-#if defined(ARCH_ARM64) && defined(USE_JIT)
+#if defined(NOCT_ARCH_ARM64) && defined(NOCT_USE_JIT)
 
 #include "runtime.h"
 #include "jit.h"
@@ -2199,4 +2199,4 @@ jit_patch_branch(
         return true;
 }
 
-#endif /* defined(ARCH_ARM64) && defined(USE_JIT) */
+#endif /* defined(NOCT_ARCH_ARM64) && defined(NOCT_USE_JIT) */

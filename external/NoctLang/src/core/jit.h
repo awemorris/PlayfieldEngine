@@ -35,7 +35,7 @@ jit_free(
 /*
  * If JIT is enabled.
  */
-#if defined(USE_JIT)
+#if defined(NOCT_USE_JIT)
 
 /* Error message. */
 #define BROKEN_BYTECODE		N_TR("Broken bytecode.")
@@ -243,6 +243,6 @@ jit_get_opr_string(
 	return true;
 }
 
-#endif /* defined(USE_JIT) */
+#endif /* defined(NOCT_USE_JIT) */
 
 #endif
