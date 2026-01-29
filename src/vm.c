@@ -884,12 +884,12 @@ static bool Engine_createTextTexture(NoctEnv *env)
 		return false;
 
 	if (!pf_create_text_texture(slot,
-					   text,
-					   size,
-					   hal_make_pixel(a, r, g, b),
-					   &tex_id,
-					   &tex_width,
-					   &tex_height))
+				    text,
+				    size,
+				    hal_make_pixel(a, r, g, b),
+				    &tex_id,
+				    &tex_width,
+				    &tex_height))
 		return false;
 
 	if (!noct_make_empty_dict(env, &ret))
@@ -1494,9 +1494,9 @@ static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val)
 		return false;
 
 	*val = ((uint32_t)ctx->data[ctx->pos + 0]) |
-	       ((uint32_t)ctx->data[ctx->pos + 1] << 8) |
-	       ((uint32_t)ctx->data[ctx->pos + 2] << 16) |
-	       ((uint32_t)ctx->data[ctx->pos + 3] << 24);
+		((uint32_t)ctx->data[ctx->pos + 1] << 8) |
+		((uint32_t)ctx->data[ctx->pos + 2] << 16) |
+		((uint32_t)ctx->data[ctx->pos + 3] << 24);
 	ctx->pos += 4;
 
 	return true;
@@ -1511,9 +1511,9 @@ static bool ser_get_string(struct ser_ctx *ctx, char **val)
 		return false;
 
 	len = ((uint32_t)ctx->data[ctx->pos + 0]) |
-	      ((uint32_t)ctx->data[ctx->pos + 1] << 8) |
-	      ((uint32_t)ctx->data[ctx->pos + 2] << 16) |
-	      ((uint32_t)ctx->data[ctx->pos + 3] << 24);
+		((uint32_t)ctx->data[ctx->pos + 1] << 8) |
+		((uint32_t)ctx->data[ctx->pos + 2] << 16) |
+		((uint32_t)ctx->data[ctx->pos + 3] << 24);
 	ctx->pos += 4;
 
 	if (len >= SER_STRING_MAX) {

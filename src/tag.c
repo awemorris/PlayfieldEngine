@@ -120,7 +120,7 @@ bool load_tag_file(const char *file)
 
 	/* Parse the file content. */
 	if (!parse_tag_document(buf, parse_tag_callback, &error_message, &error_line)) {
-		hal_log_error(N_TR("%s:%d: %s\n"),  file, error_line, error_message);
+		hal_log_error(PF_TR("%s:%d: %s\n"),  file, error_line, error_message);
 		free(buf);
 		return false;
 	}
@@ -245,7 +245,7 @@ parse_tag_document(
 			if (c == ' ' || c == '\r' || c == '\t')
 				continue;
 
-			*error_msg = strdup(N_TR("Invalid character."));
+			*error_msg = strdup(PF_TR("Invalid character."));
 			*error_line = line;
 			return false;
 		case ST_TAGNAME:
@@ -263,7 +263,7 @@ parse_tag_document(
 			if (c == ']') {
 				tag_name[len] = '\0';
 				if (!callback(tag_name, 0, NULL, NULL, line)) {
-					*error_msg = strdup(N_TR("Too many properties."));
+					*error_msg = strdup(PF_TR("Too many properties."));
 					*error_line = line;
 					return false;
 				}
@@ -271,7 +271,7 @@ parse_tag_document(
 				continue;
 			}
 			if (len >= TAG_NAME_MAX) {
-				*error_msg = strdup(N_TR("Tag name too long."));
+				*error_msg = strdup(PF_TR("Tag name too long."));
 				*error_line = line;
 				return false;
 			}
@@ -279,7 +279,7 @@ parse_tag_document(
 			continue;
 		case ST_PROPNAME:
 			if (prop_count == PROP_MAX) {
-				*error_msg = strdup(N_TR("Too many properties."));
+				*error_msg = strdup(PF_TR("Too many properties."));
 				*error_line = line;
 				return false;
 			}
@@ -287,7 +287,7 @@ parse_tag_document(
 				continue;
 			if (len == 0 && c == ']') {
 				if (!callback(tag_name, prop_count, (const char **)prop_name_tbl, (const char **)prop_val_tbl, line)) {
-					*error_msg = strdup(N_TR("Internal error."));
+					*error_msg = strdup(PF_TR("Internal error."));
 					*error_line = line;
 					return false;
 				}
@@ -309,7 +309,7 @@ parse_tag_document(
 				continue;
 			}
 			if (len >= PROP_NAME_MAX) {
-				*error_msg = strdup(N_TR("Property name too long."));
+				*error_msg = strdup(PF_TR("Property name too long."));
 				*error_line = line;
 				return false;
 			}
@@ -321,7 +321,7 @@ parse_tag_document(
 				prop_name[prop_count][len++] = c;
 				continue;
 			}
-			*error_msg = strdup(N_TR("Invalid character."));
+			*error_msg = strdup(PF_TR("Invalid character."));
 			*error_line = line;
 			continue;
 		case ST_PROPVALUE_QUOTE:
@@ -368,7 +368,7 @@ parse_tag_document(
 				continue;
 			}
 			if (len >= PROP_VALUE_MAX) {
-				*error_msg = strdup(N_TR("Property value too long."));
+				*error_msg = strdup(PF_TR("Property value too long."));
 				*error_line = line;
 				return false;
 			}
@@ -383,7 +383,7 @@ parse_tag_document(
 	if (state == ST_INIT)
 		return true;
 
-	*error_msg = strdup(N_TR("Unexpected EOF"));
+	*error_msg = strdup(PF_TR("Unexpected EOF"));
 	*error_line = line;
 	return false;
 }
