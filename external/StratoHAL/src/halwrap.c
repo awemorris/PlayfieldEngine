@@ -576,7 +576,7 @@ hal_get_lap_timer_millisec(
 	return ret;
 }
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_play_sound(
 	int stream,
@@ -587,7 +587,7 @@ hal_play_sound(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_stop_sound(
 	int stream)
@@ -597,7 +597,7 @@ hal_stop_sound(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_set_sound_volume(
 	int stream,
@@ -608,7 +608,7 @@ hal_set_sound_volume(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_is_sound_finished(
 	int stream)
@@ -689,7 +689,7 @@ hal_set_continuous_swipe_enabled(
 	wrap_set_continuous_swipe_enabled(is_enabled);
 }
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 struct hal_rfile {
 	char *data;
 	uint64_t size;
@@ -697,13 +697,13 @@ struct hal_rfile {
 };
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 struct hal_wfile {
 	int dummy;
 };
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 init_file(void)
 {
@@ -711,14 +711,14 @@ init_file(void)
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 void
 cleanup_file(void)
 {
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_check_file_exist(
 	const char *file)
@@ -740,7 +740,7 @@ hal_check_file_exist(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_open_rfile(
 	const char *file,
@@ -777,7 +777,7 @@ hal_open_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_get_rfile_size(
 	struct hal_rfile *rf,
@@ -788,7 +788,7 @@ hal_get_rfile_size(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 void
 hal_decode_rfile(
 	struct hal_rfile *f)
@@ -797,7 +797,7 @@ hal_decode_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_read_rfile(
 	struct hal_rfile *rf,
@@ -820,7 +820,7 @@ hal_read_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_gets_rfile(
 	struct hal_rfile *rf,
@@ -863,7 +863,7 @@ hal_gets_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 void
 hal_rewind_rfile(
 	struct hal_rfile *rf)
@@ -872,7 +872,7 @@ hal_rewind_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 void
 hal_close_rfile(
 	struct hal_rfile *rf)
@@ -882,7 +882,7 @@ hal_close_rfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_open_wfile(
 	const char *file,
@@ -900,7 +900,7 @@ hal_open_wfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_write_wfile(
 	struct hal_wfile *wf,
@@ -920,7 +920,7 @@ hal_write_wfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 void
 hal_close_wfile(
 	struct hal_wfile *wf)
@@ -929,7 +929,7 @@ hal_close_wfile(
 }
 #endif
 
-#if defined(HAL_USE_UNITY)
+#if defined(HAL_TARGET_UNITY)
 bool
 hal_remove_file(
 	const char *file)
