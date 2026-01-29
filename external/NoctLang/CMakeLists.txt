@@ -173,11 +173,8 @@ endif()
 if(NOCTLANG_ENABLE_I18N)
   target_compile_definitions(noctlang PRIVATE NOCT_USE_TRANSLATION)
 endif()  
-if(NOCTLANG_TARGET_WASM)
-  target_compile_definitions(noctlang PRIVATE NOCT_USE_WASM)
-endif()
 if(NOCTLANG_TARGET_UNITY)
-  target_compile_definitions(noctlang PRIVATE NOCT_USE_UNITY)
+  target_compile_definitions(noctlang PRIVATE NOCT_TARGET_UNITY)
 endif()
 
 # Win32 Unicode settings.
