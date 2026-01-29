@@ -224,7 +224,6 @@ extern "C" {
 
 /* Unity */
 #if defined(PF_TARGET_UNITY)
-#define PF_TARGET_UNITY
 #endif
 
 /* NetBSD */
