@@ -57,7 +57,7 @@ static ALCcontext *context;
 /*
  * Buffer
  */
-static ALuint buffer[SOUND_TRACKS][BUFFER_COUNT];
+static ALuint buffer[HAL_SOUND_TRACKS][BUFFER_COUNT];
 
 /*
  * Source
@@ -149,7 +149,7 @@ hal_play_sound(
 
 	/* Fill buffers. */
 	for (i = 0; i < BUFFER_COUNT; i++) {
-		samples = get_wave_samples(stream[n], tmp_buf, SAMPLES);
+		samples = hal_get_wave_samples(stream[n], tmp_buf, SAMPLES);
 		if (samples < SAMPLES) {
 			/* Set a finish flag. */
 			finish[n] = true;
@@ -237,7 +237,7 @@ fill_sound_buffer(void)
 
 			if (!finish[n]) {
 				/* Get PCM samples. */
-				samples = get_wave_samples(stream[n], tmp_buf, SAMPLES);
+				samples = hal_get_wave_samples(stream[n], tmp_buf, SAMPLES);
 				if (samples < SAMPLES) {
 					/* Set a finish flag. */
 					remain[n] = i + 1;
@@ -262,7 +262,7 @@ fill_sound_buffer(void)
  * Pause sound.
  */
 void
-hal_pause_sound(void)
+pause_sound(void)
 {
 	int i;
 	for (i = 0; i < HAL_SOUND_TRACKS; i++)
@@ -274,7 +274,7 @@ hal_pause_sound(void)
  * Resume sound.
  */
 void
-hal_resume_sound(void)
+resume_sound(void)
 {
 	int i;
 	for (i = 0; i < HAL_SOUND_TRACKS; i++)

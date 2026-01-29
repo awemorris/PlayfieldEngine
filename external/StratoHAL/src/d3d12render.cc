@@ -545,15 +545,39 @@ static float								g_fScale;
 static float								g_fOffsetX;
 static float								g_fOffsetY;
 static int									g_contextID;
+
 //
 // API Pointers
 //
 
 HRESULT(__stdcall* pfnCreateDXGIFactory2)(UINT, REFIID, void**);
-HRESULT(__stdcall* pfnD3D12CreateDevice)(IUnknown*, D3D_FEATURE_LEVEL, REFIID, void**);
-HRESULT(__stdcall* pfnD3D12SerializeRootSignature)(const D3D12_ROOT_SIGNATURE_DESC*, D3D_ROOT_SIGNATURE_VERSION, ID3DBlob**, ID3DBlob**);
-HRESULT(__stdcall *pfnD3DCompile)(LPCVOID, SIZE_T, LPCSTR, const D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**);
-HRESULT(__stdcall* pfnD3DCreateBlob)(IUnknown*, D3D_FEATURE_LEVEL, REFIID, void**);
+HRESULT(__stdcall* pfnD3D12CreateDevice)(
+	IUnknown *,
+	D3D_FEATURE_LEVEL,
+	REFIID,
+	void**);
+HRESULT(__stdcall* pfnD3D12SerializeRootSignature)(
+	const D3D12_ROOT_SIGNATURE_DESC *,
+	D3D_ROOT_SIGNATURE_VERSION,
+	ID3DBlob **,
+	ID3DBlob **);
+HRESULT(__stdcall *pfnD3DCompile)(
+	LPCVOID,
+	SIZE_T,
+	LPCSTR,
+	const D3D_SHADER_MACRO *,
+	ID3DInclude *,
+	LPCSTR,
+	LPCSTR,
+	UINT,
+	UINT,
+	ID3DBlob **,
+	ID3DBlob **);
+HRESULT(__stdcall* pfnD3DCreateBlob)(
+	IUnknown *,
+	D3D_FEATURE_LEVEL,
+	REFIID,
+	void **);
 
 //
 // Forward Declarations
@@ -563,27 +587,61 @@ static BOOL GetAPIPointers();
 static BOOL GetScreenSize();
 static BOOL RecreateD3DObjects();
 static BOOL CreateSwapchain();
-static void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter, bool requestHighPerformanceAdapter);
+static void GetHardwareAdapter(IDXGIFactory1* pFactory,
+							   IDXGIAdapter1** ppAdapter,
+							   bool requestHighPerformanceAdapter);
 static BOOL CreateSwapchain();
 static BOOL CreateDescriptorHeap();
 static BOOL CreateFrameResources();
 static BOOL CreateCommandAllocator();
 static BOOL CreateRootSignature();
 static BOOL CreatePipelineState();
-static HRESULT CompileShaderFromString(const char* szShader, LPCSTR szEntryPoint, LPCSTR szShaderModel, uint8_t** ppShaderData, size_t* pShaderSize);
+static HRESULT CompileShaderFromString(const char* szShader,
+									   LPCSTR szEntryPoint,
+									   LPCSTR szShaderModel,
+									   uint8_t** ppShaderData,
+									   size_t* pShaderSize);
 static BOOL CreateCommandList();
 static BOOL CreateVertexBuffer();
 static BOOL CreateFence();
 static void ReleaseAllD3D12Objects();
 static void WaitForPreviousFrame();
-static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline);
-static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline);
-static BOOL UploadTextureIfNeeded(struct image* img);
-static UINT64 GetRequiredIntermediateSize_NoD3DX(ID3D12Resource* destinationResource, UINT firstSubresource, UINT numSubresources);
-static UINT64 UpdateSubresources_NoD3DX(ID3D12GraphicsCommandList* pCmdList, ID3D12Resource* pDestinationResource, ID3D12Resource* pIntermediate, UINT64 IntermediateOffset, UINT FirstSubresource, UINT NumSubresources, const D3D12_SUBRESOURCE_DATA* pSrcData);
-static void MemcpySubresource_NoD3DX(const D3D12_MEMCPY_DEST* pDest, const D3D12_SUBRESOURCE_DATA* pSrc, SIZE_T rowSizeInBytes, UINT numRows, UINT numSlices);
+static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width,
+							int dst_height, struct hal_image *src_image,
+							struct hal_image *rule_image, int src_left,
+							int src_top, int src_width, int src_height,
+							int alpha, int pipeline);
+static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3,
+							float y3, float x4, float y4,
+							struct hal_image *src_image,
+							struct hal_image *rule_image,
+							int src_left, int src_top, int src_width,
+							int src_height, int alpha, int pipeline);
+static BOOL UploadTextureIfNeeded(struct hal_image *img);
+static UINT64 GetRequiredIntermediateSize_NoD3DX(
+	ID3D12Resource *destinationResource,
+	UINT firstSubresource,
+	UINT numSubresources);
+static UINT64 UpdateSubresources_NoD3DX(
+	ID3D12GraphicsCommandList *pCmdList,
+	ID3D12Resource *pDestinationResource,
+	ID3D12Resource *pIntermediate,
+	UINT64 IntermediateOffset,
+	UINT FirstSubresource,
+	UINT NumSubresources,
+	const D3D12_SUBRESOURCE_DATA *pSrcData);
+static void MemcpySubresource_NoD3DX(
+	const D3D12_MEMCPY_DEST *pDest,
+	const D3D12_SUBRESOURCE_DATA *pSrc,
+	SIZE_T rowSizeInBytes,
+	UINT numRows,
+	UINT numSlices);
 
-BOOL D3D12Initialize(HWND hWnd, int nWidth, int nHeight)
+BOOL
+D3D12Initialize(
+	HWND hWnd,
+	int nWidth,
+	int nHeight)
 {
     g_hWnd = hWnd;
     g_nVirtualWidth = nWidth;
@@ -603,7 +661,8 @@ BOOL D3D12Initialize(HWND hWnd, int nWidth, int nHeight)
     return TRUE;
 }
 
-static BOOL RecreateD3DObjects()
+static BOOL
+RecreateD3DObjects()
 {
 	g_contextID++;
 
@@ -631,9 +690,10 @@ static BOOL RecreateD3DObjects()
 	return TRUE;
 }
 
-static BOOL GetAPIPointers()
+static BOOL
+GetAPIPointers()
 {
-#if defined(TARGET_GDK_XBOX_XS)
+#if defined(HAL_TARGET_GDK_XBOX_XS)
 	//
 	// Xbox
 	//
@@ -681,7 +741,8 @@ static BOOL GetAPIPointers()
 #endif
 }
 
-static BOOL GetScreenSize()
+static BOOL
+GetScreenSize()
 {
     RECT rc;
     GetClientRect(g_hWnd, &rc);
@@ -704,7 +765,8 @@ static BOOL GetScreenSize()
     return TRUE;
 }
 
-static BOOL CreateSwapchain()
+static BOOL
+CreateSwapchain()
 {
     UINT dxgiFactoryFlags = 0;
 
@@ -768,7 +830,11 @@ static BOOL CreateSwapchain()
 }
 
 // From a DirectX sample.
-static void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter, bool requestHighPerformanceAdapter)
+static void
+GetHardwareAdapter(
+	IDXGIFactory1 *pFactory,
+	IDXGIAdapter1 **ppAdapter,
+	bool requestHighPerformanceAdapter)
 {
     GUID guidID3D12Device = {0x189819f1, 0x1db6, 0x4b57, {0xbe, 0x54, 0x18, 0x21, 0x33, 0x9b, 0x85, 0xf7}};
 
@@ -824,7 +890,8 @@ static void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapte
     *ppAdapter = adapter.Detach();
 }
 
-static BOOL CreateDescriptorHeap()
+static BOOL
+CreateDescriptorHeap()
 {
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
     rtvHeapDesc.NumDescriptors = FRAME_COUNT;
@@ -851,7 +918,8 @@ static BOOL CreateDescriptorHeap()
     return TRUE;
 }
 
-static BOOL CreateFrameResources()
+static BOOL
+CreateFrameResources()
 {
 #if defined(_MSC_VER)
     D3D12_CPU_DESCRIPTOR_HANDLE handle = g_rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -875,7 +943,8 @@ static BOOL CreateFrameResources()
     return TRUE;
 }
 
-static BOOL CreateCommandAllocator()
+static BOOL
+CreateCommandAllocator()
 {
     HRESULT hr = g_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_commandAllocator));
     if (FAILED(hr))
@@ -884,7 +953,8 @@ static BOOL CreateCommandAllocator()
     return TRUE;
 }
 
-static BOOL CreateRootSignature()
+static BOOL
+CreateRootSignature()
 {
     D3D12_DESCRIPTOR_RANGE range[2];
     for (int i = 0; i < 2; i++)
@@ -940,7 +1010,8 @@ static BOOL CreateRootSignature()
     return TRUE;
 }
 
-static BOOL CreatePipelineState()
+static BOOL
+CreatePipelineState()
 {
     uint8_t* vertexShader;
     uint8_t* pixelShaderNormal;
@@ -1177,7 +1248,13 @@ static BOOL CreatePipelineState()
     return TRUE;
 }
 
-static HRESULT CompileShaderFromString(const char* szShader, LPCSTR szEntryPoint, LPCSTR szShaderModel, uint8_t** ppShaderData, size_t* pShaderSize)
+static HRESULT
+CompileShaderFromString(
+	const char *szShader,
+	LPCSTR szEntryPoint,
+	LPCSTR szShaderModel,
+	uint8_t **ppShaderData,
+	size_t *pShaderSize)
 {
 #if 0
     ID3DBlob* pErrorBlob = nullptr;
@@ -1232,7 +1309,8 @@ static HRESULT CompileShaderFromString(const char* szShader, LPCSTR szEntryPoint
 #endif
 }
 
-static BOOL CreateCommandList()
+static BOOL
+CreateCommandList()
 {
     HRESULT hr = g_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_commandAllocator.Get(), g_pipelineStateNormal.Get(), IID_PPV_ARGS(&g_commandList));
     if (FAILED(hr))
@@ -1241,7 +1319,8 @@ static BOOL CreateCommandList()
     return TRUE;
 }
 
-static BOOL CreateVertexBuffer()
+static BOOL
+CreateVertexBuffer()
 {
     const UINT vertexBufferSize = sizeof(g_tempRectVertexBuffer);
 
@@ -1290,7 +1369,8 @@ static BOOL CreateVertexBuffer()
     return TRUE;
 }
 
-static BOOL CreateFence()
+static BOOL
+CreateFence()
 {
     // Create synchronization objects and wait until assets have been uploaded to the GPU.
     HRESULT hr = g_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&g_fence));
@@ -1309,13 +1389,22 @@ static BOOL CreateFence()
     return TRUE;
 }
 
-VOID D3D12Cleanup(void)
+VOID
+D3D12Cleanup(VOID)
 {
     WaitForPreviousFrame();
 	ReleaseAllD3D12Objects();
 }
 
-BOOL D3D12ResizeWindow(int nWindowWidth, int nWindowHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
+BOOL
+D3D12ResizeWindow(
+	int nWindowWidth,
+	int nWindowHeight,
+	int nOffsetX,
+	int nOffsetY,
+	int nViewportWidth,
+	int nViewportHeight,
+	float scale)
 {
 	// g_nVirtualWidth ... virtual screen size
     // g_nVirtualHeight ... virtual screen size
@@ -1350,7 +1439,8 @@ BOOL D3D12ResizeWindow(int nWindowWidth, int nWindowHeight, int nOffsetX, int nO
     return TRUE;
 }
 
-static void ReleaseAllD3D12Objects()
+static void
+ReleaseAllD3D12Objects()
 {
 	WaitForPreviousFrame();
 
@@ -1384,7 +1474,8 @@ static void ReleaseAllD3D12Objects()
     g_device.Reset();
 }
 
-VOID D3D12StartFrame(void)
+VOID
+D3D12StartFrame(VOID)
 {
     g_tempRectCount = 0;
 
@@ -1434,7 +1525,8 @@ VOID D3D12StartFrame(void)
     g_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 }
 
-VOID D3D12EndFrame(void)
+VOID
+D3D12EndFrame(VOID)
 {
     // Upload the temporary vertex buffer to GPU.
     UINT8* pVertexDataBegin;
@@ -1490,7 +1582,8 @@ VOID D3D12EndFrame(void)
     g_freeTextureBundleList.clear();
 }
 
-static void WaitForPreviousFrame()
+static void
+WaitForPreviousFrame()
 {
 	if (g_commandQueue == nullptr ||
 		g_fence == nullptr ||
@@ -1516,12 +1609,16 @@ static void WaitForPreviousFrame()
     g_frameIndex = g_swapChain->GetCurrentBackBufferIndex();
 }
 
-VOID D3D12NotifyImageUpdate(struct image* img)
+VOID
+D3D12NotifyImageUpdate(
+	struct hal_image *img)
 {
     img->need_upload = true;
 }
 
-VOID D3D12NotifyImageFree(struct image* img)
+VOID
+D3D12NotifyImageFree(
+	struct hal_image *img)
 {
     TextureBundle* pTextureBundle = (TextureBundle*)img->texture;
     if (pTextureBundle != NULL)
@@ -1532,57 +1629,308 @@ VOID D3D12NotifyImageFree(struct image* img)
     }
 }
 
-VOID D3D12RenderImageNormal(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImageNormal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_NORMAL);
+    DrawPrimitive2D(dst_left,
+					dst_top,
+					dst_width,
+					dst_height,
+					src_image,
+					nullptr,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_NORMAL);
 }
 
-VOID D3D12RenderImageAdd(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImageAdd(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+    DrawPrimitive2D(dst_left,
+					dst_top,
+					dst_width,
+					dst_height,
+					src_image,
+					nullptr,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_ADD);
 }
 
-VOID D3D12RenderImageSub(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImageSub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+    DrawPrimitive2D(dst_left,
+					dst_top,
+					dst_width,
+					dst_height,
+					src_image,
+					nullptr,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_SUB);
 }
 
-VOID D3D12RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImageDim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive2D(dst_left, dst_top, dst_width, dst_height, src_image, nullptr, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
+    DrawPrimitive2D(dst_left,
+					dst_top,
+					dst_width,
+					dst_height,
+					src_image,
+					nullptr,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_DIM);
 }
 
-VOID D3D12RenderImageRule(struct image* src_image, struct image* rule_image, int threshold)
+VOID
+D3D12RenderImageRule(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int threshold)
 {
-    DrawPrimitive2D(0, 0, g_nVirtualWidth, g_nVirtualHeight, src_image, rule_image, 0, 0, g_nVirtualWidth, g_nVirtualHeight, threshold, PIPELINE_RULE);
+    DrawPrimitive2D(0,
+					0,
+					g_nVirtualWidth,
+					g_nVirtualHeight,
+					src_image,
+					rule_image,
+					0,
+					0,
+					g_nVirtualWidth,
+					g_nVirtualHeight,
+					threshold,
+					PIPELINE_RULE);
 }
 
-VOID D3D12RenderImageMelt(struct image* src_image, struct image* rule_image, int progress)
+VOID
+D3D12RenderImageMelt(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int progress)
 {
-    DrawPrimitive2D(0, 0, g_nVirtualWidth, g_nVirtualHeight, src_image, rule_image, 0, 0, g_nVirtualWidth, g_nVirtualHeight, progress, PIPELINE_MELT);
+    DrawPrimitive2D(0,
+					0,
+					g_nVirtualWidth,
+					g_nVirtualHeight,
+					src_image,
+					rule_image,
+					0,
+					0,
+					g_nVirtualWidth,
+					g_nVirtualHeight,
+					progress,
+					PIPELINE_MELT);
 }
 
-VOID D3D12RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImage3DNormal(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_NORMAL);
+    DrawPrimitive3D(x1,
+					y1,
+					x2,
+					y2,
+					x3,
+					y3,
+					x4,
+					y4,
+					src_image,
+					NULL,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_NORMAL);
 }
 
-VOID D3D12RenderImage3DAdd(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImage3DAdd(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+    DrawPrimitive3D(x1,
+					y1,
+					x2,
+					y2,
+					x3,
+					y3,
+					x4,
+					y4,
+					src_image,
+					NULL,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_ADD);
 }
 
-VOID D3D12RenderImage3DSub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImage3DSub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+    DrawPrimitive3D(x1,
+					y1,
+					x2,
+					y2,
+					x3,
+					y3,
+					x4,
+					y4,
+					src_image,
+					NULL,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_SUB);
 }
 
-VOID D3D12RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D12RenderImage3DDim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-    DrawPrimitive3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
+    DrawPrimitive3D(x1,
+					y1,
+					x2,
+					y2,
+					x3,
+					y3,
+					x4,
+					y4,
+					src_image,
+					NULL,
+					src_left,
+					src_top,
+					src_width,
+					src_height,
+					alpha,
+					PIPELINE_DIM);
 }
 
-static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image* src_image, struct image* rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
+static VOID
+DrawPrimitive2D(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
     if (dst_width == -1)
         dst_width = src_image->width;
@@ -1611,7 +1959,24 @@ static VOID DrawPrimitive2D(int dst_left, int dst_top, int dst_width, int dst_he
                     pipeline);
 }
 
-static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image* src_image, struct image *rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
+static VOID
+DrawPrimitive3D(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
     // Check src_image.
     if (!UploadTextureIfNeeded(src_image))
@@ -1708,7 +2073,9 @@ static VOID DrawPrimitive3D(float x1, float y1, float x2, float y2, float x3, fl
     g_tempRectCount++;
 }
 
-static BOOL UploadTextureIfNeeded(struct image* img)
+static BOOL
+UploadTextureIfNeeded(
+	struct hal_image *img)
 {
 	bool is_needed;
 
@@ -1857,8 +2224,9 @@ static BOOL UploadTextureIfNeeded(struct image* img)
     return TRUE;
 }
 
-static UINT64 GetRequiredIntermediateSize_NoD3DX(
-    ID3D12Resource* destinationResource,
+static UINT64
+GetRequiredIntermediateSize_NoD3DX(
+    ID3D12Resource *destinationResource,
     UINT firstSubresource,
     UINT numSubresources)
 {
@@ -1890,12 +2258,19 @@ static UINT64 GetRequiredIntermediateSize_NoD3DX(
     return requiredSize;
 }
 
-static inline UINT64 AlignUp(UINT64 value, UINT64 alignment)
+static inline UINT64
+AlignUp(
+	UINT64 value,
+	UINT64 alignment)
 {
     return (value + alignment - 1) & ~(alignment - 1);
 }
 
-static inline UINT64 MinU64(UINT64 a, UINT64 b) {
+static inline UINT64
+MinU64(
+	UINT64 a,
+	UINT64 b)
+{
 	return a < b ? a : b;
 }
 
@@ -1906,14 +2281,15 @@ struct MEMCPY_DEST
     SIZE_T SlicePitch;
 };
 
-static UINT64 UpdateSubresources_NoD3DX(
-    ID3D12GraphicsCommandList* pCmdList,
-    ID3D12Resource* pDestinationResource,
-    ID3D12Resource* pIntermediate,
+static UINT64
+UpdateSubresources_NoD3DX(
+    ID3D12GraphicsCommandList *pCmdList,
+    ID3D12Resource *pDestinationResource,
+    ID3D12Resource *pIntermediate,
     UINT64 IntermediateOffset,
     UINT FirstSubresource,
     UINT NumSubresources,
-    const D3D12_SUBRESOURCE_DATA* pSrcData)
+    const D3D12_SUBRESOURCE_DATA *pSrcData)
 {
     if (!pCmdList || !pDestinationResource || !pIntermediate || !pSrcData || NumSubresources == 0)
         return 0;
@@ -2031,9 +2407,10 @@ static UINT64 UpdateSubresources_NoD3DX(
     return requiredSize;
 }
 
-static void MemcpySubresource_NoD3DX(
-    const D3D12_MEMCPY_DEST* pDest,
-    const D3D12_SUBRESOURCE_DATA* pSrc,
+static void
+MemcpySubresource_NoD3DX(
+    const D3D12_MEMCPY_DEST *pDest,
+    const D3D12_SUBRESOURCE_DATA *pSrc,
     SIZE_T rowSizeInBytes,
     UINT numRows,
     UINT numSlices)

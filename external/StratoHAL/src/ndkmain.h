@@ -34,20 +34,20 @@
 #include "stratohal/c89compat.h"
 #include <jni.h>
 
-struct rfile {
+struct hal_rfile {
 	jbyteArray array;
 	char *buf;
 	uint64_t size;
 	uint64_t pos;
 };
 
-struct wfile {
+struct hal_wfile {
 	jobject os;
 };
 
 extern JNIEnv *jni_env;
 extern jobject main_activity;
 
-void post_delayed_remove_rfile_ref(struct rfile *rf);
+void post_delayed_remove_rfile_ref(struct hal_rfile *rf);
 
 #endif

@@ -161,12 +161,6 @@ extern "C" {
 #define HAL_ARCH_LE	/* Default, no MSVC support yet */
 #endif
 
-#else
-#error "No architecture detected."
-#endif
-
-#if !defined(HAL_ARCH_LE) && !defined(HAL_ARCH_BE)
-#error "No byte order detected."
 #endif
 
 /*

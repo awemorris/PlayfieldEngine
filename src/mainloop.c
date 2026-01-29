@@ -1148,7 +1148,8 @@ hal_callback_on_event_analog_input(
 	}
 }
 
-void on_event_touch_cancel(void)
+void
+hal_callback_on_event_touch_cancel(void)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;

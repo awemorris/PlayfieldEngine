@@ -83,12 +83,12 @@ static int touch_last_y;
 static bool is_continuous_swipe_enabled;
 
 /*
- * Delayed removal of (struct rfile *) references.
+ * Delayed removal of (struct hal_rfile *) references.
  */
 
 #define DELAYED_RFILE_FREE_SLOTS	(16)
 
-struct rfile *delayed_rfile_free_slot[DELAYED_RFILE_FREE_SLOTS];
+struct hal_rfile *delayed_rfile_free_slot[DELAYED_RFILE_FREE_SLOTS];
 
 /*
  * Locale
@@ -131,19 +131,19 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeInitGame(
 
 	/* Init the file HAL. */
 	if (!init_file()) {
-		log_error("Failed to initialize config.");
+		hal_log_error("Failed to initialize config.");
 		return;
 	}
 
 	/* Do a boot callback to acquire a screen configuration. */
-	if (!on_event_boot(&window_title, &screen_width, &screen_height)) {
-		log_error("Initialization failed.");
+	if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height)) {
+		hal_log_error("Initialization failed.");
 		return;
 	}
 
 	/* Init the graphics HAL. */
 	if (!init_opengl(screen_width, screen_height)) {
-		log_error("Failed to initialize OpenGL.");
+		hal_log_error("Failed to initialize OpenGL.");
 		return;
 	}
 
@@ -151,8 +151,8 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeInitGame(
 	init_opensl_es();
 
 	/* Do a start callback. */
-	if(!on_event_start()) {
-		log_error("Failed to initialize event loop.");
+	if(!hal_callback_on_event_start()) {
+		hal_log_error("Failed to initialize event loop.");
 		return;
 	}
 
@@ -221,7 +221,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeReinitOpenGL(
 
 	/* Re-initialize OpenGL. */
 	if (!init_opengl(screen_width, screen_height)) {
-		log_error("Failed to initialize OpenGL.");
+		hal_log_error("Failed to initialize OpenGL.");
 		return;
 	}
 
@@ -237,7 +237,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeCleanup(
 {
 	jni_env = env;
 
-	on_event_stop();
+	hal_callback_on_event_stop();
 
 	/* Delete the global reference to the main activity instance. */
 	if (main_activity != NULL) {
@@ -272,7 +272,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeRunFrame(
 
 	/* Run a frame. */
 	jboolean ret = JNI_TRUE;
-	if (!on_event_frame())
+	if (!hal_callback_on_event_frame())
 		ret = JNI_FALSE;
 
 	/* Finish a rendering. */
@@ -287,7 +287,9 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeRunFrame(
 	return ret;
 }
 
-void post_delayed_remove_rfile_ref(struct rfile *rf)
+void
+post_delayed_remove_rfile_ref(
+	struct hal_rfile *rf)
 {
 	int i;
 
@@ -300,7 +302,8 @@ void post_delayed_remove_rfile_ref(struct rfile *rf)
 	assert(0);
 }
 
-static void do_delayed_remove_rfile_ref(void)
+static void
+do_delayed_remove_rfile_ref(void)
 {
 	int i;
 
@@ -355,7 +358,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchStart(
 		touch_start_x = x;
 		touch_start_y = y;
 		touch_last_y = y;
-		on_event_mouse_press(MOUSE_LEFT, x, y);
+		hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
 	}
 	jni_env = NULL;
 }
@@ -375,14 +378,14 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchMove(
 		touch_last_y = y;
 		if (is_continuous_swipe_enabled) {
 			if (delta_y > 0 && delta_y < FLICK_Y_DISTANCE) {
-				on_event_key_press(KEY_DOWN);
-				on_event_key_release(KEY_DOWN);
+				hal_callback_on_event_key_press(HAL_KEY_DOWN);
+				hal_callback_on_event_key_release(HAL_KEY_DOWN);
 				break;
 			}
 		}
 
 		/* Emulate a mouse move. */
-		on_event_mouse_move(x, y);
+		hal_callback_on_event_mouse_move(x, y);
 	} while (0);
 	jni_env = NULL;
 }
@@ -402,12 +405,12 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchEnd(
 		const int FLICK_Y_DISTANCE = 50;
 		int delta_y = y - touch_start_y;
 		if (delta_y > FLICK_Y_DISTANCE) {
-			on_event_touch_cancel();
-			on_event_swipe_down();
+			hal_callback_on_event_touch_cancel();
+			hal_callback_on_event_swipe_down();
 			break;
 		} else if (delta_y < -FLICK_Y_DISTANCE) {
-			on_event_touch_cancel();
-			on_event_swipe_up();
+			hal_callback_on_event_touch_cancel();
+			hal_callback_on_event_swipe_up();
 			break;
 		}
 
@@ -416,9 +419,9 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchEnd(
 		if (points == 1 &&
 		    abs(x - touch_start_x) < FINGER_DISTANCE &&
 		    abs(y - touch_start_y) < FINGER_DISTANCE) {
-			on_event_touch_cancel();
-			on_event_mouse_press(MOUSE_LEFT, x, y);
-			on_event_mouse_release(MOUSE_LEFT, x, y);
+			hal_callback_on_event_touch_cancel();
+			hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+			hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
 			break;
 		}
 
@@ -426,14 +429,14 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnTouchEnd(
 		if (points == 2 &&
 		    abs(x - touch_start_x) < FINGER_DISTANCE &&
 		    abs(y - touch_start_y) < FINGER_DISTANCE) {
-			on_event_touch_cancel();
-			on_event_mouse_press(MOUSE_RIGHT, x, y);
-			on_event_mouse_release(MOUSE_RIGHT, x, y);
+			hal_callback_on_event_touch_cancel();
+			hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
+			hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
 			break;
 		}
 
 		/* Cancel the touch move. */
-		on_event_touch_cancel();
+		hal_callback_on_event_touch_cancel();
 	} while (0);
 
 	jni_env = NULL;
@@ -445,7 +448,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnKeyDown(
 	jobject instance,
 	int key)
 {
-	on_event_key_press(key);
+	hal_callback_on_event_key_press(key);
 }
 
 JNIEXPORT void JNICALL
@@ -454,7 +457,7 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnKeyUp(
 	jobject instance,
 	int key)
 {
-	on_event_key_release(key);
+	hal_callback_on_event_key_release(key);
 }
 
 JNIEXPORT void JNICALL
@@ -468,19 +471,22 @@ Java_io_noctvm_playfield_engineandroid_MainActivity_nativeOnGamepadAnalog(
 	jfloat l,
 	jfloat r)
 {
-	on_event_analog_input(ANALOG_X1, (int)(x1 * 32767.0f));
-	on_event_analog_input(ANALOG_Y1, (int)(y1 * 32767.0f));
-	on_event_analog_input(ANALOG_X2, (int)(x2 * 32767.0f));
-	on_event_analog_input(ANALOG_Y2, (int)(y2 * 32767.0f));
-	on_event_analog_input(ANALOG_L, (int)(l * 32767.0f));
-	on_event_analog_input(ANALOG_R, (int)(r * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_X1, (int)(x1 * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_Y1, (int)(y1 * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_X2, (int)(x2 * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_Y2, (int)(y2 * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_L, (int)(l * 32767.0f));
+	hal_callback_on_event_analog_input(HAL_ANALOG_R, (int)(r * 32767.0f));
 }
 
 /*
  * HAL
  */
 
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -492,7 +498,10 @@ bool log_info(const char *s, ...)
 	return true;
 }
 
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -504,7 +513,10 @@ bool log_warn(const char *s, ...)
 	return true;
 }
 
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -516,32 +528,39 @@ bool log_error(const char *s, ...)
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
-	log_error("Out of memory.");
+	hal_log_error("Out of memory.");
 	return true;
 }
 
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+	struct hal_image *img)
 {
 	opengl_notify_image_update(img);
 }
 
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(
+	struct hal_image *img)
 {
 	opengl_notify_image_free(img);
 }
 
-void render_image_normal(int dst_left,
-			 int dst_top,
-			 int dst_width,
-			 int dst_height,
-			 struct image *src_image,
-			 int src_left,
-			 int src_top,
-			 int src_width,
-			 int src_height,
-			 int alpha)
+void
+hal_render_image_normal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	opengl_render_image_normal(dst_left,
 				   dst_top,
@@ -555,16 +574,18 @@ void render_image_normal(int dst_left,
 				   alpha);
 }
 
-void render_image_add(int dst_left,
-		      int dst_top,
-		      int dst_width,
-		      int dst_height,
-		      struct image *src_image,
-		      int src_left,
-		      int src_top,
-		      int src_width,
-		      int src_height,
-		      int alpha)
+void
+hal_render_image_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	opengl_render_image_add(dst_left,
 				dst_top,
@@ -578,16 +599,18 @@ void render_image_add(int dst_left,
 				alpha);
 }
 
-void render_image_sub(int dst_left,
-		      int dst_top,
-		      int dst_width,
-		      int dst_height,
-		      struct image *src_image,
-		      int src_left,
-		      int src_top,
-		      int src_width,
-		      int src_height,
-		      int alpha)
+void
+hal_render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	opengl_render_image_sub(dst_left,
 				dst_top,
@@ -601,16 +624,18 @@ void render_image_sub(int dst_left,
 				alpha);
 }
 
-void render_image_dim(int dst_left,
-		      int dst_top,
-		      int dst_width,
-		      int dst_height,
-		      struct image *src_image,
-		      int src_left,
-		      int src_top,
-		      int src_width,
-		      int src_height,
-		      int alpha)
+void
+hal_render_image_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	opengl_render_image_dim(dst_left,
 				dst_top,
@@ -624,18 +649,26 @@ void render_image_dim(int dst_left,
 				alpha);
 }
 
-void render_image_rule(struct image *src_img, struct image *rule_img, int threshold)
+void
+hal_render_image_rule(
+	struct hal_image *src_img,
+	struct hal_image *rule_img,
+	int threshold)
 {
 	opengl_render_image_rule(src_img, rule_img, threshold);
 }
 
-void render_image_melt(struct image *src_img, struct image *rule_img, int progress)
+void
+hal_render_image_melt(
+	struct hal_image *src_img,
+	struct hal_image *rule_img,
+	int progress)
 {
 	opengl_render_image_melt(src_img, rule_img, progress);
 }
 
 void
-render_image_3d_normal(
+hal_render_image_3d_normal(
 	float x1,
 	float y1,
 	float x2,
@@ -644,7 +677,7 @@ render_image_3d_normal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -668,7 +701,7 @@ render_image_3d_normal(
 }
 
 void
-render_image_3d_add(
+hal_render_image_3d_add(
 	float x1,
 	float y1,
 	float x2,
@@ -677,7 +710,7 @@ render_image_3d_add(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -701,7 +734,7 @@ render_image_3d_add(
 }
 
 void
-render_image_3d_sub(
+hal_render_image_3d_sub(
 	float x1,
 	float y1,
 	float x2,
@@ -710,7 +743,7 @@ render_image_3d_sub(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -734,7 +767,7 @@ render_image_3d_sub(
 }
 
 void
-render_image_3d_dim(
+hal_render_image_3d_dim(
 	float x1,
 	float y1,
 	float x2,
@@ -743,7 +776,7 @@ render_image_3d_dim(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -766,20 +799,26 @@ render_image_3d_dim(
 				   alpha);
 }
 
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	/* Note: We don't create a sav directory for engine-android. */
 	return true;
 }
 
-char *make_valid_path(const char *dir, const char *fname)
+char *
+hal_make_valid_path(
+	const char *dir,
+	const char *fname)
 {
 	/* Note: We don't use a POSIX path for engine-android. */
 	assert(0);
 	return NULL;
 }
 
-void reset_lap_timer(uint64_t *t)
+void
+hal_reset_lap_timer(
+	uint64_t *t)
 {
 	struct timeval tv;
 
@@ -788,7 +827,9 @@ void reset_lap_timer(uint64_t *t)
 	*t = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-uint64_t get_lap_timer_millisec(uint64_t *t)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *t)
 {
 	struct timeval tv;
 	uint64_t end;
@@ -800,37 +841,10 @@ uint64_t get_lap_timer_millisec(uint64_t *t)
 	return (uint64_t)(end - *t);
 }
 
-bool exit_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool title_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool delete_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool overwrite_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool default_dialog(void)
-{
-	/* stub */
-	return true;
-}
-
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	state_video = true;
 
@@ -847,7 +861,8 @@ bool play_video(const char *fname, bool is_skippable)
 	return true;
 }
 
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 	state_video = false;
 
@@ -856,7 +871,8 @@ void stop_video(void)
 	(*jni_env)->CallVoidMethod(jni_env, main_activity, mid);
 }
 
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	if (state_video) {
 		jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/playfield/engineandroid/MainActivity");
@@ -870,44 +886,54 @@ bool is_video_playing(void)
 	return false;
 }
 
-void update_window_title(void)
+void
+hal_update_window_title(void)
 {
 	/* FIXME: Do we have a window name on ChromeOS? */
 }
 
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
 	/* FIXME: Do we have a full screen support on ChromeOS? */
 	return false;
 }
 
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	/* FIXME: Do we have a full screen support on ChromeOS? */
 	return false;
 }
 
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	/* FIXME: Do we have a full screen support on ChromeOS? */
 }
 
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	/* FIXME: Do we have a full screen support on ChromeOS? */
 }
 
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	return lang_code;
 }
 
-void speak_text(const char *text)
+void
+hal_speak_text(
+	const char *text)
 {
 	UNUSED_PARAMETER(text);
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	is_continuous_swipe_enabled = is_enabled;
 }

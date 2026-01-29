@@ -53,14 +53,14 @@ DInputInitialize(HINSTANCE hInst, HWND hWnd)
     hr = DirectInput8Create(hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&pDI, NULL);
     if (FAILED(hr))
     {
-        log_info("DirectInput initialize error.");
+        hal_log_info("DirectInput initialize error.");
         return FALSE;
     }
 
     hr = pDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumGamepadCallback, NULL, DIEDFL_ATTACHEDONLY);
     if (FAILED(hr))
     {
-        log_info("DirectInput enumeration error.");
+        hal_log_info("DirectInput enumeration error.");
         return FALSE;
     }
     if (pGamepad == NULL)
@@ -72,14 +72,14 @@ DInputInitialize(HINSTANCE hInst, HWND hWnd)
     hr = pGamepad->SetDataFormat(&c_dfDIJoystick2);
     if (FAILED(hr))
     {
-        log_info("DirectInput gamepad data format error.");
+        hal_log_info("DirectInput gamepad data format error.");
         return FALSE;
     }
 
     hr = pGamepad->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
     if (FAILED(hr))
     {
-        log_info("DirectInput cooperative level error.");
+        hal_log_info("DirectInput cooperative level error.");
         return FALSE;
     }
 
@@ -87,14 +87,14 @@ DInputInitialize(HINSTANCE hInst, HWND hWnd)
     hr = pGamepad->GetCapabilities(&diDevCaps);
     if (FAILED(hr))
     {
-        log_info("DirectInput capabilities error.");
+        hal_log_info("DirectInput capabilities error.");
         return FALSE;
     }
 
     hr = pGamepad->EnumObjects(EnumAxesCallback, (VOID*)hWnd, DIDFT_AXIS);
     if (FAILED(hr))
     {
-        log_info("DirectInput axis error.");
+        hal_log_info("DirectInput axis error.");
 	return FALSE;
     }
 
@@ -176,104 +176,104 @@ VOID DInputUpdate(VOID)
         }
     } while (hr == DIERR_INPUTLOST);
 
-    on_event_analog_input(ANALOG_X1, js.lX);
-    on_event_analog_input(ANALOG_Y1, js.lY);
-    on_event_analog_input(ANALOG_X2, js.lRx);
-    on_event_analog_input(ANALOG_Y2, js.lRy);
-    on_event_analog_input(ANALOG_L, js.lZ);
-    on_event_analog_input(ANALOG_L, js.lRz);
+    hal_callback_on_event_analog_input(HAL_ANALOG_X1, js.lX);
+    hal_callback_on_event_analog_input(HAL_ANALOG_Y1, js.lY);
+    hal_callback_on_event_analog_input(HAL_ANALOG_X2, js.lRx);
+    hal_callback_on_event_analog_input(HAL_ANALOG_Y2, js.lRy);
+    hal_callback_on_event_analog_input(HAL_ANALOG_L, js.lZ);
+    hal_callback_on_event_analog_input(HAL_ANALOG_L, js.lRz);
 
     if (js.rgdwPOV[0] == 0)
     {
-        on_event_key_press(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 4500)
     {
-        on_event_key_press(KEY_GAMEPAD_UP);
-        on_event_key_press(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 9000)
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_press(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 13500)
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_press(KEY_GAMEPAD_RIGHT);
-        on_event_key_press(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 18000)
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_press(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 22500)
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_press(KEY_GAMEPAD_DOWN);
-        on_event_key_press(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 27000)
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_press(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_LEFT);
     }
     else if (js.rgdwPOV[0] == 31500)
     {
-        on_event_key_press(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_press(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_LEFT);
     }
     else
     {
-        on_event_key_release(KEY_GAMEPAD_UP);
-        on_event_key_release(KEY_GAMEPAD_RIGHT);
-        on_event_key_release(KEY_GAMEPAD_DOWN);
-        on_event_key_release(KEY_GAMEPAD_LEFT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
+        hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
     }
 
     if (js.rgbButtons[1] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_A);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_A);
     else
-	on_event_key_release(KEY_GAMEPAD_A);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_A);
 
     if (js.rgbButtons[2] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_B);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_B);
     else
-	on_event_key_release(KEY_GAMEPAD_B);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_B);
 
     if (js.rgbButtons[0] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_X);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_X);
     else
-	on_event_key_release(KEY_GAMEPAD_X);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_X);
 
     if (js.rgbButtons[3] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_Y);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_Y);
     else
-	on_event_key_release(KEY_GAMEPAD_Y);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_Y);
 
     if (js.rgbButtons[4] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_L);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_L);
     else
-	on_event_key_release(KEY_GAMEPAD_L);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_L);
 
     if (js.rgbButtons[5] & 0x80)
-	on_event_key_press(KEY_GAMEPAD_R);
+	hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_R);
     else
-	on_event_key_release(KEY_GAMEPAD_R);
+	hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_R);
 }

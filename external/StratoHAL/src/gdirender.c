@@ -32,7 +32,7 @@
 
 static HWND hMainWnd;
 static HDC hWndDC;
-static struct image *pBackImage;
+static struct hal_image *pBackImage;
 static HDC hBitmapDC;
 static HBITMAP hBitmap;
 static int nWindowWidth;
@@ -62,14 +62,14 @@ BOOL GDIInitialize(HWND hWnd, int nWidth, int nHeight)
 		return FALSE;
 
 	// Create a backing bitmap.
-	pixel_t *pixels = NULL;
+	hal_pixel_t *pixels = NULL;
 	hBitmap = CreateDIBSection(hBitmapDC, &bi, DIB_RGB_COLORS, (VOID **)&pixels, NULL, 0);
 	if(hBitmap == NULL || pixels == NULL)
 		return FALSE;
 	SelectObject(hBitmapDC, hBitmap);
 
 	// Create a image.
-	if (!create_image_with_pixels((int)nWidth, (int)nHeight, pixels, &pBackImage))
+	if (!hal_create_image_with_pixels((int)nWidth, (int)nHeight, pixels, &pBackImage))
 		return FALSE;
 
 	return TRUE;
@@ -96,27 +96,27 @@ VOID GDIEndFrame(void)
 	BitBlt(hWndDC, 0, 0, nWindowWidth, nWindowHeight, hBitmapDC, 0, 0, SRCCOPY);
 }
 
-VOID GDINotifyImageUpdate(struct image *img)
+VOID GDINotifyImageUpdate(struct hal_image *img)
 {
 	UNUSED_PARAMETER(img);
 }
 
-VOID GDINotifyImageFree(struct image *img)
+VOID GDINotifyImageFree(struct hal_image *img)
 {
 	UNUSED_PARAMETER(img);
 }
 
 void GDIRenderImageNormal(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	UNUSED_PARAMETER(dst_width);
 	UNUSED_PARAMETER(dst_height);
@@ -130,28 +130,28 @@ void GDIRenderImageNormal(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_alpha(pBackImage,
-					 dst_left,
-					 dst_top,
-					 src_image,
-					 src_width,
-					 src_height,
-					 src_left,
-					 src_top,
-					 alpha);
+	hal_draw_image_alpha(pBackImage,
+						 dst_left,
+						 dst_top,
+						 src_image,
+						 src_width,
+						 src_height,
+						 src_left,
+						 src_top,
+						 alpha);
 }
 
 void GDIRenderImageAdd(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	UNUSED_PARAMETER(dst_width);
 	UNUSED_PARAMETER(dst_height);
@@ -165,28 +165,28 @@ void GDIRenderImageAdd(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_add(pBackImage,
-				   dst_left,
-				   dst_top,
-				   src_image,
-				   src_width,
-				   src_height,
-				   src_left,
-				   src_top,
-				   alpha);
+	hal_draw_image_add(pBackImage,
+					   dst_left,
+					   dst_top,
+					   src_image,
+					   src_width,
+					   src_height,
+					   src_left,
+					   src_top,
+					   alpha);
 }
 
 void GDIRenderImageSub(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	UNUSED_PARAMETER(dst_width);
 	UNUSED_PARAMETER(dst_height);
@@ -200,28 +200,28 @@ void GDIRenderImageSub(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_sub(pBackImage,
-				   dst_left,
-				   dst_top,
-				   src_image,
-				   src_width,
-				   src_height,
-				   src_left,
-				   src_top,
-				   alpha);
+	hal_draw_image_sub(pBackImage,
+					   dst_left,
+					   dst_top,
+					   src_image,
+					   src_width,
+					   src_height,
+					   src_left,
+					   src_top,
+					   alpha);
 }
 
 void GDIRenderImageDim(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	UNUSED_PARAMETER(dst_width);
 	UNUSED_PARAMETER(dst_height);
@@ -235,37 +235,37 @@ void GDIRenderImageDim(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_dim(pBackImage,
-				   dst_left,
-				   dst_top,
-				   src_image,
-				   src_width,
-				   src_height,
-				   src_left,
-				   src_top,
-				   alpha);
+	hal_draw_image_dim(pBackImage,
+					   dst_left,
+					   dst_top,
+					   src_image,
+					   src_width,
+					   src_height,
+					   src_left,
+					   src_top,
+					   alpha);
 }
 
 void GDIRenderImageRule(
-	struct image *src_image,
-	struct image *rule_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
 	int threshold)
 {
-	draw_image_rule(pBackImage,
-					src_image,
-					rule_image,
-					threshold);
+	hal_draw_image_rule(pBackImage,
+						src_image,
+						rule_image,
+						threshold);
 }
 
 void GDIRenderImageMelt(
-	struct image *src_image,
-	struct image *rule_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
 	int progress)
 {
-	draw_image_melt(pBackImage,
-					src_image,
-					rule_image,
-					progress);
+	hal_draw_image_melt(pBackImage,
+						src_image,
+						rule_image,
+						progress);
 }
 
 VOID GDIRenderImage3DNormal(
@@ -277,7 +277,7 @@ VOID GDIRenderImage3DNormal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -310,7 +310,7 @@ VOID GDIRenderImage3DAdd(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -343,7 +343,7 @@ VOID GDIRenderImage3DSub(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -376,7 +376,7 @@ VOID GDIRenderImage3DDim(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,

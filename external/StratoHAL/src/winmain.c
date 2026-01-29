@@ -231,14 +231,14 @@ int WINAPI wWinMain(
 			break;
 
 		/* Do a start call. */
-		if (!on_event_start())
+		if (!hal_callback_on_event_start())
 			break;
 
 		/* Run the main loop. */
 		GameLoop();
 
 		/* Do a stop call.. */
-		on_event_stop();
+		hal_callback_on_event_stop();
 
 		nRet = 0;
 	} while (0);
@@ -251,17 +251,22 @@ int WINAPI wWinMain(
 	return nRet;
 }
 
-static void SIGSEGV_Handler(int n)
+static void
+SIGSEGV_Handler(
+	int n)
 {
 	UNUSED_PARAMETER(n);
 
-	log_error(S_TR("The app is crashed."));
+	hal_log_error(HAL_TR("The app is crashed."));
 
 	exit(1);
 }
 
 /* Initialize the app. */
-static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
+static BOOL
+InitApp(
+	HINSTANCE hInstance,
+	int nCmdShow)
 {
 	BOOL bFileOK;
 	RECT rcClient;
@@ -298,7 +303,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 
 	/* Do a boot callback. */
-	if (!on_event_boot(&pszWindowTitle, &nWindowWidth, &nWindowHeight))
+	if (!hal_callback_on_event_boot(&pszWindowTitle, &nWindowWidth, &nWindowHeight))
 		return FALSE;
 
 	/* Create a window. */
@@ -308,7 +313,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	/* Initialize the graphics HAL. */
 	if (!D3DInitialize(hWndMain, nWindowWidth, nWindowHeight, bForceD3D9))
 	{
-		log_info(S_TR("Failed to initialize the graphics."));
+		hal_log_info(HAL_TR("Failed to initialize the graphics."));
 		return FALSE;
 	}
 
@@ -320,7 +325,7 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 	/* Initialize the sound HAL. */
 	if (!DSInitialize(hWndMain))
 	{
-		log_error(S_TR("Failed to initialize the sound."));
+		hal_log_error(HAL_TR("Failed to initialize the sound."));
 
 		/* Fall-thru. */
 	}
@@ -332,7 +337,8 @@ static BOOL InitApp(HINSTANCE hInstance, int nCmdShow)
 }
 
 /* Cleanup the app. */
-static void CleanupApp(void)
+static void
+CleanupApp(void)
 {
 	/* Cleanup the joystick HAL. */
     DInputCleanup();
@@ -349,7 +355,10 @@ static void CleanupApp(void)
 }
 
 /* Create a window. */
-static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
+static BOOL
+InitWindow(
+	HINSTANCE hInstance,
+	int nCmdShow)
 {
 	WNDCLASSEXW wcex;
 	RECT rc;
@@ -435,7 +444,7 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 							   NULL, NULL, hInstance, NULL);
 	if (hWndMain == NULL)
 	{
-		log_error("CreateWindowEx() failed.");
+		hal_log_error("CreateWindowEx() failed.");
 		return FALSE;
 	}
 
@@ -467,7 +476,8 @@ static BOOL InitWindow(HINSTANCE hInstance, int nCmdShow)
 }
 
 /* Run the game loop. */
-static void GameLoop(void)
+static void
+GameLoop(void)
 {
 	BOOL bBreak;
 
@@ -502,7 +512,8 @@ static void GameLoop(void)
 }
 
 /* Run a frame. */
-static BOOL RunFrame(void)
+static BOOL
+RunFrame(void)
 {
 	BOOL bRet;
 
@@ -518,7 +529,7 @@ static BOOL RunFrame(void)
 			return FALSE;
 
 		/* Do a frame callback. */
-		if(!on_event_frame())
+		if(!hal_callback_on_event_frame())
 			return FALSE;
 
 		return TRUE;
@@ -533,7 +544,7 @@ static BOOL RunFrame(void)
 
 	/* Do a frame callback. */
 	bRet = TRUE;
-	if(!on_event_frame())
+	if(!hal_callback_on_event_frame())
 	{
 		/* Reached an exit. */
 		bRet = FALSE;
@@ -547,7 +558,8 @@ static BOOL RunFrame(void)
 }
 
 /* Process events on the queue. */
-static BOOL SyncEvents(void)
+static BOOL
+SyncEvents(void)
 {
 	/* DWORD dwStopWatchPauseStart; */
 	MSG msg;
@@ -566,7 +578,8 @@ static BOOL SyncEvents(void)
 }
 
 /* Sleep until a next frame. */
-static BOOL WaitForNextFrame(void)
+static BOOL
+WaitForNextFrame(void)
 {
 	DWORD end, lap, wait, span;
 
@@ -608,7 +621,12 @@ static BOOL WaitForNextFrame(void)
 }
 
 /* Window procedure. */
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK
+WndProc(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	int kc;
 
@@ -645,33 +663,37 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_LBUTTONDOWN:
 		if (bRunning)
 		{
-			on_event_mouse_press(MOUSE_LEFT,
-								 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-								 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+			hal_callback_on_event_mouse_press(
+				HAL_MOUSE_LEFT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
 		return 0;
 	case WM_LBUTTONUP:
 		if (bRunning)
 		{
-			on_event_mouse_release(MOUSE_LEFT,
-								   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-								   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+			hal_callback_on_event_mouse_release(
+				HAL_MOUSE_LEFT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
 		return 0;
 	case WM_RBUTTONDOWN:
 		if (bRunning)
 		{
-			on_event_mouse_press(MOUSE_RIGHT,
-								 (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-								 (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+			hal_callback_on_event_mouse_press(
+				HAL_MOUSE_RIGHT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
 		return 0;
 	case WM_RBUTTONUP:
 		if (bRunning)
 		{
-			on_event_mouse_release(MOUSE_RIGHT,
-								   (int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-								   (int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+			hal_callback_on_event_mouse_release(
+				HAL_MOUSE_RIGHT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
 		return 0;
 	case WM_KEYDOWN:
@@ -683,7 +705,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		{
 			kc = ConvertKeyCode((int)wParam);
 			if(kc != -1)
-				on_event_key_press(kc);
+				hal_callback_on_event_key_press(kc);
 		}
 		return 0;
 	case WM_KEYUP:
@@ -691,14 +713,15 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		{
 			kc = ConvertKeyCode((int)wParam);
 			if(kc != -1)
-				on_event_key_release(kc);
+				hal_callback_on_event_key_release(kc);
 		}
 		return 0;
 	case WM_MOUSEMOVE:
 		if (bRunning)
 		{
-			on_event_mouse_move((int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
-								(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+			hal_callback_on_event_mouse_move(
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
 		return 0;
 	case WM_MOUSEWHEEL:
@@ -706,20 +729,20 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		{
 			if((int)(short)HIWORD(wParam) > 0)
 			{
-				on_event_key_press(KEY_UP);
-				on_event_key_release(KEY_UP);
+				hal_callback_on_event_key_press(HAL_KEY_UP);
+				hal_callback_on_event_key_release(HAL_KEY_UP);
 			}
 			else if((int)(short)HIWORD(wParam) < 0)
 			{
-				on_event_key_press(KEY_DOWN);
-				on_event_key_release(KEY_DOWN);
+				hal_callback_on_event_key_press(HAL_KEY_DOWN);
+				hal_callback_on_event_key_release(HAL_KEY_DOWN);
 			}
 		}
 		return 0;
 	case WM_KILLFOCUS:
 		if (bRunning)
 		{
-			on_event_key_release(KEY_CONTROL);
+			hal_callback_on_event_key_release(HAL_KEY_CONTROL);
 		}
 		return 0;
 	case WM_PAINT:
@@ -792,140 +815,142 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 /* Convert a key code. */
-static int ConvertKeyCode(int nVK)
+static int
+ConvertKeyCode(
+	int nVK)
 {
 	switch(nVK)
 	{
 	case VK_ESCAPE:
-		return KEY_ESCAPE;
+		return HAL_KEY_ESCAPE;
 	case VK_RETURN:
-		return KEY_RETURN;
+		return HAL_KEY_RETURN;
 	case VK_SPACE:
-		return KEY_SPACE;
+		return HAL_KEY_SPACE;
 	case VK_TAB:
-		return KEY_TAB;
+		return HAL_KEY_TAB;
 	case VK_BACK:
-		return KEY_BACKSPACE;
+		return HAL_KEY_BACKSPACE;
 	case VK_DELETE:
-		return KEY_DELETE;
+		return HAL_KEY_DELETE;
 	case VK_HOME:
-		return KEY_HOME;
+		return HAL_KEY_HOME;
 	case VK_END:
-		return KEY_END;
+		return HAL_KEY_END;
 	case VK_PRIOR:
-		return KEY_PAGEUP;
+		return HAL_KEY_PAGEUP;
 	case VK_NEXT:
-		return KEY_PAGEDOWN;
+		return HAL_KEY_PAGEDOWN;
 	case VK_SHIFT:
-		return KEY_SHIFT;
+		return HAL_KEY_SHIFT;
 	case VK_CONTROL:
-		return KEY_CONTROL;
+		return HAL_KEY_CONTROL;
 	case VK_MENU:
-		return KEY_ALT;
+		return HAL_KEY_ALT;
 	case VK_UP:
-		return KEY_UP;
+		return HAL_KEY_UP;
 	case VK_DOWN:
-		return KEY_DOWN;
+		return HAL_KEY_DOWN;
 	case VK_LEFT:
-		return KEY_LEFT;
+		return HAL_KEY_LEFT;
 	case VK_RIGHT:
-		return KEY_RIGHT;
+		return HAL_KEY_RIGHT;
 	case 'A':
-		return KEY_A;
+		return HAL_KEY_A;
 	case 'B':
-		return KEY_B;
+		return HAL_KEY_B;
 	case 'C':
-		return KEY_C;
+		return HAL_KEY_C;
 	case 'D':
-		return KEY_D;
+		return HAL_KEY_D;
 	case 'E':
-		return KEY_E;
+		return HAL_KEY_E;
 	case 'F':
-		return KEY_F;
+		return HAL_KEY_F;
 	case 'G':
-		return KEY_G;
+		return HAL_KEY_G;
 	case 'H':
-		return KEY_H;
+		return HAL_KEY_H;
 	case 'I':
-		return KEY_I;
+		return HAL_KEY_I;
 	case 'J':
-		return KEY_J;
+		return HAL_KEY_J;
 	case 'K':
-		return KEY_K;
+		return HAL_KEY_K;
 	case 'L':
-		return KEY_L;
+		return HAL_KEY_L;
 	case 'M':
-		return KEY_M;
+		return HAL_KEY_M;
 	case 'N':
-		return KEY_N;
+		return HAL_KEY_N;
 	case 'O':
-		return KEY_O;
+		return HAL_KEY_O;
 	case 'P':
-		return KEY_P;
+		return HAL_KEY_P;
 	case 'Q':
-		return KEY_Q;
+		return HAL_KEY_Q;
 	case 'R':
-		return KEY_R;
+		return HAL_KEY_R;
 	case 'S':
-		return KEY_S;
+		return HAL_KEY_S;
 	case 'T':
-		return KEY_T;
+		return HAL_KEY_T;
 	case 'U':
-		return KEY_U;
+		return HAL_KEY_U;
 	case 'V':
-		return KEY_V;
+		return HAL_KEY_V;
 	case 'W':
-		return KEY_W;
+		return HAL_KEY_W;
 	case 'X':
-		return KEY_X;
+		return HAL_KEY_X;
 	case 'Y':
-		return KEY_Y;
+		return HAL_KEY_Y;
 	case 'Z':
-		return KEY_Z;
+		return HAL_KEY_Z;
 	case '1':
-		return KEY_1;
+		return HAL_KEY_1;
 	case '2':
-		return KEY_2;
+		return HAL_KEY_2;
 	case '3':
-		return KEY_3;
+		return HAL_KEY_3;
 	case '4':
-		return KEY_4;
+		return HAL_KEY_4;
 	case '5':
-		return KEY_5;
+		return HAL_KEY_5;
 	case '6':
-		return KEY_6;
+		return HAL_KEY_6;
 	case '7':
-		return KEY_7;
+		return HAL_KEY_7;
 	case '8':
-		return KEY_8;
+		return HAL_KEY_8;
 	case '9':
-		return KEY_9;
+		return HAL_KEY_9;
 	case '0':
-		return KEY_0;
+		return HAL_KEY_0;
 	case VK_F1:
-		return KEY_F1;
+		return HAL_KEY_F1;
 	case VK_F2:
-		return KEY_F2;
+		return HAL_KEY_F2;
 	case VK_F3:
-		return KEY_F3;
+		return HAL_KEY_F3;
 	case VK_F4:
-		return KEY_F4;
+		return HAL_KEY_F4;
 	case VK_F5:
-		return KEY_F5;
+		return HAL_KEY_F5;
 	case VK_F6:
-		return KEY_F6;
+		return HAL_KEY_F6;
 	case VK_F7:
-		return KEY_F7;
+		return HAL_KEY_F7;
 	case VK_F8:
-		return KEY_F8;
+		return HAL_KEY_F8;
 	case VK_F9:
-		return KEY_F9;
+		return HAL_KEY_F9;
 	case VK_F10:
-		return KEY_F10;
+		return HAL_KEY_F10;
 	case VK_F11:
-		return KEY_F11;
+		return HAL_KEY_F11;
 	case VK_F12:
-		return KEY_F12;
+		return HAL_KEY_F12;
 	default:
 		break;
 	}
@@ -933,7 +958,9 @@ static int ConvertKeyCode(int nVK)
 }
 
 /* WM_PAINT */
-static void OnPaint(HWND hWnd)
+static void
+OnPaint(
+	HWND hWnd)
 {
 	HDC hDC;
 	PAINTSTRUCT ps;
@@ -946,7 +973,10 @@ static void OnPaint(HWND hWnd)
 }
 
 /* WM_COMMAND */
-static void OnCommand(WPARAM wParam, LPARAM lParam)
+static void
+OnCommand(
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	UINT nID;
 
@@ -969,7 +999,10 @@ static void OnCommand(WPARAM wParam, LPARAM lParam)
 }
 
 /* WM_SIZING */
-static void OnSizing(int edge, LPRECT lpRect)
+static void
+OnSizing(
+	int edge,
+	LPRECT lpRect)
 {
 	RECT rcClient;
 	float fPadX, fPadY, fWidth, fHeight, fAspect;
@@ -1054,7 +1087,8 @@ static void OnSizing(int edge, LPRECT lpRect)
 }
 
 /* WM_SIZE */
-static void OnSize(void)
+static void
+OnSize(void)
 {
 	RECT rc;
 
@@ -1111,7 +1145,10 @@ static void OnSize(void)
 }
 
 /* Calculate screen offsets and scales. */
-static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
+static void
+UpdateScreenOffsetAndScale(
+	int nClientWidth,
+	int nClientHeight)
 {
 	float fAspect, fUseWidth, fUseHeight;
 
@@ -1154,7 +1191,8 @@ static void UpdateScreenOffsetAndScale(int nClientWidth, int nClientHeight)
 }
 
 /* Initialize the log window. */
-VOID InitLogWindow(void)
+VOID
+InitLogWindow(VOID)
 {
 	WNDCLASSEXW wcex;
 	HINSTANCE hInstance;
@@ -1204,7 +1242,9 @@ VOID InitLogWindow(void)
 }
 
 /* Append a log line to the log edit. */
-VOID AppendLogToEdit(const char *text)
+VOID
+AppendLogToEdit(
+	const char *text)
 {
 	wchar_t buf[4096];
 	CHARFORMAT2 cf;
@@ -1223,7 +1263,8 @@ VOID AppendLogToEdit(const char *text)
 }
 
 /* Window procedure. */
-static LRESULT CALLBACK LogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK
+LogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch(message)
 	{
@@ -1235,7 +1276,8 @@ static LRESULT CALLBACK LogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 }
 
 /* Open the log file. */
-static BOOL OpenLogFile(void)
+static BOOL
+OpenLogFile(void)
 {
 	wchar_t path[MAX_PATH] = {0};
 
@@ -1266,7 +1308,8 @@ static BOOL OpenLogFile(void)
 }
 
 /* Show the log file. */
-static void ShowLogFile(void)
+static void
+ShowLogFile(void)
 {
 	if (pwszLogFilePath == NULL)
 		return;
@@ -1287,7 +1330,10 @@ static void ShowLogFile(void)
 /*
  * Show an INFO log.
  */
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -1316,7 +1362,10 @@ bool log_info(const char *s, ...)
 /*
  * Show a WARN log.
  */
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -1347,7 +1396,10 @@ bool log_warn(const char *s, ...)
 /*
  * Show an ERROR log.
  */
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[LOG_BUF_SIZE];
 	va_list ap;
@@ -1378,16 +1430,19 @@ bool log_error(const char *s, ...)
 /*
  * Show an Out-of-memory error.
  */
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
-	log_error(S_TR("Out of memory."));
+	hal_log_error(HAL_TR("Out of memory."));
 	return true;
 }
 
 /*
  * Convert a utf-8 string to a utf-17 string.
  */
-const wchar_t *win32_utf8_to_utf16(const char *utf8_message)
+const wchar_t *
+win32_utf8_to_utf16(
+	const char *utf8_message)
 {
 	static wchar_t wszMessage[CONV_MESSAGE_SIZE];
 
@@ -1453,7 +1508,9 @@ const wchar_t *win32_utf8_to_utf16(const char *utf8_message)
 /*
  * Convert a utf-16 string to a utf-8 string.
  */
-const char *win32_utf16_to_utf8(const wchar_t *utf16_message)
+const char *
+win32_utf16_to_utf8(
+	const wchar_t *utf16_message)
 {
 	static char szMessage[CONV_MESSAGE_SIZE];
 
@@ -1508,7 +1565,8 @@ const char *win32_utf16_to_utf8(const wchar_t *utf16_message)
 /*
  * Create a save directory.
  */
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 #if 0
 	if (0) {
@@ -1532,7 +1590,9 @@ bool make_save_directory(void)
 /*
  * Get a real path of a file.
  */
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(
+	const char *fname)
 {
 	wchar_t *buf;
 	const char *result;
@@ -1572,7 +1632,9 @@ char *make_real_path(const char *fname)
 /*
  * Reset a lap timer.
  */
-void reset_lap_timer(uint64_t *origin)
+void
+hal_reset_lap_timer(
+	uint64_t *origin)
 {
 	*origin = GetTickCount();
 }
@@ -1580,7 +1642,9 @@ void reset_lap_timer(uint64_t *origin)
 /*
  * Get a timer lap.
  */
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *origin)
 {
 	DWORD dwCur = GetTickCount();
 	return (uint64_t)(dwCur - *origin);
@@ -1589,11 +1653,14 @@ uint64_t get_lap_timer_millisec(uint64_t *origin)
 /*
  * Play a video.
  */
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	char *path;
 
-	path = make_real_path(fname);
+	path = hal_make_real_path(fname);
 
 	/* Set the event loop DirectShow mode. */
 	bDShowMode = TRUE;
@@ -1613,7 +1680,8 @@ bool play_video(const char *fname, bool is_skippable)
 /*
  * Stop a video.
  */
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 	DShowStopVideo();
 	bDShowMode = FALSE;
@@ -1622,7 +1690,8 @@ void stop_video(void)
 /*
  * Check if a video is playing back.
  */
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	return bDShowMode;
 }
@@ -1630,7 +1699,8 @@ bool is_video_playing(void)
 /*
  * Check if the full screen mode is supported.
  */
-bool is_full_screen_supported()
+bool
+hal_is_full_screen_supported()
 {
 	return true;
 }
@@ -1638,7 +1708,8 @@ bool is_full_screen_supported()
 /*
  * Check if in the full screen mode.
  */
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	return bFullScreen ? true : false;
 }
@@ -1646,7 +1717,8 @@ bool is_full_screen_mode(void)
 /*
  * Enter the full screen mode.
  */
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	if (!bFullScreen)
 	{
@@ -1658,7 +1730,8 @@ void enter_full_screen_mode(void)
 /*
  * Leave the full screen mode.
  */
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	if (bFullScreen)
 	{
@@ -1670,7 +1743,8 @@ void leave_full_screen_mode(void)
 /*
  * Get a system language.
  */
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	DWORD dwLang = GetUserDefaultLCID() & 0x3ff;
 	switch (dwLang) {
@@ -1701,7 +1775,9 @@ const char *get_system_language(void)
 }
 
 /* Not used in Windows. */
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	UNUSED_PARAMETER(is_enabled);
 }

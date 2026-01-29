@@ -47,7 +47,7 @@
 /*
  * Forward Declaration
  */
-static void ungetc_rfile(struct rfile *rf, char c);
+static void ungetc_rfile(struct hal_rfile *rf, char c);
 
 /*
  * Initialization
@@ -75,10 +75,12 @@ void cleanup_file(void)
 /*
  * Check if a file exists.
  */
-bool check_file_exist(const char *file)
+bool
+hal_check_file_exist(
+	const char *file)
 {
 	char path[PATH_SIZE];
-	struct rfile *rf;
+	struct hal_rfile *rf;
 	jclass cls;
 	jmethodID mid;
 	jboolean ret;
@@ -102,7 +104,10 @@ bool check_file_exist(const char *file)
 /*
  * Open a file input stream.
  */
-bool open_rfile(const char *file, struct rfile **rf)
+bool
+hal_open_rfile(
+	const char *file,
+	struct hal_rfile **rf)
 {
 	char path[PATH_SIZE];
 	jclass cls;
@@ -117,14 +122,14 @@ bool open_rfile(const char *file, struct rfile **rf)
 	mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeGetFileContent", "(Ljava/lang/String;)[B");
 	ret = (*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, path));
 	if (ret == NULL) {
-		log_error("Failed to open file \"%s\".", file);
+		hal_log_error("Failed to open file \"%s\".", file);
 		return NULL;
 	}
 
 	/* Alloc a buffer for rfile. */
-	*rf = malloc(sizeof(struct rfile));
+	*rf = malloc(sizeof(struct hal_rfile));
 	if (*rf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return NULL;
 	}
 
@@ -140,7 +145,10 @@ bool open_rfile(const char *file, struct rfile **rf)
 /*
  * Get a file size.
  */
-bool get_rfile_size(struct rfile *rf, size_t *size)
+bool
+hal_get_rfile_size(
+	struct hal_rfile *rf,
+	size_t *size)
 {
 	*size = (size_t)rf->size;
 	return true;
@@ -149,7 +157,9 @@ bool get_rfile_size(struct rfile *rf, size_t *size)
 /*
  * Enable de-obfuscation on a read file stream.
  */
-void decode_rfile(struct rfile *f)
+void
+hal_decode_rfile(
+	struct hal_rfile *f)
 {
 	UNUSED_PARAMETER(f);
 }
@@ -157,7 +167,12 @@ void decode_rfile(struct rfile *f)
 /*
  * Read from a file input stream.
  */
-bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
+bool
+hal_read_rfile(
+	struct hal_rfile *rf,
+	void *buf,
+	size_t size,
+	size_t *ret)
 {
 	if (rf->pos + size > rf->size)
 		size = (size_t)(rf->size - rf->pos);
@@ -170,7 +185,10 @@ bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
 }
 
 /* ungetc() */
-static void ungetc_rfile(struct rfile *rf, char c)
+static void
+ungetc_rfile(
+	struct hal_rfile *rf,
+	char c)
 {
 	/* HINT: ignore c */
 	assert(rf->pos != 0);
@@ -180,7 +198,11 @@ static void ungetc_rfile(struct rfile *rf, char c)
 /*
  * Read a line from an input file stream.
  */
-bool gets_rfile(struct rfile *rf, char *buf, size_t size)
+bool
+hal_gets_rfile(
+	struct hal_rfile *rf,
+	char *buf,
+	size_t size)
 {
 	char *ptr;
 	size_t len, ret;
@@ -189,7 +211,7 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 	ptr = (char *)buf;
 
 	for (len = 0; len < size - 1; len++) {
-		if (!read_rfile(rf, &c, 1, &ret)) {
+		if (!hal_read_rfile(rf, &c, 1, &ret)) {
 			*ptr = '\0';
 			return len == 0 ? false : true;
 		}
@@ -198,7 +220,7 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 			return true;
 		}
 		if (c == '\r') {
-			if (!read_rfile(rf, &c, 1, &ret)) {
+			if (!hal_read_rfile(rf, &c, 1, &ret)) {
 				*ptr = '\0';
 				return true;
 			}
@@ -219,7 +241,9 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 /*
  * Rewind a file input stream.
  */
-void rewind_rfile(struct rfile *rf)
+void
+hal_rewind_rfile(
+	struct hal_rfile *rf)
 {
 	rf->pos = 0;
 }
@@ -227,9 +251,11 @@ void rewind_rfile(struct rfile *rf)
 /*
  * Close a file input stream.
  */
-void close_rfile(struct rfile *rf)
+void
+hal_close_rfile(
+	struct hal_rfile *rf)
 {
-#ifndef TARGET_ANDROID
+#ifndef HAL_TARGET_ANDROID
 	(*jni_env)->ReleaseByteArrayElements(jni_env, rf->array, (jbyte *)rf->buf, JNI_ABORT);
 	(*jni_env)->DeleteGlobalRef(jni_env, rf[i]->array);
 	free(delayed_rfile_free_slot);
@@ -257,12 +283,15 @@ void close_rfile(struct rfile *rf)
 /*
  * Open a file output stream.
  */
-bool open_wfile(const char *file, struct wfile **wf)
+bool
+hal_open_wfile(
+	const char *file,
+	struct hal_wfile **wf)
 {
 	/* Alloc a buffer for wfile */
-	*wf = malloc(sizeof(struct wfile));
+	*wf = malloc(sizeof(struct hal_wfile));
 	if (*wf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return NULL;
 	}
 
@@ -271,7 +300,7 @@ bool open_wfile(const char *file, struct wfile **wf)
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeOpenSaveFile", "(Ljava/lang/String;)Ljava/io/OutputStream;");
 	jobject ret = (*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, file));
 	if (ret == NULL) {
-		log_error("Failed to open file \"%s\".", file);
+		hal_log_error("Failed to open file \"%s\".", file);
 		free(wf);
 		return NULL;
 	}
@@ -283,7 +312,12 @@ bool open_wfile(const char *file, struct wfile **wf)
 /*
  * Write to a file output stream.
  */
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
+bool
+hal_write_wfile(
+	struct hal_wfile *wf,
+	const void *buf,
+	size_t size,
+	size_t *ret)
 {
 	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/playfield/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeWriteSaveFile", "(Ljava/io/OutputStream;I)Z");
@@ -306,7 +340,9 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 /*
  * Close a file output stream.
  */
-void close_wfile(struct wfile *wf)
+void
+hal_close_wfile(
+	struct hal_wfile *wf)
 {
 	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/playfield/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeCloseSaveFile", "(Ljava/io/OutputStream;)V");
@@ -318,9 +354,13 @@ void close_wfile(struct wfile *wf)
 /*
  * Remove a file.
  */
-void remove_file(const char *file)
+bool
+hal_remove_file(
+	const char *file)
 {
 	jclass cls = (*jni_env)->FindClass(jni_env, "io/noctvm/playfield/engineandroid/MainActivity");
 	jmethodID mid = (*jni_env)->GetMethodID(jni_env, cls, "bridgeRemoveSaveFile", "(Ljava/lang/String;)V;");
 	(*jni_env)->CallObjectMethod(jni_env, main_activity, mid, (*jni_env)->NewStringUTF(jni_env, file));
+
+	return true;
 }

@@ -104,7 +104,7 @@ main(void)
 		return 1;
 
 	/* Do a boot callback. */
-	if (!on_event_boot(&window_title, &screen_width, &screen_height))
+	if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height))
 		return 1;
 
 	/* Mount IDBFS for save data. */
@@ -150,7 +150,7 @@ main_continue(void)
 		return;
 
 	/* Do a start callback. */
-	if (!on_event_start())
+	if (!hal_callback_on_event_start())
 		return;
 
 	/* Register input device events. */
@@ -206,7 +206,9 @@ EM_JS(void, onResizeWindow, (void),
 
 /* Process a frame. */
 static EM_BOOL
-loop_iter(double time, void *userData)
+loop_iter(
+	double time,
+	void *userData)
 {
 	static bool stop = false;
 
@@ -221,7 +223,7 @@ loop_iter(double time, void *userData)
 	opengl_start_rendering();
 
 	/* Call a frame callback. */
-	if (!on_event_frame()) {
+	if (!hal_callback_on_event_frame()) {
 		/* Exit. */
 		stop = true;
 		EM_FALSE;
@@ -235,9 +237,10 @@ loop_iter(double time, void *userData)
 
 /* mousemove callback */
 static EM_BOOL
-cb_mousemove(int eventType,
-	    const EmscriptenMouseEvent *mouseEvent,
-	    void *userData)
+cb_mousemove(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y;
@@ -251,15 +254,16 @@ cb_mousemove(int eventType,
 	x = (int)((double)mouseEvent->targetX / scale_x);
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
-	on_event_mouse_move(x, y);
+	hal_callback_on_event_mouse_move(x, y);
 	return EM_TRUE;
 }
 
 /* mousedown callback */
 static EM_BOOL
-cb_mousedown(int eventType,
-	    const EmscriptenMouseEvent *mouseEvent,
-	    void *userData)
+cb_mousedown(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y, button;
@@ -276,15 +280,16 @@ cb_mousedown(int eventType,
 	else
 		button = HAL_MOUSE_RIGHT;
 
-	on_event_mouse_press(button, x, y);
+	hal_callback_on_event_mouse_press(button, x, y);
 	return EM_TRUE;
 }
 
 /* mouseup callback */
 static EM_BOOL
-cb_mouseup(int eventType,
-	   const EmscriptenMouseEvent *mouseEvent,
-	   void *userData)
+cb_mouseup(
+	int eventType,
+	const EmscriptenMouseEvent *mouseEvent,
+	void *userData)
 {
 	double w, h, scale_x, scale_y;
 	int x, y, button;
@@ -301,22 +306,23 @@ cb_mouseup(int eventType,
 	else
 		button = HAL_MOUSE_RIGHT;
 
-	on_event_mouse_release(button, x, y);
+	hal_callback_on_event_mouse_release(button, x, y);
 	return EM_TRUE;
 }
 
 /* wheel callback */
 static EM_BOOL
-cb_wheel(int eventType,
-	 const EmscriptenWheelEvent *wheelEvent,
-	 void *userData)
+cb_wheel(
+	int eventType,
+	const EmscriptenWheelEvent *wheelEvent,
+	void *userData)
 {
 	if (wheelEvent->deltaY > 0) {
-		on_event_key_press(KEY_DOWN);
-		on_event_key_release(KEY_DOWN);
+		hal_callback_on_event_key_press(HAL_KEY_DOWN);
+		hal_callback_on_event_key_release(HAL_KEY_DOWN);
 	} else {
-		on_event_key_press(KEY_UP);
-		on_event_key_release(KEY_UP);
+		hal_callback_on_event_key_press(HAL_KEY_UP);
+		hal_callback_on_event_key_release(HAL_KEY_UP);
 	}
 	return EM_TRUE;
 }
@@ -333,7 +339,7 @@ cb_keydown(int eventType,
 	if (keycode == -1)
 		return EM_TRUE;
 
-	on_event_key_press(keycode);
+	hal_callback_on_event_key_press(keycode);
 	return EM_TRUE;
 }
 
@@ -349,7 +355,7 @@ cb_keyup(int eventType,
 	if (keycode == -1)
 		return EM_TRUE;
 
-	on_event_key_release(keycode);
+	hal_callback_on_event_key_release(keycode);
 	return EM_TRUE;
 }
 
@@ -359,135 +365,135 @@ get_keycode(
 	const char *key)
 {
 	if (strcmp(key, "Escape") == 0) {
-		return KEY_ESCAPE;
+		return HAL_KEY_ESCAPE;
 	} else if (strcmp(key, "Enter") == 0) {
-		return KEY_RETURN;
+		return HAL_KEY_RETURN;
 	} else if (strcmp(key, " ") == 0) {
-		return KEY_SPACE;
+		return HAL_KEY_SPACE;
 	} else if (strcmp(key, "Tab") == 0) {
-		return KEY_TAB;
+		return HAL_KEY_TAB;
 	} else if (strcmp(key, "Backspace") == 0) {
-		return KEY_BACKSPACE;
+		return HAL_KEY_BACKSPACE;
 	} else if (strcmp(key, "Delete") == 0) {
-		return KEY_DELETE;
+		return HAL_KEY_DELETE;
 	} else if (strcmp(key, "Home") == 0) {
-		return KEY_HOME;
+		return HAL_KEY_HOME;
 	} else if (strcmp(key, "End") == 0) {
-		return KEY_END;
+		return HAL_KEY_END;
 	} else if (strcmp(key, "PageUp") == 0) {
-		return KEY_PAGEUP;
+		return HAL_KEY_PAGEUP;
 	} else if (strcmp(key, "PageDown") == 0) {
-		return KEY_PAGEDOWN;
+		return HAL_KEY_PAGEDOWN;
 	} else if (strcmp(key, "Shift") == 0) {
-		return KEY_SHIFT;
+		return HAL_KEY_SHIFT;
 	} else if (strcmp(key, "Control") == 0) {
-		return KEY_CONTROL;
+		return HAL_KEY_CONTROL;
 	} else if (strcmp(key, "Alt") == 0) {
-		return KEY_ALT;
+		return HAL_KEY_ALT;
 	} else if (strcmp(key, "ArrowUp") == 0) {
-		return KEY_UP;
+		return HAL_KEY_UP;
 	} else if (strcmp(key, "ArrowDown") == 0) {
-		return KEY_DOWN;
+		return HAL_KEY_DOWN;
 	} else if (strcmp(key, "ArrowLeft") == 0) {
-		return KEY_LEFT;
+		return HAL_KEY_LEFT;
 	} else if (strcmp(key, "ArrowRight") == 0) {
-		return KEY_RIGHT;
+		return HAL_KEY_RIGHT;
 	} else if (strcmp(key, "A") == 0) {
-		return KEY_A;
+		return HAL_KEY_A;
 	} else if (strcmp(key, "B") == 0) {
-		return KEY_B;
+		return HAL_KEY_B;
 	} else if (strcmp(key, "C") == 0) {
-		return KEY_C;
+		return HAL_KEY_C;
 	} else if (strcmp(key, "D") == 0) {
-		return KEY_D;
+		return HAL_KEY_D;
 	} else if (strcmp(key, "E") == 0) {
-		return KEY_E;
+		return HAL_KEY_E;
 	} else if (strcmp(key, "F") == 0) {
-		return KEY_F;
+		return HAL_KEY_F;
 	} else if (strcmp(key, "G") == 0) {
-		return KEY_G;
+		return HAL_KEY_G;
 	} else if (strcmp(key, "H") == 0) {
-		return KEY_H;
+		return HAL_KEY_H;
 	} else if (strcmp(key, "I") == 0) {
-		return KEY_I;
+		return HAL_KEY_I;
 	} else if (strcmp(key, "J") == 0) {
-		return KEY_J;
+		return HAL_KEY_J;
 	} else if (strcmp(key, "K") == 0) {
-		return KEY_K;
+		return HAL_KEY_K;
 	} else if (strcmp(key, "L") == 0) {
-		return KEY_L;
+		return HAL_KEY_L;
 	} else if (strcmp(key, "M") == 0) {
-		return KEY_M;
+		return HAL_KEY_M;
 	} else if (strcmp(key, "N") == 0) {
-		return KEY_N;
+		return HAL_KEY_N;
 	} else if (strcmp(key, "O") == 0) {
-		return KEY_O;
+		return HAL_KEY_O;
 	} else if (strcmp(key, "P") == 0) {
-		return KEY_P;
+		return HAL_KEY_P;
 	} else if (strcmp(key, "Q") == 0) {
-		return KEY_Q;
+		return HAL_KEY_Q;
 	} else if (strcmp(key, "R") == 0) {
-		return KEY_R;
+		return HAL_KEY_R;
 	} else if (strcmp(key, "S") == 0) {
-		return KEY_S;
+		return HAL_KEY_S;
 	} else if (strcmp(key, "T") == 0) {
-		return KEY_T;
+		return HAL_KEY_T;
 	} else if (strcmp(key, "U") == 0) {
-		return KEY_U;
+		return HAL_KEY_U;
 	} else if (strcmp(key, "V") == 0) {
-		return KEY_V;
+		return HAL_KEY_V;
 	} else if (strcmp(key, "W") == 0) {
-		return KEY_W;
+		return HAL_KEY_W;
 	} else if (strcmp(key, "X") == 0) {
-		return KEY_X;
+		return HAL_KEY_X;
 	} else if (strcmp(key, "Y") == 0) {
-		return KEY_Y;
+		return HAL_KEY_Y;
 	} else if (strcmp(key, "Z") == 0) {
-		return KEY_Z;
+		return HAL_KEY_Z;
 	} else if (strcmp(key, "1") == 0) {
-		return KEY_1;
+		return HAL_KEY_1;
 	} else if (strcmp(key, "2") == 0) {
-		return KEY_2;
+		return HAL_KEY_2;
 	} else if (strcmp(key, "3") == 0) {
-		return KEY_3;
+		return HAL_KEY_3;
 	} else if (strcmp(key, "4") == 0) {
-		return KEY_4;
+		return HAL_KEY_4;
 	} else if (strcmp(key, "5") == 0) {
-		return KEY_5;
+		return HAL_KEY_5;
 	} else if (strcmp(key, "6") == 0) {
-		return KEY_6;
+		return HAL_KEY_6;
 	} else if (strcmp(key, "7") == 0) {
-		return KEY_7;
+		return HAL_KEY_7;
 	} else if (strcmp(key, "8") == 0) {
-		return KEY_8;
+		return HAL_KEY_8;
 	} else if (strcmp(key, "9") == 0) {
-		return KEY_9;
+		return HAL_KEY_9;
 	} else if (strcmp(key, "0") == 0) {
-		return KEY_0;
+		return HAL_KEY_0;
 	} else if (strcmp(key, "F1") == 0) {
-		return KEY_F1;
+		return HAL_KEY_F1;
 	} else if (strcmp(key, "F2") == 0) {
-		return KEY_F2;
+		return HAL_KEY_F2;
 	} else if (strcmp(key, "F3") == 0) {
-		return KEY_F3;
+		return HAL_KEY_F3;
 	} else if (strcmp(key, "F4") == 0) {
-		return KEY_F4;
+		return HAL_KEY_F4;
 	} else if (strcmp(key, "F5") == 0) {
-		return KEY_F5;
+		return HAL_KEY_F5;
 	} else if (strcmp(key, "F6") == 0) {
-		return KEY_F6;
+		return HAL_KEY_F6;
 	} else if (strcmp(key, "F7") == 0) {
-		return KEY_F7;
+		return HAL_KEY_F7;
 	} else if (strcmp(key, "F8") == 0) {
-		return KEY_F8;
+		return HAL_KEY_F8;
 	} else if (strcmp(key, "F9") == 0) {
-		return KEY_F9;
+		return HAL_KEY_F9;
 	} else if (strcmp(key, "F10") == 0) {
-		return KEY_F10;
+		return HAL_KEY_F10;
 	} else if (strcmp(key, "F11") == 0) {
-		return KEY_F11;
+		return HAL_KEY_F11;
 	} else if (strcmp(key, "F12") == 0) {
-		return KEY_F12;
+		return HAL_KEY_F12;
 	}
 	return -1;
 }
@@ -513,10 +519,10 @@ cb_touchstart(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Reset an existing touch move state. */
-	on_event_touch_cancel();
+	hal_callback_on_event_touch_cancel();
 
 	/* Process as a mouse down. (even if it's a touch start) */
-	on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+	hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
 
 	return EM_TRUE;
 }
@@ -538,8 +544,8 @@ cb_touchmove(
 	touch_last_y = touchEvent->touches[0].targetY;
 	if (is_continuous_swipe_enabled) {
 		if (delta_y > 0 && delta_y < FLICK_Y_DISTANCE) {
-			on_event_key_press(KEY_DOWN);
-			on_event_key_release(KEY_DOWN);
+			hal_callback_on_event_key_press(HAL_KEY_DOWN);
+			hal_callback_on_event_key_release(HAL_KEY_DOWN);
 			return EM_TRUE;
 		}
 	}
@@ -551,7 +557,7 @@ cb_touchmove(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Process as a mouse move. (even if it's a touch start) */
-	on_event_mouse_move(x, y);
+	hal_callback_on_event_mouse_move(x, y);
 
 	return EM_TRUE;
 }
@@ -570,12 +576,12 @@ cb_touchend(
 
 	delta_y = touchEvent->touches[0].targetY - touch_start_y;
 	if (delta_y > FLICK_Y_DISTANCE) {
-		on_event_touch_cancel();
-		on_event_swipe_down();
+		hal_callback_on_event_touch_cancel();
+		hal_callback_on_event_swipe_down();
 		return EM_TRUE;
 	} else if (delta_y < -FLICK_Y_DISTANCE) {
-		on_event_touch_cancel();
-		on_event_swipe_up();
+		hal_callback_on_event_touch_cancel();
+		hal_callback_on_event_swipe_up();
 		return EM_TRUE;
 	}
 
@@ -586,7 +592,7 @@ cb_touchend(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 	if (x < 0 || x >= screen_width ||
 	    y < 0 || y >= screen_height) {
-		/* キャバス外にはみ出した場合は処理しない */
+		/* Out of canvas. */
 		return EM_TRUE;
 	}
 
@@ -594,22 +600,22 @@ cb_touchend(
 	if (touchEvent->numTouches == 1 &&
 	    abs(touchEvent->touches[0].targetX - touch_start_x) < FINGER_DISTANCE &&
 	    abs(touchEvent->touches[0].targetY - touch_start_y) < FINGER_DISTANCE) {
-		on_event_touch_cancel();
-		on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
-		on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
+		hal_callback_on_event_touch_cancel();
+		hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+		hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
 		return EM_TRUE;
 	}
 
 	/* Process as a right click if two-figer. */
 	if (touchEvent->numTouches == 2) {
-		on_event_touch_cancel();
-		on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
-		on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
+		hal_callback_on_event_touch_cancel();
+		hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
+		hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
 		return EM_TRUE;
 	}
 
 	/* Otherwise, just cancel a touch move. */
-	on_event_touch_cancel();
+	hal_callback_on_event_touch_cancel();
 
 	return EM_TRUE;
 }
@@ -622,7 +628,7 @@ cb_touchcancel(
 	void *userData)
 {
 	/* FIXME: When is this called? */
-	on_event_touch_cancel();
+	hal_callback_on_event_touch_cancel();
 	return EM_TRUE;
 }
 
@@ -651,7 +657,7 @@ EMSCRIPTEN_KEEPALIVE
 void
 mouseLeave(void)
 {
-	on_event_touch_cancel();
+	hal_callback_on_event_touch_cancel();
 }
 
 /*
@@ -727,7 +733,7 @@ hal_log_error(
 bool
 hal_log_out_of_memory(void)
 {
-	log_error("Out of memory.");
+	hal_log_error("Out of memory.");
 	return true;
 }
 
@@ -736,7 +742,7 @@ hal_log_out_of_memory(void)
  */
 void
 hal_notify_image_update(
-	struct image *img)
+	struct hal_image *img)
 {
 	fill_sound_buffer();
 	opengl_notify_image_update(img);
@@ -748,7 +754,7 @@ hal_notify_image_update(
  */
 void
 hal_notify_image_free(
-	struct image *img)
+	struct hal_image *img)
 {
 	opengl_notify_image_free(img);
 }
@@ -762,7 +768,7 @@ hal_render_image_normal(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -790,7 +796,7 @@ hal_render_image_add(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -818,7 +824,7 @@ hal_render_image_dim(
 	int dst_top,
 	int dst_width,
 	int dst_height,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -910,7 +916,7 @@ hal_render_image_3d_add(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -959,7 +965,7 @@ hal_make_real_path(
 		snprintf(buf, sizeof(buf), "%s/%s", window_title, fname);
 		ret = strdup(buf);
 		if (ret == NULL) {
-			log_out_of_memory();
+			hal_log_out_of_memory();
 			return NULL;
 		}
 		while ((space = strchr(buf, ' ')) != NULL)
@@ -971,7 +977,7 @@ hal_make_real_path(
 	snprintf(buf, sizeof(buf), "%s", fname);
 	ret = strdup(buf);
 	if (ret == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return NULL;
 	}
 	return ret;

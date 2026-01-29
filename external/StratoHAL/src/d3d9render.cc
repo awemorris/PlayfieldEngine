@@ -198,8 +198,8 @@ static VOID DrawPrimitives2D(int dst_left,
 							 int dst_top,
 							 int dst_width,
 							 int dst_height,
-							 struct image *src_image,
-							 struct image *rule_image,
+							 struct hal_image *src_image,
+							 struct hal_image *rule_image,
 							 int src_left,
 							 int src_top,
 							 int src_width,
@@ -214,20 +214,24 @@ static VOID DrawPrimitives3D(float x1,
 							 float y3,
 							 float x4,
 							 float y4,
-							 struct image *src_image,
-							 struct image *rule_image,
+							 struct hal_image *src_image,
+							 struct hal_image *rule_image,
 							 int src_left,
 							 int src_top,
 							 int src_width,
 							 int src_height,
 							 int alpha,
 							 int pipeline);
-static BOOL UploadTextureIfNeeded(struct image *img);
+static BOOL UploadTextureIfNeeded(struct hal_image *img);
 
 //
 // Initialize Direct3D.
 //
-BOOL D3D9Initialize(HWND hWnd, int nWidth, int nHeight)
+BOOL
+D3D9Initialize(
+	HWND hWnd,
+	int nWidth,
+	int nHeight)
 {
 	HRESULT hResult;
 
@@ -252,7 +256,7 @@ BOOL D3D9Initialize(HWND hWnd, int nWidth, int nHeight)
 	pD3D = pDirect3DCreate9(D3D_SDK_VERSION);
 	if (pD3D == NULL)
     {
-		log_error("Direct3DCreate9() failed.");
+		hal_log_error("Direct3DCreate9() failed.");
         return FALSE;
     }
 
@@ -292,7 +296,7 @@ BOOL D3D9Initialize(HWND hWnd, int nWidth, int nHeight)
 	} while (0);
 	if (FAILED(hResult))
 	{
-		log_error("Direct3DDevice9::CreatePixelShader() failed.");
+		hal_log_error("Direct3DDevice9::CreatePixelShader() failed.");
 		pD3DDevice->Release();
 		pD3DDevice = NULL;
 		pD3D->Release();
@@ -306,7 +310,8 @@ BOOL D3D9Initialize(HWND hWnd, int nWidth, int nHeight)
 //
 // Cleanup Direct3D.
 //
-VOID D3D9Cleanup(void)
+VOID
+D3D9Cleanup(VOID)
 {
 	if (pMeltShader != NULL)
 	{
@@ -335,7 +340,15 @@ VOID D3D9Cleanup(void)
 //
 // Resize the window.
 //
-BOOL D3D9ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
+BOOL
+D3D9ResizeWindow(
+	int nScreenWidth,
+	int nScreenHeight,
+	int nOffsetX,
+	int nOffsetY,
+	int nViewportWidth,
+	int nViewportHeight,
+	float scale)
 {
 	fDisplayOffsetX = (float)nOffsetX;
 	fDisplayOffsetY = (float)nOffsetY;
@@ -361,7 +374,8 @@ BOOL D3D9ResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOf
 //
 // Start a frame rendering.
 //
-VOID D3D9StartFrame(void)
+VOID
+D3D9StartFrame(VOID)
 {
 	// Celar.
 	pD3DDevice->Clear(0,
@@ -378,7 +392,8 @@ VOID D3D9StartFrame(void)
 //
 // End a frame rendering.
 //
-VOID D3D9EndFrame(void)
+VOID
+D3D9EndFrame(VOID)
 {
 	// End a scene.
 	pD3DDevice->EndScene();
@@ -423,12 +438,16 @@ VOID D3D9EndFrame(void)
 	}
 }
 
-VOID D3D9NotifyImageUpdate(struct image *img)
+VOID
+D3D9NotifyImageUpdate(
+	struct hal_image *img)
 {
 	img->need_upload = true;
 }
 
-VOID D3D9NotifyImageFree(struct image *img)
+VOID
+D3D9NotifyImageFree(
+	struct hal_image *img)
 {
 	IDirect3DTexture9 *pTex = (IDirect3DTexture9 *)img->texture;
 	if(pTex == NULL)
@@ -437,57 +456,308 @@ VOID D3D9NotifyImageFree(struct image *img)
 	img->texture = NULL;
 }
 
-VOID D3D9RenderImageNormal(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImageNormal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_NORMAL);
+	DrawPrimitives2D(dst_left,
+					 dst_top,
+					 dst_width,
+					 dst_height,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_NORMAL);
 }
 
-VOID D3D9RenderImageAdd(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImageAdd(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+	DrawPrimitives2D(dst_left,
+					 dst_top,
+					 dst_width,
+					 dst_height,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_ADD);
 }
 
-VOID D3D9RenderImageSub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImageSub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+	DrawPrimitives2D(dst_left,
+					 dst_top,
+					 dst_width,
+					 dst_height,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_SUB);
 }
 
-VOID D3D9RenderImageDim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImageDim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives2D(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
+	DrawPrimitives2D(dst_left,
+					 dst_top,
+					 dst_width,
+					 dst_height,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_DIM);
 }
 
-VOID D3D9RenderImageRule(struct image *src_image, struct image *rule_image, int threshold)
+VOID
+D3D9RenderImageRule(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int threshold)
 {
-	DrawPrimitives2D(0, 0, src_image->width, src_image->height, src_image, rule_image, 0, 0, rule_image->width, rule_image->height, threshold, PIPELINE_RULE);
+	DrawPrimitives2D(0,
+					 0,
+					 src_image->width,
+					 src_image->height,
+					 src_image,
+					 rule_image,
+					 0,
+					 0,
+					 rule_image->width,
+					 rule_image->height,
+					 threshold,
+					 PIPELINE_RULE);
 }
 
-VOID D3D9RenderImageMelt(struct image *src_image, struct image *rule_image, int progress)
+VOID
+D3D9RenderImageMelt(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int progress)
 {
-	DrawPrimitives2D(0, 0, src_image->width, src_image->height, src_image, rule_image, 0, 0, rule_image->width, rule_image->height, progress, PIPELINE_MELT);
+	DrawPrimitives2D(0,
+					 0,
+					 src_image->width,
+					 src_image->height,
+					 src_image,
+					 rule_image,
+					 0,
+					 0,
+					 rule_image->width,
+					 rule_image->height,
+					 progress,
+					 PIPELINE_MELT);
 }
 
-VOID D3D9RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImage3DNormal(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_NORMAL);
+	DrawPrimitives3D(x1,
+					 y1,
+					 x2,
+					 y2,
+					 x3,
+					 y3,
+					 x4,
+					 y4,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_NORMAL);
 }
 
-VOID D3D9RenderImage3DAdd(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImage3DAdd(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_ADD);
+	DrawPrimitives3D(x1,
+					 y1,
+					 x2,
+					 y2,
+					 x3,
+					 y3,
+					 x4,
+					 y4,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_ADD);
 }
 
-VOID D3D9RenderImage3DSub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImage3DSub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_SUB);
+	DrawPrimitives3D(x1,
+					 y1,
+					 x2,
+					 y2,
+					 x3,
+					 y3,
+					 x4,
+					 y4,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_SUB);
 }
 
-VOID D3D9RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+VOID
+D3D9RenderImage3DDim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	DrawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, PIPELINE_DIM);
+	DrawPrimitives3D(x1,
+					 y1,
+					 x2,
+					 y2,
+					 x3,
+					 y3,
+					 x4,
+					 y4,
+					 src_image,
+					 NULL,
+					 src_left,
+					 src_top,
+					 src_width,
+					 src_height,
+					 alpha,
+					 PIPELINE_DIM);
 }
 
-static VOID DrawPrimitives2D(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, struct image *rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
+static VOID
+DrawPrimitives2D(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
 	if (dst_width == -1)
 		dst_width = src_image->width;
@@ -516,7 +786,24 @@ static VOID DrawPrimitives2D(int dst_left, int dst_top, int dst_width, int dst_h
 					 pipeline);
 }
 
-static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, struct image *rule_image, int src_left, int src_top, int src_width, int src_height, int alpha, int pipeline)
+static VOID
+DrawPrimitives3D(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha,
+	int pipeline)
 {
 	IDirect3DTexture9 *pTexColor = NULL;
 	IDirect3DTexture9 *pTexRule = NULL;
@@ -696,7 +983,9 @@ static VOID DrawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 }
 
 // Upload a texture.
-static BOOL UploadTextureIfNeeded(struct image *img)
+static BOOL
+UploadTextureIfNeeded(
+	struct hal_image *img)
 {
 	HRESULT hResult;
 
@@ -732,7 +1021,9 @@ static BOOL UploadTextureIfNeeded(struct image *img)
 	}
 
 	// Copy pixel data.
-	memcpy(lockedRect.pBits, img->pixels, (UINT)img->width * (UINT)img->height * sizeof(pixel_t));
+	memcpy(lockedRect.pBits,
+		   img->pixels,
+		   (UINT)img->width * (UINT)img->height * sizeof(hal_pixel_t));
 
 	// Unlock the rectangle.
 	hResult = pTex->UnlockRect(0);
@@ -756,7 +1047,11 @@ static BOOL UploadTextureIfNeeded(struct image *img)
 #if 0
 #include <d3dx9.h>
 
-void CompileShader(const char *pSrc, unsigned char *pDst, BOOL bHLSL)
+void
+CompileShader(
+	const char *pSrc,
+	unsigned char *pDst,
+	BOOL bHLSL)
 {
 	ID3DXBuffer *pShader;
 	ID3DXBuffer *pError;

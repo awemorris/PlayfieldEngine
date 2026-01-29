@@ -35,7 +35,7 @@
 #include <string.h>
 #include <assert.h>
 
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 #include <malloc.h>	/* _aligned_mallo() */
 #endif
 
@@ -48,7 +48,7 @@ static int id_top;
 /*
  * SSE Flags
  */
-#if defined(USE_SSE_DISPATCH)
+#if defined(HAL_USE_SSE_DISPATCH)
 extern bool is_avx2_available;
 extern bool is_avx_available;
 extern bool is_sse42_available;
@@ -74,7 +74,7 @@ check_draw_image(
 	int *src_top,
 	int alpha);
 
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 static void *wrap_aligned_malloc(size_t size, size_t align);
 static void wrap_aligned_free(void *p);
 #endif
@@ -83,7 +83,7 @@ static void wrap_aligned_free(void *p);
  * Initialization
  */
 
-#if defined(USE_DLL)
+#if defined(HAL_USE_DLL)
 void cleanup_image(void)
 {
 	id_top = 0;
@@ -113,14 +113,14 @@ hal_create_image(
 	memset(*img, 0, sizeof(struct hal_image));
 
 	/* Allocate a pixel buffer. */
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 	pixels = wrap_aligned_malloc((size_t)w * (size_t)h * sizeof(hal_pixel_t), 64);
 	if (pixels == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		free(*img);
 		return false;
 	}
-#elif !defined(USE_UNITY)
+#elif !defined(HAL_USE_UNITY)
 	if (posix_memalign((void **)&pixels, 64, (size_t)w * (size_t)h * sizeof(hal_pixel_t)) != 0) {
 		hal_log_out_of_memory();
 		free(*img);
@@ -129,7 +129,7 @@ hal_create_image(
 #else
 	pixels = malloc((size_t)w * (size_t)h * sizeof(hal_pixel_t));
 	if (pixels == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		free(*img);
 		return false;
 	}
@@ -192,7 +192,7 @@ hal_destroy_image(
 
 	/* Free a pixel buffer. */
 	if (!img->no_free) {
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 		wrap_aligned_free(img->pixels);
 #else
 		free(img->pixels);
@@ -285,7 +285,7 @@ hal_fill_image_alpha(
  * Drawing
  */
 
-#if !defined(USE_SSE_DISPATCH)
+#if !defined(HAL_USE_SSE_DISPATCH)
 
 /*
  * Define the draw_image_*() functions directly.
@@ -342,7 +342,7 @@ hal_draw_image_copy(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_copy_sse2(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_copy_sse(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top);
 #endif
@@ -385,7 +385,7 @@ hal_draw_image_alpha(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_alpha_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_alpha_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -428,7 +428,7 @@ hal_draw_image_glyph(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_glyph_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_glyph_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -471,7 +471,7 @@ hal_draw_image_emoji(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_emoji_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -514,7 +514,7 @@ hal_draw_image_add(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_add_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_add_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -557,7 +557,7 @@ hal_draw_image_sub(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_sub_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -600,7 +600,7 @@ hal_draw_image_dim(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_dim_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_dim_avx(dst_image, dst_left, dst_top, src_image, width, height, src_left, src_top, alpha);
 #endif
@@ -638,7 +638,7 @@ hal_draw_image_rule(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_rule_sse2(dst_image, src_image, rule_image, threshold);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_rule_sse(dst_image, src_image, rule_image, threshold);
 #endif
@@ -676,7 +676,7 @@ hal_draw_image_melt(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_melt_sse2(dst_image, src_image, rule_image, threshold);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_melt_sse(dst_image, src_image, rule_image, threshold);
 #endif
@@ -716,7 +716,7 @@ hal_draw_image_scale(
 #endif
 	else if (is_sse2_available)
 		hal_draw_image_scale_sse2(dst_image, virtual_dst_width, virtual_dst_height, virtual_dst_left, virtual_dst_top, src_image);
-#if !defined(_MSC_VER) && defined(ARCH_X86)
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
 	else if (is_sse_available)
 		hal_draw_image_scale_sse(dst_image, virtual_dst_width, virtual_dst_height, virtual_dst_left, virtual_dst_top, src_image);
 #endif
@@ -933,10 +933,10 @@ wrap_aligned_free(
  */
 
 #define PNG_DEBUG 3
-#if defined(TARGET_WASM) || \
-    defined(TARGET_ANDROID) || \
-    (defined(TARGET_POSIX) && defined(USE_SHARED)) || \
-    defined(USE_QT)
+#if defined(HAL_TARGET_WASM) || \
+    defined(HAL_TARGET_ANDROID) || \
+    (defined(HAL_TARGET_POSIX) && defined(HAL_USE_SHARED)) || \
+    defined(HAL_USE_QT)
 #include <png.h>
 #else
 #include <png/png.h>
@@ -1022,7 +1022,7 @@ hal_create_image_with_png(
 		png_read_update_info(png_ptr, info_ptr);
 		break;
 	case PNG_COLOR_TYPE_PALETTE:
-#if !defined(ORDER_OPENGL)
+#if !defined(HAL_ORDER_OPENGL)
 		png_set_bgr(png_ptr);
 #endif
 		png_set_palette_to_rgb(png_ptr);
@@ -1030,7 +1030,7 @@ hal_create_image_with_png(
 		png_read_update_info(png_ptr, info_ptr);
 		break;
 	case PNG_COLOR_TYPE_RGB:
-#if !defined(ORDER_OPENGL)
+#if !defined(HAL_ORDER_OPENGL)
 		png_set_bgr(png_ptr);
 #endif
 		if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
@@ -1041,7 +1041,7 @@ hal_create_image_with_png(
 		}
 		break;
 	case PNG_COLOR_TYPE_RGB_ALPHA:
-#if !defined(ORDER_OPENGL)
+#if !defined(HAL_ORDER_OPENGL)
 		png_set_bgr(png_ptr);
 #endif
 		break;
@@ -1109,9 +1109,9 @@ png_read_callback(
  * JPEG
  */
 
-#if defined(TARGET_WASM) || \
-    (defined(TARGET_POSIX) && defined(USE_SHARED)) || \
-    defined(USE_QT)
+#if defined(HAL_TARGET_WASM) || \
+    (defined(HAL_TARGET_POSIX) && defined(HAL_USE_SHARED)) || \
+    defined(HAL_USE_QT)
 #include <jpeglib.h>
 #else
 #include <jpeg/jpeglib.h>
@@ -1167,14 +1167,14 @@ hal_create_image_with_jpeg(
 
 	/* Decode each line. */
 	p = (*img)->pixels;
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 	for (y = 0; y < height; y++) {
 		jpeg_read_scanlines(&jpeg, &line, 1);
 		for (x = 0; x < width; x++) {
-			*p++ = make_pixel(255,
-					  line[x * 3 + 2],
-					  line[x * 3 + 1],
-					  line[x * 3 + 0]);
+			*p++ = hal_make_pixel(255,
+					      line[x * 3 + 2],
+					      line[x * 3 + 1],
+					      line[x * 3 + 0]);
 		}
 	}
 #else
@@ -1234,7 +1234,7 @@ hal_create_image_with_webp(
 
 	/* Copy pixels. */
 	p = (*img)->pixels;
-#if defined(ORDER_RGBA)
+#if defined(HAL_ORDER_OPENGL)
 	/* Use RGBA as is. */
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {

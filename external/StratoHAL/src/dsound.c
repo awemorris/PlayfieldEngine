@@ -179,7 +179,7 @@ DSInitialize(
 		return FALSE;
 
 	/* Set volumes that are set before initialization. */
-	for(i = 0; i < SOUND_TRACKS; i++)
+	for(i = 0; i < HAL_SOUND_TRACKS; i++)
 		SetBufferVolume(i, fInitialVol[i]);
 
 	bInitialized = TRUE;
@@ -212,7 +212,7 @@ DSCleanup(VOID)
 	DeleteCriticalSection(&StreamCritical);
 
 	/* Release secondary buffers and notification events. */
-	for(i=0; i<SOUND_TRACKS; i++)
+	for(i=0; i<HAL_SOUND_TRACKS; i++)
 	{
 		if(pDSNotify[i] != NULL)
 		{
@@ -378,7 +378,7 @@ CreateSecondaryBuffers(VOID)
 	dsbd.dwBufferBytes = BUF_BYTES;
 	dsbd.lpwfxFormat = &wfPrimary;
 
-	for(i=0; i<SOUND_TRACKS; i++)
+	for(i=0; i<HAL_SOUND_TRACKS; i++)
 	{
 		// Create a secondary buffer.
 		hRet = IDirectSound_CreateSoundBuffer(pDS, &dsbd, &pDSBuffer[i], NULL);
@@ -613,7 +613,7 @@ WriteNext(
 	if(nPosEndArea[nBuffer] == -1)
 	{
 		/* Copy from the PCM stream to the buffer. */
-		nSamples = get_wave_samples(pStream[nBuffer], (uint32_t *)pBuf[0], AREA_SAMPLES);
+		nSamples = hal_get_wave_samples(pStream[nBuffer], (uint32_t *)pBuf[0], AREA_SAMPLES);
 
 		/* If reached the end-of-stream. */
 		if(nSamples != AREA_SAMPLES)
@@ -655,28 +655,28 @@ static DWORD WINAPI
 EventThread(
 	LPVOID lpParameter)
 {
-	HANDLE hEvents[SOUND_TRACKS+1];
+	HANDLE hEvents[HAL_SOUND_TRACKS+1];
 	DWORD dwResult;
 	int i, nBuf;
 
 	UNUSED_PARAMETER(lpParameter);
 
 	/* Create an array for events. */
-	for(i=0; i<SOUND_TRACKS; i++)
+	for(i=0; i<HAL_SOUND_TRACKS; i++)
 		hEvents[i] = hNotifyEvent[i];	/* For playback position. */
-	hEvents[SOUND_TRACKS] = hQuitEvent;	/* For quit event. */
+	hEvents[HAL_SOUND_TRACKS] = hQuitEvent;	/* For quit event. */
 
 	/* Event wait loop. */
 	while(1)
 	{
 		/* Wait for a notification. */
-		dwResult = WaitForMultipleObjects(SOUND_TRACKS + 1,
+		dwResult = WaitForMultipleObjects(HAL_SOUND_TRACKS + 1,
 										  hEvents,
 										  FALSE,
 										  INFINITE);
 		if(dwResult == WAIT_TIMEOUT || dwResult == WAIT_FAILED)
 			continue;
-		if(dwResult == WAIT_OBJECT_0 + SOUND_TRACKS)
+		if(dwResult == WAIT_OBJECT_0 + HAL_SOUND_TRACKS)
 			break;		/* hQuitEvent is set. */
 
 		/* Get a buffer index of notification source. */

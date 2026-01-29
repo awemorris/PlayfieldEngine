@@ -58,25 +58,25 @@
 static SLObjectItf engine_object;
 static SLEngineItf engine_engine;
 static SLObjectItf output_mix_object;
-static SLObjectItf bq_player_object[SOUND_TRACKS];
-static SLPlayItf bq_player_play[SOUND_TRACKS];
-static SLAndroidSimpleBufferQueueItf bq_player_buffer_queue[SOUND_TRACKS];
+static SLObjectItf bq_player_object[HAL_SOUND_TRACKS];
+static SLPlayItf bq_player_play[HAL_SOUND_TRACKS];
+static SLAndroidSimpleBufferQueueItf bq_player_buffer_queue[HAL_SOUND_TRACKS];
 
 /* Buffers */
-static uint32_t sample_buf[SOUND_TRACKS][BUF_FRAMES];
+static uint32_t sample_buf[HAL_SOUND_TRACKS][BUF_FRAMES];
 
 /* Mutex objects to synchronize accesses to sample_buf */
-static pthread_mutex_t sound_mutex[SOUND_TRACKS];
+static pthread_mutex_t sound_mutex[HAL_SOUND_TRACKS];
 
 /* Input Streams */
-static struct wave *wave[SOUND_TRACKS];
+static struct hal_wave *wave[HAL_SOUND_TRACKS];
 
 /* Volume Values */
-static float volume[SOUND_TRACKS];
+static float volume[HAL_SOUND_TRACKS];
 
 /* Finish Flags */
-static bool pre_finish[SOUND_TRACKS];	 /* Shows if we reached an end-of-stream. */
-static bool post_finish[SOUND_TRACKS];	 /* Shows if we finished a playback of a final buffer. */
+static bool pre_finish[HAL_SOUND_TRACKS];	 /* Shows if we reached an end-of-stream. */
+static bool post_finish[HAL_SOUND_TRACKS];	 /* Shows if we finished a playback of a final buffer. */
 
 /*
  * Forward Declarations
@@ -88,9 +88,10 @@ static void scale_samples(uint32_t *buf, int frames, float vol);
 /*
  * Initialize OpenSL ES.
  */
-void init_opensl_es(void)
+void
+init_opensl_es(void)
 {
-	for (int i = 0; i < SOUND_TRACKS; i++)
+	for (int i = 0; i < HAL_SOUND_TRACKS; i++)
 		pthread_mutex_init(&sound_mutex[i], NULL);
 
 	slCreateEngine(&engine_object, 0, NULL, 0, NULL, NULL);
@@ -117,7 +118,7 @@ void init_opensl_es(void)
 	SLDataSink audioSnk = {&loc_outmix, NULL};
 	const SLInterfaceID bqids[1] = {SL_IID_BUFFERQUEUE};
 	const SLboolean bqreq[1] = {SL_BOOLEAN_TRUE};
-	for (int i = 0; i < SOUND_TRACKS; i++) {
+	for (int i = 0; i < HAL_SOUND_TRACKS; i++) {
 		(*engine_engine)->CreateAudioPlayer(engine_engine, &bq_player_object[i], &audio_src, &audioSnk, 1, bqids, bqreq);
 		(*bq_player_object[i])->Realize(bq_player_object[i], SL_BOOLEAN_FALSE);
 		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_PLAY, &bq_player_play[i]);
@@ -128,23 +129,26 @@ void init_opensl_es(void)
 	}
 }
 
-void sl_pause_sound(void)
+void
+sl_pause_sound(void)
 {
-	for (int i = 0; i < SOUND_TRACKS; i++) {
+	for (int i = 0; i < HAL_SOUND_TRACKS; i++) {
 		if (bq_player_play[i] != NULL)
 			(*bq_player_play[i])->SetPlayState(bq_player_play[i], SL_PLAYSTATE_STOPPED);
 	}
 }
 
-void sl_resume_sound(void)
+void
+sl_resume_sound(void)
 {
-	for (int i = 0; i < SOUND_TRACKS; i++) {
+	for (int i = 0; i < HAL_SOUND_TRACKS; i++) {
 		if (bq_player_play[i] != NULL)
 			(*bq_player_play[i])->SetPlayState(bq_player_play[i], SL_PLAYSTATE_PLAYING);
 	}
 }
 
-static void play_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
+static void
+play_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
 	int stream = (intptr_t)context;
 
@@ -153,7 +157,8 @@ static void play_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 	pthread_mutex_unlock(&sound_mutex[stream]);
 }
 
-static void enqueue(int stream)
+static void
+enqueue(int stream)
 {
 	if (wave[stream] == NULL)
 		return;
@@ -166,7 +171,7 @@ static void enqueue(int stream)
 	}
 
 	/* Get PCM samples. */
-	int read_samples = get_wave_samples(wave[stream], sample_buf[stream], BUF_FRAMES);
+	int read_samples = hal_get_wave_samples(wave[stream], sample_buf[stream], BUF_FRAMES);
 
 	/* Fill the remaining samples by zeros for a case where we have reached an end-of-stream. */
 	if (read_samples < BUF_FRAMES)
@@ -179,11 +184,12 @@ static void enqueue(int stream)
 	(*bq_player_buffer_queue[stream])->Enqueue(bq_player_buffer_queue[stream], sample_buf[stream], read_samples * FRAME_SIZE);
 
 	/* Set a pre-finish flag if we reached an end-of-stream. */
-	if (is_wave_eos(wave[stream]))
+	if (hal_is_wave_eos(wave[stream]))
 		pre_finish[stream] = true;
 }
 
-static void scale_samples(uint32_t *buf, int frames, float vol)
+static void
+scale_samples(uint32_t *buf, int frames, float vol)
 {
 	float scale;
 	uint32_t frame;
@@ -223,7 +229,10 @@ static void scale_samples(uint32_t *buf, int frames, float vol)
  * HAL
  */
 
-bool play_sound(int stream, struct wave *w)
+bool
+hal_play_sound(
+	int stream,
+	struct hal_wave *w)
 {
 	if (bq_player_play[stream] == NULL)
 		return true;
@@ -240,7 +249,9 @@ bool play_sound(int stream, struct wave *w)
 	return true;
 }
 
-bool stop_sound(int stream)
+bool
+hal_stop_sound(
+	int stream)
 {
 	if (bq_player_play[stream] == NULL)
 		return true;
@@ -256,7 +267,10 @@ bool stop_sound(int stream)
 	return true;
 }
 
-bool set_sound_volume(int stream, float vol)
+bool
+hal_set_sound_volume(
+	int stream,
+	float vol)
 {
 	volume[stream] = vol;
 
@@ -265,7 +279,9 @@ bool set_sound_volume(int stream, float vol)
 	return true;
 }
 
-bool is_sound_finished(int stream)
+bool
+hal_is_sound_finished(
+	int stream)
 {
 	__sync_synchronize();
 

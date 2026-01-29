@@ -40,7 +40,12 @@ enum GraphicsMode {
 
 static int nGraphicsMode;
 
-BOOL D3DInitialize(HWND hWnd, int nWidth, int nHeight, BOOL bForceD3D9)
+BOOL
+D3DInitialize(
+	HWND hWnd,
+	int nWidth,
+	int nHeight,
+	BOOL bForceD3D9)
 {
 	BOOL bAvoidD3D12, bAvoidD3D11;
 
@@ -90,12 +95,13 @@ BOOL D3DInitialize(HWND hWnd, int nWidth, int nHeight, BOOL bForceD3D9)
 	}
 #endif
 
-	log_error("Failed to initialize graphics.");
+	hal_log_error("Failed to initialize graphics.");
 
 	return FALSE;
 }
 
-VOID D3DCleanup(void)
+VOID
+D3DCleanup(VOID)
 {
 	switch (nGraphicsMode)
 	{
@@ -114,7 +120,15 @@ VOID D3DCleanup(void)
 	}
 }
 
-BOOL D3DResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOffsetY, int nViewportWidth, int nViewportHeight, float scale)
+BOOL
+D3DResizeWindow(
+	int nScreenWidth,
+	int nScreenHeight,
+	int nOffsetX,
+	int nOffsetY,
+	int nViewportWidth,
+	int nViewportHeight,
+	float scale)
 {
 	switch (nGraphicsMode)
 	{
@@ -134,7 +148,8 @@ BOOL D3DResizeWindow(int nScreenWidth, int nScreenHeight, int nOffsetX, int nOff
 	return TRUE;
 }
 
-VOID D3DStartFrame(void)
+VOID
+D3DStartFrame(void)
 {
 	switch (nGraphicsMode)
 	{
@@ -172,7 +187,8 @@ VOID D3DEndFrame(void)
 	}
 }
 
-BOOL D3DIsSoftRendering(void)
+BOOL
+D3DIsSoftRendering(void)
 {
 	if (nGraphicsMode == MODE_GDI)
 		return TRUE;
@@ -180,7 +196,9 @@ BOOL D3DIsSoftRendering(void)
 	return FALSE;
 }
 
-void hal_notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+	struct hal_image *img)
 {
 	switch (nGraphicsMode)
 	{
@@ -199,7 +217,7 @@ void hal_notify_image_update(struct image *img)
 	}
 }
 
-void hal_notify_image_free(struct image *img)
+void hal_notify_image_free(struct hal_image *img)
 {
 	switch (nGraphicsMode)
 	{
@@ -220,16 +238,16 @@ void hal_notify_image_free(struct image *img)
 
 void
 hal_render_image_normal(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	switch (nGraphicsMode)
 	{
@@ -250,16 +268,16 @@ hal_render_image_normal(
 
 void
 hal_render_image_add(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	switch (nGraphicsMode)
 	{
@@ -280,16 +298,16 @@ hal_render_image_add(
 
 void
 hal_render_image_sub(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	switch (nGraphicsMode)
 	{
@@ -310,16 +328,16 @@ hal_render_image_sub(
 
 void
 hal_render_image_dim(
-	int dst_left,				/* The X coordinate of the screen */
-	int dst_top,				/* The Y coordinate of the screen */
-	int dst_width,				/* The width of the destination rectangle */
-	int dst_height,				/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] an image to be rendered */
-	int src_left,				/* The X coordinate of a source image */
-	int src_top,				/* The Y coordinate of a source image */
-	int src_width,				/* The width of the source rectangle */
-	int src_height,				/* The height of the source rectangle */
-	int alpha)					/* The alpha value (0 to 255) */
+	int dst_left,					/* The X coordinate of the screen */
+	int dst_top,					/* The Y coordinate of the screen */
+	int dst_width,					/* The width of the destination rectangle */
+	int dst_height,					/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] an image to be rendered */
+	int src_left,					/* The X coordinate of a source image */
+	int src_top,					/* The Y coordinate of a source image */
+	int src_width,					/* The width of the source rectangle */
+	int src_height,					/* The height of the source rectangle */
+	int alpha)						/* The alpha value (0 to 255) */
 {
 	switch (nGraphicsMode)
 	{
@@ -340,8 +358,8 @@ hal_render_image_dim(
 
 void
 hal_render_image_rule(
-	struct image *src_image,
-	struct image *rule_image,
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
 	int threshold)
 {
 	switch (nGraphicsMode)
@@ -361,7 +379,11 @@ hal_render_image_rule(
 	}
 }
 
-hal_void render_image_melt(struct image *src_image, struct image *rule_image, int progress)
+void
+hal_render_image_melt(
+	struct hal_image *src_image,
+	struct hal_image *rule_image,
+	int progress)
 {
 	switch (nGraphicsMode)
 	{
@@ -390,7 +412,7 @@ hal_render_image_3d_normal(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -424,7 +446,7 @@ hal_render_image_3d_add(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -458,7 +480,7 @@ hal_render_image_3d_sub(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,
@@ -493,7 +515,7 @@ hal_render_image_3d_dim(
 	float y3,
 	float x4,
 	float y4,
-	struct image *src_image,
+	struct hal_image *src_image,
 	int src_left,
 	int src_top,
 	int src_width,

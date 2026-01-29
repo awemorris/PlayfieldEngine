@@ -65,7 +65,7 @@ DShowPlayVideo(
 							IID_IGraphBuilder, (void**)&pBuilder);
 	if(hRes != S_OK || !pBuilder)
 	{
-		log_error("CoCreateInstance() failed.");
+		hal_log_error("CoCreateInstance() failed.");
 		return FALSE;
 	}
 
@@ -80,7 +80,7 @@ DShowPlayVideo(
 	pBuilder->QueryInterface(IID_IVideoWindow, (void **)&pWindow);
 	if(pBuilder == NULL)
 	{
-		log_error("IGraphBuilder::QueryInterface() failed.");
+		hal_log_error("IGraphBuilder::QueryInterface() failed.");
 		return FALSE;
 	}
 	pWindow->put_Owner((OAHWND)hWnd);
@@ -92,7 +92,7 @@ DShowPlayVideo(
 	pBuilder->QueryInterface(IID_IMediaEventEx, (void**)&pEvent);
 	if(pEvent == NULL)
 	{
-		log_error("IGraphBuilder::QueryInterface() failed.");
+		hal_log_error("IGraphBuilder::QueryInterface() failed.");
 		return FALSE;
 	}
 	pEvent->SetNotifyWindow((OAHWND)hWnd, WM_GRAPHNOTIFY, 0);
@@ -101,13 +101,13 @@ DShowPlayVideo(
 	pBuilder->QueryInterface(IID_IMediaControl, (void **)&pControl);
 	if(pControl == NULL)
 	{
-		log_error("IGraphBuilder::QueryInterface() failed.");
+		hal_log_error("IGraphBuilder::QueryInterface() failed.");
 		return FALSE;
 	}
 	hRes = pControl->Run();
 	if (FAILED(hRes))
 	{
-		log_error("IMediaControl::Run() failed.");
+		hal_log_error("IMediaControl::Run() failed.");
 		return FALSE;
 	}
 
@@ -126,7 +126,7 @@ DisplayRenderFileErrorMessage(
 	case VFW_S_AUDIO_NOT_RENDERED:
 	case VFW_S_PARTIAL_RENDER:
 	case VFW_S_VIDEO_NOT_RENDERED:
-		log_error("Unsupported codec.");
+		hal_log_error("Unsupported codec.");
 		return FALSE;
 	case E_ABORT:
 	case E_FAIL:
@@ -136,22 +136,22 @@ DisplayRenderFileErrorMessage(
 	case VFW_E_CANNOT_CONNECT:
 	case VFW_E_CANNOT_LOAD_SOURCE_FILTER:
 	case VFW_E_CANNOT_RENDER:
-		log_error("Video runtime error.");
+		hal_log_error("Video runtime error.");
 		return FALSE;
 	case VFW_E_INVALID_FILE_FORMAT:
-		log_error("Invalid video file format.");
+		hal_log_error("Invalid video file format.");
 		return FALSE;
 	case VFW_E_NOT_FOUND:
-		log_error("File not found.");
+		hal_log_error("File not found.");
 		return FALSE;
 	case VFW_E_UNKNOWN_FILE_TYPE:
-		log_error("Unknown video file type.");
+		hal_log_error("Unknown video file type.");
 		return FALSE;
 	case VFW_E_UNSUPPORTED_STREAM:
-		log_error("Unsupported video stream.");
+		hal_log_error("Unsupported video stream.");
 		return FALSE;
 	default:
-		log_error("Unknown video error.");
+		hal_log_error("Unknown video error.");
 		return FALSE;
 	}
 

@@ -238,6 +238,7 @@ struct hal_image {
 #define ORDER_BGRA	/* Use BGRA on Direct3D and Metal. */
 #else
 #define ORDER_RGBA	/* Use RGBA on OpenGL. */
+#define HAL_ORDER_OPENGL
 #endif
 
 /*

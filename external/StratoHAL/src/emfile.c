@@ -54,7 +54,7 @@ struct hal_wfile {
 
 /* Forward declaration.
  */
-static void ungetc_rfile(struct rfile *rf, char c);
+static void ungetc_rfile(struct hal_rfile *rf, char c);
 
 /* JS: Get a file size. */
 EM_ASYNC_JS(int, jsGetFileSize, (const char *file_name),
@@ -131,9 +131,9 @@ hal_open_rfile(
 		return false;
 
 	/* Allocate a rfile structure. */
-	rf = malloc(sizeof(struct rfile));
+	rf = malloc(sizeof(struct hal_rfile));
 	if (rf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 	rf->size = size;
@@ -147,7 +147,7 @@ hal_open_rfile(
 	/* Allocate a file buffer. */
 	rf->data = malloc(size);
 	if (rf->data == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 	memset(rf->data, 0, size);
@@ -155,7 +155,7 @@ hal_open_rfile(
 	/* Get the file content. */
 	result = jsReadFile(file, rf->data);
 	if (result == -1) {
-		log_error("ASM ERROR.");
+		hal_log_error("ASM ERROR.");
 		free(rf);
 		return false;
 	}
@@ -217,12 +217,12 @@ hal_get_rfile_u64(
 	uint64_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 8, &ret))
+	if (!hal_read_rfile(f, &val, 8, &ret))
 		return false;
 	if (ret != 8)
 		return false;
 
-	*data = LETOHOST64(val);
+	*data = hal_le_to_host_64(val);
 	return true;
 }
 
@@ -235,12 +235,12 @@ get_rfile_u32(
 	uint32_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 4, &ret))
+	if (!hal_read_rfile(f, &val, 4, &ret))
 		return false;
 	if (ret != 4)
 		return false;
 
-	*data = LETOHOST32(val);
+	*data = hal_le_to_host_32(val);
 	return true;
 }
 
@@ -253,12 +253,12 @@ hal_get_rfile_u16(
 	uint16_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 2, &ret))
+	if (!hal_read_rfile(f, &val, 2, &ret))
 		return false;
 	if (ret != 2)
 		return false;
 
-	*data = LETOHOST16(val);
+	*data = hal_le_to_host_16(val);
 	return true;
 }
 
@@ -271,7 +271,7 @@ hal_get_rfile_u8(
 	uint8_t val;
 	size_t ret;
 
-	if (!read_rfile(f, &val, 1, &ret))
+	if (!hal_read_rfile(f, &val, 1, &ret))
 		return false;
 	if (ret != 1)
 		return false;
@@ -300,7 +300,7 @@ hal_get_rfile_string(
 
 	ptr = buf;
 	for (len = 0; len < size - 1; len++) {
-		if (!read_rfile(f, &c, 1, &read_size)) {
+		if (!hal_read_rfile(f, &c, 1, &read_size)) {
 			*ptr = '\0';
 			if (len == 0)
 				return false;
@@ -311,7 +311,7 @@ hal_get_rfile_string(
 			return true;
 		}
 		if (c == '\r') {
-			if (!read_rfile(f, &c, 1, &read_size)) {
+			if (!hal_read_rfile(f, &c, 1, &read_size)) {
 				*ptr = '\0';
 				return true;
 			}
@@ -396,7 +396,7 @@ hal_write_wfile(
  */
 void
 hal_close_wfile(
-	struct wfile *wf)
+	struct hal_wfile *wf)
 {
 	/* TODO */
 }

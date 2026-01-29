@@ -33,7 +33,7 @@
 /* Obfuscation Key */
 #include "key.h"
 
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 #include <windows.h>
 #else
 #include <sys/stat.h>
@@ -131,7 +131,7 @@ int command_archive(int argc, char *argv[])
 	return 0;
 }
 
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 
 /*
  * For Windows:
@@ -278,7 +278,7 @@ static bool get_file_sizes(void)
 		/*
 		 * Make a path and open the file.
 		 */
-#if defined(TARGET_WINDOWS)
+#if defined(HAL_TARGET_WINDOWS)
 		/* Make a path on Windows. */
 		char *path = strdup(entry[i].name);
 		char *slash;
@@ -380,7 +380,7 @@ static bool write_file_bodies(FILE *fp)
 	size_t len, obf;
 
 	for (i = 0; i < file_count; i++) {
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 		char *path = strdup(entry[i].name);
 		char *slash;
 		if (path == NULL) {
@@ -409,7 +409,7 @@ static bool write_file_bodies(FILE *fp)
 				}
 			}
 		} while (len == sizeof(buf));
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 		free(path);
 #endif
 		fclose(fpin);

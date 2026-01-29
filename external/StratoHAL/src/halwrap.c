@@ -199,7 +199,10 @@ hal_log_info(
 	return true;
 }
 
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+	const char *s,
+	...)
 {
 	char buf[4096];
 	va_list ap;
@@ -213,7 +216,10 @@ bool log_warn(const char *s, ...)
 	return true;
 }
 
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+	const char *s,
+	...)
 {
 	char buf[4096];
 	va_list ap;
@@ -227,19 +233,23 @@ bool log_error(const char *s, ...)
 	return true;
 }
 
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
-	log_error("Out of memory.");
+	hal_log_error("Out of memory.");
 	return true;
 }
 
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
 	wrap_make_save_directory();
 	return true;
 }
 
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(
+	const char *fname)
 {
 	char buf[4096];
 	char *ret;
@@ -249,23 +259,42 @@ char *make_real_path(const char *fname)
 
 	ret = strdup(buf);
 	if (ret == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return NULL;
 	}
 	return ret;
 }
 
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+	struct hal_image *img)
 {
-	wrap_notify_image_update(img->id, img->width, img->height, (UNSAFEPTR(uint32_t *))img->pixels);
+	wrap_notify_image_update(
+		img->id,
+		img->width,
+		img->height,
+		(UNSAFEPTR(uint32_t *))img->pixels);
 }
 
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(
+	struct hal_image *img)
 {
 	wrap_notify_image_free(img->id);
 }
 
-void render_image_normal(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_normal(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_img->width;
@@ -279,7 +308,18 @@ void render_image_normal(int dst_left, int dst_top, int dst_width, int dst_heigh
 	wrap_render_image_normal(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
 }
 
-void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_add(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_img->width;
@@ -290,10 +330,30 @@ void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, 
 	if (src_height == -1)
 		src_height = src_img->height;
 
-	wrap_render_image_add(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_add(dst_left,
+			      dst_top,
+			      dst_width,
+			      dst_height,
+			      src_img->id,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
 }
 
-void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_img->width;
@@ -304,10 +364,30 @@ void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, 
 	if (src_height == -1)
 		src_height = src_img->height;
 
-	wrap_render_image_sub(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_sub(dst_left,
+			      dst_top,
+			      dst_width,
+			      dst_height,
+			      src_img->id,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
 }
 
-void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_dim(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
 	if (dst_width == -1)
 		dst_width = src_img->width;
@@ -318,77 +398,220 @@ void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, 
 	if (src_height == -1)
 		src_height = src_img->height;
 
-	wrap_render_image_dim(dst_left, dst_top, dst_width, dst_height, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_dim(dst_left,
+			      dst_top,
+			      dst_width,
+			      dst_height,
+			      src_img->id,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
 }
 
-void render_image_rule(struct image *src_img, struct image *rule_img, int threshold)
+void
+hal_render_image_rule(
+	struct hal_image *src_img,
+	struct hal_image *rule_img,
+	int threshold)
 {
 	wrap_render_image_rule(src_img->id, rule_img->id, threshold);
 }
 
-void render_image_melt(struct image *src_img, struct image *rule_img, int progress)
+void
+hal_render_image_melt(
+	struct hal_image *src_img,
+	struct hal_image *rule_img,
+	int progress)
 {
 	wrap_render_image_melt(src_img->id, rule_img->id, progress);
 }
 
-void render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_normal(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	wrap_render_image_3d_normal(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_3d_normal(x1,
+				    y1,
+				    x2,
+				    y2,
+				    x3,
+				    y3,
+				    x4,
+				    y4,
+				    src_img->id,
+				    src_left,
+				    src_top,
+				    src_width,
+				    src_height,
+				    alpha);
 }
 
-void render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_add(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	wrap_render_image_3d_add(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_3d_add(x1,
+				 y1,
+				 x2,
+				 y2,
+				 x3,
+				 y3,
+				 x4,
+				 y4,
+				 src_img->id,
+				 src_left,
+				 src_top,
+				 src_width,
+				 src_height,
+				 alpha);
 }
 
-void render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	wrap_render_image_3d_sub(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_3d_sub(x1,
+				 y1,
+				 x2,
+				 y2,
+				 x3,
+				 y3,
+				 x4,
+				 y4,
+				 src_img->id,
+				 src_left,
+				 src_top,
+				 src_width,
+				 src_height,
+				 alpha);
 }
 
-void render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_dim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_img,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
 {
-	wrap_render_image_3d_dim(x1, y1, x2, y2, x3, y3, x4, y4, src_img->id, src_left, src_top, src_width, src_height, alpha);
+	wrap_render_image_3d_dim(x1,
+				 y1,
+				 x2,
+				 y2,
+				 x3,
+				 y3,
+				 x4,
+				 y4,
+				 src_img->id,
+				 src_left,
+				 src_top,
+				 src_width,
+				 src_height,
+				 alpha);
 }
 
-void reset_lap_timer(uint64_t *origin)
+void
+hal_reset_lap_timer(
+	uint64_t *origin)
 {
 	wrap_reset_lap_timer((UNSAFEPTR(uint64_t *))origin);
 }
 
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+uint64_t
+hal_get_lap_timer_millisec(
+	uint64_t *origin)
 {
 	uint64_t ret;
 	ret = wrap_get_lap_timer_millisec((UNSAFEPTR(uint64_t *))origin);
 	return ret;
 }
 
-#if defined(USE_UNITY)
-bool play_sound(int stream, struct wave *w)
+#if defined(HAL_USE_UNITY)
+bool
+hal_play_sound(
+	int stream,
+	struct hal_wave *w)
 {
 	wrap_play_sound(stream, (UNSAFEPTR(void *))w);
 	return true;
 }
 #endif
 
-#if defined(USE_UNITY)
-bool stop_sound(int stream)
+#if defined(HAL_USE_UNITY)
+bool
+hal_stop_sound(
+	int stream)
 {
 	wrap_stop_sound(stream);
 	return true;
 }
 #endif
 
-#if defined(USE_UNITY)
-bool set_sound_volume(int stream, float vol)
+#if defined(HAL_USE_UNITY)
+bool
+hal_set_sound_volume(
+	int stream,
+	float vol)
 {
 	wrap_set_sound_volume(stream, vol);
 	return true;
 }
 #endif
 
-#if defined(USE_UNITY)
-bool is_sound_finished(int stream)
+#if defined(HAL_USE_UNITY)
+bool
+hal_is_sound_finished(
+	int stream)
 {
 	bool ret;
 	ret =  wrap_is_sound_finished(stream);
@@ -396,50 +619,60 @@ bool is_sound_finished(int stream)
 }
 #endif
 
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+	const char *fname,
+	bool is_skippable)
 {
 	bool ret;
 	ret =  wrap_play_video((UNSAFEPTR(const char *))fname, is_skippable);
 	return true;
 }
 
-void stop_video(void)
+void
+hal_stop_video(void)
 {
 	wrap_stop_video();
 }
 
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
 	bool ret;
 	ret = wrap_is_video_playing();
 	return ret;
 }
 
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
 	bool ret;
 	ret = wrap_is_full_screen_supported();
 	return ret;
 }
 
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
 	bool ret;
 	ret = wrap_is_full_screen_mode();
 	return ret;
 }
 
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
 	wrap_enter_full_screen_mode();
 }
 
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
 	wrap_leave_full_screen_mode();
 }
 
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
 	static char buf[64];
 
@@ -449,45 +682,51 @@ const char *get_system_language(void)
 	return buf;
 }
 
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled)
 {
 	wrap_set_continuous_swipe_enabled(is_enabled);
 }
 
-#if defined(USE_UNITY)
-struct rfile {
+#if defined(HAL_USE_UNITY)
+struct hal_rfile {
 	char *data;
 	uint64_t size;
 	uint64_t cur;
 };
 #endif
 
-#if defined(USE_UNITY)
-struct wfile {
+#if defined(HAL_USE_UNITY)
+struct hal_wfile {
 	int dummy;
 };
 #endif
 
-#if defined(USE_UNITY)
-bool init_file(void)
+#if defined(HAL_USE_UNITY)
+bool
+init_file(void)
 {
 	return true;
 }
 #endif
 
-#if defined(USE_UNITY)
-void cleanup_file(void)
+#if defined(HAL_USE_UNITY)
+void
+cleanup_file(void)
 {
 }
 #endif
 
-#if defined(USE_UNITY)
-bool check_file_exist(const char *file)
+#if defined(HAL_USE_UNITY)
+bool
+hal_check_file_exist(
+	const char *file)
 {
 	char *path;
 	bool ret;
 
-	path = make_real_path(file);
+	path = hal_make_real_path(file);
 	if (path == NULL)
 		return false;
 
@@ -501,20 +740,23 @@ bool check_file_exist(const char *file)
 }
 #endif
 
-#if defined(USE_UNITY)
-bool open_rfile(const char *file, struct rfile **rf)
+#if defined(HAL_USE_UNITY)
+bool
+hal_open_rfile(
+	const char *file,
+	struct hal_rfile **rf)
 {
 	UNSAFEPTR(char *) p;
 	char *path;
 	int len;
 
-	*rf = malloc(sizeof(struct rfile));
+	*rf = malloc(sizeof(struct hal_rfile));
 	if (*rf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return false;
 	}
 
-	path = make_real_path(file);
+	path = hal_make_real_path(file);
 	if (path == NULL) {
 		free(*rf);
 		return false;
@@ -535,23 +777,33 @@ bool open_rfile(const char *file, struct rfile **rf)
 }
 #endif
 
-#if defined(USE_UNITY)
-bool get_rfile_size(struct rfile *rf, size_t *ret)
+#if defined(HAL_USE_UNITY)
+bool
+hal_get_rfile_size(
+	struct hal_rfile *rf,
+	size_t *ret)
 {
 	*ret = rf->size;
 	return true;
 }
 #endif
 
-#if defined(USE_UNITY)
-void decode_rfile(struct rfile *f)
+#if defined(HAL_USE_UNITY)
+void
+hal_decode_rfile(
+	struct hal_rfile *f)
 {
 	UNUSED_PARAMETER(f);
 }
 #endif
 
-#if defined(USE_UNITY)
-bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
+#if defined(HAL_USE_UNITY)
+bool
+hal_read_rfile(
+	struct hal_rfile *rf,
+	void *buf,
+	size_t size,
+	size_t *ret)
 {
 	size_t len;
 
@@ -568,8 +820,12 @@ bool read_rfile(struct rfile *rf, void *buf, size_t size, size_t *ret)
 }
 #endif
 
-#if defined(USE_UNITY)
-bool gets_rfile(struct rfile *rf, char *buf, size_t size)
+#if defined(HAL_USE_UNITY)
+bool
+hal_gets_rfile(
+	struct hal_rfile *rf,
+	char *buf,
+	size_t size)
 {
 	char *ptr;
 	size_t len, ret;
@@ -577,7 +833,7 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 
 	ptr = buf;
 	for (len = 0; len < size - 1; len++) {
-		if (!read_rfile(rf, &c, 1, &ret)) {
+		if (!hal_read_rfile(rf, &c, 1, &ret)) {
 			*ptr = '\0';
 			return len == 0 ? false : true;
 		}
@@ -586,7 +842,7 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 			return true;
 		}
 		if (c == '\r') {
-			if (!read_rfile(rf, &c, 1, &ret)) {
+			if (!hal_read_rfile(rf, &c, 1, &ret)) {
 				*ptr = '\0';
 				return true;
 			}
@@ -607,27 +863,34 @@ bool gets_rfile(struct rfile *rf, char *buf, size_t size)
 }
 #endif
 
-#if defined(USE_UNITY)
-void rewind_rfile(struct rfile *rf)
+#if defined(HAL_USE_UNITY)
+void
+hal_rewind_rfile(
+	struct hal_rfile *rf)
 {
 	rf->cur = 0;
 }
 #endif
 
-#if defined(USE_UNITY)
-void close_rfile(struct rfile *rf)
+#if defined(HAL_USE_UNITY)
+void
+hal_close_rfile(
+	struct hal_rfile *rf)
 {
 	wrap_free_shared((UNSAFEPTR(char *))rf->data);
 	free(rf);
 }
 #endif
 
-#if defined(USE_UNITY)
-bool open_wfile(const char *file, struct wfile **wf)
+#if defined(HAL_USE_UNITY)
+bool
+hal_open_wfile(
+	const char *file,
+	struct hal_wfile **wf)
 {
-	*wf = malloc(sizeof(struct wfile));
+	*wf = malloc(sizeof(struct hal_wfile));
 	if (*wf == NULL) {
-		log_out_of_memory();
+		hal_log_out_of_memory();
 		return NULL;
 	}
 
@@ -637,8 +900,13 @@ bool open_wfile(const char *file, struct wfile **wf)
 }
 #endif
 
-#if defined(USE_UNITY)
-bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
+#if defined(HAL_USE_UNITY)
+bool
+hal_write_wfile(
+	struct hal_wfile *wf,
+	const void *buf,
+	size_t size,
+	size_t *ret)
 {
 	const char *p;
 	size_t i;
@@ -652,15 +920,19 @@ bool write_wfile(struct wfile *wf, const void *buf, size_t size, size_t *ret)
 }
 #endif
 
-#if defined(USE_UNITY)
-void close_wfile(struct wfile *wf)
+#if defined(HAL_USE_UNITY)
+void
+hal_close_wfile(
+	struct hal_wfile *wf)
 {
 	wrap_close_save_file();
 }
 #endif
 
-#if defined(USE_UNITY)
-void remove_file(const char *file)
+#if defined(HAL_USE_UNITY)
+bool
+hal_remove_file(
+	const char *file)
 {
 	// TODO
 }
