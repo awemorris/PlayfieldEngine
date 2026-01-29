@@ -112,7 +112,7 @@ static void checkBundleResource(int argc, const char *argv[])
         return;
     }
 
-    NSString *filePath = [NSString stringWithFormat:@"%@/Contents/Resources/%s", bundlePath, PACKAGE_FILE];
+    NSString *filePath = [NSString stringWithFormat:@"%@/Contents/Resources/%s", bundlePath, HAL_PACKAGE_FILE];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         // Test the resouce file size.
         NSError *attributesError = nil;
@@ -249,7 +249,7 @@ static void checkBundleResource(int argc, const char *argv[])
     }
 
     // Do a boot callback to acquire a window configuration.
-    if (!on_event_boot(&window_title, &screen_width, &screen_height)) {
+    if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height)) {
         NSLog(@"Startup file failed.");
         showLogAtExit();
         [NSApp terminate:nil];
@@ -286,7 +286,7 @@ static void checkBundleResource(int argc, const char *argv[])
                                     repeats:YES];
 
     // Do a start callback.
-    if(!on_event_start()) {
+    if(!hal_callback_on_event_start()) {
         NSLog(@"on_start() failed.");
         showLogAtExit();
         [NSApp terminate:nil];
@@ -309,89 +309,89 @@ static void initGamepad(void)
 
         controller.extendedGamepad.dpad.up.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed) {
-                on_event_key_press(KEY_GAMEPAD_UP);
-                on_event_key_release(KEY_GAMEPAD_DOWN);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_UP);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
             } else {
-                on_event_key_release(KEY_GAMEPAD_UP);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
             }
         };
         controller.extendedGamepad.dpad.down.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed) {
-                on_event_key_press(KEY_GAMEPAD_DOWN);
-                on_event_key_release(KEY_GAMEPAD_UP);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_DOWN);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_UP);
             } else {
-                on_event_key_release(KEY_GAMEPAD_DOWN);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_DOWN);
             }
         };
         controller.extendedGamepad.dpad.left.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed) {
-                on_event_key_press(KEY_GAMEPAD_LEFT);
-                on_event_key_release(KEY_GAMEPAD_RIGHT);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_LEFT);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
             } else {
-                on_event_key_release(KEY_GAMEPAD_LEFT);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
             }
         };
         controller.extendedGamepad.dpad.right.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed) {
-                on_event_key_press(KEY_GAMEPAD_RIGHT);
-                on_event_key_release(KEY_GAMEPAD_LEFT);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_RIGHT);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_LEFT);
             } else {
-                on_event_key_release(KEY_GAMEPAD_RIGHT);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_RIGHT);
             }
         };
         controller.extendedGamepad.buttonA.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed) 
-                on_event_key_press(KEY_GAMEPAD_A);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_A);
             else
-                on_event_key_release(KEY_GAMEPAD_A); 
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_A); 
         };
         controller.extendedGamepad.buttonB.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed)
-                on_event_key_press(KEY_GAMEPAD_B);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_B);
             else
-                on_event_key_release(KEY_GAMEPAD_B);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_B);
         };
         controller.extendedGamepad.buttonX.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed)
-                on_event_key_press(KEY_GAMEPAD_X);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_X);
             else
-                on_event_key_release(KEY_GAMEPAD_X);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_X);
         };
         controller.extendedGamepad.buttonY.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed)
-                on_event_key_press(KEY_GAMEPAD_Y);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_Y);
             else
-                on_event_key_release(KEY_GAMEPAD_Y);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_Y);
         };
         controller.extendedGamepad.leftShoulder.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed)
-                on_event_key_press(KEY_GAMEPAD_L);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_L);
             else
-                on_event_key_release(KEY_GAMEPAD_L);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_L);
         };
         controller.extendedGamepad.rightShoulder.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
             if (pressed)
-                on_event_key_press(KEY_GAMEPAD_R);
+                hal_callback_on_event_key_press(HAL_KEY_GAMEPAD_R);
             else
-                on_event_key_release(KEY_GAMEPAD_A);
+                hal_callback_on_event_key_release(HAL_KEY_GAMEPAD_A);
         };
         controller.extendedGamepad.leftThumbstick.xAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
-            on_event_analog_input(ANALOG_X1, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_X1, (int)(value * 32767));
         };
         controller.extendedGamepad.leftThumbstick.yAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
-            on_event_analog_input(ANALOG_Y1, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_Y1, (int)(value * 32767));
         };
         controller.extendedGamepad.rightThumbstick.xAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
-            on_event_analog_input(ANALOG_X2, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_X2, (int)(value * 32767));
         };
         controller.extendedGamepad.rightThumbstick.yAxis.valueChangedHandler = ^(GCControllerAxisInput *axis, float value) {
-            on_event_analog_input(ANALOG_Y2, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_Y2, (int)(value * 32767));
         };
         controller.extendedGamepad.leftTrigger.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
-            on_event_analog_input(ANALOG_L, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_L, (int)(value * 32767));
         };
         controller.extendedGamepad.rightTrigger.valueChangedHandler = ^(GCControllerButtonInput *button, float value, BOOL pressed) {
-            on_event_analog_input(ANALOG_R, (int)(value * 32767));
+            hal_callback_on_event_analog_input(HAL_ANALOG_R, (int)(value * 32767));
         };
     }];
     [GCController startWirelessControllerDiscoveryWithCompletionHandler:^{
@@ -614,7 +614,7 @@ static void initGamepad(void)
     NSPoint point = [event locationInWindow];
     int x = (int)((point.x - self.screenOffset.x) * _screenScale);
     int y = (int)((point.y - self.screenOffset.y) * _screenScale);
-    on_event_mouse_move(x, screen_height - y);
+    hal_callback_on_event_mouse_move(x, screen_height - y);
 }
 
 // Called when a mouse is moved by a drag.
@@ -622,7 +622,7 @@ static void initGamepad(void)
     NSPoint point = [event locationInWindow];
     int x = (int)((point.x - self.screenOffset.x) * _screenScale);
     int y = (int)((point.y - self.screenOffset.y) * _screenScale);
-    on_event_mouse_move(x, screen_height - y);
+    hal_callback_on_event_mouse_move(x, screen_height - y);
 }
 
 // Called when a modifier key is pressed or released.
@@ -635,28 +635,28 @@ static void initGamepad(void)
     // Notify when the Shift key state is changed.
     if (!_isShiftPressed && shiftBit) {
         _isShiftPressed = YES;
-        on_event_key_press(KEY_SHIFT);
+        hal_callback_on_event_key_press(HAL_KEY_SHIFT);
     } else if (_isShiftPressed && !shiftBit) {
         _isShiftPressed = NO;
-        on_event_key_release(KEY_SHIFT);
+        hal_callback_on_event_key_release(HAL_KEY_SHIFT);
     }
 
     // Notify when the Control key state is changed.
     if (!_isControlPressed && controlBit) {
         _isControlPressed = YES;
-        on_event_key_press(KEY_CONTROL);
+        hal_callback_on_event_key_press(HAL_KEY_CONTROL);
     } else if (_isControlPressed && !controlBit) {
         _isControlPressed = NO;
-        on_event_key_release(KEY_CONTROL);
+        hal_callback_on_event_key_release(HAL_KEY_CONTROL);
     }
 
     // Notify when the Command key state is changed.
     if (!_isCommandPressed && commandBit) {
         _isCommandPressed = YES;
-        on_event_key_press(KEY_ALT);
+        hal_callback_on_event_key_press(HAL_KEY_ALT);
     } else if (_isCommandPressed && !commandBit) {
         _isCommandPressed = NO;
-        on_event_key_release(KEY_ALT);
+        hal_callback_on_event_key_release(HAL_KEY_ALT);
     }
 }
 
@@ -667,81 +667,81 @@ static void initGamepad(void)
     
     int kc = [self convertKeyCode:[theEvent keyCode]];
     if (kc != -1)
-        on_event_key_press(kc);
+        hal_callback_on_event_key_press(kc);
 }
 
 // Called when a keyboard is released.
 - (void)keyUp:(NSEvent *)theEvent {
     int kc = [self convertKeyCode:[theEvent keyCode]];
     if (kc != -1)
-        on_event_key_release(kc);
+        hal_callback_on_event_key_release(kc);
 }
 
 // A helper to convert a keycode.
 - (int)convertKeyCode:(int)keyCode {
     switch(keyCode) {
-        case 53: return KEY_ESCAPE;
-        case 36: return KEY_RETURN;
-        case 49: return KEY_SPACE;
-        case 48: return KEY_TAB;
-        case 51: return KEY_BACKSPACE;
-        case 117: return KEY_DELETE;
-        case 115: return KEY_HOME;
-        case 119: return KEY_END;
-        case 116: return KEY_PAGEUP;
-        case 121: return KEY_PAGEDOWN;
-        case 123: return KEY_LEFT;
-        case 124: return KEY_RIGHT;
-        case 125: return KEY_DOWN;
-        case 126: return KEY_UP;
-        case 0: return KEY_A;
-        case 11: return KEY_B;
-        case 8: return KEY_C;
-        case 2: return KEY_D;
-        case 14: return KEY_E;
-        case 3: return KEY_F;
-        case 5: return KEY_G;
-        case 4: return KEY_H;
-        case 34: return KEY_I;
-        case 38: return KEY_J;
-        case 40: return KEY_K;
-        case 37: return KEY_L;
-        case 46: return KEY_M;
-        case 45: return KEY_N;
-        case 31: return KEY_O;
-        case 35: return KEY_P;
-        case 12: return KEY_Q;
-        case 15: return KEY_R;
-        case 1: return KEY_S;
-        case 17: return KEY_T;
-        case 32: return KEY_U;
-        case 9: return KEY_V;
-        case 13: return KEY_W;
-        case 7: return KEY_X;
-        case 16: return KEY_Y;
-        case 6: return KEY_Z;
-        case 18: return KEY_1;
-        case 19: return KEY_2;
-        case 20: return KEY_3;
-        case 21: return KEY_4;
-        case 23: return KEY_5;
-        case 22: return KEY_6;
-        case 26: return KEY_7;
-        case 28: return KEY_8;
-        case 25: return KEY_9;
-        case 29: return KEY_0;
-        case 122: return KEY_F1;
-        case 120: return KEY_F2;
-        case 99: return KEY_F3;
-        case 118: return KEY_F4;
-        case 96: return KEY_F5;
-        case 97: return KEY_F6;
-        case 98: return KEY_F7;
-        case 100: return KEY_F8;
-        case 101: return KEY_F9;
-        case 109: return KEY_F10;
-        case 103: return KEY_F11;
-        case 111: return KEY_F12;
+        case 53: return HAL_KEY_ESCAPE;
+        case 36: return HAL_KEY_RETURN;
+        case 49: return HAL_KEY_SPACE;
+        case 48: return HAL_KEY_TAB;
+        case 51: return HAL_KEY_BACKSPACE;
+        case 117: return HAL_KEY_DELETE;
+        case 115: return HAL_KEY_HOME;
+        case 119: return HAL_KEY_END;
+        case 116: return HAL_KEY_PAGEUP;
+        case 121: return HAL_KEY_PAGEDOWN;
+        case 123: return HAL_KEY_LEFT;
+        case 124: return HAL_KEY_RIGHT;
+        case 125: return HAL_KEY_DOWN;
+        case 126: return HAL_KEY_UP;
+        case 0: return HAL_KEY_A;
+        case 11: return HAL_KEY_B;
+        case 8: return HAL_KEY_C;
+        case 2: return HAL_KEY_D;
+        case 14: return HAL_KEY_E;
+        case 3: return HAL_KEY_F;
+        case 5: return HAL_KEY_G;
+        case 4: return HAL_KEY_H;
+        case 34: return HAL_KEY_I;
+        case 38: return HAL_KEY_J;
+        case 40: return HAL_KEY_K;
+        case 37: return HAL_KEY_L;
+        case 46: return HAL_KEY_M;
+        case 45: return HAL_KEY_N;
+        case 31: return HAL_KEY_O;
+        case 35: return HAL_KEY_P;
+        case 12: return HAL_KEY_Q;
+        case 15: return HAL_KEY_R;
+        case 1: return HAL_KEY_S;
+        case 17: return HAL_KEY_T;
+        case 32: return HAL_KEY_U;
+        case 9: return HAL_KEY_V;
+        case 13: return HAL_KEY_W;
+        case 7: return HAL_KEY_X;
+        case 16: return HAL_KEY_Y;
+        case 6: return HAL_KEY_Z;
+        case 18: return HAL_KEY_1;
+        case 19: return HAL_KEY_2;
+        case 20: return HAL_KEY_3;
+        case 21: return HAL_KEY_4;
+        case 23: return HAL_KEY_5;
+        case 22: return HAL_KEY_6;
+        case 26: return HAL_KEY_7;
+        case 28: return HAL_KEY_8;
+        case 25: return HAL_KEY_9;
+        case 29: return HAL_KEY_0;
+        case 122: return HAL_KEY_F1;
+        case 120: return HAL_KEY_F2;
+        case 99: return HAL_KEY_F3;
+        case 118: return HAL_KEY_F4;
+        case 96: return HAL_KEY_F5;
+        case 97: return HAL_KEY_F6;
+        case 98: return HAL_KEY_F7;
+        case 100: return HAL_KEY_F8;
+        case 101: return HAL_KEY_F9;
+        case 109: return HAL_KEY_F10;
+        case 103: return HAL_KEY_F11;
+        case 111: return HAL_KEY_F12;
     }
     return -1;
 }
@@ -871,46 +871,46 @@ static void initGamepad(void)
 - (void)mouseDown:(NSEvent *)event {
     id<GameViewControllerProtocol> viewController = [self viewControllerFrom:event];
     NSPoint point = [viewController windowPointToScreenPoint:[event locationInWindow]];
-    on_event_mouse_press(MOUSE_LEFT, (int)point.x, (int)point.y);
+    hal_callback_on_event_mouse_press(MOUSE_LEFT, (int)point.x, (int)point.y);
 }
 
 // Called when a mouse button is released.
 - (void)mouseUp:(NSEvent *)event {
     id<GameViewControllerProtocol> viewController = [self viewControllerFrom:event];
     NSPoint point = [viewController windowPointToScreenPoint:[event locationInWindow]];
-    on_event_mouse_release(MOUSE_LEFT, (int)point.x, (int)point.y);
+    hal_callback_on_event_mouse_release(MOUSE_LEFT, (int)point.x, (int)point.y);
 }
 
 // Called when a right mouse button is pressed.
 - (void)rightMouseDown:(NSEvent *)event {
     id<GameViewControllerProtocol> viewController = [self viewControllerFrom:event];
     NSPoint point = [viewController windowPointToScreenPoint:[event locationInWindow]];
-    on_event_mouse_press(MOUSE_RIGHT, (int)point.x, (int)point.y);
+    hal_callback_on_event_mouse_press(MOUSE_RIGHT, (int)point.x, (int)point.y);
 }
 
 // Called when a right mouse button is released.
 - (void)rightMouseUp:(NSEvent *)event {
     id<GameViewControllerProtocol> viewController = [self viewControllerFrom:event];
     NSPoint point = [viewController windowPointToScreenPoint:[event locationInWindow]];
-    on_event_mouse_release(MOUSE_RIGHT, (int)point.x, (int)point.y);
+    hal_callback_on_event_mouse_release(MOUSE_RIGHT, (int)point.x, (int)point.y);
 }
 
 // Called when a mouse is dragged.
 - (void)mouseDragged:(NSEvent *)event {
     id<GameViewControllerProtocol> viewController = [self viewControllerFrom:event];
     NSPoint point = [viewController windowPointToScreenPoint:[event locationInWindow]];
-    on_event_mouse_move((int)point.x, (int)point.y);
+    hal_callback_on_event_mouse_move((int)point.x, (int)point.y);
 }
 
 // Called when a mouse wheel is pressed.
 - (void)scrollWheel:(NSEvent *)event {
     int delta = (int)[event deltaY];
     if (delta > 0) {
-        on_event_key_press(KEY_UP);
-        on_event_key_release(KEY_UP);
+        hal_callback_on_event_key_press(KEY_UP);
+        hal_callback_on_event_key_release(KEY_UP);
     } else if (delta < 0) {
-        on_event_key_press(KEY_DOWN);
-        on_event_key_release(KEY_DOWN);
+        hal_callback_on_event_key_press(KEY_DOWN);
+        hal_callback_on_event_key_release(KEY_DOWN);
     }
 }
 

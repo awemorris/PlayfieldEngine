@@ -105,7 +105,7 @@ init_aunit(void)
     /* Star audio playback. */
     ret = AudioOutputUnitStart(au) == noErr;
     if (!ret)
-        log_error("AudioOutputUnitStart() failed.");
+        hal_log_error("AudioOutputUnitStart() failed.");
     else
         isPlaying = true;
 
@@ -133,15 +133,15 @@ create_audio_unit(void)
     cd.componentFlagsMask = 0;
     comp = AudioComponentFindNext(NULL, &cd);
     if(comp == NULL) {
-        log_error("AudioComponentFindNext() failed.");
+        hal_log_error("AudioComponentFindNext() failed.");
         return false;
     }
     if(AudioComponentInstanceNew(comp, &au) != noErr) {
-        log_error("AudioComponentInstanceNew() failed.");
+        hal_log_error("AudioComponentInstanceNew() failed.");
         return false;
     }
     if(AudioUnitInitialize(au) != noErr) {
-        log_error("AudioUnitInitialize() failed.");
+        hal_log_error("AudioUnitInitialize() failed.");
         return false;
     }
 
@@ -151,7 +151,7 @@ create_audio_unit(void)
     if(AudioUnitSetProperty(au, kAudioUnitProperty_SetRenderCallback,
                             kAudioUnitScope_Input, 0, &cb,
                             sizeof(AURenderCallbackStruct)) != noErr) {
-        log_error("AudioUnitSetProperty() failed.");
+        hal_log_error("AudioUnitSetProperty() failed.");
         return false;
     }
 
@@ -169,7 +169,7 @@ create_audio_unit(void)
     if(AudioUnitSetProperty(au, kAudioUnitProperty_StreamFormat,
                             kAudioUnitScope_Input, 0, &streamFormat,
                             sizeof(streamFormat)) != noErr) {
-        log_error("AudioUnitSetProperty() failed.");
+        hal_log_error("AudioUnitSetProperty() failed.");
         return false;
     }
 
@@ -223,7 +223,7 @@ hal_play_sound(
         if(!isPlaying) {
             ret = AudioOutputUnitStart(au) == noErr;
             if (!ret)
-                log_error("AudioOutputUnitStart() failed.");
+                hal_log_error("AudioOutputUnitStart() failed.");
             isPlaying = true;
         }
     }
@@ -331,7 +331,7 @@ callback(
                     continue;
 
                 /* Get samples from a input stream. */
-                ret = get_wave_samples(wave[stream], tmpBuf, readSamples);
+                ret = hal_get_wave_samples(wave[stream], tmpBuf, readSamples);
 
                 /* If reached the end of the stream: */
                 if(ret < readSamples) {

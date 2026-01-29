@@ -70,7 +70,7 @@ static id<MTLRenderPipelineState> theMeltPipelineState;
 static id<MTLCommandBuffer> theCommandBuffer;
 static id<MTLBlitCommandEncoder> theBlitEncoder;
 static id<MTLRenderCommandEncoder> theRenderEncoder;
-static struct image *theInitialUploadArray[128];
+static struct hal_image *theInitialUploadArray[128];
 static int theInitialUploadArrayCount;
 static id<MTLTexture> thePurgeArray[128];
 static int thePurgeArrayCount;
@@ -87,14 +87,14 @@ bool gameRendererExitFlag;
 //
 static BOOL runFrame(void);
 static void drawPrimitives(int dst_left, int dst_top, int dst_width, int dst_height,
-                           struct image *src_image,
-                           struct image *rule_image,
+                           struct hal_image *src_image,
+                           struct hal_image *rule_image,
                            int src_left, int src_top, int src_width, int src_height,
                            int alpha,
                            id<MTLRenderPipelineState> pipeline);
 static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
-                             struct image *src_image,
-                             struct image *rule_image,
+                             struct hal_image *src_image,
+                             struct hal_image *rule_image,
                              int src_left, int src_top, int src_width, int src_height,
                              int alpha,
                              id<MTLRenderPipelineState> pipeline);
@@ -268,7 +268,7 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     // Create textures for images that are loaded before the first rendering.
     for (int i = 0; i < theInitialUploadArrayCount; i++)
         if (theInitialUploadArray[i] != NULL)
-            notify_image_update(theInitialUploadArray[i]);
+            hal_notify_image_update(theInitialUploadArray[i]);
     theInitialUploadArrayCount = 0;
 
     // Make a barrier.
@@ -324,7 +324,8 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 //
 // Run a frame.
 //
-static BOOL runFrame(void)
+static BOOL
+runFrame(void)
 {
     if(!on_event_frame())
         return FALSE;
@@ -333,9 +334,11 @@ static BOOL runFrame(void)
 }
 
 //
-// テクスチャの更新を通知する
+// Notify a texture update.
 //
-void notify_image_update(struct image *img)
+void
+hal_notify_image_update(
+    struct hal_image *img)
 {
     if (theCommandBuffer == nil) {
         assert(theInitialUploadArrayCount < 128);
@@ -372,11 +375,15 @@ void notify_image_update(struct image *img)
 }
 
 //
-// テクスチャの破棄を通知する
+// Notify a text destruction.
 //
-void notify_image_free(struct image *img)
+void
+hal_notify_image_free(
+    struct hal_image *img)
 {
-    // Metal初期化前に作成され、Metal初期化前に削除されるイメージを、theInitialUploadArrayから削除する
+    // Delete textures from theInitialUploadArray that contains images
+    // created before Metal initialization and deleted before Metal
+    // initialization.
     for (int i = 0; i < theInitialUploadArrayCount; i++) {
         if (theInitialUploadArray[i] == img) {
             theInitialUploadArray[i] = NULL;
@@ -391,7 +398,18 @@ void notify_image_free(struct image *img)
 //
 // Render an image to the screen with the "normal" pipeline.
 //
-void render_image_normal(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_normal(
+    int dst_left,
+    int dst_top,
+    int dst_width,
+    int dst_height,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
     if (dst_width == -1)
         dst_width = src_image->width;
@@ -402,13 +420,35 @@ void render_image_normal(int dst_left, int dst_top, int dst_width, int dst_heigh
     if (src_height == -1)
         src_height = src_image->height;
 
-    drawPrimitives(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theNormalPipelineState);
+    drawPrimitives(dst_left,
+                   dst_top,
+                   dst_width,
+                   dst_height,
+                   src_image,
+                   NULL,
+                   src_left,
+                   src_top,
+                   src_width,
+                   src_height,
+                   alpha,
+                   theNormalPipelineState);
 }
 
 //
 // Render an image to the screen with the "add" pipeline.
 //
-void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_add(
+    int dst_left,
+    int dst_top,
+    int dst_width,
+    int dst_height,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
     if (dst_width == -1)
         dst_width = src_image->width;
@@ -419,13 +459,35 @@ void render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, 
     if (src_height == -1)
         src_height = src_image->height;
 
-    drawPrimitives(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theAddPipelineState);
+    drawPrimitives(dst_left,
+                   dst_top,
+                   dst_width,
+                   dst_height,
+                   src_image,
+                   NULL,
+                   src_left,
+                   src_top,
+                   src_width,
+                   src_height,
+                   alpha,
+                   theAddPipelineState);
 }
 
 //
 // Render an image to the screen with the "sub" pipeline.
 //
-void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_sub(
+    int dst_left,
+    int dst_top,
+    int dst_width,
+    int dst_height,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
     if (dst_width == -1)
         dst_width = src_image->width;
@@ -436,14 +498,36 @@ void render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, 
     if (src_height == -1)
         src_height = src_image->height;
 
-    drawPrimitives(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theSubPipelineState);
+    drawPrimitives(dst_left,
+                   dst_top,
+                   dst_width,
+                   dst_height,
+                   src_image,
+                   NULL,
+                   src_left,
+                   src_top,
+                   src_width,
+                   src_height,
+                   alpha,
+                   theSubPipelineState);
 }
 
 
 //
 // Render an image to the screen with the "dim" pipeline.
 //
-void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_dim(
+    int dst_left,
+    int dst_top,
+    int dst_width,
+    int dst_height,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
     if (dst_width == -1)
         dst_width = src_image->width;
@@ -454,34 +538,83 @@ void render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, 
     if (src_height == -1)
         src_height = src_image->height;
 
-    drawPrimitives(dst_left, dst_top, dst_width, dst_height, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theDimPipelineState);
+    drawPrimitives(dst_left,
+                   dst_top,
+                   dst_width,
+                   dst_height,
+                   src_image,
+                   NULL,
+                   src_left,
+                   src_top,
+                   src_width,
+                   src_height,
+                   alpha,
+                   theDimPipelineState);
 }
 
 //
 // Render an image to the screen with the "rule" pipeline.
 //
-void render_image_rule(struct image *src_img, struct image *rule_img, int threshold)
+void
+hal_render_image_rule(
+    struct hal_image *src_img,
+    struct hal_image *rule_img,
+    int threshold)
 {
-    drawPrimitives(0, 0, src_img->width, src_img->height, src_img, rule_img, 0, 0, src_img->width, src_img->height, threshold, theRulePipelineState);
+    drawPrimitives(0,
+                   0,
+                   src_img->width,
+                   src_img->height,
+                   src_img,
+                   rule_img,
+                   0,
+                   0,
+                   src_img->width,
+                   src_img->height,
+                   threshold,
+                   theRulePipelineState);
 }
 
 //
 // Render an image to the screen with the "melt" pipeline.
 //
-void render_image_melt(struct image *src_img, struct image *rule_img, int progress)
+void
+hal_render_image_melt(
+    struct hal_image *src_img,
+    struct hal_image *rule_img,
+    int progress)
 {
-    drawPrimitives(0, 0, src_img->width, src_img->height, src_img, rule_img, 0, 0, src_img->width, src_img->height, progress, theMeltPipelineState);
+    drawPrimitives(0,
+                   0,
+                   src_img->width,
+                   src_img->height,
+                   src_img,
+                   rule_img,
+                   0,
+                   0,
+                   src_img->width,
+                   src_img->height,
+                   progress,
+                   theMeltPipelineState);
 }
 
 //
 // Draw a rectangle with a specified pipeline.
 //
-static void drawPrimitives(int dst_left, int dst_top, int dst_width, int dst_height,
-                           struct image *src_image,
-                           struct image *rule_image,
-                           int src_left, int src_top, int src_width, int src_height,
-                           int alpha,
-                           id<MTLRenderPipelineState> pipeline)
+static void
+drawPrimitives(
+    int dst_left,
+    int dst_top,
+    int dst_width,
+    int dst_height,
+    struct hal_image *src_image,
+    struct hal_image *rule_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha,
+    id<MTLRenderPipelineState> pipeline)
 {
     // Calc the half size of the window.
     float hw = (float)screen_width / 2.0f;
@@ -562,47 +695,176 @@ static void drawPrimitives(int dst_left, int dst_top, int dst_width, int dst_hei
 //
 // Renders an image to the screen with the "normal" shader pipeline.
 //
-void render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_normal(
+    float x1,
+    float y1,
+    float x2,
+    float y2,
+    float x3,
+    float y3,
+    float x4,
+    float y4,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
-    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theNormalPipelineState);
+    drawPrimitives3D(x1,
+                     y1,
+                     x2,
+                     y2,
+                     x3,
+                     y3,
+                     x4,
+                     y4,
+                     src_image,
+                     NULL,
+                     src_left,
+                     src_top,
+                     src_width,
+                     src_height,
+                     alpha,
+                     theNormalPipelineState);
 }
 
 //
 // Renders an image to the screen with the "add" shader pipeline.
 //
-void render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_add(
+    float x1,
+    float y1,
+    float x2,
+    float y2,
+    float x3,
+    float y3,
+    float x4,
+    float y4,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
-    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theAddPipelineState);
+    drawPrimitives3D(x1,
+                     y1,
+                     x2,
+                     y2,
+                     x3,
+                     y3,
+                     x4,
+                     y4,
+                     src_image,
+                     NULL,
+                     src_left,
+                     src_top,
+                     src_width,
+                     src_height,
+                     alpha,
+                     theAddPipelineState);
 }
 
 //
 // Renders an image to the screen with the "sub" shader pipeline.
 //
-void render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_sub(
+    float x1,
+    float y1,
+    float x2,
+    float y2,
+    float x3,
+    float y3,
+    float x4,
+    float y4,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
-    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theSubPipelineState);
+    drawPrimitives3D(x1,
+                     y1,
+                     x2,
+                     y2,
+                     x3,
+                     y3,
+                     x4,
+                     y4,
+                     src_image,
+                     NULL,
+                     src_left,
+                     src_top,
+                     src_width,
+                     src_height,
+                     alpha,
+                     theSubPipelineState);
 }
 
 //
 // Renders an image to the screen with the "dim" shader pipeline.
 //
-void render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha)
+void
+hal_render_image_3d_dim(
+    float x1,
+    float y1,
+    float x2,
+    float y2,
+    float x3,
+    float y3,
+    float x4,
+    float y4,
+    struct hal_image *src_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha)
 {
-    drawPrimitives3D(x1, y1, x2, y2, x3, y3, x4, y4, src_image, NULL, src_left, src_top, src_width, src_height, alpha, theDimPipelineState);
+    drawPrimitives3D(x1,
+                     y1,
+                     x2,
+                     y2,
+                     x3,
+                     y3,
+                     x4,
+                     y4,
+                     src_image,
+                     NULL,
+                     src_left,
+                     src_top,
+                     src_width,
+                     src_height,
+                     alpha,
+                     theDimPipelineState);
 }
 
 //
 // Draw a rectangle with a specified pipeline.
 //
-static void drawPrimitives3D(float x1, float y1,
-                             float x2, float y2,
-                             float x3, float y3,
-                             float x4, float y4,
-                             struct image *src_image,
-                             struct image *rule_image,
-                             int src_left, int src_top, int src_width, int src_height,
-                             int alpha,
-                             id<MTLRenderPipelineState> pipeline)
+static void
+drawPrimitives3D(
+    float x1,
+    float y1,
+    float x2,
+    float y2,
+    float x3,
+    float y3,
+    float x4,
+    float y4,
+    struct hal_image *src_image,
+    struct hal_image *rule_image,
+    int src_left,
+    int src_top,
+    int src_width,
+    int src_height,
+    int alpha,
+    id<MTLRenderPipelineState> pipeline)
 {
     // Calc the half size of the window.
     float hw = (float)screen_width / 2.0f;
