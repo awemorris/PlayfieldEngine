@@ -37,7 +37,7 @@ extern "C" {
 // Windows
 #include <windows.h>
 
-#if defined(TARGET_GDK_XBOX)
+#if defined(HAL_TARGET_GDK_XBOX)
 #include <d3d12_x.h>
 #include <dxgi_x.h>
 #else
@@ -49,7 +49,7 @@ extern "C" {
 #include <directxmath.h>
 #include <wrl.h>
 
-#if !defined(TARGET_GDK_XBOX)
+#if !defined(HAL_TARGET_GDK_XBOX)
 #include <d3dcompiler.h>
 #endif
 

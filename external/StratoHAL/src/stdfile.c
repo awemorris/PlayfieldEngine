@@ -50,7 +50,7 @@
 #include <assert.h>
 
 /* Win32 */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 #include <fcntl.h>
 #endif
 
@@ -149,7 +149,7 @@ struct hal_wfile {
  * Forward declarations.
  */
 static bool open_package(struct hal_rfile *rf, const char *path);
-#if !defined(TARGET_IOS) && !defined(TARGET_WASM)
+#if !defined(HAL_TARGET_IOS) && !defined(HAL_TARGET_WASM)
 static bool open_real(struct hal_rfile *rf, const char *path);
 #endif
 static void ungetc_rfile(struct hal_rfile *rf, char c);
@@ -173,7 +173,7 @@ init_file(void)
 		return false;
 
 	/* Try opening a package file. */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 	_fmode = _O_BINARY;
 	fp = _wfopen(win32_utf8_to_utf16(package_path), L"rb");
 #else
@@ -181,7 +181,7 @@ init_file(void)
 #endif
 	if (fp == NULL) {
 		/* Failed to open. */
-#if defined(TARGET_IOS) || defined(TARGET_WASM)
+#if defined(HAL_TARGET_IOS) || defined(HAL_TARGET_WASM)
 		/* Fail: On iOS and Emscripten, we need a package file. */
 		return false;
 #else
@@ -264,7 +264,7 @@ hal_check_file_exist(
 		}
 	}
 
-#if defined(TARGET_IOS) || defined(TARGET_WASM)
+#if defined(HAL_TARGET_IOS) || defined(HAL_TARGET_WASM)
 	(void)fp;
 	return false;
 #else
@@ -275,7 +275,7 @@ hal_check_file_exist(
 		return false;
 
 	/* Open a FILE pointer. */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 	_fmode = _O_BINARY;
 	fp = _wfopen(win32_utf8_to_utf16(real_path), L"rb");
 #else
@@ -325,7 +325,7 @@ hal_open_rfile(
 		return true;
 	}
 
-#if defined(TARGET_IOS) || defined(TARGET_WASM)
+#if defined(HAL_TARGET_IOS) || defined(HAL_TARGET_WASM)
 	return false;
 #else
 	/* Open a real file. */
@@ -360,7 +360,7 @@ open_package(
 	}
 
 	/* Open a new FILE pointer to the package file. */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 	_fmode = _O_BINARY;
 	f->fp = _wfopen(win32_utf8_to_utf16(package_path), L"rb");
 #else
@@ -391,7 +391,7 @@ open_package(
 	return true;
 }
 
-#if !defined(TARGET_IOS) && !defined(TARGET_WASM)
+#if !defined(HAL_TARGET_IOS) && !defined(HAL_TARGET_WASM)
 /* Open a real file on a file system. */
 static bool
 open_real(
@@ -406,7 +406,7 @@ open_real(
 		return false;
 
 	/* Open a real file. */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 	_fmode = _O_BINARY;
 	f->fp = _wfopen(win32_utf8_to_utf16(real_path), L"rb");
 #else
@@ -796,7 +796,7 @@ hal_open_wfile(
 	}
 
 	/* Open a real file. */
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 	_fmode = _O_BINARY;
 	(*wf)->fp = _wfopen(win32_utf8_to_utf16(path), L"wb");
 #else

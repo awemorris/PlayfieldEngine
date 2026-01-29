@@ -31,7 +31,7 @@
 /* HAL */
 #include "stratohal/platform.h"		/* Public Interface */
 #include "stdfile.h"			/* Standard C File Implementation */
-#if defined(TARGET_LINUX)
+#if defined(HAL_TARGET_LINUX)
 #include "asound.h"			/* ALSA Sound Implemenatation */
 #else
 #include "bsdsound.h"			/* BSD Sound Implementation */

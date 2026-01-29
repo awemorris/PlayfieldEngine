@@ -115,7 +115,7 @@ extern void (APIENTRY *glDeleteShader)(GLuint shader);
 extern void (APIENTRY *glDeleteProgram)(GLuint program);
 extern void (APIENTRY *glDeleteVertexArrays)(GLsizei n, const GLuint *arrays);
 extern void (APIENTRY *glDeleteBuffers)(GLsizei n, const GLuint *buffers);
-#ifdef TARGET_WINDOWS
+#ifdef HAL_TARGET_WINDOWS
 /* Note: only Windows lacks glActiveTexture(), libOpenGL.so exports one that actually works. */
 extern void (APIENTRY *glActiveTexture)(GLenum texture);
 #endif

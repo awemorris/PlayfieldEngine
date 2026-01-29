@@ -123,7 +123,7 @@ create_audio_unit(void)
 
     /* Get an audio component. */
     cd.componentType = kAudioUnitType_Output;
-#ifdef TARGET_IOS
+#ifdef HAL_TARGET_IOS
     cd.componentSubType = kAudioUnitSubType_RemoteIO;
 #else
     cd.componentSubType = kAudioUnitSubType_DefaultOutput;
