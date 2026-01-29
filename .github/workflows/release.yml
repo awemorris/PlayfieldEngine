@@ -368,9 +368,9 @@ jobs:
       - name: Setup for Unity
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-Linux-X64.tar.xz
-          mkdir llvm-20 && tar -xJf llvm.tar.xz -C llvm-20 --strip-components=1
-          echo "`pwd`/llvm-20/bin" >> $GITHUB_PATH
+          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-Linux-X64.tar.xz
+          mkdir llvm-21 && tar -xJf llvm.tar.xz -C llvm-21 --strip-components=1
+          echo "`pwd`/llvm-21/bin" >> $GITHUB_PATH
           clang --version
 
       - name: Build for Unity
@@ -425,12 +425,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Cache LLVM
-        uses: actions/cache@v4
-        with:
-          path: llvm-20
-          key: llvm-20
 
       - name: Set up dependencies
         run: git submodule update --init
