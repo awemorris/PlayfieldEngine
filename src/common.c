@@ -50,12 +50,12 @@ bool load_file(const char *file, char **buf, size_t *size)
 	assert(buf != NULL);
 
 	if (!hal_open_rfile(file, &f)) {
-		hal_log_error(PPS_TR("Cannot open file \"%s\"."), file);
+		hal_log_error(PF_TR("Cannot open file \"%s\"."), file);
 		return false;
 	}
 
 	if (!hal_get_rfile_size(f, &file_size)) {
-		hal_log_error(PPS_TR("Cannot get the size of file \"%s\"."), file);
+		hal_log_error(PF_TR("Cannot get the size of file \"%s\"."), file);
 		return false;
 	}
 
@@ -67,7 +67,7 @@ bool load_file(const char *file, char **buf, size_t *size)
 		}
 
 		if (!hal_read_rfile(f, *buf, file_size, &read_size)) {
-			hal_log_error(PPS_TR("Cannot read file \"%s\"."), file);
+			hal_log_error(PF_TR("Cannot read file \"%s\"."), file);
 			free(*buf);
 			return false;
 		}

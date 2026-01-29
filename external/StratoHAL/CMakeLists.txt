@@ -439,25 +439,25 @@ if(STRATO_TARGET_UNITY)
   target_compile_definitions(strato PRIVATE HAL_USE_UNITY HAL_USE_CSHARP)
 
   if(STRATO_TARGET_UNITY_SWITCH)
-    target_compile_definitions(strato PRIVATE UNITY_SWITCH)
+    target_compile_definitions(strato PRIVATE HAL_UNITY_SWITCH)
   elseif(STRATO_TARGET_UNITY_PS5)
-    target_compile_definitions(strato PRIVATE UNITY_PS5)
+    target_compile_definitions(strato PRIVATE HAL_UNITY_PS5)
   elseif(STRATO_TARGET_UNITY_XBOX)
-    target_compile_definitions(strato PRIVATE UNITY_GAMECORE_XBOXSERIES)
+    target_compile_definitions(strato PRIVATE HAL_UNITY_GAMECORE_XBOXSERIES)
   endif()
 endif()
 
 # For GDK (Windows or Xbox).
 if(STRATO_TARGET_GDK_WINDOWS)
-  target_compile_definitions(strato PRIVATE TARGET_GDK_WINDOWS)
+  target_compile_definitions(strato PRIVATE HAL_TARGET_GDK_WINDOWS)
 endif()
 if(STRATO_TARGET_GDK_XBOX_XS)
-  target_compile_definitions(strato PRIVATE TARGET_GDK_XBOX_XS)
+  target_compile_definitions(strato PRIVATE HAL_TARGET_GDK_XBOX_XS)
 endif()
 
 # For UWP.
 if(STRATO_TARGET_UWP)
-  target_compile_definitions(strato PRIVATE TARGET_UWP)
+  target_compile_definitions(strato PRIVATE HAL_TARGET_UWP)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   file(ARCHIVE_EXTRACT

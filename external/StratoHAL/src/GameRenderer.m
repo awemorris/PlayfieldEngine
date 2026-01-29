@@ -327,7 +327,7 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 static BOOL
 runFrame(void)
 {
-    if(!on_event_frame())
+    if(!hal_callback_on_event_frame())
         return FALSE;
 
     return TRUE;

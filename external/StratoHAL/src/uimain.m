@@ -523,7 +523,10 @@ static void initGamepad(void)
 //
 
 // Show an INFO log.
-bool log_info(const char *s, ...)
+bool
+hal_log_info(
+        const char *s,
+        ...)
 {
     char buf[1024];
     va_list ap;
@@ -538,7 +541,10 @@ bool log_info(const char *s, ...)
 }
 
 // Show a WARN log.
-bool log_warn(const char *s, ...)
+bool
+hal_log_warn(
+        const char *s,
+        ...)
 {
     char buf[1024];
     va_list ap;
@@ -553,7 +559,10 @@ bool log_warn(const char *s, ...)
 }
 
 // Show an ERROR log.
-bool log_error(const char *s, ...)
+bool
+hal_log_error(
+        const char *s,
+        ...)
 {
     char buf[1024];
     va_list ap;
@@ -568,7 +577,8 @@ bool log_error(const char *s, ...)
 }
 
 // Show an out-of-memory error.
-bool log_out_of_memory(void)
+bool
+hal_log_out_of_memory(void)
 {
     log_error("Out of memory.");
 
@@ -576,7 +586,8 @@ bool log_out_of_memory(void)
 }
 
 // Make a save directory.
-bool make_save_directory(void)
+bool
+hal_make_save_directory(void)
 {
     @autoreleasepool {
         NSString *path = [NSString stringWithFormat:@"%@/%@/%s/sav",
@@ -597,7 +608,9 @@ bool make_save_directory(void)
 }
 
 // Get a real path for a file.
-char *make_real_path(const char *fname)
+char *
+hal_make_real_path(
+        const char *fname)
 {
     @autoreleasepool {
         // If a save file:
@@ -636,7 +649,9 @@ char *make_real_path(const char *fname)
 }
 
 // Reset a lap timer.
-void reset_lap_timer(uint64_t *origin)
+void
+hal_reset_lap_timer(
+        uint64_t *origin)
 {
     struct timeval tv;
 
@@ -645,7 +660,9 @@ void reset_lap_timer(uint64_t *origin)
 }
 
 // Get a timer lap
-uint64_t get_lap_timer_millisec(uint64_t *origin)
+uint64_t
+hal_get_lap_timer_millisec(
+        uint64_t *origin)
 {
     struct timeval tv;
     uint64_t now;
@@ -660,7 +677,10 @@ uint64_t get_lap_timer_millisec(uint64_t *origin)
 }
 
 // Play a video.
-bool play_video(const char *fname, bool is_skippable)
+bool
+hal_play_video(
+        const char *fname,
+        bool is_skippable)
 {
     // Make a path.
     char *cpath = make_real_path(fname);
@@ -676,44 +696,50 @@ bool play_video(const char *fname, bool is_skippable)
 }
 
 // Stop a video.
-void stop_video(void)
+void
+hal_stop_video(void)
 {
     [theViewController stopVideo];
 }
 
 // Check if video is playing back.
-//
-bool is_video_playing(void)
+bool
+hal_is_video_playing(void)
 {
     return [theViewController isVideoPlaying] ? true : false;
 }
 
 // Check if the full screen mode is supported.
-bool is_full_screen_supported(void)
+bool
+hal_is_full_screen_supported(void)
 {
     return true;
 }
 
 // Check if operating in the full screen mode.
-bool is_full_screen_mode(void)
+bool
+hal_is_full_screen_mode(void)
 {
     return [theViewController isFullScreen];
 }
 
 // Enter the full screen mode.
-void enter_full_screen_mode(void)
+void
+hal_enter_full_screen_mode(void)
 {
     [theViewController enterFullScreen];
 }
 
 // Leave the full screen mode.
-void leave_full_screen_mode(void)
+void
+hal_leave_full_screen_mode(void)
 {
     [theViewController leaveFullScreen];
 }
 
 // Get a system language.
-const char *get_system_language(void)
+const char *
+hal_get_system_language(void)
 {
     NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
     if ([language hasPrefix:@"ja"])
@@ -740,7 +766,9 @@ const char *get_system_language(void)
 }
 
 // Not used in macOS.
-void set_continuous_swipe_enabled(bool is_enabled)
+void
+hal_set_continuous_swipe_enabled(
+        bool is_enabled)
 {
     isContinuousSwipeEnabled = is_enabled;
 }

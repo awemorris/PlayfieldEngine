@@ -91,7 +91,7 @@ bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -132,7 +132,7 @@ static bool load_startup_file(void)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -209,7 +209,7 @@ static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -231,7 +231,7 @@ bool call_vm_function(const char *func_name)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -266,7 +266,7 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
-		hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+		hal_log_error(PF_TR("In tag %s:%d: runtime error."),
 			      get_tag_file_name(),
 			      get_tag_line());
 		return false;
@@ -276,13 +276,13 @@ bool call_vm_tag_function(bool *tag_end)
 	for (i = 0; i < t->prop_count; i++) {
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
-			hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+			hal_log_error(PF_TR("In tag %s:%d: runtime error."),
 				      get_tag_file_name(),
 				      get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
-			hal_log_error(PPS_TR("In tag %s:%d: runtime error."),
+			hal_log_error(PF_TR("In tag %s:%d: runtime error."),
 				      get_tag_file_name(),
 				      get_tag_line());
 			return false;
@@ -294,14 +294,14 @@ bool call_vm_tag_function(bool *tag_end)
 
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
-		hal_log_error(PPS_TR("%s:%d: Tag \"%s\" not found."),
+		hal_log_error(PF_TR("%s:%d: Tag \"%s\" not found."),
 			      get_tag_file_name(),
 			      get_tag_line(),
 			      t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
-		hal_log_error(PPS_TR("%s:%d: \"tag_%s\" is not a function."),
+		hal_log_error(PF_TR("%s:%d: \"tag_%s\" is not a function."),
 			      get_tag_file_name(),
 			      get_tag_line(),
 			      t->tag_name);
@@ -314,7 +314,7 @@ bool call_vm_tag_function(bool *tag_end)
 		int line;
 		const char *msg;
 
-		hal_log_error(PPS_TR("In tag %s:%d: Tag \"%s\" execution error."),
+		hal_log_error(PF_TR("In tag %s:%d: Tag \"%s\" execution error."),
 			      get_tag_file_name(),
 			      get_tag_line(),
 			      t->tag_name);
@@ -322,7 +322,7 @@ bool call_vm_tag_function(bool *tag_end)
 		noct_get_error_file(env, &file);
 		noct_get_error_line(env, &line);
 		noct_get_error_message(env, &msg);
-		hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+		hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 		return false;
 	}
 
@@ -502,7 +502,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+			hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	} else {
@@ -513,7 +513,7 @@ static bool import(NoctEnv *env)
 			noct_get_error_file(env, &file);
 			noct_get_error_line(env, &line);
 			noct_get_error_message(env, &msg);
-			hal_log_error(PPS_TR("Error: %s: %d: %s"), file, line, msg);
+			hal_log_error(PF_TR("Error: %s: %d: %s"), file, line, msg);
 			return false;
 		}
 	}
@@ -986,13 +986,13 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	const char *s;
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_error(env, PF_TR("Parameter is not set."));
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter %s is not set."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -1025,13 +1025,13 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	static char buf[128];
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_error(env, PF_TR("Parameter is not set."));
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter %s is not set."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -1057,7 +1057,7 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		noct_get_string(env, &elem, ret);
 		break;
 	default:
-		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PF_TR("Unexpected parameter value for %s."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -1071,13 +1071,13 @@ static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
 	NoctValue param;
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_error(env, PF_TR("Parameter is not set."));
 		noct_unpin_local(env, 1, &param);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, value)) {
-		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter %s is not set."), name);
 		noct_unpin_local(env, 1, &param);
 		return false;
 	}
@@ -1091,31 +1091,31 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 	NoctValue param, elem, ival;
 
 	if (!noct_get_arg(env, 0, &param)) {
-		noct_error(env, PPS_TR("Parameter is not set."));
+		noct_error(env, PF_TR("Parameter is not set."));
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PPS_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter %s is not set."), name);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (elem.type != NOCT_VALUE_DICT) {
-		noct_error(env, PPS_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PF_TR("Unexpected parameter value for %s."), name);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &elem, key, &ival)) {
-		noct_error(env, PPS_TR("Parameter %s doesn't have the key %s."), name, key);
+		noct_error(env, PF_TR("Parameter %s doesn't have the key %s."), name, key);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (ival.type != NOCT_VALUE_INT) {
-		noct_error(env, PPS_TR("Unexpected parameter value for %s.%s."), name, key);
+		noct_error(env, PF_TR("Unexpected parameter value for %s.%s."), name, key);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
@@ -1323,7 +1323,7 @@ static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, stru
 		}
 		return true;
 	case NOCT_VALUE_FUNC:
-		hal_log_error(PPS_TR("Cannot deserialize function."));
+		hal_log_error(PF_TR("Cannot deserialize function."));
 		return false;
 	default:
 		assert(0);
@@ -1415,7 +1415,7 @@ static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, st
 		}
 		return true;
 	default:
-		hal_log_error(PPS_TR("Invalid save data."));
+		hal_log_error(PF_TR("Invalid save data."));
 		return false;
 	}
 	return false;
@@ -1456,7 +1456,7 @@ static bool ser_put_string(struct ser_ctx *ctx, const char *val)
 
 	len = strlen(val);
 	if (len > SER_STRING_MAX) {
-		hal_log_error(PPS_TR("String too long."));
+		hal_log_error(PF_TR("String too long."));
 		return false;
 	}
 
@@ -1517,7 +1517,7 @@ static bool ser_get_string(struct ser_ctx *ctx, char **val)
 	ctx->pos += 4;
 
 	if (len >= SER_STRING_MAX) {
-		hal_log_error(PPS_TR("String too long."));
+		hal_log_error(PF_TR("String too long."));
 		return false;
 	}
 

@@ -124,7 +124,7 @@ pf_load_texture(
 	/* Get a file extension. */
 	ext = strrchr(fname, '.');
 	if (ext == NULL) {
-		hal_log_error(PPS_TR("Cannot determine the file type for \"%s\"."), fname);
+		hal_log_error(PF_TR("Cannot determine the file type for \"%s\"."), fname);
 		return false;
 	}
 
@@ -138,19 +138,19 @@ pf_load_texture(
 	    strcmp(ext, ".jpeg") == 0 ||
 	    strcmp(ext, ".JPEG") == 0) {
 		if (!hal_create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+			hal_log_error(PF_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else if (strcmp(ext, ".webp") == 0 ||
 		   strcmp(ext, ".WebP") == 0 ||
 		   strcmp(ext, ".WEBP") == 0) {
 		if (!hal_create_image_with_webp((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+			hal_log_error(PF_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	} else {
 		if (!hal_create_image_with_png((const uint8_t *)data, size, &tex_tbl[index].img)) {
-			hal_log_error(PPS_TR("Cannot load an image \"%s\"."), fname);
+			hal_log_error(PF_TR("Cannot load an image \"%s\"."), fname);
 			return false;
 		}
 	}
@@ -222,7 +222,7 @@ create_texture(
 	/* Allocate a texture entry. */
 	index = search_free_entry();
 	if (index == -1) {
-		hal_log_error(PPS_TR("Too many textures."));
+		hal_log_error(PF_TR("Too many textures."));
 		return false;
 	}
 
@@ -948,7 +948,7 @@ pf_load_font(
 
 	/* Check the font slot index. */
 	if (slot < 0 || slot >= HAL_GLYPH_DATA_COUNT) {
-		hal_log_error(PPS_TR("Invalid font slot index."));
+		hal_log_error(PF_TR("Invalid font slot index."));
 		return false;
 	}
 
@@ -1102,7 +1102,7 @@ pf_play_sound(
 	const char *file)
 {
 	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
-		hal_log_error(PPS_TR("Invalid sound stream index."));
+		hal_log_error(PF_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -1123,7 +1123,7 @@ pf_stop_sound(
 	int stream)
 {
 	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
-		hal_log_error(PPS_TR("Invalid sound stream index."));
+		hal_log_error(PF_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -1144,7 +1144,7 @@ pf_set_sound_volume(
 	float vol)
 {
 	if (stream < 0 || stream >= HAL_SOUND_TRACKS) {
-		hal_log_error(PPS_TR("Invalid sound stream index."));
+		hal_log_error(PF_TR("Invalid sound stream index."));
 		return false;
 	}
 
@@ -1210,20 +1210,20 @@ pf_write_save_data(
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		hal_log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PF_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Make the save directory. */
 	if (!hal_make_save_directory()) {
-		hal_log_error(PPS_TR("Cannot make the save directory."));
+		hal_log_error(PF_TR("Cannot make the save directory."));
 		free(fname);
 		return false;
 	}
 
 	/* Open a save file. */
 	if (!hal_open_wfile(fname, &wf)) {
-		hal_log_error(PPS_TR("Cannot open a save file."));
+		hal_log_error(PF_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
@@ -1231,7 +1231,7 @@ pf_write_save_data(
 
 	/* Write data to the save file. */
 	if (!hal_write_wfile(wf, data, size, &ret)) {
-		hal_log_error(PPS_TR("Cannot write to a save file."));
+		hal_log_error(PF_TR("Cannot write to a save file."));
 		return false;
 	}
 
@@ -1257,13 +1257,13 @@ pf_read_save_data(
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		hal_log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PF_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Open a save file. */
 	if (!hal_open_rfile(fname, &rf)) {
-		hal_log_error(PPS_TR("Cannot open a save file."));
+		hal_log_error(PF_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
@@ -1274,17 +1274,17 @@ pf_read_save_data(
 
 	/* Get a file size. */
 	if (!hal_get_rfile_size(rf, ret)) {
-		hal_log_error(PPS_TR("Cannot get the size of a save file."));
+		hal_log_error(PF_TR("Cannot get the size of a save file."));
 		return false;
 	}
 	if (size < *ret) {
-		hal_log_error(PPS_TR("Save file too large."));
+		hal_log_error(PF_TR("Save file too large."));
 		return false;
 	}
 
 	/* Read data to the save file. */
 	if (!hal_read_rfile(rf, data, *ret, ret)) {
-		hal_log_error(PPS_TR("Cannot read a save file."));
+		hal_log_error(PF_TR("Cannot read a save file."));
 		return false;
 	}
 
@@ -1307,7 +1307,7 @@ pf_check_save_data(
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		hal_log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PF_TR("Save data key too long."));
 		return false;
 	}
 
@@ -1331,13 +1331,13 @@ pf_get_save_data_size(
 	/* Make a save file name. */
 	fname = make_save_file_name(key);
 	if (fname == NULL) {
-		hal_log_error(PPS_TR("Save data key too long."));
+		hal_log_error(PF_TR("Save data key too long."));
 		return false;
 	}
 
 	/* Open a save file. */
 	if (!hal_open_rfile(fname, &rf)) {
-		hal_log_error(PPS_TR("Cannot open a save file."));
+		hal_log_error(PF_TR("Cannot open a save file."));
 		free(fname);
 		return false;
 	}
@@ -1345,7 +1345,7 @@ pf_get_save_data_size(
 
 	/* Get a file size. */
 	if (!hal_get_rfile_size(rf, ret)) {
-		hal_log_error(PPS_TR("Cannot get the size of a save file."));
+		hal_log_error(PF_TR("Cannot get the size of a save file."));
 		return false;
 	}
 
