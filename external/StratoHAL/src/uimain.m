@@ -580,7 +580,7 @@ hal_log_error(
 bool
 hal_log_out_of_memory(void)
 {
-    log_error("Out of memory.");
+    hal_log_error("Out of memory.");
 
     return true;
 }
@@ -636,7 +636,7 @@ hal_make_real_path(
         }
 
         // If the package:
-        if(strcmp(fname, PACKAGE_FILE) == 0) {
+        if(strcmp(fname, HAL_PACKAGE_FILE) == 0) {
             // Return a bundle resource path.
             NSString *path = [[NSBundle mainBundle] pathForResource:@"assets" ofType:@"pak"];
             const char *cstr = [path UTF8String];
@@ -670,7 +670,7 @@ hal_get_lap_timer_millisec(
     gettimeofday(&tv, NULL);
     now = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
     if (now < *origin) {
-        reset_lap_timer(origin);
+        hal_reset_lap_timer(origin);
         return 0;
     }
     return (uint64_t)(now - *origin);
@@ -683,7 +683,7 @@ hal_play_video(
         bool is_skippable)
 {
     // Make a path.
-    char *cpath = make_real_path(fname);
+    char *cpath = hal_make_real_path(fname);
     assert(cpath != NULL);
     NSString *path = [[NSString alloc] initWithUTF8String:cpath];
     free(cpath);

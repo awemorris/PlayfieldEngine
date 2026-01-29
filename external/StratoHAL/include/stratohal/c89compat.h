@@ -188,12 +188,12 @@ extern "C" {
  */
 
 /* Windows */
-#if defined(_WIN32) && !defined(HAL_USE_UNITY)
+#if defined(_WIN32) && !defined(HAL_TARGET_UNITY)
 #define HAL_TARGET_WINDOWS
 #endif
 
 /* macOS / iOS */
-#if !defined(HAL_USE_UNITY)
+#if !defined(HAL_TARGET_UNITY)
 #if defined(__GNUC__)
 #if defined(__APPLE__) && __has_include(<TargetConditionals.h>)
 #include <TargetConditionals.h>
@@ -207,7 +207,7 @@ extern "C" {
 #endif
 
 /* Linux (non-Android) */
-#if defined(__linux) && !defined(__ANDROID__) && !defined(HAL_USE_UNITY)
+#if defined(__linux) && !defined(__ANDROID__) && !defined(HAL_TARGET_UNITY)
 #define HAL_TARGET_LINUX
 #ifndef HAL_TARGET_POSIX
 #define HAL_TARGET_POSIX
@@ -215,7 +215,7 @@ extern "C" {
 #endif
 
 /* FreeBSD */
-#if defined(__FreeBSD__) && !defined(HAL_USE_UNITY)
+#if defined(__FreeBSD__) && !defined(HAL_TARGET_UNITY)
 #define HAL_TARGET_FREEBSD
 #ifndef HAL_TARGET_POSIX
 #define HAL_TARGET_POSIX
@@ -223,8 +223,7 @@ extern "C" {
 #endif
 
 /* Unity */
-#if defined(HAL_USE_UNITY)
-#define HAL_TARGET_UNITY
+#if defined(HAL_TARGET_UNITY)
 #endif
 
 /* NetBSD */
@@ -279,7 +278,7 @@ extern "C" {
     !defined(HAL_TARGET_ANDROID) &&              \
     !defined(HAL_TARGET_WASM) &&                 \
     !defined(HAL_TARGET_BEOS) &&                 \
-    !defined(HAL_USE_UNITY)
+    !defined(HAL_TARGTE_UNITY)
 #error "No target detected."
 #endif
 

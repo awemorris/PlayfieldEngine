@@ -188,12 +188,12 @@ extern "C" {
  */
 
 /* Windows */
-#if defined(_WIN32) && !defined(PF_USE_UNITY)
+#if defined(_WIN32) && !defined(PF_TARGET_UNITY)
 #define PF_TARGET_WINDOWS
 #endif
 
 /* macOS / iOS */
-#if !defined(PF_USE_UNITY)
+#if !defined(PF_TARGET_UNITY)
 #if defined(__GNUC__)
 #if defined(__APPLE__) && __has_include(<TargetConditionals.h>)
 #include <TargetConditionals.h>
@@ -207,7 +207,7 @@ extern "C" {
 #endif
 
 /* Linux (non-Android) */
-#if defined(__linux) && !defined(__ANDROID__) && !defined(PF_USE_UNITY)
+#if defined(__linux) && !defined(__ANDROID__) && !defined(PF_TARGET_UNITY)
 #define PF_TARGET_LINUX
 #ifndef PF_TARGET_POSIX
 #define PF_TARGET_POSIX
@@ -215,7 +215,7 @@ extern "C" {
 #endif
 
 /* FreeBSD */
-#if defined(__FreeBSD__) && !defined(PF_USE_UNITY)
+#if defined(__FreeBSD__) && !defined(PF_TARGET_UNITY)
 #define PF_TARGET_FREEBSD
 #ifndef PF_TARGET_POSIX
 #define PF_TARGET_POSIX
@@ -223,7 +223,7 @@ extern "C" {
 #endif
 
 /* Unity */
-#if defined(PF_USE_UNITY)
+#if defined(PF_TARGET_UNITY)
 #define PF_TARGET_UNITY
 #endif
 
@@ -279,7 +279,7 @@ extern "C" {
     !defined(PF_TARGET_ANDROID) &&              \
     !defined(PF_TARGET_WASM) &&                 \
     !defined(PF_TARGET_BEOS) &&                 \
-    !defined(PF_USE_UNITY)
+    !defined(PF_TARGET_UNITY)
 #error "No target detected."
 #endif
 
