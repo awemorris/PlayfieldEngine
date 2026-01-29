@@ -249,7 +249,7 @@ endif()
 
 # Library mode
 if(PLAYFIELD_ENABLE_INITHOOK)
-  target_compile_definitions(playfield PRIVATE USE_INITHOOK)
+  target_compile_definitions(playfield PRIVATE HAL_USE_INITHOOK)
 endif()
 
 #
@@ -399,22 +399,22 @@ target_include_directories(playfield PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # -DUSE_JIT
 if(PLAYFIELD_ENABLE_JIT)
-  target_compile_definitions(playfield PRIVATE USE_JIT)
+  target_compile_definitions(playfield PRIVATE PF_USE_JIT)
 endif()
 
 # -DUSE_TRANSLATION
 if(PLAYFIELD_ENABLE_I18N)
-  target_compile_definitions(playfield PRIVATE USE_TRANSLATION)
+  target_compile_definitions(playfield PRIVATE PF_USE_TRANSLATION)
 endif()
 
 # -DUSE_SHARED
 if(PLAYFIELD_ENABLE_SHARED)
-  target_compile_definitions(playfield PRIVATE USE_SHARED)
+  target_compile_definitions(playfield PRIVATE PF_USE_SHARED)
 endif()
 
 # -DUSE_UNITY
 if(PLAYFIELD_TARGET_UNITY)
-  target_compile_definitions(playfield PRIVATE USE_UNITY)
+  target_compile_definitions(playfield PRIVATE HAL_USE_UNITY)
 endif()
 
 # Windows quirks

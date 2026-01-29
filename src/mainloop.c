@@ -368,7 +368,7 @@ hal_callback_on_event_start(void)
 	hal_reset_lap_timer(&lap_origin);
 
 	/* Initialize the upper layer. */
-#ifdef USE_INITHOOK
+#ifdef PF_USE_INITHOOK
 	bool playfield_init_hook(void);
 	playfield_init_hook();
 #endif

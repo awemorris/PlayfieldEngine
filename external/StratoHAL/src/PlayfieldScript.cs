@@ -734,7 +734,7 @@ public class PlayfieldScript : MonoBehaviour
     // Native Code
     //
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -781,7 +781,7 @@ public class PlayfieldScript : MonoBehaviour
         IntPtr write_save_file,
         IntPtr close_save_file);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -789,7 +789,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_boot))]
     static extern unsafe int on_event_boot(byte *dummy1, byte *dummy2, byte *dummy3);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -797,7 +797,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_start))]
     static extern unsafe int on_event_start();
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -805,7 +805,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_frame))]
     static extern unsafe int on_event_frame();
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -813,7 +813,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_press))]
     static extern unsafe void on_event_key_press(int key);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -821,7 +821,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_release))]
     static extern unsafe void on_event_key_release(int key);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -829,7 +829,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_press))]
     static extern unsafe void on_event_mouse_press(int button, int x, int y);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -837,7 +837,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_release))]
     static extern unsafe void on_event_mouse_release(int button, int x, int y);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -845,7 +845,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_move))]
     static extern unsafe void on_event_mouse_move(int x, int y);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -853,7 +853,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_touch_cancel))]
     static extern unsafe void on_event_touch_cancel();
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -861,7 +861,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_down))]
     static extern unsafe void on_event_swipe_down();
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -869,7 +869,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_up))]
     static extern unsafe void on_event_swipe_up();
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
@@ -877,7 +877,7 @@ public class PlayfieldScript : MonoBehaviour
     [AOT.MonoPInvokeCallback(typeof(delegate_get_wave_samples))]
     public static extern unsafe int get_wave_samples(byte *w, uint *buf, int samples);
 
-#if UNITY_SWITCH || UNITY_PS5 || UNITY_GAMECORE_XBOXSERIES
+#if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
     [DllImport("libplayfield")]
