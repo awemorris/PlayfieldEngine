@@ -1129,8 +1129,10 @@ pf_stop_sound(
 
 	hal_stop_sound(stream);
 
-	hal_destroy_wave(wave_tbl[stream]);
-	wave_tbl[stream] = NULL;
+	if (wave_tbl[stream] != NULL) {
+		hal_destroy_wave(wave_tbl[stream]);
+		wave_tbl[stream] = NULL;
+	}
 
 	return true;
 }
