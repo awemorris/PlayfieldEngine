@@ -249,7 +249,7 @@ endif()
 
 # Library mode
 if(PLAYFIELD_ENABLE_INITHOOK)
-  target_compile_definitions(playfield PRIVATE HAL_USE_INITHOOK)
+  target_compile_definitions(playfield PRIVATE PF_USE_INITHOOK)
 endif()
 
 #
