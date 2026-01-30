@@ -785,6 +785,22 @@ noct_set_return(
 
 NOCT_DLL
 bool
+noct_check_global(
+	NoctEnv *env,
+	const char *name)
+{
+	assert(env != NULL);
+	assert(name != NULL);
+	assert(val != NULL);
+
+	if (!rt_check_global(env, name))
+		return false;
+
+	return true;
+}
+
+NOCT_DLL
+bool
 noct_get_global(
 	NoctEnv *env,
 	const char *name,
