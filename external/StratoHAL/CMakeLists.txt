@@ -418,6 +418,7 @@ if(STRATO_TARGET_WINDOWS)
   enable_language(RC)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
   file(ARCHIVE_EXTRACT
     INPUT       ${CMAKE_CURRENT_SOURCE_DIR}/lib/archive/dx12headers.tar.gz
     DESTINATION ${CMAKE_BINARY_DIR}
