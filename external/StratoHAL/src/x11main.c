@@ -61,6 +61,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <time.h>
 #include <assert.h>
 
 /* Gstreamer Video HAL */
@@ -1296,11 +1297,15 @@ void
 hal_reset_lap_timer(
 	uint64_t *t)
 {
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	*t = (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+
+#if 0
 	struct timeval tv;
-
 	gettimeofday(&tv, NULL);
-
 	*t = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+#endif
 }
 
 /*
@@ -1310,14 +1315,19 @@ uint64_t
 hal_get_lap_timer_millisec(
 	uint64_t *t)
 {
+	struct timespec ts;
+	uint64_t end;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	end = (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
+	return (end - *t);
+
+#if 0
 	struct timeval tv;
 	uint64_t end;
-	
 	gettimeofday(&tv, NULL);
-
 	end = (uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
-
 	return (uint64_t)(end - *t);
+#endif
 }
 
 /*
