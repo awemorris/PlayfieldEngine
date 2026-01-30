@@ -1726,7 +1726,7 @@ rt_gc_compact_gc(
 	for (i = 0; i < env->vm->global_alloc_size; i++) {
 		if (env->vm->global[i].name == NULL || env->vm->global[i].is_removed)
 			continue;
-		if (IS_REF_VAL(&global->val))
+		if (IS_REF_VAL(&env->vm->global[i].val))
 			rt_gc_update_tenure_ref_recursively(env, &global->val.val.obj);
 	}
 
