@@ -791,7 +791,6 @@ noct_check_global(
 {
 	assert(env != NULL);
 	assert(name != NULL);
-	assert(val != NULL);
 
 	if (!rt_check_global(env, name))
 		return false;

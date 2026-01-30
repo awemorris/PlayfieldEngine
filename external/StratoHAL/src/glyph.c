@@ -148,7 +148,7 @@ hal_load_glyph_data(
 {
 	FT_Error err;
 
-	assert(index >= 0 && index < GLYPH_DATA_COUNT);
+	assert(index >= 0 && index < HAL_GLYPH_DATA_COUNT);
 
 	/* Initialize FreeType2 if required. */
 	if (library == NULL) {
