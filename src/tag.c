@@ -294,6 +294,7 @@ parse_tag_document(
 					return false;
 				}
 				state = ST_INIT;
+				prop_count = 0;
 				continue;
 			}
 			if (len >= TAG_NAME_MAX) {
@@ -318,6 +319,7 @@ parse_tag_document(
 					return false;
 				}
 				state = ST_INIT;
+				prop_count = 0;
 				continue;
 			}
 			if (len == 0 && c == '\n')
