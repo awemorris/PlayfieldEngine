@@ -247,11 +247,6 @@ if(PLAYFIELD_ENABLE_ROT90)
   set(STRATO_ENABLE_ROT90 ON)
 endif()
 
-# Library mode
-if(PLAYFIELD_ENABLE_INITHOOK)
-  target_compile_definitions(playfield PRIVATE PF_USE_INITHOOK)
-endif()
-
 #
 # Release/Debug
 #
@@ -415,6 +410,11 @@ endif()
 # -DUSE_UNITY
 if(PLAYFIELD_TARGET_UNITY)
   target_compile_definitions(playfield PRIVATE PF_TARGET_UNITY)
+endif()
+
+# Library mode
+if(PLAYFIELD_ENABLE_INITHOOK)
+  target_compile_definitions(playfield PRIVATE PF_USE_INITHOOK)
 endif()
 
 # Windows quirks
