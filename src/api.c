@@ -2150,6 +2150,52 @@ pf_get_tag_property_value(
  */
 
 /*
+ * Return whether we support the full screen mode.
+ */
+bool
+pf_is_full_screen_supported(void)
+{
+	return hal_is_full_screen_supported();
+}
+
+/*
+ * Return whether the we are in the full screen mode.
+ */
+bool
+pf_is_full_screen_mode(void)
+{
+	return hal_is_full_screen_mode();
+}
+
+/*
+ * Enter the full screen mode.
+ */
+void
+pf_enter_full_screen_mode(void)
+{
+	hal_enter_full_screen_mode();
+}
+
+/*
+ * Leave the full screen mode.
+ */
+void
+pf_leave_full_screen_mode(void)
+{
+	hal_leave_full_screen_mode();
+}
+
+/*
+ * Enable/disable message skip by touch move.
+ */
+void
+pf_set_continuous_swipe_enabled(
+	bool is_enabled)
+{
+	hal_set_continuous_swipe_enabled(is_enabled);
+}
+
+/*
  * Get the system locale.
  */
 const char *

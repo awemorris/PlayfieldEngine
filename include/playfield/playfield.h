@@ -869,6 +869,37 @@ pf_get_tag_property_value(
  */
 
 /*
+ * Return whether we support the full screen mode.
+ */
+bool
+pf_is_full_screen_supported(void);
+
+/*
+ * Return whether the we are in the full screen mode.
+ */
+bool
+pf_is_full_screen_mode(void);
+
+/*
+ * Enter the full screen mode.
+ */
+void
+pf_enter_full_screen_mode(void);
+
+/*
+ * Leave the full screen mode.
+ */
+void
+pf_leave_full_screen_mode(void);
+
+/*
+ * Enable/disable message skip by touch move.
+ */
+void
+pf_set_continuous_swipe_enabled(
+	bool is_enabled);
+
+/*
  * Get the system language.
  */
 const char *
