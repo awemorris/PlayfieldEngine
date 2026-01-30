@@ -821,6 +821,12 @@ bool
 pf_move_to_next_tag(void);
 
 /*
+ * Move to a tag by index.
+ */
+bool
+pf_move_to_tag_index(int index);
+
+/*
  * Get the current tag file name.
  */
 const char *

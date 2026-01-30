@@ -42,7 +42,11 @@
 /*
  * Load a file content.
  */
-bool load_file(const char *file, char **buf, size_t *size)
+bool
+pfi_load_file(
+	const char *file,
+	char **buf,
+	size_t *size)
 {
 	struct hal_rfile *f;
 	size_t file_size, read_size;

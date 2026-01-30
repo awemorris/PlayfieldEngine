@@ -44,7 +44,7 @@
 /*
  * Command struct.
  */
-struct tag {
+struct pfi_tag {
 	char *tag_name;
 	int prop_count;
 	char *prop_name[PROP_MAX];
@@ -53,27 +53,45 @@ struct tag {
 };
 
 /* Initialize the tag system. */
-void init_tag(void);
+void
+pfi_init_tag(void);
 
 /* Cleanup the tag system. */
-void cleanup_tag(void);
+void
+pfi_cleanup_tag(void);
 
-/* Load a tag file. */
-bool load_tag_file(const char *file);
+/*
+ * Load a tag file.
+ */
+bool
+pfi_load_tag_file(
+	const char *file);
 
-/* Get the tag file name. */
-const char *get_tag_file_name(void);
+/*
+ * Get the tag file name.
+ */
+const char *
+pfi_get_tag_file_name(void);
 
 /* Get the command index of the current tag. */
-int get_tag_index(void);
+int
+pfi_get_tag_index(void);
 
 /* Get the tag line. */
-int get_tag_line(void);
+int
+pfi_get_tag_line(void);
 
 /* Get the current tag. */
-struct tag *get_current_tag(void);
+struct pfi_tag *
+pfi_get_current_tag(void);
 
 /* Move to the next tag. */
-bool move_to_next_tag(void);
+bool
+pfi_move_to_next_tag(void);
+
+/* Move to a tag by index. */
+bool
+pfi_move_to_tag_index(
+	int index);
 
 #endif

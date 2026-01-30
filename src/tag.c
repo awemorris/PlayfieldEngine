@@ -54,7 +54,7 @@ static char cur_file[1024];
 static int cur_index;
 
 /* Tag table. */
-static struct tag tag[COMMAND_MAX];
+static struct pfi_tag tag[COMMAND_MAX];
 
 /* Tag size. */
 static int tag_size;
@@ -66,17 +66,19 @@ static bool parse_tag_callback(const char *name, int props, const char **prop_na
 /*
  * Initialize the tag system.
  */
-void init_tag(void)
+void
+pfi_init_tag(void)
 {
-	cleanup_tag();
+	pfi_cleanup_tag();
 }
 
 /*
  * Cleanup the tag system.
  */
-void cleanup_tag(void)
+void
+pfi_cleanup_tag(void)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 	int i, j;
 
 	cur_index = 0;
@@ -102,18 +104,20 @@ void cleanup_tag(void)
 /*
  * Load a tag file.
  */
-bool load_tag_file(const char *file)
+bool
+pfi_load_tag_file(
+	const char *file)
 {
 	char *buf;
 	char *error_message;
 	int error_line;
 
 	/* Get the file content. */
-	if (!load_file(file, &buf, NULL))
+	if (!pfi_load_file(file, &buf, NULL))
 		return false;
 
 	/* Destroy the existing commands. */
-	cleanup_tag();
+	pfi_cleanup_tag();
 
 	/* Save the file name. */
 	strncpy(cur_file, file, sizeof(cur_file) - 1);
@@ -134,7 +138,8 @@ bool load_tag_file(const char *file)
 /*
  * Get the file name of the current tag.
  */
-const char *get_tag_file_name(void)
+const char *
+pfi_get_tag_file_name(void)
 {
 	return &cur_file[0];
 }
@@ -142,7 +147,8 @@ const char *get_tag_file_name(void)
 /*
  * Get the command index of the current tag.
  */
-int get_tag_index(void)
+int
+pfi_get_tag_index(void)
 {
 	/* If the current tag index is invalid. */
 	if (cur_index >= tag_size)
@@ -154,7 +160,8 @@ int get_tag_index(void)
 /*
  * Get the line number of the current tag.
  */
-int get_tag_line(void)
+int
+pfi_get_tag_line(void)
 {
 	/* If the current tag index is invalid. */
 	if (cur_index >= tag_size)
@@ -166,7 +173,8 @@ int get_tag_line(void)
 /*
  * Get the current tag.
  */
-struct tag *get_current_tag(void)
+struct pfi_tag *
+pfi_get_current_tag(void)
 {
 	/* If the current command index is invalid. */
 	if (cur_index >= tag_size)
@@ -178,12 +186,28 @@ struct tag *get_current_tag(void)
 /*
  * Move to the next tag.
  */
-bool move_to_next_tag(void)
+bool
+pfi_move_to_next_tag(void)
 {
 	if (cur_index + 1 >= tag_size)
 		return false;
 
 	cur_index++;
+
+	return true;
+}
+
+/*
+ * Move to a tag by index.
+ */
+bool
+pfi_move_to_tag_index(
+	int index)
+{
+	if (index >= tag_size)
+		return false;
+
+	cur_index = index;
 
 	return true;
 }
@@ -389,9 +413,15 @@ parse_tag_document(
 }
 
 /* Callback for when a tag is read. */
-static bool parse_tag_callback(const char *name, int props, const char **prop_name, const char **prop_value, int line)
+static bool
+parse_tag_callback(
+	const char *name,
+	int props,
+	const char **prop_name,
+	const char **prop_value,
+	int line)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 	int i;
 
 	/* If command table is full. */

@@ -73,7 +73,12 @@ static bool install_api(NoctEnv *env);
 /*
  * Create a VM, then call setup().
  */
-bool create_vm(char **title, int *width, int *height, bool *fullscreen)
+bool
+pfi_create_vm(
+	char **title,
+	int *width,
+	int *height,
+	bool *fullscreen)
 {
 	/* Create a language runtime. */
 	if (!noct_create_vm(&vm, &env))
@@ -109,19 +114,21 @@ bool create_vm(char **title, int *width, int *height, bool *fullscreen)
 /*
  * Destroy the VM.
  */
-void destroy_vm(void)
+void
+pfi_destroy_vm(void)
 {
 	/* Destroy the VM. */
 	noct_destroy_vm(vm);
 }
 
 /* Load the startup file. */
-static bool load_startup_file(void)
+static bool
+load_startup_file(void)
 {
 	char *buf;
 
 	/* Load a file content, i.e., a script text. */
-	if (!load_file(STARTUP_FILE, &buf, NULL))
+	if (!pfi_load_file(STARTUP_FILE, &buf, NULL))
 		return false;
 
 	/* Register the script text to the language runtime. */
@@ -142,7 +149,12 @@ static bool load_startup_file(void)
 }
 
 /* Call "setup()" function to determin a title, width, and height. */
-static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
+static bool
+call_setup(
+	char **title,
+	int *width,
+	int *height,
+	bool *fullscreen)
 {
 	NoctValue ret;
 	NoctValue title_val;
@@ -219,7 +231,9 @@ static bool call_setup(char **title, int *width, int *height, bool *fullscreen)
 /*
  * Call a VM function.
  */
-bool call_vm_function(const char *func_name)
+bool
+pfi_call_vm_function(
+	const char *func_name)
 {
 	NoctValue ret;
 
@@ -236,7 +250,7 @@ bool call_vm_function(const char *func_name)
 	}
 
 	/* Do a fast GC. */
-	fast_gc();
+	pfi_fast_gc();
 
 	return true;
 }
@@ -244,9 +258,11 @@ bool call_vm_function(const char *func_name)
 /*
  * Call a tag function.
  */
-bool call_vm_tag_function(bool *tag_end)
+bool
+pfi_call_vm_tag_function(
+	bool *tag_end)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 	NoctValue dict;
 	int i;
 	char func_name[256];
@@ -257,7 +273,7 @@ bool call_vm_tag_function(bool *tag_end)
 	*tag_end = false;
 
 	/* Get a current command. */
-	t = get_current_tag();
+	t = pfi_get_current_tag();
 	if (t == NULL) {
 		/* Reached to the end. Finish the game loop. */
 		*tag_end = true;
@@ -267,8 +283,8 @@ bool call_vm_tag_function(bool *tag_end)
 	/* Make a parameter dictionary. */
 	if (!noct_make_empty_dict(env, &dict)) {
 		hal_log_error(PF_TR("In tag %s:%d: runtime error."),
-			      get_tag_file_name(),
-			      get_tag_line());
+			      pfi_get_tag_file_name(),
+			      pfi_get_tag_line());
 		return false;
 	}
 
@@ -277,14 +293,14 @@ bool call_vm_tag_function(bool *tag_end)
 		NoctValue str;
 		if (!noct_make_string(env, &str, t->prop_value[i])) {
 			hal_log_error(PF_TR("In tag %s:%d: runtime error."),
-				      get_tag_file_name(),
-				      get_tag_line());
+				      pfi_get_tag_file_name(),
+				      pfi_get_tag_line());
 			return false;
 		}
 		if (!noct_set_dict_elem(env, &dict, t->prop_name[i], &str)) {
 			hal_log_error(PF_TR("In tag %s:%d: runtime error."),
-				      get_tag_file_name(),
-				      get_tag_line());
+				      pfi_get_tag_file_name(),
+				      pfi_get_tag_line());
 			return false;
 		}
 	}
@@ -295,15 +311,15 @@ bool call_vm_tag_function(bool *tag_end)
 	/* Get a corresponding function.  */
 	if (!noct_get_global(env, func_name, &func_val)) {
 		hal_log_error(PF_TR("%s:%d: Tag \"%s\" not found."),
-			      get_tag_file_name(),
-			      get_tag_line(),
+			      pfi_get_tag_file_name(),
+			      pfi_get_tag_line(),
 			      t->tag_name);
 		return false;
 	}
 	if (!noct_get_func(env, &func_val, &func)) {
 		hal_log_error(PF_TR("%s:%d: \"tag_%s\" is not a function."),
-			      get_tag_file_name(),
-			      get_tag_line(),
+			      pfi_get_tag_file_name(),
+			      pfi_get_tag_line(),
 			      t->tag_name);
 		return false;
 	}
@@ -315,8 +331,8 @@ bool call_vm_tag_function(bool *tag_end)
 		const char *msg;
 
 		hal_log_error(PF_TR("In tag %s:%d: Tag \"%s\" execution error."),
-			      get_tag_file_name(),
-			      get_tag_line(),
+			      pfi_get_tag_file_name(),
+			      pfi_get_tag_line(),
 			      t->tag_name);
 
 		noct_get_error_file(env, &file);
@@ -330,9 +346,12 @@ bool call_vm_tag_function(bool *tag_end)
 }
 
 /*
- * Set a VM integer.
+ * Set an integer properties in the VM. (Engine.*)
  */
-bool set_vm_int(const char *prop_name, int val)
+bool
+pfi_set_vm_int(
+	const char *prop_name,
+	int val)
 {
 	NoctValue api, prop_val;
 
@@ -345,9 +364,12 @@ bool set_vm_int(const char *prop_name, int val)
 }
 
 /*
- * Get a VM integer.
+ * Get an integer properties from the VM. (Engine.*)
  */
-bool get_vm_int(const char *prop_name, int *val)
+bool
+pfi_get_vm_int(
+	const char *prop_name,
+	int *val)
 {
 	NoctValue dict, dict_val;
 
@@ -360,19 +382,43 @@ bool get_vm_int(const char *prop_name, int *val)
 }
 
 /*
- * Do a fast GC.
+ * Perform a fast garbage collection in the VM.
  */
-void fast_gc(void)
+void
+pfi_fast_gc(void)
 {
 	noct_fast_gc(env);
 }
 
 /*
- * Do a full GC.
+ * Perform a full garbage collection in the VM.
  */
-void full_gc(void)
+void
+pfi_full_gc(void)
 {
 	noct_compact_gc(env);
+}
+
+/*
+ * Get the heap usage of the VM.
+ */
+size_t
+pfi_get_heap_usage(void)
+{
+	size_t usage;
+
+	noct_get_heap_usage(env, &usage);
+
+	return usage;
+}
+
+/*
+ * Get the VM environment pointer.
+ */
+void *
+pfi_get_vm_env(void)
+{
+	return env;
 }
 
 /*
@@ -490,7 +536,7 @@ static bool import(NoctEnv *env)
 		return false;
 
 	/* Load the source file content. */
-	if (!load_file(file_s, &data, &len))
+	if (!pfi_load_file(file_s, &data, &len))
 		return false;
 
 	/* Check for the bytecode header. */
@@ -555,7 +601,7 @@ static bool Engine_callTagFunction(NoctEnv *env)
 
 	UNUSED_PARAMETER(env);
 
-	if (!call_vm_tag_function(&tag_end))
+	if (!pfi_call_vm_tag_function(&tag_end))
 		return false;
 
 	if (!noct_set_return_make_int(env, &ret, tag_end ? 0 : 1))
@@ -1132,7 +1178,9 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 /*
  * Install Engine functions to a runtime.
  */
-bool install_api(NoctEnv *env)
+static bool
+install_api(
+	NoctEnv *env)
 {
 	const char *params[] = {"param"};
 	struct func {
@@ -1229,7 +1277,13 @@ static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val);
 static bool ser_get_string(struct ser_ctx *ctx, char **val);
 
 /* Serialize a value to a data buffer. */
-static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size, size_t *ret)
+static bool
+serialize_save_data(
+	NoctEnv *env,
+	NoctValue *value,
+	void *data,
+	size_t buf_size,
+	size_t *ret)
 {
 	struct ser_ctx ctx;
 
@@ -1248,7 +1302,11 @@ static bool serialize_save_data(NoctEnv *env, NoctValue *value, void *data, size
 }
 
 /* Serialize a value recursively. */
-static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx)
+static bool
+serialize_save_data_recursively(
+	NoctEnv *env,
+	NoctValue *value,
+	struct ser_ctx *ctx)
 {
 	int type;
 	int ival;
@@ -1333,7 +1391,12 @@ static bool serialize_save_data_recursively(NoctEnv *env, NoctValue *value, stru
 }
 
 /* Deserialize a value from a data buffer. */
-static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, size_t buf_size)
+static bool
+deserialize_save_data(
+	NoctEnv *env,
+	NoctValue *value,
+	void *data,
+	size_t buf_size)
 {
 	struct ser_ctx ctx;
 
@@ -1350,7 +1413,11 @@ static bool deserialize_save_data(NoctEnv *env, NoctValue *value, void *data, si
 }
 
 /* Deserialize a value recursively. */
-static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, struct ser_ctx *ctx)
+static bool
+deserialize_save_data_recursively(
+	NoctEnv *env,
+	NoctValue *value,
+	struct ser_ctx *ctx)
 {
 	uint8_t type;
 	uint32_t ival;
@@ -1422,7 +1489,10 @@ static bool deserialize_save_data_recursively(NoctEnv *env, NoctValue *value, st
 }
 
 /* Put a u8 to the data buffer. */
-static bool ser_put_u8(struct ser_ctx *ctx, uint8_t val)
+static bool
+ser_put_u8(
+	struct ser_ctx *ctx,
+	uint8_t val)
 {
 	if (ctx->pos + 1 > ctx->size)
 		return false;
@@ -1434,7 +1504,10 @@ static bool ser_put_u8(struct ser_ctx *ctx, uint8_t val)
 }
 
 /* Put a u32 to the data buffer. */
-static bool ser_put_u32(struct ser_ctx *ctx, uint32_t val)
+static bool
+ser_put_u32(
+	struct ser_ctx *ctx,
+	uint32_t val)
 {
 	if (ctx->pos + 4 > ctx->size)
 		return false;
@@ -1450,7 +1523,10 @@ static bool ser_put_u32(struct ser_ctx *ctx, uint32_t val)
 }
 
 /* Put a string to the data buffer. */
-static bool ser_put_string(struct ser_ctx *ctx, const char *val)
+static bool
+ser_put_string(
+	struct ser_ctx *ctx,
+	const char *val)
 {
 	size_t len;
 
@@ -1476,7 +1552,10 @@ static bool ser_put_string(struct ser_ctx *ctx, const char *val)
 }
 
 /* Get a u8 from the data buffer. */
-static bool ser_get_u8(struct ser_ctx *ctx, uint8_t *val)
+static bool
+ser_get_u8(
+	struct ser_ctx *ctx,
+	uint8_t *val)
 {
 	if (ctx->pos + 1 > ctx->size)
 		return false;
@@ -1488,7 +1567,10 @@ static bool ser_get_u8(struct ser_ctx *ctx, uint8_t *val)
 }
 
 /* Get a u32 from the data buffer. */
-static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val)
+static bool
+ser_get_u32(
+	struct ser_ctx *ctx,
+	uint32_t *val)
 {
 	if (ctx->pos + 4 > ctx->size)
 		return false;
@@ -1503,7 +1585,10 @@ static bool ser_get_u32(struct ser_ctx *ctx, uint32_t *val)
 }
 
 /* Get a string from the data buffer. */
-static bool ser_get_string(struct ser_ctx *ctx, char **val)
+static bool
+ser_get_string(
+	struct ser_ctx *ctx,
+	char **val)
 {
 	uint32_t len;
 
@@ -1528,12 +1613,4 @@ static bool ser_get_string(struct ser_ctx *ctx, char **val)
 	*val = ctx->sbuf;
 
 	return true;
-}
-
-/*
- * Get the VM environment pointer.
- */
-void *get_vm_env(void)
-{
-	return env;
 }

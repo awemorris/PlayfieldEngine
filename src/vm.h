@@ -36,15 +36,75 @@
 
 #include "playfield/playfield.h"
 
-bool create_vm(char **title, int *width, int *height, bool *fullscreen);
-void destroy_vm(void);
-bool call_vm_function(const char *func_name);
-bool call_vm_tag_function(bool *tag_end);
-bool set_vm_int(const char *prop_name, int val);
-bool get_vm_int(const char *prop_name, int *val);
-size_t get_heap_usage(void);
-void fast_gc(void);
-void full_gc(void);
-void *get_vm_env(void);
+/*
+ * Create the VM.
+ */
+bool
+pfi_create_vm(
+	char **title,
+	int *width,
+	int *height,
+	bool *fullscreen);
+
+/*
+ * Destroy the VM.
+ */
+void
+pfi_destroy_vm(void);
+
+/*
+ * Call a NoctLang function in the VM.
+ */
+bool
+pfi_call_vm_function(
+	const char *func_name);
+
+/*
+ * Call a NoctLang function that the current tag points to.
+ */
+bool
+pfi_call_vm_tag_function(
+	bool *tag_end);
+
+/*
+ * Set an integer properties in the VM. (Engine.*)
+ */
+bool
+pfi_set_vm_int(
+	const char *prop_name,
+	int val);
+
+/*
+ * Get an integer properties from the VM. (Engine.*)
+ */
+bool
+pfi_get_vm_int(
+	const char *prop_name,
+	int *val);
+
+/*
+ * Get the heap usage of the VM.
+ */
+size_t
+pfi_get_heap_usage(void);
+
+/*
+ * Perform a fast garbage collection in the VM.
+ */
+void
+pfi_fast_gc(void);
+
+/*
+ * Perform a full garbage collection in the VM.
+ */
+void
+pfi_full_gc(void);
+
+/*
+ * Get the VM environment pointer.
+ */
+void *
+pfi_get_vm_env(void);
 
 #endif
+

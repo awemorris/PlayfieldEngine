@@ -36,7 +36,13 @@
 
 #include "playfield/playfield.h"
 
-/* Load a file content. */
-bool load_file(const char *file, char **buf, size_t *size);
+/*
+ * Load a file content.
+ */
+bool
+pfi_load_file(
+	const char *file,
+	char **buf,
+	size_t *size);
 
 #endif

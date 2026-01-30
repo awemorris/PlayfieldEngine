@@ -73,7 +73,7 @@ static char get_hex_char(int val);
  * Initialize the API.
  */
 bool
-init_api(void)
+pfi_init_api(void)
 {
 	return true;
 }
@@ -82,7 +82,7 @@ init_api(void)
  * Cleanup the API.
  */
 void
-cleanup_api(void)
+pfi_cleanup_api(void)
 {
 	int i;
 
@@ -129,7 +129,7 @@ pf_load_texture(
 	}
 
 	/* Load a file content. */
-	if (!load_file(fname, &data, &size))
+	if (!pfi_load_file(fname, &data, &size))
 		return false;
 
 	/* Load an image. */
@@ -953,7 +953,7 @@ pf_load_font(
 	}
 
 	/* Load the file content. */
-	if (!load_file(file, (char **)&data, &len))
+	if (!pfi_load_file(file, (char **)&data, &len))
 		return false;
 
 	/* Load the glyph date. */
@@ -1451,7 +1451,7 @@ pf_read_file_content(
 	char **buf,
 	size_t *len)
 {
-	if (!load_file(fname, buf, len))
+	if (!pfi_load_file(fname, buf, len))
 		return false;
 
 	return true;
@@ -1467,7 +1467,7 @@ pf_read_file_content(
 void *
 pf_get_vm_env(void)
 {
-	return get_vm_env();
+	return pfi_get_vm_env();
 }
 
 /*
@@ -1477,7 +1477,7 @@ bool
 pf_call_vm_function(
 	const char *func_name)
 {
-	return call_vm_function(func_name);
+	return pfi_call_vm_function(func_name);
 }
 
 /*
@@ -1487,7 +1487,7 @@ bool
 pf_call_vm_tag_function(
 	bool *tag_end)
 {
-	return call_vm_tag_function(tag_end);
+	return pfi_call_vm_tag_function(tag_end);
 }
 
 /*
@@ -1498,7 +1498,7 @@ pf_set_vm_int(
 	const char *prop_name,
 	int val)
 {
-	return set_vm_int(prop_name, val);
+	return pfi_set_vm_int(prop_name, val);
 }
 
 /*
@@ -1509,7 +1509,7 @@ pf_get_vm_int(
 	const char *prop_name,
 	int *val)
 {
-	return get_vm_int(prop_name, val);
+	return pfi_get_vm_int(prop_name, val);
 }
 
 /*
@@ -1527,7 +1527,7 @@ pf_install_api(
 	NoctEnv *env;
 	const char *params[] = {"param"};
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_register_cfunc(env, name, 1, params, (bool (*)(NoctEnv *))func, NULL))
 		return false;
@@ -1546,7 +1546,7 @@ pf_get_call_arg_int(
 	NoctEnv *env;
 	NoctValue param, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1570,7 +1570,7 @@ pf_get_call_arg_float(
 	NoctEnv *env;
 	NoctValue param, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1595,7 +1595,7 @@ pf_get_call_arg_string(
 	NoctValue param, value;
 	const char *s;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1626,7 +1626,7 @@ pf_get_call_arg_array_length(
 	NoctEnv *env;
 	NoctValue param, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1655,7 +1655,7 @@ pf_get_call_arg_array_int(
 	NoctEnv *env;
 	NoctValue param, array, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1684,7 +1684,7 @@ pf_get_call_arg_array_float(
 	NoctEnv *env;
 	NoctValue param, array, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1714,7 +1714,7 @@ pf_get_call_arg_array_string(
 	NoctValue param, array, value;
 	const char *s;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1750,7 +1750,7 @@ pf_get_call_arg_dict_int(
 	NoctEnv *env;
 	NoctValue param, dict, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1779,7 +1779,7 @@ pf_get_call_arg_dict_float(
 	NoctEnv *env;
 	NoctValue param, dict, value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1809,7 +1809,7 @@ pf_get_call_arg_dict_string(
 	NoctValue param, dict, value;
 	const char *s;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	/* Get the "param" argument. */
 	if (!noct_get_arg_check_array(env, 0, &param))
@@ -1843,7 +1843,7 @@ pf_set_return_int(
 	NoctEnv *env;
 	NoctValue value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_set_return_make_int(env, &value, val))
 		return false;
@@ -1861,7 +1861,7 @@ pf_set_return_float(
 	NoctEnv *env;
 	NoctValue value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_set_return_make_float(env, &value, val))
 		return false;
@@ -1879,7 +1879,7 @@ pf_set_return_string(
 	NoctEnv *env;
 	NoctValue value;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_set_return_make_string(env, &value, val))
 		return false;
@@ -1899,7 +1899,7 @@ pf_set_return_int_array(
 	NoctValue array, value;
 	int i;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_make_empty_array(env, &array))
 		return false;
@@ -1927,7 +1927,7 @@ pf_set_return_float_array(
 	NoctValue array, value;
 	int i;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_make_empty_array(env, &array))
 		return false;
@@ -1955,7 +1955,7 @@ pf_set_return_string_array(
 	NoctValue array, value;
 	int i;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_make_empty_array(env, &array))
 		return false;
@@ -1988,7 +1988,7 @@ pf_set_return_dictionary(
 	NoctValue dict, value;
 	int i;
 
-	env = get_vm_env();
+	env = pfi_get_vm_env();
 
 	if (!noct_make_empty_dict(env, &dict))
 		return false;
@@ -2044,7 +2044,7 @@ bool
 pf_move_to_tag_file(
 	const char *file)
 {
-	return load_tag_file(file);
+	return pfi_load_tag_file(file);
 }
 
 /*
@@ -2053,7 +2053,17 @@ pf_move_to_tag_file(
 bool
 pf_move_to_next_tag(void)
 {
-	return move_to_next_tag();
+	return pfi_move_to_next_tag();
+}
+
+/*
+ * Move to a tag by index.
+ */
+bool
+pf_move_to_tag_index(
+	int index)
+{
+	return pfi_move_to_tag_index(index);
 }
 
 /*
@@ -2062,7 +2072,7 @@ pf_move_to_next_tag(void)
 const char *
 pf_get_tag_file(void)
 {
-	return get_tag_file_name();
+	return pfi_get_tag_file_name();
 }
 
 /*
@@ -2071,7 +2081,7 @@ pf_get_tag_file(void)
 int
 pf_get_tag_index(void)
 {
-	return get_tag_index();
+	return pfi_get_tag_index();
 }
 
 /*
@@ -2080,7 +2090,7 @@ pf_get_tag_index(void)
 int
 pf_get_tag_line(void)
 {
-	return get_tag_line();
+	return pfi_get_tag_line();
 }
 
 /*
@@ -2089,9 +2099,9 @@ pf_get_tag_line(void)
 const char *
 pf_get_tag_name(void)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 
-	t = get_current_tag();
+	t = pfi_get_current_tag();
 
 	return t->tag_name;
 }
@@ -2102,9 +2112,9 @@ pf_get_tag_name(void)
 int
 pf_get_tag_property_count(void)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 
-	t = get_current_tag();
+	t = pfi_get_current_tag();
 
 	return t->prop_count;
 }
@@ -2116,9 +2126,9 @@ const char *
 pf_get_tag_property_name(
 	int index)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 
-	t = get_current_tag();
+	t = pfi_get_current_tag();
 
 	assert(index < t->prop_count);
 	if (index >= t->prop_count)
@@ -2134,9 +2144,9 @@ const char *
 pf_get_tag_property_value(
 	int index)
 {
-	struct tag *t;
+	struct pfi_tag *t;
 
-	t = get_current_tag();
+	t = pfi_get_current_tag();
 
 	assert(index < t->prop_count);
 	if (index >= t->prop_count)

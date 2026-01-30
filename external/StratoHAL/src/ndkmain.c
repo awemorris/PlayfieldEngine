@@ -937,3 +937,15 @@ hal_set_continuous_swipe_enabled(
 {
 	is_continuous_swipe_enabled = is_enabled;
 }
+
+void
+hal_get_local_time(
+	int *year,
+	int *month,
+	int *day,
+	int *dow,
+	int *hour,
+	int *min,
+	int *sec)
+{
+	localtime(

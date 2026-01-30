@@ -150,25 +150,25 @@ hal_callback_on_event_boot(
 	
 #ifdef USE_TRANSLATION
 	/* Initialize the locale. */
-	playfield_init_locale();
+	pf_init_locale();
 #endif
 
 	/* Initialize the API. */
-	if (!init_api())
+	if (!pfi_init_api())
 		return false;
 
 	/* Create a VM, then call setup(). */
-	if (!create_vm(&title_ret, &width_ret, &height_ret, &fullscreen_ret))
+	if (!pfi_create_vm(&title_ret, &width_ret, &height_ret, &fullscreen_ret))
 		return false;
 
 	/* Save the window size. */
-	if (!set_vm_int("screenWidth", width_ret))
+	if (!pfi_set_vm_int("screenWidth", width_ret))
 		return false;
-	if (!set_vm_int("screenHeight", height_ret))
+	if (!pfi_set_vm_int("screenHeight", height_ret))
 		return false;
 
 	/* Make the exit flag. */
-	if (!set_vm_int("exitFlag", 0))
+	if (!pfi_set_vm_int("exitFlag", 0))
 		return false;
 
 	if (title != NULL)
@@ -277,104 +277,104 @@ hal_callback_on_event_start(void)
 	pf_is_f12_key_pressed = 0;
 
 	/* Initialize the API variables. */
-	set_vm_int("mousePosX", 0);
-	set_vm_int("mousePosY", 0);
-	set_vm_int("millisec", 0);
-	set_vm_int("isMouseLeftPressed", 0);
-	set_vm_int("isMouseRightPressed", 0);
-	set_vm_int("isEscapeKeyPressed", 0);
-	set_vm_int("isReturnKeyPressed", 0);
-	set_vm_int("isSpaceKeyPressed", 0);
-	set_vm_int("isTabKeyPressed", 0);
-	set_vm_int("isBackspaceKeyPressed", 0);
-	set_vm_int("isDeleteKeyPressed", 0);
-	set_vm_int("isHomeKeyPressed", 0);
-	set_vm_int("isEndKeyPressed", 0);
-	set_vm_int("isPageupKeyPressed", 0);
-	set_vm_int("isPagedownKeyPressed", 0);
-	set_vm_int("isShiftKeyPressed", 0);
-	set_vm_int("isControlKeyPressed", 0);
-	set_vm_int("isAltKeyPressed", 0);
-	set_vm_int("isUpKeyPressed", 0);
-	set_vm_int("isDownKeyPressed", 0);
-	set_vm_int("isLeftKeyPressed", 0);
-	set_vm_int("isRightKeyPressed", 0);
-	set_vm_int("isAKeyPressed", 0);
-	set_vm_int("isBKeyPressed", 0);
-	set_vm_int("isCKeyPressed", 0);
-	set_vm_int("isDKeyPressed", 0);
-	set_vm_int("isEKeyPressed", 0);
-	set_vm_int("isFKeyPressed", 0);
-	set_vm_int("isGKeyPressed", 0);
-	set_vm_int("isHKeyPressed", 0);
-	set_vm_int("isIKeyPressed", 0);
-	set_vm_int("isJKeyPressed", 0);
-	set_vm_int("isKKeyPressed", 0);
-	set_vm_int("isLKeyPressed", 0);
-	set_vm_int("isMKeyPressed", 0);
-	set_vm_int("isNKeyPressed", 0);
-	set_vm_int("isOKeyPressed", 0);
-	set_vm_int("isPKeyPressed", 0);
-	set_vm_int("isQKeyPressed", 0);
-	set_vm_int("isRKeyPressed", 0);
-	set_vm_int("isSKeyPressed", 0);
-	set_vm_int("isTKeyPressed", 0);
-	set_vm_int("isUKeyPressed", 0);
-	set_vm_int("isVKeyPressed", 0);
-	set_vm_int("isWKeyPressed", 0);
-	set_vm_int("isXKeyPressed", 0);
-	set_vm_int("isYKeyPressed", 0);
-	set_vm_int("isZKeyPressed", 0);
-	set_vm_int("is1KeyPressed", 0);
-	set_vm_int("is2KeyPressed", 0);
-	set_vm_int("is3KeyPressed", 0);
-	set_vm_int("is4KeyPressed", 0);
-	set_vm_int("is5KeyPressed", 0);
-	set_vm_int("is6KeyPressed", 0);
-	set_vm_int("is7KeyPressed", 0);
-	set_vm_int("is8KeyPressed", 0);
-	set_vm_int("is9KeyPressed", 0);
-	set_vm_int("is0KeyPressed", 0);
-	set_vm_int("isF1KeyPressed", 0);
-	set_vm_int("isF2KeyPressed", 0);
-	set_vm_int("isF3KeyPressed", 0);
-	set_vm_int("isF4KeyPressed", 0);
-	set_vm_int("isF5KeyPressed", 0);
-	set_vm_int("isF6KeyPressed", 0);
-	set_vm_int("isF7KeyPressed", 0);
-	set_vm_int("isF8KeyPressed", 0);
-	set_vm_int("isF9KeyPressed", 0);
-	set_vm_int("isF10KeyPressed", 0);
-	set_vm_int("isF11KeyPressed", 0);
-	set_vm_int("isF12KeyPressed", 0);
-        set_vm_int("isGamepadLeftPressed", 0);
-        set_vm_int("isGamepadRightPressed", 0);
-        set_vm_int("isGamepadUpPressed", 0);
-        set_vm_int("isGamepadDownPressed", 0);
-        set_vm_int("isGamepadAPressed", 0);
-        set_vm_int("isGamepadBPressed", 0);
-        set_vm_int("isGamepadXPressed", 0);
-        set_vm_int("isGamepadYPressed", 0);
-        set_vm_int("isGamepadLPressed", 0);
-        set_vm_int("isGamepadRPressed", 0);
-	set_vm_int("gamepadAnalogX1", 0);
-	set_vm_int("gamepadAnalogY1", 0);
-	set_vm_int("gamepadAnalogX2", 0);
-	set_vm_int("gamepadAnalogY2", 0);
-	set_vm_int("gamepadAnalogL", 0);
-	set_vm_int("gamepadAnalogR", 0);
+	pfi_set_vm_int("mousePosX", 0);
+	pfi_set_vm_int("mousePosY", 0);
+	pfi_set_vm_int("millisec", 0);
+	pfi_set_vm_int("isMouseLeftPressed", 0);
+	pfi_set_vm_int("isMouseRightPressed", 0);
+	pfi_set_vm_int("isEscapeKeyPressed", 0);
+	pfi_set_vm_int("isReturnKeyPressed", 0);
+	pfi_set_vm_int("isSpaceKeyPressed", 0);
+	pfi_set_vm_int("isTabKeyPressed", 0);
+	pfi_set_vm_int("isBackspaceKeyPressed", 0);
+	pfi_set_vm_int("isDeleteKeyPressed", 0);
+	pfi_set_vm_int("isHomeKeyPressed", 0);
+	pfi_set_vm_int("isEndKeyPressed", 0);
+	pfi_set_vm_int("isPageupKeyPressed", 0);
+	pfi_set_vm_int("isPagedownKeyPressed", 0);
+	pfi_set_vm_int("isShiftKeyPressed", 0);
+	pfi_set_vm_int("isControlKeyPressed", 0);
+	pfi_set_vm_int("isAltKeyPressed", 0);
+	pfi_set_vm_int("isUpKeyPressed", 0);
+	pfi_set_vm_int("isDownKeyPressed", 0);
+	pfi_set_vm_int("isLeftKeyPressed", 0);
+	pfi_set_vm_int("isRightKeyPressed", 0);
+	pfi_set_vm_int("isAKeyPressed", 0);
+	pfi_set_vm_int("isBKeyPressed", 0);
+	pfi_set_vm_int("isCKeyPressed", 0);
+	pfi_set_vm_int("isDKeyPressed", 0);
+	pfi_set_vm_int("isEKeyPressed", 0);
+	pfi_set_vm_int("isFKeyPressed", 0);
+	pfi_set_vm_int("isGKeyPressed", 0);
+	pfi_set_vm_int("isHKeyPressed", 0);
+	pfi_set_vm_int("isIKeyPressed", 0);
+	pfi_set_vm_int("isJKeyPressed", 0);
+	pfi_set_vm_int("isKKeyPressed", 0);
+	pfi_set_vm_int("isLKeyPressed", 0);
+	pfi_set_vm_int("isMKeyPressed", 0);
+	pfi_set_vm_int("isNKeyPressed", 0);
+	pfi_set_vm_int("isOKeyPressed", 0);
+	pfi_set_vm_int("isPKeyPressed", 0);
+	pfi_set_vm_int("isQKeyPressed", 0);
+	pfi_set_vm_int("isRKeyPressed", 0);
+	pfi_set_vm_int("isSKeyPressed", 0);
+	pfi_set_vm_int("isTKeyPressed", 0);
+	pfi_set_vm_int("isUKeyPressed", 0);
+	pfi_set_vm_int("isVKeyPressed", 0);
+	pfi_set_vm_int("isWKeyPressed", 0);
+	pfi_set_vm_int("isXKeyPressed", 0);
+	pfi_set_vm_int("isYKeyPressed", 0);
+	pfi_set_vm_int("isZKeyPressed", 0);
+	pfi_set_vm_int("is1KeyPressed", 0);
+	pfi_set_vm_int("is2KeyPressed", 0);
+	pfi_set_vm_int("is3KeyPressed", 0);
+	pfi_set_vm_int("is4KeyPressed", 0);
+	pfi_set_vm_int("is5KeyPressed", 0);
+	pfi_set_vm_int("is6KeyPressed", 0);
+	pfi_set_vm_int("is7KeyPressed", 0);
+	pfi_set_vm_int("is8KeyPressed", 0);
+	pfi_set_vm_int("is9KeyPressed", 0);
+	pfi_set_vm_int("is0KeyPressed", 0);
+	pfi_set_vm_int("isF1KeyPressed", 0);
+	pfi_set_vm_int("isF2KeyPressed", 0);
+	pfi_set_vm_int("isF3KeyPressed", 0);
+	pfi_set_vm_int("isF4KeyPressed", 0);
+	pfi_set_vm_int("isF5KeyPressed", 0);
+	pfi_set_vm_int("isF6KeyPressed", 0);
+	pfi_set_vm_int("isF7KeyPressed", 0);
+	pfi_set_vm_int("isF8KeyPressed", 0);
+	pfi_set_vm_int("isF9KeyPressed", 0);
+	pfi_set_vm_int("isF10KeyPressed", 0);
+	pfi_set_vm_int("isF11KeyPressed", 0);
+	pfi_set_vm_int("isF12KeyPressed", 0);
+        pfi_set_vm_int("isGamepadLeftPressed", 0);
+        pfi_set_vm_int("isGamepadRightPressed", 0);
+        pfi_set_vm_int("isGamepadUpPressed", 0);
+        pfi_set_vm_int("isGamepadDownPressed", 0);
+        pfi_set_vm_int("isGamepadAPressed", 0);
+        pfi_set_vm_int("isGamepadBPressed", 0);
+        pfi_set_vm_int("isGamepadXPressed", 0);
+        pfi_set_vm_int("isGamepadYPressed", 0);
+        pfi_set_vm_int("isGamepadLPressed", 0);
+        pfi_set_vm_int("isGamepadRPressed", 0);
+	pfi_set_vm_int("gamepadAnalogX1", 0);
+	pfi_set_vm_int("gamepadAnalogY1", 0);
+	pfi_set_vm_int("gamepadAnalogX2", 0);
+	pfi_set_vm_int("gamepadAnalogY2", 0);
+	pfi_set_vm_int("gamepadAnalogL", 0);
+	pfi_set_vm_int("gamepadAnalogR", 0);
 
 	/* Initialize the lap timer. */
 	hal_reset_lap_timer(&lap_origin);
 
 	/* Initialize the upper layer. */
 #ifdef PF_USE_INITHOOK
-	bool playfield_init_hook(void);
-	playfield_init_hook();
+	bool pf_init_hook(void);
+	pf_init_hook();
 #endif
 
 	/* Call start(). */
-	if (!call_vm_function("start"))
+	if (!pfi_call_vm_function("start"))
 		return false;
 
 	is_running = true;
@@ -391,27 +391,27 @@ hal_callback_on_event_frame(void)
 	int exit_flag;
 
 	/* Get the lap timer. */
-	set_vm_int("millisec", (int)hal_get_lap_timer_millisec(&lap_origin));
+	pfi_set_vm_int("millisec", (int)hal_get_lap_timer_millisec(&lap_origin));
 
 	/* Call update(). */
-	if (!call_vm_function("update"))
+	if (!pfi_call_vm_function("update"))
 		return false;
 
 	/* Call render(). */
-	if (!call_vm_function("render"))
+	if (!pfi_call_vm_function("render"))
 		return false;
 
 	/* Check the exit flag. */
 	exit_flag = 0;
-	get_vm_int("exitFlag", &exit_flag);
+	pfi_get_vm_int("exitFlag", &exit_flag);
 	if (exit_flag) {
 		/* Exit the game loop. */
 		return false;
 	}
 
 	/* Clear input states. */
-	//set_vm_int("isMouseLeftPressed", 0);
-	//set_vm_int("isMouseRightPressed", 0);
+	//pfi_pfi_set_vm_int("isMouseLeftPressed", 0);
+	//pfi_pfi_set_vm_int("isMouseRightPressed", 0);
 
 	/* Continue the game loop. */
 	return true;
@@ -421,10 +421,10 @@ void
 hal_callback_on_event_stop(void)
 {
 	/* Cleanup the API */
-	cleanup_api();
+	pfi_cleanup_api();
 
 	/* Destroy the VM. */
-	destroy_vm();
+	pfi_destroy_vm();
 
 	is_running = false;
 }
@@ -439,303 +439,303 @@ hal_callback_on_event_key_press(
 	switch (key) {
 	case HAL_KEY_ESCAPE:
 		pf_is_escape_key_pressed = true;
-		set_vm_int("isEscapeKeyPressed", 1);
+		pfi_set_vm_int("isEscapeKeyPressed", 1);
 		break;
 	case HAL_KEY_RETURN:
 		pf_is_return_key_pressed = true;
-		set_vm_int("isReturnKeyPressed", 1);
+		pfi_set_vm_int("isReturnKeyPressed", 1);
 		break;
 	case HAL_KEY_SPACE:
 		pf_is_space_key_pressed = true;
-		set_vm_int("isSpaceKeyPressed", 1);
+		pfi_set_vm_int("isSpaceKeyPressed", 1);
 		break;
 	case HAL_KEY_TAB:
 		pf_is_tab_key_pressed = true;
-		set_vm_int("isTabKeyPressed", 1);
+		pfi_set_vm_int("isTabKeyPressed", 1);
 		break;
 	case HAL_KEY_BACKSPACE:
 		pf_is_backspace_key_pressed = true;
-		set_vm_int("isBackspaceKeyPressed", 1);
+		pfi_set_vm_int("isBackspaceKeyPressed", 1);
 		break;
 	case HAL_KEY_DELETE:
 		pf_is_delete_key_pressed = true;
-		set_vm_int("isDeleteKeyPressed", 1);
+		pfi_set_vm_int("isDeleteKeyPressed", 1);
 		break;
 	case HAL_KEY_HOME:
 		pf_is_home_key_pressed = true;
-		set_vm_int("isHomeKeyPressed", 1);
+		pfi_set_vm_int("isHomeKeyPressed", 1);
 		break;
 	case HAL_KEY_END:
 		pf_is_end_key_pressed = true;
-		set_vm_int("isEndKeyPressed", 1);
+		pfi_set_vm_int("isEndKeyPressed", 1);
 		break;
 	case HAL_KEY_PAGEUP:
 		pf_is_pageup_key_pressed = true;
-		set_vm_int("isPageupKeyPressed", 1);
+		pfi_set_vm_int("isPageupKeyPressed", 1);
 		break;
 	case HAL_KEY_PAGEDOWN:
 		pf_is_pagedown_key_pressed = true;
-		set_vm_int("isPagedownKeyPressed", 1);
+		pfi_set_vm_int("isPagedownKeyPressed", 1);
 		break;
 	case HAL_KEY_SHIFT:
 		pf_is_shift_key_pressed = true;
-		set_vm_int("isShiftKeyPressed", 1);
+		pfi_set_vm_int("isShiftKeyPressed", 1);
 		break;
 	case HAL_KEY_CONTROL:
 		pf_is_control_key_pressed = true;
-		set_vm_int("isControlKeyPressed", 1);
+		pfi_set_vm_int("isControlKeyPressed", 1);
 		break;
 	case HAL_KEY_ALT:
 		pf_is_alt_key_pressed = true;
-		set_vm_int("isAltKeyPressed", 1);
+		pfi_set_vm_int("isAltKeyPressed", 1);
 		break;
 	case HAL_KEY_LEFT:
 		pf_is_left_key_pressed = true;
-		set_vm_int("isLeftKeyPressed", 1);
+		pfi_set_vm_int("isLeftKeyPressed", 1);
 		break;
 	case HAL_KEY_RIGHT:
 		pf_is_right_key_pressed = true;
-		set_vm_int("isRightKeyPressed", 1);
+		pfi_set_vm_int("isRightKeyPressed", 1);
 		break;
 	case HAL_KEY_UP:
 		pf_is_up_key_pressed = true;
-		set_vm_int("isUpKeyPressed", 1);
+		pfi_set_vm_int("isUpKeyPressed", 1);
 		break;
 	case HAL_KEY_DOWN:
 		pf_is_down_key_pressed = true;
-		set_vm_int("isDownKeyPressed", 1);
+		pfi_set_vm_int("isDownKeyPressed", 1);
 		break;
 	case HAL_KEY_A:
 		pf_is_a_key_pressed = true;
-		set_vm_int("isAKeyPressed", 1);
+		pfi_set_vm_int("isAKeyPressed", 1);
 		break;
 	case HAL_KEY_B:
 		pf_is_b_key_pressed = true;
-		set_vm_int("isBKeyPressed", 1);
+		pfi_set_vm_int("isBKeyPressed", 1);
 		break;
 	case HAL_KEY_C:
 		pf_is_c_key_pressed = true;
-		set_vm_int("isCKeyPressed", 1);
+		pfi_set_vm_int("isCKeyPressed", 1);
 		break;
 	case HAL_KEY_D:
 		pf_is_d_key_pressed = true;
-		set_vm_int("isDKeyPressed", 1);
+		pfi_set_vm_int("isDKeyPressed", 1);
 		break;
 	case HAL_KEY_E:
 		pf_is_e_key_pressed = true;
-		set_vm_int("isEKeyPressed", 1);
+		pfi_set_vm_int("isEKeyPressed", 1);
 		break;
 	case HAL_KEY_F:
 		pf_is_f_key_pressed = true;
-		set_vm_int("isFKeyPressed", 1);
+		pfi_set_vm_int("isFKeyPressed", 1);
 		break;
 	case HAL_KEY_G:
 		pf_is_g_key_pressed = true;
-		set_vm_int("isGKeyPressed", 1);
+		pfi_set_vm_int("isGKeyPressed", 1);
 		break;
 	case HAL_KEY_H:
 		pf_is_h_key_pressed = true;
-		set_vm_int("isHKeyPressed", 1);
+		pfi_set_vm_int("isHKeyPressed", 1);
 		break;
 	case HAL_KEY_I:
 		pf_is_i_key_pressed = true;
-		set_vm_int("isIKeyPressed", 1);
+		pfi_set_vm_int("isIKeyPressed", 1);
 		break;
 	case HAL_KEY_J:
 		pf_is_j_key_pressed = true;
-		set_vm_int("isJKeyPressed", 1);
+		pfi_set_vm_int("isJKeyPressed", 1);
 		break;
 	case HAL_KEY_K:
 		pf_is_k_key_pressed = true;
-		set_vm_int("isKKeyPressed", 1);
+		pfi_set_vm_int("isKKeyPressed", 1);
 		break;
 	case HAL_KEY_L:
 		pf_is_l_key_pressed = true;
-		set_vm_int("isLKeyPressed", 1);
+		pfi_set_vm_int("isLKeyPressed", 1);
 		break;
 	case HAL_KEY_M:
 		pf_is_m_key_pressed = true;
-		set_vm_int("isMKeyPressed", 1);
+		pfi_set_vm_int("isMKeyPressed", 1);
 		break;
 	case HAL_KEY_N:
 		pf_is_n_key_pressed = true;
-		set_vm_int("isNKeyPressed", 1);
+		pfi_set_vm_int("isNKeyPressed", 1);
 		break;
 	case HAL_KEY_O:
 		pf_is_o_key_pressed = true;
-		set_vm_int("isOKeyPressed", 1);
+		pfi_set_vm_int("isOKeyPressed", 1);
 		break;
 	case HAL_KEY_P:
 		pf_is_p_key_pressed = true;
-		set_vm_int("isPKeyPressed", 1);
+		pfi_set_vm_int("isPKeyPressed", 1);
 		break;
 	case HAL_KEY_Q:
 		pf_is_q_key_pressed = true;
-		set_vm_int("isQKeyPressed", 1);
+		pfi_set_vm_int("isQKeyPressed", 1);
 		break;
 	case HAL_KEY_R:
 		pf_is_r_key_pressed = true;
-		set_vm_int("isRKeyPressed", 1);
+		pfi_set_vm_int("isRKeyPressed", 1);
 		break;
 	case HAL_KEY_S:
 		pf_is_s_key_pressed = true;
-		set_vm_int("isSKeyPressed", 1);
+		pfi_set_vm_int("isSKeyPressed", 1);
 		break;
 	case HAL_KEY_T:
 		pf_is_t_key_pressed = true;
-		set_vm_int("isTKeyPressed", 1);
+		pfi_set_vm_int("isTKeyPressed", 1);
 		break;
 	case HAL_KEY_U:
 		pf_is_u_key_pressed = true;
-		set_vm_int("isUKeyPressed", 1);
+		pfi_set_vm_int("isUKeyPressed", 1);
 		break;
 	case HAL_KEY_V:
 		pf_is_v_key_pressed = true;
-		set_vm_int("isVKeyPressed", 1);
+		pfi_set_vm_int("isVKeyPressed", 1);
 		break;
 	case HAL_KEY_W:
 		pf_is_w_key_pressed = true;
-		set_vm_int("isWKeyPressed", 1);
+		pfi_set_vm_int("isWKeyPressed", 1);
 		break;
 	case HAL_KEY_X:
 		pf_is_x_key_pressed = true;
-		set_vm_int("isXKeyPressed", 1);
+		pfi_set_vm_int("isXKeyPressed", 1);
 		break;
 	case HAL_KEY_Y:
 		pf_is_y_key_pressed = true;
-		set_vm_int("isYKeyPressed", 1);
+		pfi_set_vm_int("isYKeyPressed", 1);
 		break;
 	case HAL_KEY_Z:
 		pf_is_z_key_pressed = true;
-		set_vm_int("isZKeyPressed", 1);
+		pfi_set_vm_int("isZKeyPressed", 1);
 		break;
 	case HAL_KEY_1:
 		pf_is_1_key_pressed = true;
-		set_vm_int("is1KeyPressed", 1);
+		pfi_set_vm_int("is1KeyPressed", 1);
 		break;
 	case HAL_KEY_2:
 		pf_is_2_key_pressed = true;
-		set_vm_int("is2KeyPressed", 1);
+		pfi_set_vm_int("is2KeyPressed", 1);
 		break;
 	case HAL_KEY_3:
 		pf_is_3_key_pressed = true;
-		set_vm_int("is3KeyPressed", 1);
+		pfi_set_vm_int("is3KeyPressed", 1);
 		break;
 	case HAL_KEY_4:
 		pf_is_4_key_pressed = true;
-		set_vm_int("is4KeyPressed", 1);
+		pfi_set_vm_int("is4KeyPressed", 1);
 		break;
 	case HAL_KEY_5:
 		pf_is_5_key_pressed = true;
-		set_vm_int("is5KeyPressed", 1);
+		pfi_set_vm_int("is5KeyPressed", 1);
 		break;
 	case HAL_KEY_6:
 		pf_is_6_key_pressed = true;
-		set_vm_int("is6KeyPressed", 1);
+		pfi_set_vm_int("is6KeyPressed", 1);
 		break;
 	case HAL_KEY_7:
 		pf_is_7_key_pressed = true;
-		set_vm_int("is7KeyPressed", 1);
+		pfi_set_vm_int("is7KeyPressed", 1);
 		break;
 	case HAL_KEY_8:
 		pf_is_8_key_pressed = true;
-		set_vm_int("is8KeyPressed", 1);
+		pfi_set_vm_int("is8KeyPressed", 1);
 		break;
 	case HAL_KEY_9:
 		pf_is_9_key_pressed = true;
-		set_vm_int("is9KeyPressed", 1);
+		pfi_set_vm_int("is9KeyPressed", 1);
 		break;
 	case HAL_KEY_0:
 		pf_is_0_key_pressed = true;
-		set_vm_int("is0KeyPressed", 1);
+		pfi_set_vm_int("is0KeyPressed", 1);
 		break;
 	case HAL_KEY_F1:
 		pf_is_f1_key_pressed = true;
-		set_vm_int("isF1KeyPressed", 1);
+		pfi_set_vm_int("isF1KeyPressed", 1);
 		break;
 	case HAL_KEY_F2:
 		pf_is_f2_key_pressed = true;
-		set_vm_int("isF2KeyPressed", 1);
+		pfi_set_vm_int("isF2KeyPressed", 1);
 		break;
 	case HAL_KEY_F3:
 		pf_is_f3_key_pressed = true;
-		set_vm_int("isF3KeyPressed", 1);
+		pfi_set_vm_int("isF3KeyPressed", 1);
 		break;
 	case HAL_KEY_F4:
 		pf_is_f4_key_pressed = true;
-		set_vm_int("isF4KeyPressed", 1);
+		pfi_set_vm_int("isF4KeyPressed", 1);
 		break;
 	case HAL_KEY_F5:
 		pf_is_f5_key_pressed = true;
-		set_vm_int("isF5KeyPressed", 1);
+		pfi_set_vm_int("isF5KeyPressed", 1);
 		break;
 	case HAL_KEY_F6:
 		pf_is_f6_key_pressed = true;
-		set_vm_int("isF6KeyPressed", 1);
+		pfi_set_vm_int("isF6KeyPressed", 1);
 		break;
 	case HAL_KEY_F7:
 		pf_is_f7_key_pressed = true;
-		set_vm_int("isF7KeyPressed", 1);
+		pfi_set_vm_int("isF7KeyPressed", 1);
 		break;
 	case HAL_KEY_F8:
 		pf_is_f8_key_pressed = true;
-		set_vm_int("isF8KeyPressed", 1);
+		pfi_set_vm_int("isF8KeyPressed", 1);
 		break;
 	case HAL_KEY_F9:
 		pf_is_f9_key_pressed = true;
-		set_vm_int("isF9KeyPressed", 1);
+		pfi_set_vm_int("isF9KeyPressed", 1);
 		break;
 	case HAL_KEY_F10:
 		pf_is_f10_key_pressed = true;
-		set_vm_int("isF10KeyPressed", 1);
+		pfi_set_vm_int("isF10KeyPressed", 1);
 		break;
 	case HAL_KEY_F11:
 		pf_is_f11_key_pressed = true;
-		set_vm_int("isF11KeyPressed", 1);
+		pfi_set_vm_int("isF11KeyPressed", 1);
 		break;
 	case HAL_KEY_F12:
 		pf_is_f12_key_pressed = true;
-		set_vm_int("isF12KeyPressed", 1);
+		pfi_set_vm_int("isF12KeyPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_LEFT:
 		pf_is_gamepad_left_pressed = true;
-		set_vm_int("isGamepadLeftPressed", 1);
+		pfi_set_vm_int("isGamepadLeftPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_RIGHT:
 		pf_is_gamepad_right_pressed = true;
-		set_vm_int("isGamepadRightPressed", 1);
+		pfi_set_vm_int("isGamepadRightPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_UP:
 		pf_is_gamepad_up_pressed = true;
-		set_vm_int("isGamepadUpPressed", 1);
+		pfi_set_vm_int("isGamepadUpPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_DOWN:
 		pf_is_gamepad_down_pressed = true;
-		set_vm_int("isGamepadDownPressed", 1);
+		pfi_set_vm_int("isGamepadDownPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_A:
 		pf_is_gamepad_a_pressed = true;
-		set_vm_int("isGamepadAPressed", 1);
+		pfi_set_vm_int("isGamepadAPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_B:
 		pf_is_gamepad_b_pressed = true;
-		set_vm_int("isGamepadBPressed", 1);
+		pfi_set_vm_int("isGamepadBPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_X:
 		pf_is_gamepad_x_pressed = true;
-		set_vm_int("isGamepadXPressed", 1);
+		pfi_set_vm_int("isGamepadXPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_Y:
 		pf_is_gamepad_y_pressed = true;
-		set_vm_int("isGamepadYPressed", 1);
+		pfi_set_vm_int("isGamepadYPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_L:
 		pf_is_gamepad_l_pressed = true;
-		set_vm_int("isGamepadLPressed", 1);
+		pfi_set_vm_int("isGamepadLPressed", 1);
 		break;
 	case HAL_KEY_GAMEPAD_R:
 		pf_is_gamepad_r_pressed = true;
-		set_vm_int("isGamepadRPressed", 1);
+		pfi_set_vm_int("isGamepadRPressed", 1);
 		break;
 	default:
 		break;
@@ -752,302 +752,302 @@ hal_callback_on_event_key_release(
 	switch (key) {
 	case HAL_KEY_ESCAPE:
 		pf_is_escape_key_pressed = false;
-		set_vm_int("isEscapeKeyPressed", 0);
+		pfi_set_vm_int("isEscapeKeyPressed", 0);
 		break;
 	case HAL_KEY_RETURN:
-		set_vm_int("isReturnKeyPressed", 0);
+		pfi_set_vm_int("isReturnKeyPressed", 0);
 		break;
 	case HAL_KEY_SPACE:
 		pf_is_space_key_pressed = false;
-		set_vm_int("isSpaceKeyPressed", 0);
+		pfi_set_vm_int("isSpaceKeyPressed", 0);
 		break;
 	case HAL_KEY_TAB:
 		pf_is_tab_key_pressed = false;
-		set_vm_int("isTabKeyPressed", 0);
+		pfi_set_vm_int("isTabKeyPressed", 0);
 		break;
 	case HAL_KEY_BACKSPACE:
 		pf_is_backspace_key_pressed = false;
-		set_vm_int("isBackspaceKeyPressed", 0);
+		pfi_set_vm_int("isBackspaceKeyPressed", 0);
 		break;
 	case HAL_KEY_DELETE:
 		pf_is_delete_key_pressed = false;
-		set_vm_int("isDeleteKeyPressed", 0);
+		pfi_set_vm_int("isDeleteKeyPressed", 0);
 		break;
 	case HAL_KEY_HOME:
 		pf_is_home_key_pressed = false;
-		set_vm_int("isHomeKeyPressed", 0);
+		pfi_set_vm_int("isHomeKeyPressed", 0);
 		break;
 	case HAL_KEY_END:
 		pf_is_end_key_pressed = false;
-		set_vm_int("isEndKeyPressed", 0);
+		pfi_set_vm_int("isEndKeyPressed", 0);
 		break;
 	case HAL_KEY_PAGEUP:
 		pf_is_pageup_key_pressed = false;
-		set_vm_int("isPageupKeyPressed", 0);
+		pfi_set_vm_int("isPageupKeyPressed", 0);
 		break;
 	case HAL_KEY_PAGEDOWN:
 		pf_is_pagedown_key_pressed = false;
-		set_vm_int("isPagedownKeyPressed", 0);
+		pfi_set_vm_int("isPagedownKeyPressed", 0);
 		break;
 	case HAL_KEY_SHIFT:
 		pf_is_shift_key_pressed = false;
-		set_vm_int("isShiftKeyPressed", 0);
+		pfi_set_vm_int("isShiftKeyPressed", 0);
 		break;
 	case HAL_KEY_CONTROL:
 		pf_is_control_key_pressed = false;
-		set_vm_int("isControlKeyPressed", 0);
+		pfi_set_vm_int("isControlKeyPressed", 0);
 		break;
 	case HAL_KEY_ALT:
 		pf_is_alt_key_pressed = false;
-		set_vm_int("isAltKeyPressed", 0);
+		pfi_set_vm_int("isAltKeyPressed", 0);
 		break;
 	case HAL_KEY_LEFT:
 		pf_is_left_key_pressed = false;
-		set_vm_int("isLeftKeyPressed", 0);
+		pfi_set_vm_int("isLeftKeyPressed", 0);
 		break;
 	case HAL_KEY_RIGHT:
 		pf_is_right_key_pressed = false;
-		set_vm_int("isRightKeyPressed", 0);
+		pfi_set_vm_int("isRightKeyPressed", 0);
 		break;
 	case HAL_KEY_UP:
 		pf_is_up_key_pressed = false;
-		set_vm_int("isUpKeyPressed", 0);
+		pfi_set_vm_int("isUpKeyPressed", 0);
 		break;
 	case HAL_KEY_DOWN:
 		pf_is_down_key_pressed = false;
-		set_vm_int("isDownKeyPressed", 0);
+		pfi_set_vm_int("isDownKeyPressed", 0);
 		break;
 	case HAL_KEY_A:
 		pf_is_a_key_pressed = false;
-		set_vm_int("isAKeyPressed", 0);
+		pfi_set_vm_int("isAKeyPressed", 0);
 		break;
 	case HAL_KEY_B:
 		pf_is_b_key_pressed = false;
-		set_vm_int("isBKeyPressed", 0);
+		pfi_set_vm_int("isBKeyPressed", 0);
 		break;
 	case HAL_KEY_C:
 		pf_is_c_key_pressed = false;
-		set_vm_int("isCKeyPressed", 0);
+		pfi_set_vm_int("isCKeyPressed", 0);
 		break;
 	case HAL_KEY_D:
 		pf_is_d_key_pressed = false;
-		set_vm_int("isDKeyPressed", 0);
+		pfi_set_vm_int("isDKeyPressed", 0);
 		break;
 	case HAL_KEY_E:
 		pf_is_e_key_pressed = false;
-		set_vm_int("isEKeyPressed", 0);
+		pfi_set_vm_int("isEKeyPressed", 0);
 		break;
 	case HAL_KEY_F:
 		pf_is_f_key_pressed = false;
-		set_vm_int("isFKeyPressed", 0);
+		pfi_set_vm_int("isFKeyPressed", 0);
 		break;
 	case HAL_KEY_G:
 		pf_is_g_key_pressed = false;
-		set_vm_int("isGKeyPressed", 0);
+		pfi_set_vm_int("isGKeyPressed", 0);
 		break;
 	case HAL_KEY_H:
 		pf_is_h_key_pressed = false;
-		set_vm_int("isHKeyPressed", 0);
+		pfi_set_vm_int("isHKeyPressed", 0);
 		break;
 	case HAL_KEY_I:
 		pf_is_i_key_pressed = false;
-		set_vm_int("isIKeyPressed", 0);
+		pfi_set_vm_int("isIKeyPressed", 0);
 		break;
 	case HAL_KEY_J:
 		pf_is_j_key_pressed = false;
-		set_vm_int("isJKeyPressed", 0);
+		pfi_set_vm_int("isJKeyPressed", 0);
 		break;
 	case HAL_KEY_K:
 		pf_is_k_key_pressed = false;
-		set_vm_int("isKKeyPressed", 0);
+		pfi_set_vm_int("isKKeyPressed", 0);
 		break;
 	case HAL_KEY_L:
 		pf_is_l_key_pressed = false;
-		set_vm_int("isLKeyPressed", 0);
+		pfi_set_vm_int("isLKeyPressed", 0);
 		break;
 	case HAL_KEY_M:
 		pf_is_m_key_pressed = false;
-		set_vm_int("isMKeyPressed", 0);
+		pfi_set_vm_int("isMKeyPressed", 0);
 		break;
 	case HAL_KEY_N:
 		pf_is_n_key_pressed = false;
-		set_vm_int("isNKeyPressed", 0);
+		pfi_set_vm_int("isNKeyPressed", 0);
 		break;
 	case HAL_KEY_O:
 		pf_is_o_key_pressed = false;
-		set_vm_int("isOKeyPressed", 0);
+		pfi_set_vm_int("isOKeyPressed", 0);
 		break;
 	case HAL_KEY_P:
 		pf_is_p_key_pressed = false;
-		set_vm_int("isPKeyPressed", 0);
+		pfi_set_vm_int("isPKeyPressed", 0);
 		break;
 	case HAL_KEY_Q:
 		pf_is_q_key_pressed = false;
-		set_vm_int("isQKeyPressed", 0);
+		pfi_set_vm_int("isQKeyPressed", 0);
 		break;
 	case HAL_KEY_R:
 		pf_is_r_key_pressed = false;
-		set_vm_int("isRKeyPressed", 0);
+		pfi_set_vm_int("isRKeyPressed", 0);
 		break;
 	case HAL_KEY_S:
 		pf_is_s_key_pressed = false;
-		set_vm_int("isSKeyPressed", 0);
+		pfi_set_vm_int("isSKeyPressed", 0);
 		break;
 	case HAL_KEY_T:
 		pf_is_t_key_pressed = false;
-		set_vm_int("isTKeyPressed", 0);
+		pfi_set_vm_int("isTKeyPressed", 0);
 		break;
 	case HAL_KEY_U:
 		pf_is_u_key_pressed = false;
-		set_vm_int("isUKeyPressed", 0);
+		pfi_set_vm_int("isUKeyPressed", 0);
 		break;
 	case HAL_KEY_V:
 		pf_is_v_key_pressed = false;
-		set_vm_int("isVKeyPressed", 0);
+		pfi_set_vm_int("isVKeyPressed", 0);
 		break;
 	case HAL_KEY_W:
 		pf_is_w_key_pressed = false;
-		set_vm_int("isWKeyPressed", 0);
+		pfi_set_vm_int("isWKeyPressed", 0);
 		break;
 	case HAL_KEY_X:
 		pf_is_x_key_pressed = false;
-		set_vm_int("isXKeyPressed", 0);
+		pfi_set_vm_int("isXKeyPressed", 0);
 		break;
 	case HAL_KEY_Y:
 		pf_is_y_key_pressed = false;
-		set_vm_int("isYKeyPressed", 0);
+		pfi_set_vm_int("isYKeyPressed", 0);
 		break;
 	case HAL_KEY_Z:
 		pf_is_z_key_pressed = false;
-		set_vm_int("isZKeyPressed", 0);
+		pfi_set_vm_int("isZKeyPressed", 0);
 		break;
 	case HAL_KEY_1:
 		pf_is_1_key_pressed = false;
-		set_vm_int("is1KeyPressed", 0);
+		pfi_set_vm_int("is1KeyPressed", 0);
 		break;
 	case HAL_KEY_2:
 		pf_is_2_key_pressed = false;
-		set_vm_int("is2KeyPressed", 0);
+		pfi_set_vm_int("is2KeyPressed", 0);
 		break;
 	case HAL_KEY_3:
 		pf_is_3_key_pressed = false;
-		set_vm_int("is3KeyPressed", 0);
+		pfi_set_vm_int("is3KeyPressed", 0);
 		break;
 	case HAL_KEY_4:
 		pf_is_4_key_pressed = false;
-		set_vm_int("is4KeyPressed", 0);
+		pfi_set_vm_int("is4KeyPressed", 0);
 		break;
 	case HAL_KEY_5:
 		pf_is_5_key_pressed = false;
-		set_vm_int("is5KeyPressed", 0);
+		pfi_set_vm_int("is5KeyPressed", 0);
 		break;
 	case HAL_KEY_6:
 		pf_is_6_key_pressed = false;
-		set_vm_int("is6KeyPressed", 0);
+		pfi_set_vm_int("is6KeyPressed", 0);
 		break;
 	case HAL_KEY_7:
 		pf_is_7_key_pressed = false;
-		set_vm_int("is7KeyPressed", 0);
+		pfi_set_vm_int("is7KeyPressed", 0);
 		break;
 	case HAL_KEY_8:
 		pf_is_8_key_pressed = false;
-		set_vm_int("is8KeyPressed", 0);
+		pfi_set_vm_int("is8KeyPressed", 0);
 		break;
 	case HAL_KEY_9:
 		pf_is_9_key_pressed = false;
-		set_vm_int("is9KeyPressed", 0);
+		pfi_set_vm_int("is9KeyPressed", 0);
 		break;
 	case HAL_KEY_0:
 		pf_is_0_key_pressed = false;
-		set_vm_int("is0KeyPressed", 0);
+		pfi_set_vm_int("is0KeyPressed", 0);
 		break;
 	case HAL_KEY_F1:
 		pf_is_f1_key_pressed = false;
-		set_vm_int("isF1KeyPressed", 0);
+		pfi_set_vm_int("isF1KeyPressed", 0);
 		break;
 	case HAL_KEY_F2:
 		pf_is_f2_key_pressed = false;
-		set_vm_int("isF2KeyPressed", 0);
+		pfi_set_vm_int("isF2KeyPressed", 0);
 		break;
 	case HAL_KEY_F3:
 		pf_is_f3_key_pressed = false;
-		set_vm_int("isF3KeyPressed", 0);
+		pfi_set_vm_int("isF3KeyPressed", 0);
 		break;
 	case HAL_KEY_F4:
 		pf_is_f4_key_pressed = false;
-		set_vm_int("isF4KeyPressed", 0);
+		pfi_set_vm_int("isF4KeyPressed", 0);
 		break;
 	case HAL_KEY_F5:
 		pf_is_f5_key_pressed = false;
-		set_vm_int("isF5KeyPressed", 0);
+		pfi_set_vm_int("isF5KeyPressed", 0);
 		break;
 	case HAL_KEY_F6:
 		pf_is_f6_key_pressed = false;
-		set_vm_int("isF6KeyPressed", 0);
+		pfi_set_vm_int("isF6KeyPressed", 0);
 		break;
 	case HAL_KEY_F7:
 		pf_is_f7_key_pressed = false;
-		set_vm_int("isF7KeyPressed", 0);
+		pfi_set_vm_int("isF7KeyPressed", 0);
 		break;
 	case HAL_KEY_F8:
 		pf_is_f8_key_pressed = false;
-		set_vm_int("isF8KeyPressed", 0);
+		pfi_set_vm_int("isF8KeyPressed", 0);
 		break;
 	case HAL_KEY_F9:
 		pf_is_f9_key_pressed = false;
-		set_vm_int("isF9KeyPressed", 0);
+		pfi_set_vm_int("isF9KeyPressed", 0);
 		break;
 	case HAL_KEY_F10:
 		pf_is_f10_key_pressed = false;
-		set_vm_int("isF10KeyPressed", 0);
+		pfi_set_vm_int("isF10KeyPressed", 0);
 		break;
 	case HAL_KEY_F11:
 		pf_is_f11_key_pressed = false;
-		set_vm_int("isF11KeyPressed", 0);
+		pfi_set_vm_int("isF11KeyPressed", 0);
 		break;
 	case HAL_KEY_F12:
 		pf_is_f12_key_pressed = false;
-		set_vm_int("isF12KeyPressed", 0);
+		pfi_set_vm_int("isF12KeyPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_LEFT:
 		pf_is_gamepad_left_pressed = false;
-		set_vm_int("isGamepadLeftPressed", 0);
+		pfi_set_vm_int("isGamepadLeftPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_RIGHT:
 		pf_is_gamepad_right_pressed = false;
-		set_vm_int("isGamepadRightPressed", 0);
+		pfi_set_vm_int("isGamepadRightPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_UP:
 		pf_is_gamepad_up_pressed = false;
-		set_vm_int("isGamepadUpPressed", 0);
+		pfi_set_vm_int("isGamepadUpPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_DOWN:
 		pf_is_gamepad_down_pressed = false;
-		set_vm_int("isGamepadDownPressed", 0);
+		pfi_set_vm_int("isGamepadDownPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_A:
 		pf_is_gamepad_a_pressed = false;
-		set_vm_int("isGamepadAPressed", 0);
+		pfi_set_vm_int("isGamepadAPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_B:
 		pf_is_gamepad_b_pressed = false;
-		set_vm_int("isGamepadBPressed", 0);
+		pfi_set_vm_int("isGamepadBPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_X:
 		pf_is_gamepad_x_pressed = false;
-		set_vm_int("isGamepadXPressed", 0);
+		pfi_set_vm_int("isGamepadXPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_Y:
 		pf_is_gamepad_y_pressed = false;
-		set_vm_int("isGamepadYPressed", 0);
+		pfi_set_vm_int("isGamepadYPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_L:
 		pf_is_gamepad_l_pressed = false;
-		set_vm_int("isGamepadLPressed", 0);
+		pfi_set_vm_int("isGamepadLPressed", 0);
 		break;
 	case HAL_KEY_GAMEPAD_R:
 		pf_is_gamepad_r_pressed = false;
-		set_vm_int("isGamepadRPressed", 0);
+		pfi_set_vm_int("isGamepadRPressed", 0);
 		break;
 	default:
 		break;
@@ -1063,15 +1063,15 @@ hal_callback_on_event_mouse_press(
 	if (is_running) {
 		pf_mouse_pos_x = x;
 		pf_mouse_pos_y = y;
-		set_vm_int("mousePosX", x);
-		set_vm_int("mousePosY", y);
+		pfi_set_vm_int("mousePosX", x);
+		pfi_set_vm_int("mousePosY", y);
 
 		if (button == HAL_MOUSE_LEFT) {
 			pf_is_mouse_left_pressed = true;
-			set_vm_int("isMouseLeftPressed", 1);
+			pfi_set_vm_int("isMouseLeftPressed", 1);
 		} else {
 			pf_is_mouse_right_pressed = true;
-			set_vm_int("isMouseRightPressed", 1);
+			pfi_set_vm_int("isMouseRightPressed", 1);
 		}
 	}
 }
@@ -1085,15 +1085,15 @@ hal_callback_on_event_mouse_release(
 	if (is_running) {
 		pf_mouse_pos_x = x;
 		pf_mouse_pos_y = y;
-		set_vm_int("mousePosX", x);
-		set_vm_int("mousePosY", y);
+		pfi_set_vm_int("mousePosX", x);
+		pfi_set_vm_int("mousePosY", y);
 
 		if (button == HAL_MOUSE_LEFT) {
 			pf_is_mouse_left_pressed = false;
-			set_vm_int("isMouseLeftPressed", 0);
+			pfi_set_vm_int("isMouseLeftPressed", 0);
 		} else {
 			pf_is_mouse_right_pressed = false;
-			set_vm_int("isMouseRightPressed", 0);
+			pfi_set_vm_int("isMouseRightPressed", 0);
 		}
 	}
 }
@@ -1106,8 +1106,8 @@ hal_callback_on_event_mouse_move(
 	if (is_running) {
 		pf_mouse_pos_x = x;
 		pf_mouse_pos_y = y;
-		set_vm_int("mousePosX", x);
-		set_vm_int("mousePosY", y);
+		pfi_set_vm_int("mousePosX", x);
+		pfi_set_vm_int("mousePosY", y);
 	}
 }
 
@@ -1120,27 +1120,27 @@ hal_callback_on_event_analog_input(
 		switch (input) {
 		case HAL_ANALOG_X1:
 			pf_gamepad_analog_x1 = val;
-			set_vm_int("gamepadAnalogX1", val);
+			pfi_set_vm_int("gamepadAnalogX1", val);
 			break;
 		case HAL_ANALOG_Y1:
 			pf_gamepad_analog_y1 = val;
-			set_vm_int("gamepadAnalogY1", val);
+			pfi_set_vm_int("gamepadAnalogY1", val);
 			break;
 		case HAL_ANALOG_X2:
 			pf_gamepad_analog_x2 = val;
-			set_vm_int("gamepadAnalogX2", val);
+			pfi_set_vm_int("gamepadAnalogX2", val);
 			break;
 		case HAL_ANALOG_Y2:
 			pf_gamepad_analog_y2 = val;
-			set_vm_int("gamepadAnalogY2", val);
+			pfi_set_vm_int("gamepadAnalogY2", val);
 			break;
 		case HAL_ANALOG_L:
 			pf_gamepad_analog_l = val;
-			set_vm_int("gamepadAnalogL", val);
+			pfi_set_vm_int("gamepadAnalogL", val);
 			break;
 		case HAL_ANALOG_R:
 			pf_gamepad_analog_r = val;
-			set_vm_int("gamepadAnalogR", val);
+			pfi_set_vm_int("gamepadAnalogR", val);
 			break;
 		default:
 			break;
@@ -1153,7 +1153,7 @@ hal_callback_on_event_touch_cancel(void)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;
-		set_vm_int("isMouseLeftPressed", 0);
+		pfi_set_vm_int("isMouseLeftPressed", 0);
 	}
 }
 
@@ -1162,7 +1162,7 @@ hal_callback_on_event_swipe_down(void)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;
-		set_vm_int("isMouseLeftPressed", 0);
+		pfi_set_vm_int("isMouseLeftPressed", 0);
 	}
 }
 
@@ -1171,6 +1171,6 @@ hal_callback_on_event_swipe_up(void)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;
-		set_vm_int("isMouseLeftPressed", 0);
+		pfi_set_vm_int("isMouseLeftPressed", 0);
 	}
 }

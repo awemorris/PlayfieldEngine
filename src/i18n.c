@@ -46,7 +46,8 @@ extern const char *noct_lang_code;
 /*
  * Initialized the locale.
  */
-void playfield_init_locale(void)
+void
+pf_init_locale(void)
 {
 	/* Initialize the NoctLang's i18n system manually. */
 	noct_lang_code = hal_get_system_language();

@@ -38,8 +38,11 @@
 
 #ifdef USE_TRANSLATION
 
-/* Initialized the locale. */
-void playfield_init_locale(void);
+/*
+ * Initialized the locale.
+ */
+void
+playfield_init_locale(void);
 
 #endif
 

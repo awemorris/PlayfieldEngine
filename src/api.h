@@ -36,10 +36,16 @@
 
 #include "playfield/playfield.h"
 
-/* Initialize the API. */
-bool init_api(void);
+/*
+ * Initialize the API.
+ */
+bool
+pfi_init_api(void);
 
-/* Cleanup the API. */
-void cleanup_api(void);
+/*
+ * Cleanup the API.
+ */
+void
+pfi_cleanup_api(void);
 
 #endif
