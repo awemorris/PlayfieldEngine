@@ -24,14 +24,16 @@
 #define PINNED_VAR_NOT_FOUND	0
 
 /*
- *Link an element to a list.
+ * Link an element to a list.
  */
 #define INSERT_TO_LIST(elem, list, prev, next)	\
 	do {					\
 		(elem)->prev = NULL;		\
 		(elem)->next = (list);		\
-		if ((list) != NULL)		\
+		if ((list) != NULL) {		\
+			assert(elem != (list)->next); \
 			(list)->prev = (elem);	\
+		}				\
 		(list) = (elem);		\
 	} while (0)
 
@@ -1078,6 +1080,8 @@ rt_gc_copy_young_object_recursively(
 		if ((*obj)->type == RT_GC_TYPE_ARRAY) {
 			/* Check for array cross-generation references. */
 			arr = (struct rt_array *)*obj;
+			if (arr->head.rem_flg)
+				return true;
 			for (i = 0; i < arr->size; i++) {
 				/* If the element is young generation. */
 				if (IS_REF_VAL(&arr->table[i]) &&
@@ -1096,6 +1100,8 @@ rt_gc_copy_young_object_recursively(
 		} else if ((*obj)->type == RT_GC_TYPE_DICT) {
 			/* Check for dictionary cross-generation references. */
 			dict = (struct rt_dict *)*obj;
+			if (dict->head.rem_flg)
+				return true;
 			for (i = 0; i < dict->alloc_size; i++) {
 				if (dict->key[i].type != NOCT_VALUE_STRING)
 					continue; /* Removed or empty. */
@@ -1109,7 +1115,7 @@ rt_gc_copy_young_object_recursively(
 
 					/* Add to remember set. */
 					dict->head.rem_flg = true;
-					INSERT_TO_LIST(&dict->head, env->vm->gc.remember_set,rem_prev, rem_next);
+					INSERT_TO_LIST(&dict->head, env->vm->gc.remember_set, rem_prev, rem_next);
 					break;
 				}
 
