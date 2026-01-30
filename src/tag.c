@@ -189,8 +189,10 @@ pfi_get_current_tag(void)
 bool
 pfi_move_to_next_tag(void)
 {
-	if (cur_index + 1 >= tag_size)
-		return false;
+	if (cur_index + 1 >= tag_size) {
+		cur_index = tag_size;
+		return true;
+	}
 
 	cur_index++;
 
