@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <time.h>
 #include <assert.h>
 
 /* POSIX */
@@ -948,4 +949,17 @@ hal_get_local_time(
 	int *min,
 	int *sec)
 {
-	localtime(
+	time_t t;
+	struct tm *tm_info;
+
+	time(&t);
+	tm_info = localtime(&t);
+
+	*year = tm_info->tm_year + 1900;
+	*month = tm_info->tm_mon + 1;
+	*day = tm_info->tm_mday;
+	*dow = tm_info->tm_wday;
+	*hour = tm_info->tm_hour;
+	*min = tm_info->tm_min;
+	*sec = tm_info->tm_sec;
+}
