@@ -251,7 +251,7 @@ hal_play_sound(
 		return true;
 
 	assert(pDS != NULL);
-	assert(stream >= 0 && stream < SOUND_TRACKS);
+	assert(stream >= 0 && stream < HAL_SOUND_TRACKS);
 	assert(w != NULL);
 
 	/* Stop if playing. */
@@ -273,7 +273,7 @@ hal_stop_sound(
 		return true;
 
 	assert(pDS != NULL);
-	assert(stream >= 0 && stream < SOUND_TRACKS);
+	assert(stream >= 0 && stream < HAL_SOUND_TRACKS);
 
 	/* Stop if playing. */
 	StopSoundBuffer(stream);
@@ -292,7 +292,7 @@ hal_set_sound_volume(
 	if (!bInitialized)
 		return true;
 
-	assert(stream >= 0 && stream < SOUND_TRACKS);
+	assert(stream >= 0 && stream < HAL_SOUND_TRACKS);
 
 	if (pDS == NULL)
 	{
@@ -424,7 +424,7 @@ RestoreBuffers(int nBuffer)
 	HRESULT hRet;
 
 	assert(pDSBuffer[nBuffer] != NULL);
-	assert(nBuffer >= 0 && nBuffer < SOUND_TRACKS);
+	assert(nBuffer >= 0 && nBuffer < HAL_SOUND_TRACKS);
 
 	hRet = IDirectSoundBuffer_GetStatus(pDSBuffer[nBuffer], &dwStatus);
 	if(hRet != DS_OK)
@@ -457,7 +457,7 @@ PlaySoundBuffer(int nBuffer,
 
 	assert(pDSBuffer[nBuffer] != NULL);
 	assert(pStream[nBuffer] == NULL);
-	assert(nBuffer >= 0 && nBuffer < SOUND_TRACKS);
+	assert(nBuffer >= 0 && nBuffer < HAL_SOUND_TRACKS);
 
 	/* Restore a buffer if it is lost. */
 	if(!RestoreBuffers(nBuffer))
@@ -504,7 +504,7 @@ StopSoundBuffer(
 	int nBuffer)
 {
 	assert(pDSBuffer[nBuffer] != NULL);
-	assert(nBuffer >= 0 && nBuffer < SOUND_TRACKS);
+	assert(nBuffer >= 0 && nBuffer < HAL_SOUND_TRACKS);
 
 	/* Mutually exclude with the event thread. */
 	EnterCriticalSection(&StreamCritical);
@@ -568,7 +568,7 @@ WriteNext(
 	HRESULT hRet;
 	int nArea, nSamples;
 
-	assert(nBuffer >= 0 && nBuffer < SOUND_TRACKS);
+	assert(nBuffer >= 0 && nBuffer < HAL_SOUND_TRACKS);
 	assert(nPosCurArea[nBuffer] >= 0 && nPosCurArea[nBuffer] < BUF_AREAS);
 
 	/* Get an area where playback is finished (and where we write) and increment it. */
@@ -681,7 +681,7 @@ EventThread(
 
 		/* Get a buffer index of notification source. */
 		nBuf = (int)(dwResult - WAIT_OBJECT_0);
-		assert(nBuf >= 0 && nBuf < SOUND_TRACKS);
+		assert(nBuf >= 0 && nBuf < HAL_SOUND_TRACKS);
 
 		/* Reset the event to non-signal state. */
 		ResetEvent(hNotifyEvent[nBuf]);
