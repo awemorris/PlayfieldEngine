@@ -31,6 +31,8 @@ extern int pf_mouse_pos_y;
  */
 extern bool pf_is_mouse_left_pressed;
 extern bool pf_is_mouse_right_pressed;
+extern bool pf_is_mouse_left_clicked;
+extern bool pf_is_mouse_right_clicked;
 
 /*
  * Gamepad

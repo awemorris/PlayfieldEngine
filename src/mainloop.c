@@ -52,6 +52,8 @@ int pf_mouse_pos_x;
 int pf_mouse_pos_y;
 bool pf_is_mouse_left_pressed;
 bool pf_is_mouse_right_pressed;
+bool pf_is_mouse_left_clicked;
+bool pf_is_mouse_right_clicked;
 bool pf_is_gamepad_left_pressed;
 bool pf_is_gamepad_right_pressed;
 bool pf_is_gamepad_up_pressed;
@@ -196,6 +198,8 @@ hal_callback_on_event_start(void)
 	pf_mouse_pos_y = 0;
 	pf_is_mouse_left_pressed = false;
 	pf_is_mouse_right_pressed = false;
+	pf_is_mouse_left_clicked = false;
+	pf_is_mouse_right_clicked = false;
 	pf_is_gamepad_left_pressed = false;
 	pf_is_gamepad_right_pressed = false;
 	pf_is_gamepad_up_pressed = false;
@@ -1090,9 +1094,11 @@ hal_callback_on_event_mouse_release(
 
 		if (button == HAL_MOUSE_LEFT) {
 			pf_is_mouse_left_pressed = false;
+			pf_is_mouse_left_clicked = true;
 			pfi_set_vm_int("isMouseLeftPressed", 0);
 		} else {
 			pf_is_mouse_right_pressed = false;
+			pf_is_mouse_right_clicked = true;
 			pfi_set_vm_int("isMouseRightPressed", 0);
 		}
 	}
