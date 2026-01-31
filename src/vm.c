@@ -448,7 +448,7 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	int ival;
 	float fval;
 	const char *sval;
-	int items;
+	uint32_t items;
 	int i;
 	char digits[1024];
 
@@ -1320,7 +1320,7 @@ serialize_save_data_recursively(
 	int ival;
 	float fval;
 	const char *sval;
-	int size;
+	uint32_t size;
 	int i;
 
 	if (!noct_get_value_type(env, value, &type))

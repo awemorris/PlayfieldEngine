@@ -1628,6 +1628,7 @@ pf_get_call_arg_array_length(
 {
 	NoctEnv *env;
 	NoctValue param, value;
+	uint32_t size;
 
 	env = pfi_get_vm_env();
 
@@ -1640,8 +1641,9 @@ pf_get_call_arg_array_length(
 		return false;
 
 	/* Get the array size. */
-	if (!noct_get_array_size(env, &value, val))
+	if (!noct_get_array_size(env, &value, &size))
 		return false;
+	*val = (int)size;
 
 	return true;
 }

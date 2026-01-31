@@ -29,3 +29,5 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
 elseif(MSVC)
   target_compile_options(bz2 PRIVATE /W0 /wd4267 /wd4334)
 endif()
+
+target_compile_definitions(bz2 PRIVATE BZ_STRICT_ANSI)
