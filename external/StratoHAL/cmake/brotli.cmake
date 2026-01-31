@@ -31,8 +31,8 @@ target_include_directories(brotlicommon PUBLIC  ${CMAKE_BINARY_DIR}/brotli/c/inc
 
 # Suppress compilation errors.
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-  target_compile_options(brotlicommon PRIVATE -std=c89 -w)
-  target_compile_options(brotlidec PRIVATE -std=c89 -w)
+  target_compile_options(brotlicommon PRIVATE -std=gnu89 -w)
+  target_compile_options(brotlidec PRIVATE -std=gnu89 -w)
 elseif(MSVC)
   target_compile_options(brotlicommon PRIVATE /W0 /wd4267 /wd4334)
   target_compile_options(brotlidec PRIVATE /W0 /wd4267 /wd4334)
