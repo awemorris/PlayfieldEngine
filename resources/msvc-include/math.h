@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define M_PI 3.14159265
+
 typedef float  float_t;
 typedef double double_t;
 
