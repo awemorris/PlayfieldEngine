@@ -819,6 +819,34 @@ hal_render_image_add(
  * Render an image.
  */
 void
+hal_render_image_sub(
+	int dst_left,
+	int dst_top,
+	int dst_width,
+	int dst_height,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_sub(dst_left,
+				dst_top,
+				dst_width,
+				dst_height,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
+}
+
+/*
+ * Render an image.
+ */
+void
 hal_render_image_dim(
 	int dst_left,
 	int dst_top,
@@ -924,6 +952,78 @@ hal_render_image_3d_add(
 	int alpha)
 {
 	opengl_render_image_3d_add(x1,
+				   y1,
+				   x2,
+				   y2,
+				   x3,
+				   y3,
+				   x4,
+				   y4,
+				   src_image,
+				   src_left,
+				   src_top,
+				   src_width,
+				   src_height,
+				   alpha);
+}
+
+/*
+ * Render an image to the screen with the "add" shader pipeline.
+ */
+void
+hal_render_image_3d_sub(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_sub(x1,
+				   y1,
+				   x2,
+				   y2,
+				   x3,
+				   y3,
+				   x4,
+				   y4,
+				   src_image,
+				   src_left,
+				   src_top,
+				   src_width,
+				   src_height,
+				   alpha);
+}
+
+/*
+ * Render an image to the screen with the "add" shader pipeline.
+ */
+void
+hal_render_image_3d_dim(
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha)
+{
+	opengl_render_image_3d_dim(x1,
 				   y1,
 				   x2,
 				   y2,
