@@ -181,7 +181,7 @@ bool rt_gc_init(struct rt_vm *vm);
 void rt_gc_cleanup(struct rt_vm *vm);
 
 /* Allocates a string object in the appropriate region. */
-struct rt_string *rt_gc_alloc_string(struct rt_env *env, const char *data, uint32_t len, uint32_t hash);
+struct rt_string *rt_gc_alloc_string(struct rt_env *env, const char *data, size_t len, uint32_t hash);
 
 /* Allocates an array object in the appropriate region. */
 struct rt_array *rt_gc_alloc_array(struct rt_env *env, size_t size);

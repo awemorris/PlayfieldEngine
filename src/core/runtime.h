@@ -111,19 +111,19 @@ struct rt_func {
 	struct rt_gc_object head;
 
 	char *name;
-	int param_count;
+	uint32_t param_count;
 	char *param_name[NOCT_ARG_MAX];
 
 	char *file_name;
 
 	/* Bytecode for a function. (if not a cfunc) */
-	int bytecode_size;
+	uint32_t bytecode_size;
 	uint8_t *bytecode;
-	int tmpvar_size;
+	uint32_t tmpvar_size;
 
 	/* JIT-generated code. */
 	bool (*jit_code)(struct rt_env *env);
-	int call_count;
+	uint32_t call_count;
 
 	/* Function pointer. (if a cfunc) */
 	bool (*cfunc)(struct rt_env *env);
@@ -293,7 +293,7 @@ bool rt_create_thread_env(struct rt_env *prev_env, struct rt_env **new_env);
 bool rt_register_source(struct rt_env *env, const char *file_name, const char *source_text);
 
 /* Register functions from bytecode data. */
-bool rt_register_bytecode(struct rt_env *env, uint32_t size, uint8_t *data);
+bool rt_register_bytecode(struct rt_env *env, size_t size, uint8_t *data);
 
 /* Register an FFI C function. */
 bool rt_register_cfunc(struct rt_env *env, const char *name, int param_count, const char *param_name[], bool (*cfunc)(struct rt_env *env), struct rt_func **ret_func);
@@ -316,7 +316,7 @@ bool rt_call(struct rt_env *env, struct rt_func *func, int arg_count, struct rt_
 bool rt_make_string(struct rt_env *env, struct rt_value *val, const char *data);
 
 /* Make a string value. (hash version) */
-bool rt_make_string_with_hash(struct rt_env *env, struct rt_value *val, const char *data, uint32_t len, uint32_t hash);
+bool rt_make_string_with_hash(struct rt_env *env, struct rt_value *val, const char *data, size_t len, uint32_t hash);
 
 /* Cache the hash of a string. */
 void rt_cache_string_hash(struct rt_string *rts);
@@ -329,7 +329,7 @@ void rt_cache_string_hash(struct rt_string *rts);
 bool rt_make_empty_array(struct rt_env *env, struct rt_value *val);
 
 /* Get the size of an array. */
-bool rt_get_array_size(struct rt_env *env, struct rt_array *arr, int *size);
+bool rt_get_array_size(struct rt_env *env, struct rt_array *arr, uint32_t *size);
 
 /* Retrieves an array element. */
 bool rt_get_array_elem(struct rt_env *env, struct rt_array *arr, int index, struct rt_value *val);
@@ -347,7 +347,7 @@ bool rt_make_array_copy(struct rt_env *env, struct rt_array **dst, struct rt_arr
 bool rt_make_empty_dict(struct rt_env *env, struct rt_value *val);
 
 /* Get the size of a dictionary. */
-bool rt_get_dict_size(struct rt_env *env, struct rt_dict *dict, int *size);
+bool rt_get_dict_size(struct rt_env *env, struct rt_dict *dict, uint32_t *size);
 
 /* Checks if a key exists in a dictionary. */
 bool rt_check_dict_key(struct rt_env *env, struct rt_dict *dict, const char *key, bool *ret);
@@ -362,19 +362,19 @@ bool rt_get_dict_value_by_index(struct rt_env *env, struct rt_dict *dict, int in
 bool rt_get_dict_elem(struct rt_env *env, struct rt_dict *dict, const char *key, struct rt_value *val);
 
 /* Retrieves the value by a key in a dictionary. (hash version) */
-bool rt_get_dict_elem_with_hash(struct rt_env *env, struct rt_dict *dict, const char *key, uint32_t len, uint32_t hash, struct rt_value *val);
+bool rt_get_dict_elem_with_hash(struct rt_env *env, struct rt_dict *dict, const char *key, size_t len, uint32_t hash, struct rt_value *val);
 
 /* Stores a key-value-pair to a dictionary. */
 bool rt_set_dict_elem(struct rt_env *env, struct rt_dict **dict, const char *key, struct rt_value *val);
 
 /* Stores a key-value-pair to a dictionary. (hash version) */
-bool rt_set_dict_elem_with_hash(struct rt_env *env, struct rt_dict **dict, const char *key, uint32_t len, uint32_t hash, struct rt_value *val);
+bool rt_set_dict_elem_with_hash(struct rt_env *env, struct rt_dict **dict, const char *key, size_t len, uint32_t hash, struct rt_value *val);
 
 /* Remove a dictionary key. */
 bool rt_remove_dict_elem(struct rt_env *env, struct rt_dict *dict, const char *key);
 
 /* Remove a dictionary key. (hash version) */
-bool rt_remove_dict_elem_with_hash(struct rt_env *env, struct rt_dict *dict, const char *key, uint32_t len, uint32_t hash);
+bool rt_remove_dict_elem_with_hash(struct rt_env *env, struct rt_dict *dict, const char *key, size_t len, uint32_t hash);
 
 /* Make a shallow copy of a dictionary. */
 bool rt_make_dict_copy(struct rt_env *env, struct rt_dict **dst, struct rt_dict *src);
@@ -390,13 +390,13 @@ bool rt_check_global(struct rt_env *env, const char *name);
 bool rt_get_global(struct rt_env *env, const char *name, struct rt_value *val);
 
 /* Get a global variable. (hash version) */
-bool rt_get_global_with_hash(struct rt_env *env, const char *name, uint32_t len, uint32_t hash, struct rt_value *val);
+bool rt_get_global_with_hash(struct rt_env *env, const char *name, size_t len, uint32_t hash, struct rt_value *val);
 
 /* Set a global variable. */
 bool rt_set_global(struct rt_env *env, const char *name, struct rt_value *val);
 
 /* Set a global variable. (hash version) */
-bool rt_set_global_with_hash(struct rt_env *env, const char *name, uint32_t len, uint32_t hash, struct rt_value *val);
+bool rt_set_global_with_hash(struct rt_env *env, const char *name, size_t len, uint32_t hash, struct rt_value *val);
 
 /*
  * FFI Pin

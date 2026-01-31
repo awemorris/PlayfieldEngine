@@ -366,9 +366,6 @@ noct_get_string(
 	NoctValue *val,
 	const char **s)
 {
-	size_t src_len;
-	size_t copy_len;
-
 	assert(env != NULL);
 	assert(val != NULL);
 
@@ -412,10 +409,8 @@ bool
 noct_get_array_size(
 	NoctEnv *env,
 	NoctValue *val,
-	int *size)
+	uint32_t *size)
 {
-	struct rt_array *real_arr;
-
 	assert(env != NULL);
 	assert(val != NULL);
 	assert(size != NULL);
@@ -438,11 +433,9 @@ bool
 noct_get_array_elem(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
-	struct rt_array *real_arr;
-
 	assert(env != NULL);
 	assert(array != NULL);
 	assert(index >= 0);
@@ -466,7 +459,7 @@ bool
 noct_set_array_elem(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
@@ -492,7 +485,7 @@ bool
 noct_resize_array(
 	NoctEnv *env,
 	NoctValue *array,
-	int size)
+	uint32_t size)
 {
 	assert(env != NULL);
 	assert(array != NULL);
@@ -544,7 +537,7 @@ bool
 noct_get_dict_size(
 	NoctEnv *env,
 	NoctValue *dict,
-	int *size)
+	uint32_t *size)
 {
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -568,7 +561,7 @@ bool
 noct_get_dict_key_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
-	int index,
+	uint32_t index,
 	NoctValue *key)
 {
 	assert(env != NULL);
@@ -594,7 +587,7 @@ bool
 noct_get_dict_value_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
@@ -704,9 +697,6 @@ noct_remove_dict_elem(
 	NoctValue *dict,
 	const char *key)
 {
-	struct rt_dict *d;
-	int i;
-
 	assert(env != NULL);
 	assert(dict != NULL);
 	assert(key != NULL);
@@ -757,7 +747,7 @@ NOCT_DLL
 bool
 noct_get_arg(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
@@ -791,7 +781,6 @@ noct_check_global(
 {
 	assert(env != NULL);
 	assert(name != NULL);
-	assert(val != NULL);
 
 	if (!rt_check_global(env, name))
 		return false;
@@ -867,11 +856,11 @@ NOCT_DLL
 bool
 noct_pin_local(
 	NoctEnv *env,
-	int count,
+	uint32_t count,
 	...)
 {
 	va_list ap;
-	int i;
+	uint32_t i;
 	struct rt_value *val;
 
 	assert(env != NULL);
@@ -892,11 +881,11 @@ NOCT_DLL
 bool
 noct_unpin_local(
 	NoctEnv *env,
-	int count,
+	uint32_t count,
 	...)
 {
 	va_list ap;
-	int i;
+	uint32_t i;
 	struct rt_value *val;
 
 	assert(env != NULL);
@@ -1016,7 +1005,7 @@ bool
 noct_get_array_elem_check_int(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int *i)
 {
@@ -1050,7 +1039,7 @@ bool
 noct_get_array_elem_check_float(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float *f)
 {
@@ -1084,7 +1073,7 @@ bool
 noct_get_array_elem_check_string(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char **data)
 {
@@ -1119,7 +1108,7 @@ bool
 noct_get_array_elem_check_array(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
@@ -1171,7 +1160,7 @@ bool
 noct_get_array_elem_check_func(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	NoctFunc **f)
 {
@@ -1209,8 +1198,6 @@ noct_set_array_elem_make_int(
 	NoctValue *val,
 	int i)
 {
-	struct rt_value *tmp;
-
 	assert(env != NULL);
 	assert(array != NULL);
 	assert(index >= 0);

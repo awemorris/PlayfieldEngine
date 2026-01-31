@@ -78,8 +78,8 @@ size_t noct_conf_gc_promotion_threshold = RT_GC_PROMOTION_THRESHOLD;
 /*
  * Forward declaration.
  */
-static struct rt_string *rt_gc_alloc_string_graduate(struct rt_env *env, const char *data, uint32_t len, uint32_t hash);
-static struct rt_string *rt_gc_alloc_string_tenure(struct rt_env *env, const char *data, uint32_t len, uint32_t hash);
+static struct rt_string *rt_gc_alloc_string_graduate(struct rt_env *env, const char *data, size_t len, uint32_t hash);
+static struct rt_string *rt_gc_alloc_string_tenure(struct rt_env *env, const char *data, size_t len, uint32_t hash);
 static struct rt_array *rt_gc_alloc_array_graduate(struct rt_env *env, size_t size);
 static struct rt_array *rt_gc_alloc_array_tenure(struct rt_env *env, size_t size);
 static struct rt_dict *rt_gc_alloc_dict_graduate(struct rt_env *env, size_t size);
@@ -169,7 +169,7 @@ struct rt_string *
 rt_gc_alloc_string(
 	struct rt_env *env,
 	const char *data,
-	uint32_t len,
+	size_t len,
 	uint32_t hash)
 {
 	struct rt_string *rts;
@@ -228,7 +228,7 @@ static struct rt_string *
 rt_gc_alloc_string_graduate(
 	struct rt_env *env,
 	const char *data,
-	uint32_t len,
+	size_t len,
 	uint32_t hash)
 {
 	struct rt_string *rts;
@@ -279,7 +279,7 @@ static struct rt_string *
 rt_gc_alloc_string_tenure(
 	struct rt_env *env,
 	const char *data,
-	uint32_t len,
+	size_t len,
 	uint32_t hash)
 {
 	struct rt_string *rts;
@@ -1221,7 +1221,7 @@ rt_gc_promote_array(
 	struct rt_gc_object *obj)
 {
 	struct rt_array *old_arr, *new_arr;
-	int alloc_size;
+	size_t alloc_size;
 
 	/* Get the allocation size. */
 	old_arr = (struct rt_array *)obj;
@@ -1252,7 +1252,8 @@ rt_gc_promote_dict(
 	struct rt_gc_object *obj)
 {
 	struct rt_dict *old_dict, *new_dict;
-	int alloc_size, index, i, j;
+	size_t alloc_size;
+	int index, i, j;
 
 	/* Get the allocation size. */
 	old_dict = (struct rt_dict *)obj;
@@ -1323,7 +1324,7 @@ rt_gc_copy_array_to_graduate(
 {
 	struct rt_array *new_obj;
 	int i;
-	int size;
+	size_t size;
 
 	assert(env != NULL);
 	assert(old_obj != NULL);
@@ -1371,7 +1372,7 @@ rt_gc_copy_dict_to_graduate(
 {
 	struct rt_dict *new_obj;
 	int i;
-	int size;
+	size_t size;
 
 	assert(env != NULL);
 	assert(old_obj != NULL);
@@ -1438,7 +1439,6 @@ rt_gc_old_gc_body(
 	struct rt_env *env)
 {
 	struct rt_gc_object *obj, *next_obj;
-	struct rt_bindglobal *global;
 	struct rt_frame *frame;
 	int sp, i;
 
@@ -1603,7 +1603,6 @@ rt_gc_compact_gc(
 	struct rt_gc_object *obj, **objpp;
 	char *cur_blk, *remap_top;
 	int sp, i, index;
-	struct rt_bindglobal *global;
 	struct rt_frame *frame;
 
 	/*
@@ -1727,7 +1726,7 @@ rt_gc_compact_gc(
 		if (env->vm->global[i].name == NULL || env->vm->global[i].is_removed)
 			continue;
 		if (IS_REF_VAL(&env->vm->global[i].val))
-			rt_gc_update_tenure_ref_recursively(env, &global->val.val.obj);
+			rt_gc_update_tenure_ref_recursively(env, &env->vm->global[i].val.val.obj);
 	}
 
 	/* For all call frames. */

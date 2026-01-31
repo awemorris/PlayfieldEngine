@@ -50,8 +50,8 @@ int noct_conf_optimize = 0;
 /* Forward declarations. */
 static void rt_free_func(struct rt_env *rt, struct rt_func *func);
 static bool rt_register_lir(struct rt_env *rt, struct lir_func *lir);
-static bool rt_register_bytecode_function(struct rt_env *rt, uint8_t *data, uint32_t size, int *pos, char *file_name);
-static const char *rt_read_bytecode_line(uint8_t *data, uint32_t size, int *pos);
+static bool rt_register_bytecode_function(struct rt_env *rt, uint8_t *data, size_t size, int *pos, char *file_name);
+static const char *rt_read_bytecode_line(uint8_t *data, size_t size, int *pos);
 static bool rt_enter_frame(struct rt_env *env, struct rt_func *func);
 static void rt_leave_frame(struct rt_env *env);
 static bool rt_expand_array(struct rt_env *env, struct rt_array *old_arr, struct rt_array **new_arr_pp, size_t size);
@@ -72,8 +72,6 @@ rt_create_vm(
 	struct rt_vm **vm,
 	struct rt_env **default_env)
 {
-	srand(time(NULL));
-
 	/* Allocate a struct rt_vm. */
 	*vm = noct_malloc(sizeof(struct rt_vm));
 	if (*vm == NULL) {
@@ -386,7 +384,7 @@ rt_register_lir(
 bool
 rt_register_bytecode(
 	struct rt_env *env,
-	uint32_t size,
+	size_t size,
 	uint8_t *data)
 {
 	char *file_name;
@@ -452,7 +450,7 @@ static bool
 rt_register_bytecode_function(
 	struct rt_env *env,
 	uint8_t *data,
-	uint32_t size,
+	size_t size,
 	int *pos,
 	char *file_name)
 {
@@ -563,7 +561,7 @@ rt_register_bytecode_function(
 static const char *
 rt_read_bytecode_line(
 	uint8_t *data,
-	uint32_t size,
+	size_t size,
 	int *pos)
 {
 	static char line[1024];
@@ -804,8 +802,6 @@ static void
 rt_leave_frame(
 	struct rt_env *env)
 {
-	struct rt_frame *frame;
-
 	if (--env->cur_frame_index < 0) {
 		rt_error(env, N_TR("Stack underflow."));
 		abort();
@@ -827,7 +823,8 @@ rt_make_string(
 	struct rt_value *val,
 	const char *data)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(data) + 1;
 	hash = 0;
@@ -845,7 +842,7 @@ rt_make_string_with_hash(
 	struct rt_env *env,
 	struct rt_value *val,
 	const char *data,
-	uint32_t len,		/* Including NUL */
+	size_t len,		/* Including NUL */
 	uint32_t hash)
 {
 	struct rt_string *rts;
@@ -957,10 +954,9 @@ bool
 rt_get_array_size(
 	struct rt_env *env,
 	struct rt_array *arr,
-	int *size)
+	uint32_t *size)
 {
 	struct rt_array *real_arr;
-	int type;
 
 	assert(env != NULL);
 	assert(arr != NULL);
@@ -969,7 +965,7 @@ rt_get_array_size(
 	ACQUIRE_OBJ(arr, real_arr);
 
 	/* Get the size. */
-	*size = real_arr->size;
+	*size = (uint32_t)real_arr->size;
 
 	RELEASE_OBJ(real_arr);
 
@@ -1244,7 +1240,7 @@ bool
 rt_get_dict_size(
 	struct rt_env *env,
 	struct rt_dict *dict,
-	int *size)
+	uint32_t *size)
 {
 	struct rt_dict *real_dict;
 
@@ -1255,7 +1251,7 @@ rt_get_dict_size(
 	ACQUIRE_OBJ(dict, real_dict);
 
 	/* Get the size. */
-	*size = real_dict->size;
+	*size = (uint32_t)real_dict->size;
 
 	RELEASE_OBJ(real_dict);
 	return true;
@@ -1272,7 +1268,8 @@ rt_check_dict_key(
 	bool *ret)
 {
 	struct rt_dict *real_dict;
-	uint32_t hash, len;
+	size_t len;
+	uint32_t hash;
 	int i, index;
 
 	ACQUIRE_OBJ(dict, real_dict);
@@ -1415,7 +1412,8 @@ rt_get_dict_elem(
 	const char *key,
 	struct rt_value *val)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(key) + 1;
 	hash = string_hash(key);
@@ -1433,7 +1431,7 @@ rt_get_dict_elem_with_hash(
 	struct rt_env *env,
 	struct rt_dict *dict,
 	const char *key,
-	uint32_t len,
+	size_t len,
 	uint32_t hash,
 	struct rt_value *val)
 {
@@ -1487,7 +1485,8 @@ rt_set_dict_elem(
 	const char *key,
 	struct rt_value *val)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(key) + 1;	/* Including NUL. */
 	hash = string_hash(key);
@@ -1505,7 +1504,7 @@ rt_set_dict_elem_with_hash(
 	struct rt_env *env,
 	struct rt_dict **dict,
 	const char *key,
-	uint32_t len,
+	size_t len,
 	uint32_t hash,
 	struct rt_value *val)
 {
@@ -1659,7 +1658,8 @@ rt_remove_dict_elem(
 	struct rt_dict *dict,
 	const char *key)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(key) + 1;	/* Including NUL. */
 	hash = string_hash(key);
@@ -1677,7 +1677,7 @@ rt_remove_dict_elem_with_hash(
 	struct rt_env *env,
 	struct rt_dict *dict,
 	const char *key,
-	uint32_t len,
+	size_t len,
 	uint32_t hash)
 {
 	struct rt_dict *real_dict;
@@ -1886,7 +1886,8 @@ rt_get_global(
 	const char *name,
 	struct rt_value *val)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(name) + 1;
 	hash = string_hash(name);
@@ -1904,7 +1905,7 @@ bool
 rt_get_global_with_hash(
 	struct rt_env *env,
 	const char *name,
-	uint32_t len,
+	size_t len,
 	uint32_t hash,
 	struct rt_value *val)
 {
@@ -1948,7 +1949,8 @@ rt_set_global(
 	const char *name,
 	struct rt_value *val)
 {
-	uint32_t len, hash;
+	size_t len;
+	uint32_t hash;
 
 	len = strlen(name) + 1;	/* Including NUL. */
 	hash = string_hash(name);
@@ -1965,7 +1967,7 @@ bool
 rt_set_global_with_hash(
 	struct rt_env *env,
 	const char *name,
-	uint32_t len,		/* Including NUL. */
+	size_t len,		/* Including NUL. */
 	uint32_t hash,
 	struct rt_value *val)
 {
@@ -1994,7 +1996,7 @@ rt_set_global_with_hash(
 				rt_out_of_memory(env);
 				return false;
 			}
-			env->vm->global[i].name_len = len;
+			env->vm->global[i].name_len = (uint32_t)len;
 			env->vm->global[i].name_hash = hash;
 			env->vm->global[i].val = *val;
 			env->vm->global_size++;

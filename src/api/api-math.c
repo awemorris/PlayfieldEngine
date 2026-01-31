@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -52,6 +53,8 @@ bool noct_register_api_math(NoctEnv *env)
 {
 	NoctValue dict;
 	int i;
+
+	srand((unsigned int)time(NULL));
 
 	/* Make a global variable "System". */
 	if (!noct_make_empty_dict(env, &dict))

@@ -69,7 +69,7 @@ struct jit_context {
 	void *exception_code;
 
 	/* Current PC of LIR. */
-	int lpc;
+	uint32_t lpc;
 
 	/* Mapping table from LIR-PC to Native-PC. */
 	struct pc_entry {
@@ -79,7 +79,7 @@ struct jit_context {
 		/* Native-PC */
 		uint32_t *code;
 	} pc_entry[PC_ENTRY_MAX];
-	int pc_entry_count;
+	uint32_t pc_entry_count;
 
 	/* Delayed branch patching table. */
 	struct branch_patch {
@@ -171,7 +171,7 @@ jit_get_opr_tmpvar(
 
 	*d = (ctx->func->bytecode[ctx->lpc] << 8) |
 	      ctx->func->bytecode[ctx->lpc + 1];
-	if (*d >= ctx->func->tmpvar_size) {
+	if ((uint32_t)*d >= ctx->func->tmpvar_size) {
 		rt_error(ctx->env, BROKEN_BYTECODE);
 		return false;
 	}

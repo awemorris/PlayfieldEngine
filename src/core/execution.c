@@ -1011,8 +1011,6 @@ rt_storearray_helper(
 	struct rt_value *arr_val;
 	struct rt_value *subscr_val;
 	struct rt_value *val_val;
-	int index;
-	bool is_dict;
 
 	/* Get the container. */
 	arr_val = &env->frame->tmpvar[arr];
@@ -1123,6 +1121,7 @@ rt_len_helper(
 {
 	struct rt_value *dst_val;
 	struct rt_value *src_val;
+	uint32_t val;
 
 	dst_val = &env->frame->tmpvar[dst];
 	src_val = &env->frame->tmpvar[src];
@@ -1130,16 +1129,18 @@ rt_len_helper(
 	switch (src_val->type) {
 	case NOCT_VALUE_STRING:
 		dst_val->type = NOCT_VALUE_INT;
-		dst_val->val.i = src_val->val.str->len - 1; /* Exclude NUL */
+		dst_val->val.i = (int)(src_val->val.str->len - 1); /* Exclude NUL */
 		assert(src_val->val.str->len == strlen(src_val->val.str->data));
 		break;
 	case NOCT_VALUE_ARRAY:
 		dst_val->type = NOCT_VALUE_INT;
-		rt_get_array_size(env, src_val->val.arr, &dst_val->val.i);
+		rt_get_array_size(env, src_val->val.arr, &val);
+		dst_val->val.i = (int)val;
 		break;
 	case NOCT_VALUE_DICT:
 		dst_val->type = NOCT_VALUE_INT;
-		rt_get_dict_size(env, src_val->val.dict, &dst_val->val.i);
+		rt_get_dict_size(env, src_val->val.dict, &val);
+		dst_val->val.i = (int)val;
 		break;
 	default:
 		rt_error(env, N_TR("Value is not a string, an array, or a dictionary."));
@@ -1160,7 +1161,6 @@ rt_getdictkeybyindex_helper(
 	struct rt_value *dst_val;
 	struct rt_value *dict_val;
 	struct rt_value *subscr_val;
-	int size;
 
 	dst_val = &env->frame->tmpvar[dst];
 	dict_val = &env->frame->tmpvar[dict];
@@ -1271,22 +1271,22 @@ rt_loaddot_helper(
 	    field_hash == 0x83d03615 &&
 	    strcmp(field, "length") == 0) {
 		if (env->frame->tmpvar[dict].type == NOCT_VALUE_DICT) {
-			int size;
+			uint32_t size;
 			if (!rt_get_dict_size(env, env->frame->tmpvar[dict].val.dict, &size))
 				return false;
 			env->frame->tmpvar[dst].type = NOCT_VALUE_INT;
-			env->frame->tmpvar[dst].val.i = size;
+			env->frame->tmpvar[dst].val.i = (int)size;
 			return true;
 		} else if (env->frame->tmpvar[dict].type == NOCT_VALUE_ARRAY) {
-			int size;
+			uint32_t size;
 			if (!rt_get_array_size(env, env->frame->tmpvar[dict].val.arr, &size))
 				return false;
 			env->frame->tmpvar[dst].type = NOCT_VALUE_INT;
-			env->frame->tmpvar[dst].val.i = size;
+			env->frame->tmpvar[dst].val.i = (int)size;
 			return true;
 		} else if (env->frame->tmpvar[dict].type == NOCT_VALUE_STRING) {
 			env->frame->tmpvar[dst].type = NOCT_VALUE_INT;
-			env->frame->tmpvar[dst].val.i = env->frame->tmpvar[dict].val.str->len - 1; /* Exclude NUL */
+			env->frame->tmpvar[dst].val.i = (int)(env->frame->tmpvar[dict].val.str->len - 1); /* Exclude NUL */
 			return true;
 		}
 	}
