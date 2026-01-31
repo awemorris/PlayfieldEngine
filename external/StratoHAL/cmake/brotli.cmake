@@ -28,3 +28,12 @@ target_include_directories(brotlidec PUBLIC  ${CMAKE_BINARY_DIR}/brotli/c/includ
 
 target_include_directories(brotlicommon PRIVATE ${CMAKE_BINARY_DIR}/brotli/c/include)
 target_include_directories(brotlicommon PUBLIC  ${CMAKE_BINARY_DIR}/brotli/c/include)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(brotlicommon PRIVATE -std=c89 -w)
+  target_compile_options(brotlidec PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(brotlicommon PRIVATE /W0 /wd4267 /wd4334)
+  target_compile_options(brotlidec PRIVATE /W0 /wd4267 /wd4334)
+endif()

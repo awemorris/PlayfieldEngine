@@ -33,3 +33,10 @@ target_compile_definitions(ogg PUBLIC _FILE_OFFSET_BITS=64 _LARGEFILE_SOURCE _LA
 target_include_directories(ogg PRIVATE ${CMAKE_BINARY_DIR}/libogg)
 target_include_directories(ogg PUBLIC  ${CMAKE_BINARY_DIR}/libogg/include)
 set(OGG_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/libogg/include)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(ogg PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(ogg PRIVATE /W0 /wd4267 /wd4244)
+endif()

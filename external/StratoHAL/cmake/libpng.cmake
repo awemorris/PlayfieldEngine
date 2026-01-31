@@ -53,3 +53,10 @@ set(PNG_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/libpng)
 target_link_libraries(png PRIVATE z)
 
 #target_compile_definitions(png PRIVATE PNG_ARM_NEON_OPT=0)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(png PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(png PRIVATE /W0 /wd4267 /wd4334)
+endif()

@@ -268,7 +268,6 @@ InitApp(
 	HINSTANCE hInstance,
 	int nCmdShow)
 {
-	BOOL bFileOK;
 	RECT rcClient;
 	HRESULT hResult;
 
@@ -1286,7 +1285,7 @@ OpenLogFile(void)
 		return TRUE;
 
 	/* Create in the game directory. */
-	pwszLogFilePath = wcsdup(L"log.txt");
+	pwszLogFilePath = _wcsdup(L"log.txt");
 	pLogFile = _wfopen(L"log.txt", L"w");
 	if (pLogFile == NULL)
 		return FALSE;

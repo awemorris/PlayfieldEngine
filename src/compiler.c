@@ -76,8 +76,6 @@ static int wide_printf(const char *format, ...);
 
 int main(int argc, char *argv[])
 {
-	char *first_arg;
-
 #if defined(USE_TRANSLATION)
 	noct_init_locale();
 #endif

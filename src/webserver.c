@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* Create a socket to listen. */
-	int listen_sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	int listen_sock = (int)socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_sock == -1) {
 		printf("Error: Cannot create a socket.\n");
 		return 1;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 	/* Get a socket for a connection. */
 	struct sockaddr_in from;
 	int len = sizeof(from);
-	int accept_sock = accept(listen_sock, (struct sockaddr *)&from, &len);
+	int accept_sock = (int)accept(listen_sock, (struct sockaddr *)&from, &len);
 	if (accept_sock == -1) {
 		printf("Error: Cannot accept.\n");
 		return 1;
@@ -126,8 +126,8 @@ int main(int argc, char *argv[])
 		if (is_index_sent && is_data_sent) {
 			/* Send "Connection: Close". */
 			snprintf(send_buf, sizeof(send_buf), "Connection: Close\n");
-			send(accept_sock, send_buf, strlen(send_buf), 0);
-			close(accept_sock);
+			send(accept_sock, send_buf, (int)strlen(send_buf), 0);
+			_close((int)accept_sock);
 			break;
 		}
 
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 			char send_buf[4096];
 			printf("404 Not Found\n");
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 404 Not Found\nContent-Size: 0\nConnection: Close\n\n");
-			send(accept_sock, send_buf, strlen(send_buf), 0);
+			send(accept_sock, send_buf, (int)strlen(send_buf), 0);
 			continue;
 		}
 		printf("File: %s\n", fname);
@@ -197,11 +197,11 @@ int main(int argc, char *argv[])
 			snprintf(send_buf, sizeof(send_buf), "HTTP/1.1 200 OK\nContent-Type: application/octet-stream\nCache-Control: no-cache\nContent-Length: %zu\n\n", fsize);
 			is_data_sent = 1;
 		}
-		send(accept_sock, send_buf, strlen(send_buf), 0);
+		send(accept_sock, send_buf, (int)strlen(send_buf), 0);
 
 		/* Send a response body. */
 		printf("Sending response body...\n");
-		send(accept_sock, fdata, fsize, 0);
+		send(accept_sock, fdata, (int)fsize, 0);
 		free(fdata);
 
 		printf("File %s Ok.\n", fname);

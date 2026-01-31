@@ -617,7 +617,6 @@ static bool Engine_getDate(NoctEnv *env)
 	NoctValue val;
 	time_t t;
 	struct tm *tm_info;
-	bool is_ok;
 
 	if (!noct_make_empty_dict(env, &ret))
 		return false;
@@ -814,9 +813,19 @@ static bool Engine_renderTexture3D(NoctEnv *env)
 		return false;
 
 	pf_render_texture_3d(
-		x1, y1, x2, y2, x3, y3, x4, y4,
+		(float)x1,
+		(float)y1,
+		(float)x2,
+		(float)y2,
+		(float)x3,
+		(float)y3,
+		(float)x4,
+		(float)y4,
 		tex_id,
-		src_left, src_top, src_width, src_height,
+		src_left,
+		src_top,
+		src_width,
+		src_height,
 		alpha);
 
 	return true;
@@ -907,7 +916,6 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	int slot;
 	const char *text;
 	int size;
-	const char *color;
 	int r, g, b, a;
 	int tex_id;
 	int tex_width;

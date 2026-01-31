@@ -112,3 +112,10 @@ add_library(webp OBJECT
 target_include_directories(webp PRIVATE ${CMAKE_BINARY_DIR}/libwebp)
 target_include_directories(webp PUBLIC  ${CMAKE_BINARY_DIR}/libwebp/src)
 set(WEBP_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/libwebp/src)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(webp PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(webp PRIVATE /W0 /wd4267 /wd4334)
+endif()

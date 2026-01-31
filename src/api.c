@@ -1363,7 +1363,8 @@ make_save_file_name(
 	const char *key)
 {
 	char buf[1024];
-	int i, len, pos;
+	int i;
+	size_t len, pos;
 
 	strcpy(buf, HAL_SAVE_DIR "/");
 

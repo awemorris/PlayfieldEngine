@@ -25,7 +25,7 @@ target_include_directories(bz2 PUBLIC ${CMAKE_BINARY_DIR}/bzip2)
 
 # Suppress compilation errors.
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-  target_compile_options(bz2 PRIVATE -w)
+  target_compile_options(bz2 PRIVATE -std=c89 -w)
 elseif(MSVC)
-  target_compile_options(bz2 PRIVATE /w)
+  target_compile_options(bz2 PRIVATE /W0 /wd4267 /wd4334)
 endif()

@@ -45,3 +45,12 @@ target_include_directories(vorbis PRIVATE ${CMAKE_BINARY_DIR}/libvorbis/include)
 target_include_directories(vorbis PUBLIC  ${CMAKE_BINARY_DIR}/libvorbis/include)
 
 target_link_libraries(vorbis PRIVATE ogg)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(vorbis PRIVATE -std=c89 -w)
+  target_compile_options(vorbisfile PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(vorbis PRIVATE /W0 /wd4267 /wd4244)
+  target_compile_options(vorbisfile PRIVATE /W0 /wd4267 /wd4244)
+endif()

@@ -66,3 +66,10 @@ target_link_libraries(freetype PRIVATE
   brotlicommon
   z
 )
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(freetype PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(freetype PRIVATE /W0 /wd4267 /wd4334)
+endif()

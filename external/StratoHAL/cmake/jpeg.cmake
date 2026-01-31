@@ -71,3 +71,10 @@ add_library(jpeg OBJECT
 
 target_include_directories(jpeg PUBLIC ${CMAKE_BINARY_DIR}/jpeg)
 set(JPEG_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/jpeg)
+
+# Suppress compilation errors.
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(jpeg PRIVATE -std=c89 -w)
+elseif(MSVC)
+  target_compile_options(jpeg PRIVATE /W0 /wd4267 /wd4244)
+endif()
