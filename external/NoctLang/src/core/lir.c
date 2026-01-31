@@ -1557,7 +1557,6 @@ lir_visit_new_expr(
 	struct hir_expr *expr,
 	struct hir_block *block)
 {
-	int arg_tmpvar[2];
 	int new_tmpvar, cls_tmpvar, init_tmpvar;
 
 	assert(expr != NULL);

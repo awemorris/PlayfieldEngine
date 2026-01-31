@@ -1850,7 +1850,6 @@ hir_visit_new_expr(
 	struct ast_expr *aexpr)
 {
 	struct hir_expr *e;
-	struct hir_term *t;
 
 	assert(hexpr != NULL);
 	assert(*hexpr == NULL);

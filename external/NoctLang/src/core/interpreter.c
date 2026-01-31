@@ -51,7 +51,7 @@
                 return false;                                   \
         return true
 
-static bool rt_visit_op(struct rt_env *env, struct rt_func *func, int *pc);
+static bool rt_visit_op(struct rt_env *env, struct rt_func *func, uint32_t *pc);
 
 /*
  * Visit a bytecode array.
@@ -61,7 +61,7 @@ rt_visit_bytecode(
         struct rt_env *env,
         struct rt_func *func)
 {
-        int pc;
+        uint32_t pc;
 
         pc = 0;
         while (pc < func->bytecode_size) {
@@ -76,7 +76,7 @@ rt_visit_bytecode(
 static INLINE bool rt_get_u8(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 1 > func->bytecode_size) {
@@ -95,7 +95,7 @@ static INLINE bool rt_get_u8(
 static INLINE bool rt_get_u16(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 2 > func->bytecode_size) {
@@ -115,7 +115,7 @@ static INLINE bool rt_get_u16(
 static INLINE bool rt_get_tmpvar(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 2 > func->bytecode_size) {
@@ -125,7 +125,7 @@ static INLINE bool rt_get_tmpvar(
 
         *val = ((uint32_t)func->bytecode[*pc] << 8) |
                 (uint32_t)func->bytecode[*pc + 1];
-        if (*val >= (uint32_t)func->tmpvar_size) {
+        if ((uint32_t)*val >= func->tmpvar_size) {
                 rt_error(env, BROKEN_BYTECODE);
                 return false;
         }
@@ -139,7 +139,7 @@ static INLINE bool rt_get_tmpvar(
 static INLINE bool rt_get_u32(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         uint32_t *val)
 {
         if (*pc + 4 > func->bytecode_size) {
@@ -161,7 +161,7 @@ static INLINE bool rt_get_u32(
 static INLINE bool rt_get_addr(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         uint32_t *val)
 {
         if (*pc + 4 > func->bytecode_size) {
@@ -188,7 +188,7 @@ static INLINE bool rt_get_addr(
 static INLINE bool rt_get_string(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc,
+        uint32_t *pc,
         const char **s,
         uint32_t *len,
         uint32_t *hash)
@@ -225,7 +225,7 @@ static INLINE bool
 rt_visit_lineinfo_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         uint32_t line;
 
@@ -243,7 +243,7 @@ static INLINE bool
 rt_visit_assign_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst, src;
 
@@ -262,7 +262,7 @@ static INLINE bool
 rt_visit_iconst_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
         uint32_t val;
@@ -283,7 +283,7 @@ static INLINE bool
 rt_visit_fconst_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
         uint32_t raw;
@@ -307,7 +307,7 @@ static INLINE bool
 rt_visit_sconst_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
         const char *s;
@@ -329,7 +329,7 @@ static INLINE bool
 rt_visit_aconst_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
 
@@ -348,7 +348,7 @@ static INLINE bool
 rt_visit_dconst_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
 
@@ -367,7 +367,7 @@ static INLINE bool
 rt_visit_inc_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         struct rt_value *val;
         int dst;
@@ -391,7 +391,7 @@ static INLINE bool
 rt_visit_add_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "ADD");
 
@@ -403,7 +403,7 @@ static INLINE bool
 rt_visit_sub_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "SUB");
 
@@ -415,7 +415,7 @@ static INLINE bool
 rt_visit_mul_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "MUL");
 
@@ -427,7 +427,7 @@ static INLINE bool
 rt_visit_div_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "DIV");
 
@@ -439,7 +439,7 @@ static INLINE bool
 rt_visit_mod_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "MOD");
 
@@ -451,7 +451,7 @@ static INLINE bool
 rt_visit_and_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "AND");
 
@@ -463,7 +463,7 @@ static INLINE bool
 rt_visit_or_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "OR");
 
@@ -475,7 +475,7 @@ static INLINE bool
 rt_visit_xor_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "XOR");
 
@@ -487,7 +487,7 @@ static INLINE bool
 rt_visit_shl_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "SHL");
 
@@ -499,7 +499,7 @@ static INLINE bool
 rt_visit_shr_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "SHR");
 
@@ -511,7 +511,7 @@ static INLINE bool
 rt_visit_neg_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "NEG");
 
@@ -523,7 +523,7 @@ static INLINE bool
 rt_visit_not_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "NOT");
 
@@ -535,7 +535,7 @@ static INLINE bool
 rt_visit_lt_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "LT");
 
@@ -547,7 +547,7 @@ static INLINE bool
 rt_visit_lte_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "LTE");
 
@@ -559,7 +559,7 @@ static INLINE bool
 rt_visit_gt_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "GT");
 
@@ -571,7 +571,7 @@ static INLINE bool
 rt_visit_gte_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "GTE");
 
@@ -583,7 +583,7 @@ static INLINE bool
 rt_visit_eq_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "EQ");
 
@@ -595,7 +595,7 @@ static INLINE bool
 rt_visit_neq_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "NEQ");
 
@@ -607,7 +607,7 @@ static INLINE bool
 rt_visit_storearray_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "STOREARRAY");
 
@@ -619,7 +619,7 @@ static INLINE bool
 rt_visit_loadarray_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "LOADARRAY");
 
@@ -631,7 +631,7 @@ static INLINE bool
 rt_visit_len_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "LEN");
 
@@ -643,7 +643,7 @@ static INLINE bool
 rt_visit_getdictkeybyindex_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "GETDICTKEYBYINDEX");
 
@@ -655,7 +655,7 @@ static INLINE bool
 rt_visit_getdictvalbyindex_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         DEBUG_TRACE(*pc, "GETDICTVALBYINDEX");
 
@@ -667,7 +667,7 @@ static INLINE bool
 rt_visit_loadsymbol_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst;
         const char *s;
@@ -689,7 +689,7 @@ static INLINE bool
 rt_visit_storesymbol_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         const char *s;
         uint32_t len, hash;
@@ -711,7 +711,7 @@ static INLINE bool
 rt_visit_loaddot_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst, dict;
         const char *field;
@@ -734,7 +734,7 @@ static INLINE bool
 rt_visit_storedot_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dict, src;
         const char *field;
@@ -757,7 +757,7 @@ static INLINE bool
 rt_visit_call_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst_tmpvar;
         int func_tmpvar;
@@ -787,7 +787,7 @@ static INLINE bool
 rt_visit_thiscall_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int dst_tmpvar;
         int obj_tmpvar;
@@ -820,7 +820,7 @@ static INLINE bool
 rt_visit_jmp_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         uint32_t target;
 
@@ -839,7 +839,7 @@ static INLINE bool
 rt_visit_jmpiftrue_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int src;
         uint32_t target;
@@ -867,7 +867,7 @@ static INLINE bool
 rt_visit_jmpiffalse_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int src;
         uint32_t target;
@@ -895,7 +895,7 @@ static bool
 rt_visit_op(
         struct rt_env *env,
         struct rt_func *func,
-        int *pc)
+        uint32_t *pc)
 {
         int op;
 

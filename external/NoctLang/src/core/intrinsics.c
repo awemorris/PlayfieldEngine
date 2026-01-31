@@ -114,7 +114,7 @@ rt_intrin_new(
 {
 	struct rt_value cls, init, ret, key, val;
 	const char *key_s;
-	int type, i, count;
+	uint32_t i, count;
 
 	noct_pin_local(env, 5, &cls, &init, &ret, &key, &val);
 
@@ -260,7 +260,7 @@ rt_intrin_push(
 	NoctEnv *env)
 {
 	struct rt_value arr, val;
-	int size;
+	uint32_t size;
 
 	noct_pin_local(env, 2, &arr, &val);
 
@@ -285,7 +285,7 @@ rt_intrin_pop(
 	NoctEnv *env)
 {
 	struct rt_value arr, val;
-	int size;
+	uint32_t size;
 
 	noct_pin_local(env, 2, &arr, &val);
 
@@ -477,7 +477,7 @@ rt_intrin_substring(
 {
 	NoctValue str, start, len, ret;
 	const char *str_s;
-	int start_i, len_i, slen, i, ofs, copy_start, copy_mblen;
+	int start_i, len_i, i, ofs, copy_start, copy_mblen;
 	const char *s;
 	char *tmp;
 

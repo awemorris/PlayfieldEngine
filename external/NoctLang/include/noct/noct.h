@@ -379,7 +379,7 @@ bool
 noct_get_array_size(
 	NoctEnv *env,
 	NoctValue *val,
-	int *size);
+	uint32_t *size);
 
 /*
  * Retrieves an element from an array without type checking.
@@ -392,7 +392,7 @@ bool
 noct_get_array_elem(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -407,7 +407,7 @@ bool
 noct_set_array_elem(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -421,7 +421,7 @@ bool
 noct_resize_array(
 	NoctEnv *env,
 	NoctValue *arr,
-	int size);
+	uint32_t size);
 
 /*
  * Creates a shallow copy of an array.
@@ -441,7 +441,7 @@ bool
 noct_get_dict_size(
 	NoctEnv *env,
 	NoctValue *dict,
-	int *size);
+	uint32_t *size);
 
 /*
  * Retrieves a dictionary key by index.
@@ -453,7 +453,7 @@ bool
 noct_get_dict_key_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
-	int index,
+	uint32_t index,
 	NoctValue *key);
 
 /*
@@ -466,7 +466,7 @@ bool
 noct_get_dict_value_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -532,7 +532,7 @@ NOCT_DLL
 bool
 noct_get_arg(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -612,7 +612,7 @@ NOCT_DLL
 bool
 noct_pin_local(
 	NoctEnv *env,
-	int count,
+	uint32_t count,
 	...);
 
 /*
@@ -622,7 +622,7 @@ NOCT_DLL
 bool
 noct_unpin_local(
 	NoctEnv *env,
-	int count,
+	uint32_t count,
 	...);
 
 /*
@@ -712,7 +712,7 @@ bool
 noct_get_array_elem_check_int(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int *i);
 
@@ -733,7 +733,7 @@ bool
 noct_get_array_elem_check_float(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float *f);
 
@@ -755,7 +755,7 @@ bool
 noct_get_array_elem_check_string(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char **data);
 
@@ -776,7 +776,7 @@ bool
 noct_get_array_elem_check_array(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -796,7 +796,7 @@ bool
 noct_get_array_elem_check_dict(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -816,7 +816,7 @@ bool
 noct_get_array_elem_check_func(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	NoctFunc **f);
 
