@@ -40,14 +40,14 @@ Built completely from scratch, Playfield Engine features:
 - **Comfortable Scripting:**
     - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
     - Native performance with a built-in JIT compiler.
-    - Write a script and run it instantly — **Jot. Run. Boom!**
+    - Write a script and run it instantly — **Jot, Run, Boom!**
 - **Portable Rendering & Audio:**
     - Powered by StratoHAL, a portable game library also designed in-house.
     - Runs virtually everywhere: Windows, macOS, Linux, Chromebook, WebAssembly, iOS, Android, and even consoles.
-    - Deploy to platforms you don't even own — **One Code Conquers All!**
+    - Deploy to platforms you don't even own — **Go Far, Stay Close!**
 - **Minimal Runtime:**
     - The runtime is only ~1.4 MB on Windows.
-    - Perfect for mobile apps — **little Core, BIG Hits!**
+    - Perfect for mobile apps — **Little Core, Big Hits!**
 
 ![platforms](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/platforms.png)
 
