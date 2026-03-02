@@ -137,19 +137,19 @@ Currently we are focusing on `C API` for use with derrived engines.
 
 **The nightly builds actually work on:**
 
-|Type       |OS         |Status       |Confirm Date |Confirmed On                        |
-|-----------|-----------|-------------|-------------|------------------------------------|
-|Desktop    |Windows    |✅ Works     |1 March 2026 |Windows 11 x64                      |
-|           |macOS      |✅ Works     |1 March 2026 |macOS 26 Arm64                      |
-|           |Linux      |✅ Works     |1 March 2026 |Ubuntu 24.04 LTS x86_64             |
-|Mobile     |iOS        |✅ Works     |1 March 2026 |iPhone iOS 26                       |
-|           |Android    |✅ Works     |22 Sep 2025  |Android 16                          |
-|BSD        |FreeBSD    |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
-|           |NetBSD     |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
-|           |OpenBSD    |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
-|Others     |WebAssembly|✅ Works     |22 Sep 2025  |Chrome                              |
-|           |Chromebook |✅ Works     |22 Sep 2025  |Chrome [Here](https://noctvm.io/w/) |
-|           |Unity      |✅ Works     |22 Sep 2025  |Unity 6.2 Windows 11 x86_64         |
+|Type       |OS              |Status       |Confirm Date |Confirmed On                        |
+|-----------|----------------|-------------|-------------|------------------------------------|
+|Desktop    |Windows         |✅ Works     |1 March 2026 |Windows 11 x64                      |
+|           |macOS           |✅ Works     |1 March 2026 |macOS 26 Arm64                      |
+|           |Linux           |✅ Works     |1 March 2026 |Ubuntu 24.04 LTS x86_64             |
+|Mobile     |iOS             |✅ Works     |1 March 2026 |iPhone iOS 26                       |
+|           |Android         |✅ Works     |22 Sep 2025  |Android 16                          |
+|BSD        |FreeBSD         |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
+|           |NetBSD          |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
+|           |OpenBSD         |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
+|Others     |WebAssembly     |✅ Works     |22 Sep 2025  |Chrome                              |
+|           |Chromebook      |✅ Works     |22 Sep 2025  |Chrome [Here](https://noctvm.io/w/) |
+|           |Unity           |✅ Works     |22 Sep 2025  |Unity 6.2 Windows 11 x86_64         |
 
 ---
 
@@ -312,6 +312,7 @@ Unity without relying on any NDA-restricted code.
 |               |Android             |OpenGL, OpenSL ES, NDK                    |
 |Web            |WebAssembly         |WebGL, OpenAL, via Emscripten             |
 |Console        |Unity               |Unity Plugin                              |
+|               |Xbox Series X\|S    |Xbox GDK Native (DirectX 12 + XAudio2)    |
 
 ### Console Unity Plugin Notice
 
