@@ -40,7 +40,7 @@ Built completely from scratch, Playfield Engine features:
 - **Comfortable Scripting:**
     - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
     - Native performance with a built-in JIT compiler.
-    - Write a script and run it instantly — **Jot, Run, Boom!**
+    - Write a script and run it instantly — **Jot and Run, Boom!**
 - **Portable Rendering & Audio:**
     - Powered by StratoHAL, a portable game library also designed in-house.
     - Runs virtually everywhere: Windows, macOS, Linux, Chromebook, WebAssembly, iOS, Android, and even consoles.
