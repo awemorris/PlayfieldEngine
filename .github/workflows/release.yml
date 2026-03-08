@@ -376,7 +376,7 @@ jobs:
         with:
           name: openharmony-arm64
           path: |
-            build-openharmony-arm64/libplayfield.so
+            build-openharmony-arm64/libengine.so
           if-no-files-found: error
           retention-days: 7
 
@@ -385,7 +385,7 @@ jobs:
         with:
           name: openharmony-x86_64
           path: |
-            build-openharmony-x86_64/libplayfield.so
+            build-openharmony-x86_64/libengine.so
           if-no-files-found: error
           retention-days: 7
 
