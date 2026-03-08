@@ -363,14 +363,13 @@ jobs:
           echo "Downloaing openharmony-native.tar.gz"
           wget -q https://noctvm.io/ci/openharmony-native.tar.gz
           tar xzf openharmony-native.tar.gz
-          export OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native"
 
       - name: Build for OpenHarmony
         run: |
-          cmake --preset openharmony-arm64
-          cmake --build --preset openharmony-arm64
-          cmake --preset openharmony-x86_64
-          cmake --build --preset openharmony-x86_64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --preset openharmony-arm64
+	  OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --build --preset openharmony-arm64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --preset openharmony-x86_64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --build --preset openharmony-x86_64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

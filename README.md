@@ -28,6 +28,7 @@ it can render graphics and play sounds seamlessly across platforms.
 | Others                                                    | [WebAssembly (HTML)](https://noctvm.io/dl/playfield/playfield-wasm-0.8.16.zip)                                           |
 |                                                           | [iOS (Xcode)](https://noctvm.io/dl/playfield/playfield-ios-0.8.16.zip)                                                   |
 |                                                           | [Android (Android Studio)](https://noctvm.io/dl/playfield/playfield-android-0.8.16.zip)                                  |
+|                                                           | [HarmonyOS NEXT](https://noctvm.io/dl/playfield/playfield-openharmony-0.8.16.zip)                                        |
 |                                                           | [Unity Plugin](https://noctvm.io/dl/playfield/playfield-unity-0.8.16.zip)                                                |
 | Samples                                                   | [Sample Games](https://noctvm.io/dl/playfield/playfield-samples-0.8.16.zip)                                              |
 | Source Code                                               | [Source Code](https://noctvm.io/dl/playfield/playfield-src-0.8.16.zip)                                                   |
@@ -119,6 +120,10 @@ Playfield Engine running on Android emulator:
 
 <img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
 
+Playfield Engine running on HarmonyOS NEXT emulator:
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-harmonyosnext.png" width="320" alt="Playfield Engine running on HarmonyOS NEXT emulator">
+
 Playfield Engine running on Windows XP — because why not:
 
 <img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
@@ -144,7 +149,7 @@ Currently we are focusing on `C API` for use with derrived engines.
 |           |Linux           |✅ Works     |1 March 2026 |Ubuntu 24.04 LTS x86_64             |
 |Mobile     |iOS             |✅ Works     |1 March 2026 |iPhone iOS 26                       |
 |           |Android         |✅ Works     |22 Sep 2025  |Android 16                          |
-|           |HarmonyOS       |Porting      |             |DevEco Studio 6                     |
+|           |HarmonyOS NEXT  |✅ Initial   |9 March 2026 |DevEco Studio 6                     |
 |BSD        |FreeBSD         |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
 |           |NetBSD          |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
 |           |OpenBSD         |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
@@ -266,14 +271,12 @@ game engine.
 +----------------------------------------------------------+
 |                       User Scripts                       |
 +----------------------------------------------------------+
-                             ||
-+----------------------------------------------------------+
 |                 Playfield Script Runtime                 |
-+----------------------------------------------------------+
-                ||                            ||
-+--------------------------------+  +----------------------+
-|  StratoHAL (Rendering/Audio)   |  |   NoctLang VM (JIT)  |
-+--------------------------------+  +----------------------|
++--------------------------------+-------------------------+
+|                    Playfield C Runtime                   |
++--------------------------------+-------------------------+
+|  StratoHAL (Rendering/Audio)   |    NoctLang VM (JIT)    |
++--------------------------------+-------------------------+
 ```
 
 * **Scripting**:
@@ -311,7 +314,7 @@ Unity without relying on any NDA-restricted code.
 |               |Qt                  |Qt OpenGL                                 |
 |Mobile         |iOS                 |Metal, Audio Unit                         |
 |               |Android             |OpenGL, OpenSL ES, NDK                    |
-|               |HarmonyOS           |OpenGL, OpenSL ES                         |
+|               |HarmonyOS NEXT      |OpenGL, OpenSL ES                         |
 |Web            |WebAssembly         |WebGL, OpenAL, via Emscripten             |
 |Console        |Unity               |Unity Plugin                              |
 |               |Xbox Series X\|S    |Xbox GDK Native (DirectX 12 + XAudio2)    |
@@ -401,7 +404,7 @@ development.
 |           |Safari          |18.6    |WebAssembly     |
 |Smartphone |iOS             |18      |Simulator       |
 |           |Android         |16      |Simulator       |
-|           |HarmonyOS       |-       |(now porting)   |
+|           |HarmonyOS NEXT  |20      |Simulator       |
 |Console    |Unity           |6.2     |Windows x64     |
 
 ---
@@ -448,7 +451,9 @@ and build configurations.
 |android-x86_64                 |Android x86_64   |Clang      |build-android-x86_64                   |libplayfield.so  |Shared Library |
 |android-armv7                  |Android armv7    |Clang      |build-android-armv7                    |libplayfield.so  |Shared Library |
 |android-arm64                  |Android arm64    |Clang      |build-android-arm64                    |libplayfield.so  |Shared Library |
-|openharmony-arm64              |HarmonyOS x86_64 |Clang      |build-openharmony-x86_64               |libplayfield.a   |Static Library |
+|openharmony-arm64              |HarmonyOS arm64  |Clang      |build-openharmony-arm64                |libplayfield.a   |Static Library |
+|openharmony-armv7              |HarmonyOS armv7  |Clang      |build-openharmony-armv7                |libplayfield.a   |Static Library |
+|openharmony-x86_64             |HarmonyOS x86_64 |Clang      |build-openharmony-x86_64               |libplayfield.a   |Static Library |
 |unity-win64                    |Unity Plugin     |Clang-CL   |build-unity-win64                      |libplayfield.dll |DLL Plugin     |
 |unity-switch                   |Unity Plugin     |Clang      |build-unity-switch                     |libplayfield.a   |Static Library |
 |unity-ps5                      |Unity Plugin     |Clang      |build-unity-ps5                        |libplayfield.a   |Static Library |
@@ -615,6 +620,13 @@ Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
 | Android 14 | ✅     |
 | Android 15 | ✅     |
 | Android 16 | ✅     |
+
+**OpenHarmony / HarmonyOS NEXT:**
+
+| OS         | Status |
+|------------|--------|
+| API 20     | ✅     |
+| API 12     | ✅     |
 
 ---
 

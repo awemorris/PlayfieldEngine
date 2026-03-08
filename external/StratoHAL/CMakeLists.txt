@@ -472,7 +472,7 @@ endif()
 
 # macOS
 if(STRATO_TARGET_MACOS)
-  target_compile_definitions(strato PUBLIC HAL_TARGET_WINDOWS)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_MACOS)
   enable_language(OBJC)
 endif()
 
