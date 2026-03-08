@@ -6,6 +6,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "libentry.so": "file:./src/main/cpp/types/libentry"
+    "libengine.so": "file:./src/main/cpp/types/libengine"
   }
 }
