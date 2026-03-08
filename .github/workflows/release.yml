@@ -358,7 +358,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build flex bison
 
-      - name: Download mingw-w64-11.0
+      - name: Download OpenHarmony SDK
         run: |
           echo "Downloaing openharmony-native.tar.gz"
           wget -q https://noctvm.io/ci/openharmony-native.tar.gz
@@ -659,6 +659,7 @@ jobs:
           cp -R resources/projects/openharmony/AppScope entry
           cp -R resources/projects/openharmony/AppScope hvigor
           cp -R resources/projects/openharmony/AppScope hvigorfile.ts
+          mkdir -p dist/misc/openharmony/entry/src/main/resources/rawfile/
           cp samples/shoot/main.pf dist/misc/openharmony/entry/src/main/resources/rawfile/
           mkdir -p dist/misc/openharmony/entry/libs/arm64-v8a
           mkdir -p dist/misc/openharmony/entry/libs/arm64-x86_64
