@@ -310,7 +310,7 @@ public class MainActivity extends Activity {
         //
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            // Get the aspect ratir.
+            // Get the aspect ratio.
             float aspect = (float)VIEWPORT_HEIGHT / (float)VIEWPORT_WIDTH;
 
             // Width-first.
