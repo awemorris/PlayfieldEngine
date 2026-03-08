@@ -2,7 +2,7 @@
 
 /*
  * StratoHAL
- * Sound HAL for OpenSL ES on Android
+ * Sound HAL for OpenSL ES (Android and OpenHarmony)
  */
 
 /*-
@@ -33,7 +33,12 @@
 
 /* OpenSLES */
 #include <SLES/OpenSLES.h>
+#if defined(HAL_TARGET_ANDROID)
 #include <SLES/OpenSLES_Android.h>
+#endif
+#if defined(HAL_TARGET_OPENHARMONY)
+#include <SLES/OpenSLES_OpenHarmony.h>
+#endif
 
 /* POSIX */
 #include <pthread.h>
@@ -43,6 +48,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#if defined(HAL_TARGET_ANDROID)
+#define BUFFERQUEUEITF SLAndroidSimpleBufferQueueItf
+#endif
+#if defined(HAL_TARGET_OPENHARMONY)
+#define BUFFERQUEUEITF SLOHBufferQueueItf
+#endif
 
 /*
  * sound Buffer Parameters
@@ -60,7 +72,7 @@ static SLEngineItf engine_engine;
 static SLObjectItf output_mix_object;
 static SLObjectItf bq_player_object[HAL_SOUND_TRACKS];
 static SLPlayItf bq_player_play[HAL_SOUND_TRACKS];
-static SLAndroidSimpleBufferQueueItf bq_player_buffer_queue[HAL_SOUND_TRACKS];
+static BUFFERQUEUEITF bq_player_buffer_queue[HAL_SOUND_TRACKS];
 
 /* Buffers */
 static uint32_t sample_buf[HAL_SOUND_TRACKS][BUF_FRAMES];
@@ -81,7 +93,7 @@ static bool post_finish[HAL_SOUND_TRACKS];	 /* Shows if we finished a playback o
 /*
  * Forward Declarations
  */
-static void play_callback(SLAndroidSimpleBufferQueueItf bq, void *context);
+static void play_callback(const BUFFERQUEUEITF bq, void *context);
 static void enqueue(int stream);
 static void scale_samples(uint32_t *buf, int frames, float vol);
 
@@ -103,7 +115,11 @@ init_opensl_es(void)
 	(*engine_engine)->CreateOutputMix(engine_engine, &output_mix_object, 1, outids, outreq);
 	(*output_mix_object)->Realize(output_mix_object, SL_BOOLEAN_FALSE);
 
+#if defined(HAL_TARGET_ANDROID)
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq = {SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
+#else
+	SLDataLocator_BufferQueue loc_bufq = {SL_DATALOCATOR_BUFFERQUEUE, 2};
+#endif
 	SLDataFormat_PCM format_pcm = {
 		SL_DATAFORMAT_PCM,
 		2,
@@ -123,7 +139,7 @@ init_opensl_es(void)
 		(*bq_player_object[i])->Realize(bq_player_object[i], SL_BOOLEAN_FALSE);
 		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_PLAY, &bq_player_play[i]);
 		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_BUFFERQUEUE, &bq_player_buffer_queue[i]);
-		(*bq_player_buffer_queue[i])->RegisterCallback(bq_player_buffer_queue[i], play_callback, (void *)(intptr_t)i);
+		(*bq_player_buffer_queue[i])->RegisterCallback(bq_player_buffer_queue[i], (void *)play_callback, (void *)(intptr_t)i);
 		(*bq_player_play[i])->SetCallbackEventsMask(bq_player_play[i], SL_PLAYEVENT_HEADATEND);
 		(*bq_player_play[i])->SetPlayState(bq_player_play[i], SL_PLAYSTATE_PLAYING);
 	}
@@ -148,7 +164,7 @@ sl_resume_sound(void)
 }
 
 static void
-play_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
+play_callback(BUFFERQUEUEITF bq, void *context)
 {
 	int stream = (intptr_t)context;
 

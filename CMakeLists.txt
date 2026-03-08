@@ -13,6 +13,7 @@ option(PLAYFIELD_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"              
 option(PLAYFIELD_TARGET_LINUX_GBM        "Build for Linux Framebuffer"           OFF)
 Option(PLAYFIELD_TARGET_IOS              "Build for iOS"                         OFF)
 option(PLAYFIELD_TARGET_ANDROID          "Build for Android"                     OFF)
+option(PLAYFIELD_TARGET_OPENHARMONY      "Build for OpenHarmony"                 OFF)
 option(PLAYFIELD_TARGET_WASM             "Build for Emscripten"                  OFF)
 option(PLAYFIELD_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"     OFF)
 option(PLAYFIELD_TARGET_UNITY            "Build for Unity"                       OFF)
@@ -51,6 +52,7 @@ if(   PLAYFIELD_TARGET_WINDOWS
    OR PLAYFIELD_TARGET_LINUX_GBM
    OR PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
    OR PLAYFIELD_TARGET_WASM
    OR PLAYFIELD_TARGET_WASM_LOCAL
    OR PLAYFIELD_TARGET_UNITY
@@ -111,6 +113,7 @@ else()
 
   # No automatic detection for:
   #  - Android
+  #  - OpenHarmony
   #  - Wasm (Emscripten)
   #  - Unity
   #  - GDK (Windows or Xbox)
@@ -157,9 +160,12 @@ endif()
 # No install.
 set(NOCTLANG_DISABLE_INSTALL ON)
 
-# Magic: On iOS/Android/Unity, merge object files that consists libnoctlang.a into libplayfield.a.
+# Magic:
+#  For iOS/Android/OpenHarmony/Unity,
+#  merge object files that consists in libnoctlang.a into libplayfield.a.
 if(   PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
    OR PLAYFIELD_TARGET_UNITY
 )
   # For library generation.
@@ -193,6 +199,8 @@ elseif(PLAYFIELD_TARGET_IOS)
   set(STRATO_TARGET_IOS ON)
 elseif(PLAYFIELD_TARGET_ANDROID)
   set(STRATO_TARGET_ANDROID ON)
+elseif(PLAYFIELD_TARGET_OPENHARMONY)
+  set(STRATO_TARGET_OPENHARMONY ON)
 elseif(PLAYFIELD_TARGET_WASM)
   set(STRATO_TARGET_WASM ON)
 elseif(PLAYFIELD_TARGET_WASM_LOCAL)
@@ -226,6 +234,7 @@ endif()
 # Merge subproject objects into libplayfield.
 if(   PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
    OR PLAYFIELD_TARGET_UNITY
 )
   # For library generation.
@@ -355,6 +364,7 @@ endif()
 # Add Target
 if(   PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
    OR PLAYFIELD_TARGET_UNITY
    OR PLAYFIELD_ENABLE_STATIC
 )

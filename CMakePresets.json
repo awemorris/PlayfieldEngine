@@ -533,6 +533,48 @@
       }
     },
     {
+      "name":           "openharmony-x86_64",
+      "displayName":    "OpenHarmony x86_64",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-openharmony-x86_64",
+      "toolchainFile":  "$env{OH_NATIVE_SDK_ROOT}/build/cmake/ohos.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":             "Release",
+        "OHOS_PLATFORM_LEVEL":          "12",
+        "OHOS_ARCH":                    "x86_64",
+        "PLAYFIELD_TARGET_OPENHARMONY": "ON",
+        "PLAYFIELD_ENABLE_STATIC":      "ON"
+      }
+    },
+    {
+      "name":           "openharmony-arm64",
+      "displayName":    "OpenHarmony Arm64",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-openharmony-arm64",
+      "toolchainFile":  "$env{OH_NATIVE_SDK_ROOT}/build/cmake/ohos.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":             "Release",
+        "OHOS_PLATFORM_LEVEL":          "12",
+        "OHOS_ARCH":                    "arm64-v8a",
+        "PLAYFIELD_TARGET_OPENHARMONY": "ON",
+        "PLAYFIELD_ENABLE_STATIC":      "ON"
+      }
+    },
+    {
+      "name":           "openharmony-armv7",
+      "displayName":    "OpenHarmony ARMv7",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-openharmony-armv7",
+      "toolchainFile":  "$env{OH_NATIVE_SDK_ROOT}/build/cmake/ohos.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":             "Release",
+        "OHOS_PLATFORM_LEVEL":          "12",
+        "OHOS_ARCH":                    "armeabi-v7a",
+        "PLAYFIELD_TARGET_OPENHARMONY": "ON",
+        "PLAYFIELD_ENABLE_STATIC":      "ON"
+      }
+    },
+    {
       "name":           "wasm",
       "displayName":    "Wasm",
       "generator":      "Ninja",
@@ -778,6 +820,18 @@
     {
       "name": "android-arm64",
       "configurePreset": "android-arm64"
+    },
+    {
+      "name": "openharmony-x86_64",
+      "configurePreset": "openharmony-x86_64"
+    },
+    {
+      "name": "openharmony-arm64",
+      "configurePreset": "openharmony-arm64"
+    },
+    {
+      "name": "openharmony-armv7",
+      "configurePreset": "openharmony-armv7"
     },
     {
       "name": "wasm",

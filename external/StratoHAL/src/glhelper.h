@@ -89,7 +89,11 @@ typedef ssize_t GLsizeiptr;
  *
  * With Qt, we use replacement macros and don't define the API symbols directly.
  */
-#if (defined(HAL_TARGET_POSIX) && !defined(HAL_USE_GLES) && !defined(HAL_USE_QT)) || defined(HAL_TARGET_WINDOWS)
+#if (\
+	defined(HAL_TARGET_POSIX) && !defined(HAL_USE_GLES) && !defined(HAL_USE_QT)\
+    )\
+    ||\
+    defined(HAL_TARGET_WINDOWS)
 extern GLuint (APIENTRY *glCreateShader)(GLenum type);
 extern void (APIENTRY *glShaderSource)(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length);
 extern void (APIENTRY *glCompileShader)(GLuint shader);

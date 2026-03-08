@@ -70,7 +70,15 @@
 #endif
 
 /*
- * Windows (OpenGL 3.2)
+ * OpenHarmony (OpenGL ES 3.0)
+ */
+#if defined(HAL_TARGET_OPENHARMONY)
+#include <GLES3/gl3.h>
+#include <GLES2/gl2ext.h>
+#endif
+
+/*
+ * Windows (OpenGL 3.2) (Unused)
  */
 #if defined(HAL_TARGET_WINDOWS)
 #include <windows.h>
@@ -79,7 +87,7 @@
 #endif
 
 /*
- * macOS (OpenGL 3.0)
+ * macOS (OpenGL 3.0) (Unused)
  */
 #if defined(HAL_TARGET_MACOS)
 #define GL_SILENCE_DEPRECATION
@@ -379,7 +387,7 @@ init_opengl(
 	int width,
 	int height)
 {
-#ifdef HAL_TARGET_ANDROID
+#if defined(HAL_TARGET_ANDROID) || (HAL_TARGET_OPENHARMONY)
 	cleanup_opengl();
 #endif
 

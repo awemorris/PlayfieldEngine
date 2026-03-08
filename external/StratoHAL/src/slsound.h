@@ -2,7 +2,7 @@
 
 /*
  * StratoHAL
- * Sound HAL for OpenSL ES on Android
+ * Sound HAL for OpenSL ES (Android and OpenHarmony)
  */
 
 /*-

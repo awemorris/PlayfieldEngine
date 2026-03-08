@@ -13,6 +13,7 @@ option(STRATO_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"            OFF)
 option(STRATO_TARGET_LINUX_GBM        "Build for Linux Framebuffer"        OFF)
 option(STRATO_TARGET_IOS              "Build for iOS"                      OFF)
 option(STRATO_TARGET_ANDROID          "Build for Android"                  OFF)
+option(STRATO_TARGET_OPENHARMONY      "Build for OpenHarmony"              OFF)
 option(STRATO_TARGET_WASM             "Build for Emscripten"               OFF)
 option(STRATO_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"  OFF)
 option(STRATO_TARGET_UNITY            "Build for Unity"                    OFF)
@@ -44,6 +45,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_LINUX_GBM
    OR STRATO_TARGET_IOS
    OR STRATO_TARGET_ANDROID
+   OR STRATO_TARGET_OPENHARMONY
    OR STRATO_TARGET_WASM
    OR STRATO_TARGET_WASM_LOCAL
    OR STRATO_TARGET_UNITY
@@ -78,6 +80,7 @@ else()
   # No automatic detection for:
   #  - iOS
   #  - Android
+  #  - OpenHarmony
   #  - Wasm (Emscripten)
   #  - Unity
   #  - GDK (Windows or Xbox)
@@ -358,6 +361,18 @@ if(STRATO_TARGET_ANDROID)
   )
 endif()
 
+# For OpenHarmony.
+if(STRATO_TARGET_OPENHARMONY)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/glrender.c
+    src/slsound.c
+    src/ohfile.cpp
+  )
+endif()
+
 # For Unity.
 if(STRATO_TARGET_UNITY)
   set(STRATO_SOURCES
@@ -439,8 +454,11 @@ else()
   )
 endif()
 
-# Windows specific.
-if(STRATO_TARGET_WINDOWS)
+# Windows
+if(   STRATO_TARGET_WINDOWS
+   OR STRATO_TARGET_GDK_WINDOWS
+   OR STRATO_TARGET_GDK_XBOX_XS)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_WINDOWS)
   enable_language(RC)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -451,14 +469,43 @@ if(STRATO_TARGET_WINDOWS)
   )
 endif()
 
-# macOS specific
+# macOS
 if(STRATO_TARGET_MACOS)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_WINDOWS)
   enable_language(OBJC)
 endif()
 
-# For translation.
-if(STRATO_ENABLE_I18N)
-  target_compile_definitions(strato PRIVATE HAL_USE_TRANSLATION)
+# Linux
+if(  STRATO_TARGET_LINUX
+  OR STRATO_TARGET_LINUX_WAYLAND
+  OR STRATO_TARGET_LINUX_GBM)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_LINUX)
+endif()
+
+# iOS
+if(STRATO_TARGET_IOS)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_IOS)
+endif()
+
+# Android
+if(STRATO_TARGET_ANDROID)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_ANDROID)
+endif()
+
+# OpenHarmony
+if(STRATO_TARGET_OPENHARMONY)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_OPENHARMONY HAL_USE_GLES)
+endif()
+
+# *BSD
+if(STRATO_TARGET_FREEBSD)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_FREEBSD)
+endif()
+if(STRATO_TARGET_NETBSD)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_NETBSD)
+endif()
+if(STRATO_TARGET_OPENBSD)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_OPENBSD)
 endif()
 
 # For Unity
@@ -493,6 +540,11 @@ if(STRATO_TARGET_UWP)
   )
   add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
   add_compile_definitions(BZ_STRICT_ANSI)
+endif()
+
+# For translation.
+if(STRATO_ENABLE_I18N)
+  target_compile_definitions(strato PRIVATE HAL_USE_TRANSLATION)
 endif()
 
 #
@@ -598,6 +650,11 @@ endif()
 
 # Android: Add -DHAL_USE_GLES
 if(STARATO_TARGET_ANDROID)
+  target_compile_definitions(strato PRIVATE HAL_USE_GLES)
+endif()
+
+# OpenHarmony: Add -DHAL_USE_GLES
+if(STARATO_TARGET_OPENHARMONY)
   target_compile_definitions(strato PRIVATE HAL_USE_GLES)
 endif()
 
@@ -772,6 +829,11 @@ endif()
 # Android: Add -lGLESv3 -lOpenSLES -llog
 if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
+endif()
+
+# Android: Add -lGLESv3 -lOpenSLES -llibrawfile.z.so
+if(STRATO_TARGET_OPENHARMONY)
+  target_link_libraries(strato PUBLIC m GLESv3 OpenSLES librawfile.z.so)
 endif()
 
 # GDK link options.
