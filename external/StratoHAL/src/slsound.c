@@ -132,13 +132,17 @@ init_opensl_es(void)
 	SLDataSource audio_src = {&loc_bufq, &format_pcm};
 	SLDataLocator_OutputMix loc_outmix = {SL_DATALOCATOR_OUTPUTMIX, output_mix_object};
 	SLDataSink audioSnk = {&loc_outmix, NULL};
-	const SLInterfaceID bqids[1] = {SL_IID_BUFFERQUEUE};
+    const SLInterfaceID bqids[1] = {SL_IID_BUFFERQUEUE};
 	const SLboolean bqreq[1] = {SL_BOOLEAN_TRUE};
 	for (int i = 0; i < HAL_SOUND_TRACKS; i++) {
 		(*engine_engine)->CreateAudioPlayer(engine_engine, &bq_player_object[i], &audio_src, &audioSnk, 1, bqids, bqreq);
 		(*bq_player_object[i])->Realize(bq_player_object[i], SL_BOOLEAN_FALSE);
 		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_PLAY, &bq_player_play[i]);
+#if defined(HAL_TARGET_OPENHARMONY)
+		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_OH_BUFFERQUEUE, &bq_player_buffer_queue[i]);
+#else
 		(*bq_player_object[i])->GetInterface(bq_player_object[i], SL_IID_BUFFERQUEUE, &bq_player_buffer_queue[i]);
+#endif
 		(*bq_player_buffer_queue[i])->RegisterCallback(bq_player_buffer_queue[i], (void *)play_callback, (void *)(intptr_t)i);
 		(*bq_player_play[i])->SetCallbackEventsMask(bq_player_play[i], SL_PLAYEVENT_HEADATEND);
 		(*bq_player_play[i])->SetPlayState(bq_player_play[i], SL_PLAYSTATE_PLAYING);

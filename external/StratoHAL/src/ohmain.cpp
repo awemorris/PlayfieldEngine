@@ -155,9 +155,7 @@ static OH_NativeXComponent_Callback callback = {
 //
 // Initializer for shared object load
 //
-__attribute__((constructor))
-void
-RegisterEntryModule(void)
+void onLoadSharedObject(void)
 {
     napi_module_register(&engineModule);
 }
@@ -322,11 +320,7 @@ OnSurfaceCreatedCB(
 
     surface = eglCreateWindowSurface(display, config, reinterpret_cast<EGLNativeWindowType>(nativeWindow), nullptr);
 
-    eglMakeCurrent(display, surface, surface, context);
-
-    glClearColor(1.0f, 0.4f, 0.7f, 1.0f); 
-    glClear(GL_COLOR_BUFFER_BIT);
-    eglSwapBuffers(display, surface);
+    //eglMakeCurrent(display, surface, surface, context);
 
     pthread_create(&thread, NULL, &RenderingThread, nullptr);
 }
@@ -423,9 +417,12 @@ RenderingThread(
     // Wait for startGame(). 
     while (!isRunning)
         ;
-    
+
     // Use OpenGL ES.
     eglMakeCurrent(display, surface, surface, context);
+    glClearColor(1.0f, 0.4f, 0.7f, 1.0f); 
+    glClear(GL_COLOR_BUFFER_BIT);
+    eglSwapBuffers(display, surface);
 
     // Start the game.
     if (!onInit())

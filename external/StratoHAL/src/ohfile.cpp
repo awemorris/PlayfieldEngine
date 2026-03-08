@@ -162,6 +162,7 @@ hal_open_rfile(
 
 		(*rf)->rawFile = rawFile;
 		(*rf)->size = (uint64_t)OH_ResourceManager_GetRawFileSize(rawFile);
+		(*rf)->fp = NULL;
 
 		return true;
 	}

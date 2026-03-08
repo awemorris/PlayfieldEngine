@@ -229,7 +229,10 @@ static const char *vertex_shader_src =
 #if !defined(HAL_TARGET_WASM) && !defined(HAL_TARGET_MACOS)
 	"#version 100                 \n"
 #endif
-	"attribute vec4 a_position;   \n" /* FIXME: vec3? */
+#if defined(HAL_TARGET_OPENHARMONY)
+	"precision mediump float;     \n"
+#endif
+	"attribute vec4 a_position;   \n"
 	"attribute vec2 a_texCoord;   \n"
 	"attribute float a_alpha;     \n"
 	"varying vec2 v_texCoord;     \n"
@@ -239,7 +242,7 @@ static const char *vertex_shader_src =
 #if !defined(HAL_USE_ROT90)
 	"  gl_Position = a_position;\n"
 #else
-        "  vec2 rotated = vec2(-a_position.y, a_position.x); \n"
+	"  vec2 rotated = vec2(-a_position.y, a_position.x); \n"
 	"  gl_Position = vec4(rotated, a_position.z, 1.0);   \n"
 #endif
 	"  v_texCoord = a_texCoord;   \n"

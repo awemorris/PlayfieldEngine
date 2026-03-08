@@ -832,9 +832,9 @@ if(STRATO_TARGET_ANDROID)
   target_link_libraries(strato PUBLIC -lm -lGLESv3 -lOpenSLES -llog)
 endif()
 
-# Android: Add -lGLESv3 -lOpenSLES -llibrawfile.z.so
+# OpenHarmony: Add -lGLESv2 -lOpenSLES -llibrawfile.z.so
 if(STRATO_TARGET_OPENHARMONY)
-  target_link_libraries(strato PUBLIC m GLESv3 OpenSLES librawfile.z.so)
+  target_link_libraries(strato PUBLIC m GLESv2 OpenSLES librawfile.z.so)
 endif()
 
 # GDK link options.

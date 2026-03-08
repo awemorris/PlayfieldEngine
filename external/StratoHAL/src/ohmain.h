@@ -37,13 +37,7 @@
 extern "C" {
 #endif
 	
-bool oh_on_init(void);
-bool oh_on_frame(void);
-void oh_on_update_viewport(int x, int y, int w, int h, float scale);
-void oh_on_touch_start(int x, int y, int points);
-void oh_on_touch_move(int x, int y);
-void oh_on_touch_up(int x, int y, int points);
-void oh_on_touch_cancel(void);
+void onLoadSharedObject(void);
 
 #ifdef __cplusplus
 };
