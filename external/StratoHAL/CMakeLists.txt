@@ -369,7 +369,7 @@ if(STRATO_TARGET_OPENHARMONY)
     src/wave.c
     src/glrender.c
     src/slsound.c
-    src/ohmain.c
+    src/ohmain.cpp
     src/ohfile.cpp
   )
 endif()
