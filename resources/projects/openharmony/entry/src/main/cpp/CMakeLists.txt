@@ -11,15 +11,19 @@ endif()
 include_directories(${NATIVERENDER_ROOT_PATH}
                     ${NATIVERENDER_ROOT_PATH}/include)
 
+#set(PLAYFIELD_TARGET_OPENHARMONY "ON")
+#set(PLAYFIELD_ENABLE_STATIC "ON")
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/PlayfieldEngine)
+
 set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../libs)
-add_library(suika3 STATIC IMPORTED)
-set_target_properties(suika3 PROPERTIES IMPORTED_LOCATION ${LIBS_DIR}/${OHOS_ARCH}/libsuika3.a)
+add_library(playfield STATIC IMPORTED)
+set_target_properties(playfield PROPERTIES IMPORTED_LOCATION ${LIBS_DIR}/${OHOS_ARCH}/libplayfield.a)
 
 add_library(engine SHARED napi_init.cpp)
 target_link_libraries(
   engine
   PUBLIC
-  suika3
+  playfield
   libace_napi.z.so
   libace_ndk.z.so
   librawfile.z.so

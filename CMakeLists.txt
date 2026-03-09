@@ -1,201 +1,269 @@
 cmake_minimum_required(VERSION 3.13)
-project(suika3 LANGUAGES C CXX)
+project(playfield LANGUAGES C CXX)
 
 #
 # Configuration
 #
 
 # Targets
-option(SUIKA_TARGET_WINDOWS          "Build for Windows"                     OFF)
-option(SUIKA_TARGET_MACOS            "Build for macOS"                       OFF)
-option(SUIKA_TARGET_LINUX            "Build for Linux X11"                   OFF)
-option(SUIKA_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"               OFF)
-option(SUIKA_TARGET_LINUX_GBM        "Build for Linux Framebuffer"           OFF)
-option(SUIKA_TARGET_IOS              "Build for iOS"                         OFF)
-option(SUIKA_TARGET_ANDROID          "Build for Android"                     OFF)
-option(SUIKA_TARGET_OPENHARMONY      "Build for HarmonyOS NEXT"              OFF)
-option(SUIKA_TARGET_WASM             "Build for Emscripten"                  OFF)
-option(SUIKA_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"     OFF)
-option(SUIKA_TARGET_UNITY            "Build for Unity"                       OFF)
-option(SUIKA_TARGET_FREEBSD          "Build for FreeBSD X11"                 OFF)
-option(SUIKA_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"             OFF)
-option(SUIKA_TARGET_NETBSD           "Build for NetBSD X11"                  OFF)
-option(SUIKA_TARGET_OPENBSD          "Build for OpenBSD X11"                 OFF)
+option(PLAYFIELD_TARGET_WINDOWS          "Build for Windows"                     OFF)
+option(PLAYFIELD_TARGET_MACOS            "Build for macOS"                       OFF)
+option(PLAYFIELD_TARGET_LINUX            "Build for Linux X11"                   OFF)
+option(PLAYFIELD_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"               OFF)
+option(PLAYFIELD_TARGET_LINUX_GBM        "Build for Linux Framebuffer"           OFF)
+Option(PLAYFIELD_TARGET_IOS              "Build for iOS"                         OFF)
+option(PLAYFIELD_TARGET_ANDROID          "Build for Android"                     OFF)
+option(PLAYFIELD_TARGET_OPENHARMONY      "Build for OpenHarmony"                 OFF)
+option(PLAYFIELD_TARGET_WASM             "Build for Emscripten"                  OFF)
+option(PLAYFIELD_TARGET_WASM_LOCAL       "Build for Emscripten (local file)"     OFF)
+option(PLAYFIELD_TARGET_UNITY            "Build for Unity"                       OFF)
+option(PLAYFIELD_TARGET_FREEBSD          "Build for FreeBSD X11"                 OFF)
+option(PLAYFIELD_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD Wayland"             OFF)
+option(PLAYFIELD_TARGET_NETBSD           "Build for NetBSD X11"                  OFF)
+option(PLAYFIELD_TARGET_OPENBSD          "Build for OpenBSD X11"                 OFF)
+option(PLAYFIELD_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"             OFF)
+option(PLAYFIELD_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"     OFF)
+option(PLAYFIELD_TARGET_UWP              "Build for UWP"                         OFF)
 
 # Options
-option(SUIKA_ENABLE_JIT              "Enable JIT"                         OFF)
-option(SUIKA_ENABLE_I18N             "Enable translation"                 OFF)
-option(SUIKA_ENABLE_BUNDLE           "Enable macOS bundle"                OFF)
-option(SUIKA_ENABLE_PACK             "Enable packager"                    OFF)
-option(SUIKA_ENABLE_STATIC           "Build a static library"             OFF)
-option(SUIKA_ENABLE_SHARED           "Build a dynamic library"            OFF)
-option(SUIKA_ENABLE_DIST             "Build for packages"                 OFF)
-option(SUIKA_ENABLE_ROT90            "Rotate screen for GBM"              OFF)
-option(SUIKA_ENABLE_MEDIAFOUNDATION  "Enable Media Foundation support"    OFF)
-option(SUIKA_ENABLE_GST              "Enable GStreamer support"           OFF)
+option(PLAYFIELD_ENABLE_JIT              "Enable JIT"                         OFF)
+option(PLAYFIELD_ENABLE_I18N             "Enable translation"                 OFF)
+option(PLAYFIELD_ENABLE_BUNDLE           "Enable macOS bundle"                OFF)
+option(PLAYFIELD_ENABLE_PACK             "Enable packager"                    OFF)
+option(PLAYFIELD_ENABLE_STATIC           "Build a static library"             OFF)
+option(PLAYFIELD_ENABLE_SHARED           "Build a dynamic library"            OFF)
+option(PLAYFIELD_ENABLE_DIST             "Build for packages"                 OFF)
+option(PLAYFIELD_ENABLE_ROT90            "Rotate screen for GBM"              OFF)
+option(PLAYFIELD_ENABLE_MEDIAFOUNDATION  "Enable Media Foundation support"    OFF)
+option(PLAYFIELD_ENABLE_GST              "Enable GStreamer support"           OFF)
+
+# For derived projects
+option(PLAYFIELD_ENABLE_INITHOOK    "Enable the inithook function"  OFF)
 
 #
 # Automatic Target Detection
 #
 
 # For when a target is manually specified.
-if(   SUIKA_TARGET_WINDOWS
-   OR SUIKA_TARGET_MACOS
-   OR SUIKA_TARGET_LINUX
-   OR SUIKA_TARGET_LINUX_WAYLAND
-   OR SUIKA_TARGET_LINUX_GBM
-   OR SUIKA_TARGET_IOS
-   OR SUIKA_TARGET_ANDROID
-   OR SUIKA_TARGET_OPENHARMONY
-   OR SUIKA_TARGET_WASM
-   OR SUIKA_TARGET_WASM_LOCAL
-   OR SUIKA_TARGET_UNITY
-   OR SUIKA_TARGET_FREEBSD
-   OR SUIKA_TARGET_FREEBSD_WAYLAND
-   OR SUIKA_TARGET_NETBSD
-   OR SUIKA_TARGET_OPENBSD
+if(   PLAYFIELD_TARGET_WINDOWS
+   OR PLAYFIELD_TARGET_MACOS
+   OR PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_LINUX_WAYLAND
+   OR PLAYFIELD_TARGET_LINUX_GBM
+   OR PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
+   OR PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_WASM_LOCAL
+   OR PLAYFIELD_TARGET_UNITY
+   OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD
+   OR PLAYFIELD_TARGET_GDK_WINDOWS
+   OR PLAYFIELD_TARGET_GDK_XBOX_XS
+   OR PLAYFIELD_TARGET_UWP
 )
   # A target and options are manually specified.
 else()   
   if(WIN32)
     # Windows is detected.
-    set(SUIKA_TARGET_WINDOWS    ON)
-    set(SUIKA_ENABLE_JIT        ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_WINDOWS    ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(APPLE AND NOT IOS)
     # macOS is detected.
-    set(SUIKA_TARGET_MACOS      ON)
-    set(SUIKA_ENABLE_JIT        ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_BUNDLE     ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_MACOS      ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_BUNDLE     ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # Linux is detected.
-    set(SUIKA_TARGET_LINUX      ON)
-    set(SUIKA_ENABLE_JIT        ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_LINUX      ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(SUIKA_TARGET_FREEBSD    ON)
-    set(SUIKA_ENABLE_JIT        ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_FREEBSD    ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-    set(SUIKA_TARGET_NETBSD     ON)
-    set(SUIKA_ENABLE_JIT        ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_NETBSD     ON)
+    set(PLAYFIELD_ENABLE_JIT        ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-    set(SUIKA_TARGET_OPENBSD    ON)
-    set(SUIKA_ENABLE_I18N       ON)
-    set(SUIKA_ENABLE_PACK       ON)
+    set(PLAYFIELD_TARGET_OPENBSD    ON)
+    set(PLAYFIELD_ENABLE_I18N       ON)
+    set(PLAYFIELD_ENABLE_PACK       ON)
   endif()
 
   # No automatic detection for:
   #  - Android
-  #  - HarmonyOS NEXT
+  #  - OpenHarmony
   #  - Wasm (Emscripten)
   #  - Unity
+  #  - GDK (Windows or Xbox)
+  #  - UWP
 endif()
 
 #
-# PlayfieldEngine Configuration
+# NoctLang Configuration
 #
 
-set(PLAYFIELD_ENABLE_STATIC ON)
-set(PLAYFIELD_ENABLE_INITHOOK ON)
-
-# Set the target and its specific options.
-if(SUIKA_TARGET_WINDOWS)
-  set(PLAYFIELD_TARGET_WINDOWS ON)
-elseif(SUIKA_TARGET_MACOS)
-  set(PLAYFIELD_TARGET_MACOS ON)
-elseif(SUIKA_TARGET_LINUX)
-  set(PLAYFIELD_TARGET_LINUX ON)
-elseif(SUIKA_TARGET_LINUX_WAYLAND)
-  set(PLAYFIELD_TARGET_LINUX_WAYLAND ON)
-elseif(SUIKA_TARGET_LINUX_GBM)
-  set(PLAYFIELD_TARGET_LINUX_GBM ON)
-elseif(SUIKA_TARGET_IOS)
-  set(PLAYFIELD_TARGET_IOS ON)
-elseif(SUIKA_TARGET_ANDROID)
-  set(PLAYFIELD_TARGET_ANDROID ON)
-elseif(SUIKA_TARGET_OPENHARMONY)
-  set(PLAYFIELD_TARGET_OPENHARMONY ON)
-elseif(SUIKA_TARGET_WASM)
-  set(PLAYFIELD_TARGET_WASM ON)
-elseif(SUIKA_TARGET_WASM_LOCAL)
-  set(PLAYFIELD_TARGET_WASM_LOCAL ON)
-elseif(SUIKA_TARGET_UNITY)
-  set(PLAYFIELDTARGET_UNITY ON)
-elseif(SUIKA_TARGET_FREEBSD)
-  set(PLAYFIELD_TARGET_FREEBSD ON)
-elseif(SUIKA_TARGET_FREEBSD_WAYLAND)
-  set(PLAYFIELD_TARGET_FREEBSD_WAYLAND ON)
-elseif(SUIKA_TARGET_NETBSD)
-  set(PLAYFIELD_TARGET_NETBSD ON)
-elseif(SUIKA_TARGET_OPENBSD)
-  set(PLAYFIELD_TARGET_OPENBSD ON)
-elseif(SUIKA_TARGET_GDK_WINDOWS)
-  set(PLAYFIELD_TARGET_GDK_WINDOWS ON)
-elseif(SUIKA_TARGET_GDK_XBOX_XS)
-  set(PLAYFIELD_TARGET_GDK_XBOX_XS ON)
-elseif(SUIKA_TARGET_UWP)
-  set(PLAYFIELD_TARGET_UWP ON)
-endif()
-
-if(SUIKA_TARGET_UNITY_SWITCH)
-  set(PLAYFIELD_TARGET_UNITY_SWITCH)
-elseif(SUIKA_TARGET_UNITY_PS5)
-  set(PLAYFIELD_TARGET_UNITY_PS5)
-elseif(SUIKA_TARGET_UNITY_XBOX)
-  set(PLAYFIELDTARGET_UNITY_XBOX)
-endif()
+# Use Math.* API.
+set(NOCTLANG_API_MATH     ON)
+set(NOCTLANG_API_SYSTEM   OFF)
+set(NOCTLANG_API_CONSOLE  OFF)
 
 # If building with JIT.
-if(SUIKA_ENABLE_JIT)
-  set(PLAYFIELD_ENABLE_JIT ON)
+if(PLAYFIELD_ENABLE_JIT)
+  set(NOCTLANG_ENABLE_JIT ON)
 else()
-  set(PLAYFIELD_ENABLE_JIT OFF)
+  set(NOCTLANG_ENABLE_JIT OFF)
 endif()
 
 # If building with translation.
-if(SUIKA_ENABLE_I18N)
-  set(PLAYFIELD_ENABLE_I18N ON)
+if(PLAYFIELD_ENABLE_I18N)
+  set(NOCTLANG_ENABLE_I18N ON)
 endif()
 
 # If building for Emscripten.
-if(SUIKA_TARGET_WASM)
-  set(PLAYFIELD_TARGET_WASM ON)
-endif()
-if(SUIKA_TARGET_WASM_LOCAL)
-  set(PLAYFIELD_TARGET_WASM_LOCAL ON)
+if(   PLAYFIELD_TARGET_WASM
+   OR PLAYFIELD_TARGET_WASM_LOCAL)
+  set(NOCTLANG_TARGET_WASM ON)
 endif()
 
 # If building for Unity.
-if(SUIKA_TARGET_UNITY)
-  set(PLAYFIELD_TARGET_UNITY ON)
+if(PLAYFIELD_TARGET_UNITY)
+  set(NOCTLANG_TARGET_UNITY ON)
 endif()
 
-# Media Foundation on Windows
-if(SUIKA_ENABLE_MEDIAFOUNDATION)
-  set(PLAYFIELD_ENABLE_MEDIAFOUNDATION ON)
+# No `noct` CLI.
+if(NOT NOCTLANG_ENABLE_CLI)
+  set(NOCTLANG_ENABLE_CLI OFF)
 endif()
 
-# Gstreamer on Linux.
-if(SUIKA_TARGET_LINUX)
-  set(PLAYFIELD_ENABLE_GST ON)
+# No install.
+set(NOCTLANG_DISABLE_INSTALL ON)
+
+# Magic:
+#  For iOS/Android/OpenHarmony/Unity,
+#  merge object files that consists in libnoctlang.a into libplayfield.a.
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
+   OR PLAYFIELD_TARGET_UNITY
+)
+  # For library generation.
+  set(NOCTLANG_ENABLE_OBJECT ON)
+else()
+  if(PLAYFIELD_ENABLE_DIST)
+    # For dynamically linked binaries.
+    set(NOCTLANG_ENABLE_SHARED ON)
+  else()
+    # For statically linked binaries.
+    set(NOCTLANG_ENABLE_STATIC ON)
+  endif()
+endif()
+
+#
+# Strato Configuration
+#
+
+# Set the target and its specific options.
+if(PLAYFIELD_TARGET_WINDOWS)
+  set(STRATO_TARGET_WINDOWS ON)
+elseif(PLAYFIELD_TARGET_MACOS)
+  set(STRATO_TARGET_MACOS ON)
+elseif(PLAYFIELD_TARGET_LINUX)
+  set(STRATO_TARGET_LINUX ON)
+elseif(PLAYFIELD_TARGET_LINUX_WAYLAND)
+  set(STRATO_TARGET_LINUX_WAYLAND ON)
+elseif(PLAYFIELD_TARGET_LINUX_GBM)
+  set(STRATO_TARGET_LINUX_GBM ON)
+elseif(PLAYFIELD_TARGET_IOS)
+  set(STRATO_TARGET_IOS ON)
+elseif(PLAYFIELD_TARGET_ANDROID)
+  set(STRATO_TARGET_ANDROID ON)
+elseif(PLAYFIELD_TARGET_OPENHARMONY)
+  set(STRATO_TARGET_OPENHARMONY ON)
+elseif(PLAYFIELD_TARGET_WASM)
+  set(STRATO_TARGET_WASM ON)
+elseif(PLAYFIELD_TARGET_WASM_LOCAL)
+  set(STRATO_TARGET_WASM_LOCAL ON)
+elseif(PLAYFIELD_TARGET_UNITY)
+  set(STRATO_TARGET_UNITY ON)
+elseif(PLAYFIELD_TARGET_FREEBSD)
+  set(STRATO_TARGET_FREEBSD ON)
+elseif(PLAYFIELD_TARGET_FREEBSD_WAYLAND)
+  set(STRATO_TARGET_FREEBSD_WAYLAND ON)
+elseif(PLAYFIELD_TARGET_NETBSD)
+  set(STRATO_TARGET_NETBSD ON)
+elseif(PLAYFIELD_TARGET_OPENBSD)
+  set(STRATO_TARGET_OPENBSD ON)
+elseif(PLAYFIELD_TARGET_GDK_WINDOWS)
+  set(STRATO_TARGET_GDK_WINDOWS ON)
+elseif(PLAYFIELD_TARGET_GDK_XBOX_XS)
+  set(STRATO_TARGET_GDK_XBOX_XS ON)
+elseif(PLAYFIELD_TARGET_UWP)
+  set(STRATO_TARGET_UWP ON)
+endif()
+
+if(PLAYFIELD_TARGET_UNITY_SWITCH)
+  set(STRATO_TARGET_UNITY_SWITCH)
+elseif(PLAYFIELD_TARGET_UNITY_PS5)
+  set(STRATO_TARGET_UNITY_PS5)
+elseif(PLAYFIELD_TARGET_UNITY_XBOX)
+  set(STRATO_TARGET_UNITY_XBOX)
+endif()
+
+# Merge subproject objects into libplayfield.
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
+   OR PLAYFIELD_TARGET_UNITY
+)
+  # For library generation.
+  set(STRATO_ENABLE_OBJECT ON)
+else()
+  if(PLAYFIELD_ENABLE_DIST)
+    # For dynamically linked binaries.
+    set(STRATO_ENABLE_SHARED ON)
+  else()
+    # For statically linked binaries.
+  endif()
+endif()
+
+# Use translation.
+if(PLAYFIELD_ENABLE_I18N)
+  set(STRATO_ENABLE_I18N ON)
+endif()
+
+# Screen rotate
+if(PLAYFIELD_ENABLE_ROT90)
+  set(STRATO_ENABLE_ROT90 ON)
+endif()
+
+if(PLAYFIELD_ENABLE_MEDIAFOUNDATION)
+  set(STRATO_ENABLE_MEDIAFOUNDATION ON)
+endif()
+
+if(PLAYFIELD_ENABLE_GST)
+  set(STRATO_ENABLE_GST ON)
 endif()
 
 #
@@ -231,7 +299,7 @@ endif()
 # Apple Quirks
 #
 
-if(SUIKA_TARGET_MACOS)
+if(PLAYFIELD_TARGET_MACOS)
   set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "" FORCE)
 endif()
 
@@ -239,8 +307,11 @@ endif()
 # Dependencies
 #
 
-# PlayfieldEngine
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/PlayfieldEngine)
+# NoctLang
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/NoctLang)
+
+# StratoHAL
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/StratoHAL)
 
 #
 # Checks
@@ -268,90 +339,47 @@ endif()
 #
 
 # Base Source
-set(SUIKA_BASE_SOURCES
-  src/anime.c
+set(PLAYFIELD_BASE_SOURCES
   src/api.c
-  src/conf.c
-  src/game.c
-  src/gui.c
-  src/hal.c
-  src/history.c
-  src/image.c
-  src/mixer.c
-  src/save.c
-  src/seen.c
-  src/stage.c
-  src/sysbtn.c
-  src/tag.c
-  src/text.c
-  src/translation.c
-  src/vars.c
-  src/cmd.c
-  src/cmd_anime.c
-  src/cmd_bg.c
-  src/cmd_bgm.c
-  src/cmd_callmacro.c
-  src/cmd_ch.c
-  src/cmd_chapter.c
-  src/cmd_choose.c
-  src/cmd_click.c
-  src/cmd_config.c
-  src/cmd_defmacro.c
-  src/cmd_else.c
-  src/cmd_elseif.c
-  src/cmd_endif.c
-  src/cmd_endmacro.c
-  src/cmd_goto.c
-  src/cmd_gui.c
-  src/cmd_if.c
-  src/cmd_label.c
-  src/cmd_layer.c
-  src/cmd_load.c
-  src/cmd_move.c
-  src/cmd_returnmacro.c
-  src/cmd_se.c
-  src/cmd_set.c
-  src/cmd_skip.c
-  src/cmd_text.c
-  src/cmd_video.c
-  src/cmd_volume.c
-  src/cmd_wait.c
+  src/common.c
+  src/mainloop.c
+  src/vm.c
 )
 
 # I18N Source
-#if(SUIKA_ENABLE_I18N)
-#  set(SUIKA_I18N_SOURCES
-#    src/i18n.c
-#    src/translation.c
-#  )
-#endif()
+if(PLAYFIELD_ENABLE_I18N)
+  set(PLAYFIELD_I18N_SOURCES
+    src/i18n.c
+    src/translation.c
+  )
+endif()
 
 # Resource
-if(SUIKA_TARGET_WINDOWS AND NOT SUIKA3_ENABLE_STATIC)
-  set(SUIKA_RESOURCES
+if(PLAYFIELD_TARGET_WINDOWS AND NOT PLAYFIELD_ENABLE_STATIC)
+  set(PLAYFIELD_RESOURCES
     resources/windows/resource.rc
   )
 endif()
 
 # Add Target
-if(   SUIKA_TARGET_IOS
-   OR SUIKA_TARGET_ANDROID
-   OR SUIKA_TARGET_OPENHARMONY
-   OR SUIKA_TARGET_UNITY
-   OR SUIKA_ENABLE_STATIC
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
+   OR PLAYFIELD_TARGET_UNITY
+   OR PLAYFIELD_ENABLE_STATIC
 )
   # Make a library.
-  if(SUIKA_ENABLE_SHARED)
-    set(SUIKA_LIB_TYPE SHARED)
+  if(PLAYFIELD_ENABLE_SHARED)
+    set(PLAYFIELD_LIB_TYPE SHARED)
   else()
-    set(SUIKA_LIB_TYPE STATIC)
+    set(PLAYFIELD_LIB_TYPE STATIC)
   endif()
   add_library(
-    suika3
-    ${SUIKA_LIB_TYPE}
-    ${SUIKA_BASE_SOURCES}
-    ${SUIKA_I18N_SOURCES}
-    ${SUIKA_RESOURCES}
+    playfield
+    ${PLAYFIELD_LIB_TYPE}
+    ${PLAYFIELD_BASE_SOURCES}
+    ${PLAYFIELD_I18N_SOURCES}
+    ${PLAYFIELD_RESOURCES}
     $<TARGET_OBJECTS:png>
     $<TARGET_OBJECTS:jpeg>
     $<TARGET_OBJECTS:webp>
@@ -367,67 +395,70 @@ if(   SUIKA_TARGET_IOS
 else()
   # Make an executable.
   add_executable(
-    suika3
-    ${SUIKA_BASE_SOURCES}
-    ${SUIKA_I18N_SOURCES}
-    ${SUIKA_RESOURCES}
+    playfield
+    ${PLAYFIELD_BASE_SOURCES}
+    ${PLAYFIELD_I18N_SOURCES}
+    ${PLAYFIELD_RESOURCES}
   )
 endif()
 
-# Link PlayfieldEngine
-target_link_libraries(suika3 PRIVATE
-  playfield
-  strato
-  playfield  # Specify twice to resolve circular references.
+# Link NoctLang and Strato
+target_link_libraries(playfield PUBLIC
   noctlang
+  strato
 )
 
-# Include
-target_include_directories(suika3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# -Iinclude
+target_include_directories(playfield PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# JIT
-if(SUIKA_ENABLE_JIT)
-  target_compile_definitions(suika3 PRIVATE S3_USE_JIT PF_USE_JIT NOCT_USE_JIT)
+# -DUSE_JIT
+if(PLAYFIELD_ENABLE_JIT)
+  target_compile_definitions(playfield PRIVATE PF_USE_JIT)
 endif()
 
-# Translation
-if(SUIKA_ENABLE_I18N)
-  target_compile_definitions(suika3 PRIVATE S3_USE_TRANSLATION)
+# -DUSE_TRANSLATION
+if(PLAYFIELD_ENABLE_I18N)
+  target_compile_definitions(playfield PRIVATE PF_USE_TRANSLATION)
 endif()
 
-# DLL
-if(SUIKA_ENABLE_SHARED)
-  target_compile_definitions(suika3 PRIVATE S3_USE_SHARED)
+# -DUSE_SHARED
+if(PLAYFIELD_ENABLE_SHARED)
+  target_compile_definitions(playfield PRIVATE PF_USE_SHARED)
 endif()
 
-# Unity
-if(SUIKA_TARGET_UNITY)
-  target_compile_definitions(suika3 PRIVATE S3_TARGET_UNITY PF_TARGET_UNITY HAL_TARGET_UNITY)
+# -DUSE_UNITY
+if(PLAYFIELD_TARGET_UNITY)
+  target_compile_definitions(playfield PRIVATE PF_TARGET_UNITY)
+endif()
+
+# Library mode
+if(PLAYFIELD_ENABLE_INITHOOK)
+  target_compile_definitions(playfield PRIVATE PF_USE_INITHOOK)
 endif()
 
 # Windows quirks
-if(SUIKA_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS)
   if(MSVC)
-    target_compile_options(suika3 PRIVATE /utf-8)
-    target_link_options(suika3 PRIVATE /SUBSYSTEM:WINDOWS)
+    target_compile_options(playfield PUBLIC /utf-8)
+    target_link_options(playfield PUBLIC /SUBSYSTEM:WINDOWS)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
   else()
-    target_compile_options(suika3 PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
-    target_link_options(suika3 PRIVATE -mwindows -static -Wl,-u,wWinMain -Wl,-u,_wWinMain@16)
+    target_compile_options(playfield PUBLIC -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    target_link_options(playfield PUBLIC -mwindows -static)
   endif()
 endif()
 
 # Emscripten
-if(SUIKA_TARGET_WASM)
+if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(suika3 PROPERTIES OUTPUT_NAME index)
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
 
   # -DUSE_EMSCRIPTEN
-  target_compile_definitions(suika3 PRIVATE USE_EMSCRIPTEN)
+  target_compile_definitions(playfield PRIVATE USE_EMSCRIPTEN)
 
   # Link options.
-  target_link_options(suika3 PRIVATE
+  target_link_options(playfield PRIVATE
     -o index.html
     -sSINGLE_FILE=1
     -sTOTAL_MEMORY=536870912
@@ -443,16 +474,16 @@ if(SUIKA_TARGET_WASM)
 endif()
 
 # Emscripten
-if(SUIKA_TARGET_WASM_LOCAL)
+if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(suika3 PROPERTIES OUTPUT_NAME index)
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
 
   # -DUSE_EMSCRIPTEN
-  target_compile_definitions(suika3 PRIVATE USE_EMSCRIPTEN)
+  target_compile_definitions(playfield PRIVATE USE_EMSCRIPTEN)
 
   # Link options.
-  target_link_options(suika3 PRIVATE
+  target_link_options(playfield PRIVATE
     -o index.html
     -sSINGLE_FILE=1
     -sTOTAL_MEMORY=536870912
@@ -473,46 +504,48 @@ endif()
 # Packager Target
 #
 
-if(SUIKA_ENABLE_PACK)
-  if (NOT SUIKA_TARGET_WINDOWS)
+if(PLAYFIELD_ENABLE_PACK)
+  if (NOT PLAYFIELD_TARGET_WINDOWS)
     add_executable(
-      suika3-pack
-      external/PlayfieldEngine/src/pack.c
+      playfield-pack
+      src/pack.c
     )
   else()
     add_executable(
-      suika3-pack
-      external/PlayfieldEngine/src/pack.c
-      external/PlayfieldEngine/resources/windows/pack-resource.rc
+      playfield-pack
+      src/pack.c
+      resources/windows/pack-resource.rc
     )
   endif()
-  target_link_libraries(suika3-pack stratopack)
+  target_link_libraries(playfield-pack stratopack)
 endif()
 
 #
 # Compiler Target
 #
 
-if(   SUIKA_TARGET_WINDOWS
-   OR SUIKA_TARGET_MACOS
-   OR SUIKA_TARGET_LINUX
-   OR SUIKA_TARGET_LINUX_WAYLAND
-   OR SUIKA_TARGET_LINUX_GBM
-   OR SUIKA_TARGET_FREEBSD
-   OR SUIKA_TARGET_FREEBSD_WAYLAND
-   OR SUIKA_TARGET_NETBSD
-   OR SUIKA_TARGET_OPENBSD)
-  add_executable(
-    suika3-compiler
-    external/PlayfieldEngine/src/compiler.c
-  )
-  target_include_directories(suika3-compiler PRIVATE
-    external/PlayfieldEngine/external/NoctLang/src/core
-    external/PlayfieldEngine/external/NoctLang/src/backend
-  )
-  target_link_libraries(suika3-compiler noctlang)
-  if(UNIX)
-    target_link_libraries(suika3-compiler m)
+if(   PLAYFIELD_TARGET_WINDOWS
+   OR PLAYFIELD_TARGET_MACOS
+   OR PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_LINUX_WAYLAND
+   OR PLAYFIELD_TARGET_LINUX_GBM
+   OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD)
+  if(NOT PLAYFIELD_ENABLE_STATIC AND NOT PLAYFIELD_ENABLE_SHARED)
+    add_executable(
+      playfield-compiler
+      src/compiler.c
+    )
+    target_include_directories(playfield-compiler PRIVATE
+      external/NoctLang/src/core
+      external/NoctLang/src/backend
+    )
+    target_link_libraries(playfield-compiler noctlang)
+    if(UNIX)
+      target_link_libraries(playfield-compiler m)
+    endif()
   endif()
 endif()
 
@@ -520,37 +553,57 @@ endif()
 # Web Server Target
 #
 
-if(SUIKA_TARGET_WINDOWS)
+if(PLAYFIELD_TARGET_WINDOWS AND NOT PLAYFIELD_ENABLE_STATIC)
   add_executable(
-    suika3-web
-    external/PlayfieldEngine/src/webserver.c
-    external/PlayfieldEngine/resources/windows/web-resource.rc
+    playfield-web
+    src/webserver.c
+    resources/windows/web-resource.rc
   )
-  target_link_libraries(suika3-web wsock32 ws2_32)
+  target_link_libraries(playfield-web wsock32 ws2_32)
+endif()
+
+#
+# Editor Target
+#
+
+if(PLAYFIELD_TARGET_WINDOWS AND MSVC AND NOT PLAYFIELD_ENABLE_STATIC)
+  add_executable(
+    playfield-editor
+    src/editor.c
+    resources/windows/editor-resource.rc
+  )
+  if(MSVC)
+    target_compile_options(playfield-editor PRIVATE /utf-8)
+    target_compile_definitions(playfield-editor PRIVATE UNICODE _UNICODE)
+    target_link_options(playfield-editor PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
+  else()
+    target_compile_options(playfield-editor PRIVATE -municode)
+    target_link_options(playfield-editor PRIVATE -mwindows -municode)
+  endif()
 endif()
 
 #
 # macOS Bundle
 #
 
-if(SUIKA_TARGET_MACOS AND SUIKA_ENABLE_BUNDLE)
+if(PLAYFIELD_TARGET_MACOS AND NOT PLAYFIELD_ENABLE_STATIC AND PLAYFIELD_ENABLE_BUNDLE)
   # Use capital name.
-  set_target_properties(suika3 PROPERTIES OUTPUT_NAME "Suika3")
+  set_target_properties(playfield PROPERTIES OUTPUT_NAME "Playfield")
 
   # Make an app bundle.
-  set_target_properties(suika3 PROPERTIES
+  set_target_properties(playfield PROPERTIES
     MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.suika3"
-    MACOSX_BUNDLE_BUNDLE_NAME "Suika3"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.playfield"
+    MACOSX_BUNDLE_BUNDLE_NAME "Playfield"
   )
 
   # Set an icon.
   set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/icon512.png")
-  target_sources(suika3 PRIVATE ${APP_ICON})
+  target_sources(playfield PRIVATE ${APP_ICON})
   set_source_files_properties(${APP_ICON} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  set_target_properties(suika3 PROPERTIES
+  set_target_properties(playfield PROPERTIES
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
@@ -559,52 +612,95 @@ if(SUIKA_TARGET_MACOS AND SUIKA_ENABLE_BUNDLE)
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  target_sources(suika3 PRIVATE ${APP_GAME_DATA})
+  target_sources(playfield PRIVATE ${APP_GAME_DATA})
+endif()
+
+#
+# GDK Packaging
+#
+
+if(0)
+if(PLAYFIELD_TARGET_GDK_WINDOWS)
+  set(PKG_STAGING_DIR "${CMAKE_BINARY_DIR}/gdk_staging")
+  set(PKG_OUTPUT_DIR  "${CMAKE_BINARY_DIR}/gdk_package")
+  set(PKG_LAYOUT_XML "${CMAKE_BINARY_DIR}/layout.xml")
+
+  # EXE
+  set(GAME_TARGET playfield)
+
+  # Path to makepkg.exe
+  set(GDK_MAKEPKG "C:/Program Files (x86)/Microsoft GDK/bin/makepkg.exe")
+  set(GDK_WDAPP   "C:/Program Files (x86)/Microsoft GDK/bin/wdapp.exe")
+
+  add_custom_command(TARGET playfield POST_BUILD
+    # Make gdk_staging.
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${PKG_STAGING_DIR}"
+    # Copy assets.
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/samples/bouncer/main.pf" "${PKG_STAGING_DIR}/"
+    # Copy EXE file.
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${GAME_TARGET}>" "${PKG_STAGING_DIR}/"
+    # Copy config files.
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/windows/gdk-desktop/MicrosoftGame.config" "${PKG_STAGING_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/windows/gdk-desktop/logo-44x44.png" "${PKG_STAGING_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/windows/gdk-desktop/logo-100x100.png" "${PKG_STAGING_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/windows/gdk-desktop/logo-150x150.png" "${PKG_STAGING_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/resources/windows/gdk-desktop/splashscreen.png" "${PKG_STAGING_DIR}/"
+    # Make gdk_output.
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${PKG_OUTPUT_DIR}"
+    # Make a mapping file.
+    COMMAND "${GDK_MAKEPKG}" genmap /f "${PKG_LAYOUT_XML}" /d "${PKG_STAGING_DIR}"
+    # pack
+    COMMAND "${GDK_MAKEPKG}" pack /f "${PKG_LAYOUT_XML}" /lt /d "${PKG_STAGING_DIR}" /nogameos /pc /pd "${PKG_OUTPUT_DIR}"
+    # Install to local.
+    COMMAND "${GDK_WDAPP}" install "${PKG_OUTPUT_DIR}/PlayfieldEngineSample_1.0.0.0_x64__6ng4m9yy9amvm.msixvc"
+  )
+endif()
 endif()
 
 #
 # Install
 #
 
-if (   SUIKA_TARGET_LINUX
-    OR SUIKA_TARGET_LINUX_WAYLAND
-    OR SUIKA_TARGET_LINUX_GBM
-    OR SUIKA_TARGET_FREEBSD
-    OR SUIKA_TARGET_FREEBSD_WAYLAND
-    OR SUIKA_TARGET_NETBSD
-    OR SUIKA_TARGET_OPENBSD)
+if(   PLAYFIELD_TARGET_LINUX
+   OR PLAYFIELD_TARGET_LINUX_WAYLAND
+   OR PLAYFIELD_TARGET_LINUX_GBM
+   OR PLAYFIELD_TARGET_FREEBSD
+   OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+   OR PLAYFIELD_TARGET_NETBSD
+   OR PLAYFIELD_TARGET_OPENBSD)
+  if(NOT PLAYFIELD_ENABLE_STATIC AND NOT PLAYFIELD_ENABLE_SHARED)
+    include(GNUInstallDirs)
 
-  include(GNUInstallDirs)
+    install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS playfield-compiler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-  install(TARGETS suika3          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS suika3-compiler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS suika3-pack     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-  if (   SUIKA_TARGET_FREEBSD
-      OR SUIKA_TARGET_FREEBSD_WAYLAND
-      OR SUIKA_TARGET_NETBSD
-      OR SUIKA_TARGET_OPENBSD)
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "suika3.1"
-    )
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3-compiler.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "suika3-compiler.1"
-    )
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3-pack.1.mdoc"
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-      RENAME      "suika3-pack.1"
-    )
-  else()
-    install(
-      FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3.1"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3-compiler.1"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/suika3-pack.1"
-      DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
-    )
+    if(   PLAYFIELD_TARGET_FREEBSD
+       OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
+       OR PLAYFIELD_TARGET_NETBSD
+       OR PLAYFIELD_TARGET_OPENBSD)
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield.1"
+      )
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield-compiler.1"
+      )
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1.mdoc"
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+        RENAME      "playfield-pack.1"
+      )
+    else()
+      install(
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-compiler.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1"
+        DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+      )
+    endif()
   endif()
 endif()

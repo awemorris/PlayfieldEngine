@@ -1,377 +1,290 @@
-Suika3
-======
+Playfield Engine
+================
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/suika3-community/suika3/refs/heads/main/docs/img/logo-small.png">
-</div>
+[![License: zlib](https://img.shields.io/badge/License-zlib-blue.svg)](LICENSE)
 
-A next-generation visual novel engine for professional creators,
-designed to run natively across virtually all platforms,
-ensuring long-term support for the 2030s and beyond.
+`Playfield Engine` is a 2D game scripting runtime that works everywhere.
+With scripts written in `Playfield Script`,
+it can render graphics and play sounds seamlessly across platforms.
+
+[Official Page](https://noctvm.io/playfield/)
+ | 
+[Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
+ |
+[Japanese Page](https://noctvm.io/playfield-ja/)
+
+## Download v0.8.16 now!
+
+| Platform                                                  | Downloads                                                                                                                |
+|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| <img src="docs/img/logo-win.png" align="middle"> Windows  | [Windows 64-bit Installer (For Windows 10/11)](https://noctvm.io/dl/playfield/playfield-installer-0.8.16.exe)            |
+|                                                           | [Windows 64-bit ZIP (For Windows 10/11)](https://noctvm.io/dl/playfield/playfield-win64-0.8.16.zip)                      |
+|                                                           | [Windows Arm64 ZIP (For Windows 11 Arm64)](https://noctvm.io/dl/playfield/playfield-winarm64-0.8.16.zip)                 |
+|                                                           | [Windows 32-bit ZIP (For Windows XP)](https://noctvm.io/dl/playfield/playfield-win32-0.8.16.zip)                         |
+|                                                           | [Windows Pack Tool (For All Windows)](https://noctvm.io/dl/playfield/playfield-pack-0.8.16.zip)                          |
+| <img src="docs/img/logo-mac.png" align="middle"> Mac      | [macOS Arm64/Intel DMG (For macOS 10.12+)](https://noctvm.io/dl/playfield/Playfield-0.8.16.dmg)                          |
+| <img src="docs/img/logo-linux.png" align="middle"> Linux  | [Linux x86_64 AppImage](https://noctvm.io/dl/playfield/Playfield-0.8.16-x86_64.AppImage)                                 |
+|                                                           | [Linux aarch64 AppImage (For Raspberry Pi OS 64-bit)](https://noctvm.io/dl/playfield/Playfield-0.8.16-aarch64.AppImage)  |
+| Others                                                    | [WebAssembly (HTML)](https://noctvm.io/dl/playfield/playfield-wasm-0.8.16.zip)                                           |
+|                                                           | [iOS (Xcode)](https://noctvm.io/dl/playfield/playfield-ios-0.8.16.zip)                                                   |
+|                                                           | [Android (Android Studio)](https://noctvm.io/dl/playfield/playfield-android-0.8.16.zip)                                  |
+|                                                           | [HarmonyOS NEXT](https://noctvm.io/dl/playfield/playfield-openharmony-0.8.16.zip)                                        |
+|                                                           | [Unity Plugin](https://noctvm.io/dl/playfield/playfield-unity-0.8.16.zip)                                                |
+| Samples                                                   | [Sample Games](https://noctvm.io/dl/playfield/playfield-samples-0.8.16.zip)                                              |
+| Source Code                                               | [Source Code](https://noctvm.io/dl/playfield/playfield-src-0.8.16.zip)                                                   |
+
+
+## Feature Highlights
+
+Built completely from scratch, Playfield Engine features:
+
+- **Comfortable Scripting:**
+    - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
+    - Native performance with a built-in JIT compiler.
+    - Write a script and run it instantly — **Jot and Run, Boom!**
+- **Portable Rendering & Audio:**
+    - Powered by StratoHAL, a portable game library also designed in-house.
+    - Runs virtually everywhere: Windows, macOS, Linux, Chromebook, WebAssembly, iOS, Android, and even consoles.
+    - Deploy to platforms you don't even own — **Go Far, Stay Close!**
+- **Minimal Runtime:**
+    - The runtime is only ~1.4 MB on Windows.
+    - Perfect for mobile apps — **Little Core, Big Hits!**
 
 ![platforms](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/platforms.png)
 
 ---
 
-## TL;DR
+## Why Playfield Engine?
 
-* **High-Performance:** Native, written in C
-* **Better Scripting:** JIT VM with AOT fallback for App Store compliance
-* **Virtuall All Platforms:**
-    * **Desktop:** Windows, macOS, Linux, Chromebook, Raspberry Pi
-    * **Mobile:** iOS, Android, HarmonyOS NEXT
-    * **Web:** WebAssembly
-    * **Console:** Xbox GDK, PS5 and Switch via Unity Integration
-* Target: Empowering both commercial and indie studios
+_"If a game engine could run anywhere, how would the world change?"_
 
-[Join Discord](https://discord.gg/YZsq9u9Mgr)
+Playfield Engine was born from this single question.
 
----
+Creativity shouldn't depend on the power of your computer, where you
+live, or what tools you have.  Playfield Engine was created with the
+belief that every creator deserves space to explore, no matter their
+surroundings.
 
-## Introduction
+It runs smoothly even on older or low-spec machines — if you have a
+computer, there's a place for you to create.  It's a helpful companion
+for creators everywhere — especially in places with fewer resources.
+If you have something to make, Playfield Engine will be here to walk
+with you.
 
-Suika3 is a high-performance, production-grade visual novel engine
-specifically engineered for commercial app development, maintained by
-the `Suika3 Community` and led by Awe Morris.
+Whether you're using a Raspberry Pi in a classroom, or using a
+UN-issued Chromebook in a temporary shelter, Playfield Engine offers
+gentle tools to help bring your ideas to life — in a way that feels
+simple, thoughtful, and your own.
 
-Engineered with state-of-the-art techniques in computer science,
-Suika3 delivers native performance and true portability, empowering
-creators worldwide to build timeless experiences that endure for
-decades.
+The goal is simple:
+**To make game development accessible, thoughtful, and within reach
+for everyone.**
 
-Games made with Suika3 are powered by `NovelML 3.0` and `SuikaScript 3.0`.
-
-* **NovelML 3.0**: A tag-based, human-readable markup language
-  designed specifically for visual novels. It features concise,
-  declarative tags for seamless dialogue and scene
-  control. Developers can also extend its capabilities by defining
-  custom tags using SuikaScript.
-
-* **SuikaScript 3.0**: The robust extension language for Suika3. It
-  utilizes a high-speed JIT compiler on desktop platforms and can be
-  compiled into native binaries for production or mobile
-  environments.
+**Dreams fuel it — and they're the only requirement.**
 
 ---
 
-## Kanban (Status): Final Polishing for 1.0.0!
+## Live Web Demo
 
-We are planning the 1.0.0 release on July 1 2026.
-Currently we are working very hard to complete Suika3.
+These are the sample games that work on Web browsers.
 
-**Our current status is:**
+[![Small Shoot](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-4.png)](https://noctvm.io/g/4)
 
-* ✅ Cleaning up the Suika2 code base. (OpenNovel) (June 2024 - November 2024)
-* ✅ Implementing the scripting language. (NoctLang) (December 2024 - March 2025)
-* ✅ Implementing the 2D game engine. (Playfield Engine) (March 2025 - October 2025)
-* ✅ Implementing the tag execution engine. (Suika3) (January 2026 - February 2026)
-* ✅ Refactoring all C APIs. (January 2026 - February 2026)
-* ✅ Implementing all tags in C. (January 2026 - February 2026)
-* ✅ Wrapping all APIs in SuikaScript. (February 2026 - March 2026)
+[![Heartbeat Clock](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-2.png)](https://noctvm.io/g/2)
 
-* Remaining Tasks
-    * ✅ Final checking for API consistency and freeze the API. (March 7, 2026)
-    * Adjusting GUI functionality including GUI animations. (March 10, 2026)
-    * Engine Feature Freeze (March 15, 2026)
-    * Adding the exporter tool. (March 20, 2026)
-    * Adding a sample game. (March 30, 2026)
+[![Mini Shoot](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-3.png)](https://noctvm.io/g/3)
 
-* Quality Stabilization Period (March 30 - May 30, 2026)
-    * Milestone: Release Candidate 1 (March 30, 2026)
-    * Milestone: Release Candidate 2 (April 30, 2026)
-    * Milestone: Release Candidate 3 (May 30, 2026)
-    * Milestone: Release Candidate 4 / Golden Master (June 30, 2026)
-
-* Documentation (Simultaneous with Quality Stabilization)
-    * `C API`
-    * ✅ `SuikaScript Syntax`
-    * ✅ `SuikaScript API`
-    * `NovelML Syntax`
-    * ✅ `NovelML Tags`
-    * `Getting Started`
-    * `Plugin Development`
-    * ✅ `Build Instruction`
-    * `System Requirement Specification`
-    * `System Design Specification`
-    * ✅ Website
-
-* 1.0.0 Release (July 1, 2026)
+[![DON'T RUSH IN COMIKET](https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-1.png)](https://noctvm.io/g/1)
 
 ---
 
-## Key Features
+## Gallery
 
-* **High Performance**: Powered by the Suika JIT VM, it delivers
-    5~10x execution speed compared to interpreter.
+Playfield Engine running on Windows 11:
 
-* **Lightweight**: Engineered to run smoothly at 60 fps even on low-spec
-    hardware such as Raspberry Pi in developing regions.
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-win11.png" width="320" alt="Playfield Engine running on Windows 11">
 
-* **Universal Platform**: Designed with a "port anywhere" strategy,
-    ensuring compatibility with almost every modern platform.
+Playfield Engine running on macOS:
 
-* **Extensible**: NovelML can be seamlessly expanded by developers
-    using SuikaScript.
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-macos.png" width="320" alt="Playfield Engine running on macOS">
 
-* **Reliable**: Built on the proven codebase of Suika2 and integrated
-    with the modern Playfield Engine.
+Playfield Engine running on Linux:
 
-* **Jot-and-Run**: A powerful markup language designed to bring your
-    stories to life in an instant.
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-linux.png" width="320" alt="Playfield Engine running on Linux">
 
----
+Playfield Engine running on iOS simulator:
 
-## Getting Started
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-ios.png" width="320" alt="Playfield Engine running on iOS simulator">
 
-A quick path to try Suika3 locally.
+Playfield Engine running on Android emulator:
 
-### Using prebuilt binary
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-android.png" width="320" alt="Playfield Engine running on Android emulator">
 
-Please download from [Releases](releases).
+Playfield Engine running on HarmonyOS NEXT emulator:
 
-### Building locally
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-harmonyosnext.png" width="320" alt="Playfield Engine running on HarmonyOS NEXT emulator">
 
-Refer to [build.md](docs/mkdocs-en/build.md) for platform-specific instructions.
+Playfield Engine running on Windows XP — because why not:
 
-**Generic instruction:**
-```
-git clone https://github.com/suika3-community/suika3.git
-cd suika3
-mkdir build
-cd build
-cmake ..
-cmake --build .
-cp -R ../game/* .
-./suika3
-```
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-xp.png" width="320" alt="Playfield Engine running on Windows XP">
+
+Playfield Engine running on NetBSD — Of course it runs!: 
+
+<img src="https://github.com/awemorris/PlayfieldEngine/blob/main/docs/img/screenshot-netbsd.png" width="320" alt="Playfield Engine running on NetBSD">
 
 ---
 
-## Quick Look
+## Status
 
-### NovelML
+Actively developing on the 0.8.x branch. Stable 1.0.0 release planned.
 
-`start.novel` file looks like:
+Currently we are focusing on `C API` for use with derrived engines.
 
-```
-# Show a background image.
-[bg file="bg/coast.png" time="0.5"]
+**The nightly builds actually work on:**
 
-# Show a character image.
-[ch center="ch/midori-normal.png" time="0.5" fade="normal"]
+|Type       |OS              |Status       |Confirm Date |Confirmed On                        |
+|-----------|----------------|-------------|-------------|------------------------------------|
+|Desktop    |Windows         |✅ Works     |1 March 2026 |Windows 11 x64                      |
+|           |macOS           |✅ Works     |1 March 2026 |macOS 26 Arm64                      |
+|           |Linux           |✅ Works     |1 March 2026 |Ubuntu 24.04 LTS x86_64             |
+|Mobile     |iOS             |✅ Works     |1 March 2026 |iPhone iOS 26                       |
+|           |Android         |✅ Works     |22 Sep 2025  |Android 16                          |
+|           |HarmonyOS NEXT  |✅ Initial   |9 March 2026 |DevEco Studio 6                     |
+|BSD        |FreeBSD         |✅ Works     |22 Sep 2025  |FreeBSD 14.3 amd64                  |
+|           |NetBSD          |✅ Works     |22 Sep 2025  |NetBSD 10.1 amd64                   |
+|           |OpenBSD         |✅ Works     |22 Sep 2025  |OpenBSD 7.7 amd64                   |
+|Others     |WebAssembly     |✅ Works     |22 Sep 2025  |Chrome                              |
+|           |Chromebook      |✅ Works     |22 Sep 2025  |Chrome [Here](https://noctvm.io/w/) |
+|           |Unity           |✅ Works     |22 Sep 2025  |Unity 6.2 Windows 11 x86_64         |
 
-# Show a question text.
-[text text="Choose a name."]
+---
 
-# Show options.
-[choose
-  name="choose_result"
-  text1="March"
-  text2="April"
-  text3="May"
-]
+## Example
 
-# Branch by the choose's result.
-[if lhs="${choose_result}" op="==" rhs="March"]
-    [set name="name" value="March"]
-[elseif lhs="${choose_result}" op="==" rhs="April"]
-    [set name="name" value="April"]
-[else]
-    [set name="name" value="May"]
-[endif]
-
-# Show a text.
-[text name="${name}" text="Hello! My name is ${name}."]
-```
-
-### SuikaScript
-
-`main.pf` file looks like:
+Here's a simple example that displays an image following the mouse
+cursor. This shows the basic lifecycle:
+`setup` (window config),
+`start` (asset loading),
+`update` (per-frame logic and texture loading), and
+`render` (per-frame rendering).
 
 ```
-// Called when the window is opened.
+// Called when the window is created.
 func setup() {
-    // Return the window settings.
+    // Return the window configuration.
     return {
-        width:      1280,
-        height:     720,
-        title:      "My First Game",
-	fullscreen: false
+        width: 1280,
+        height: 720,
+        title: "My First Game"
     };
 }
 
-// Called before the game starts.
+// Called once when the game starts.
 func start() {
-    // Do not delete the following line.
-    Suika.start();
+    // Create a white 100x100 texture.
+    tex = Engine.createColorTexture({
+        width: 100,
+        height: 100,
+        r: 255, g: 255, b: 255, a: 255
+    });
 }
 
-// Called before a frame rendering.
+// Called every frame before rendering.
 func update() {
-    // Do not delete the following line.
-    Suika.update();
+    posX = Engine.mousePosX;
+    posY = Engine.mousePosY;
 }
 
-// Called every frame rendering.
+// Called every frame to render graphics.
 func render() {
-    // Do not delete the following line.
-    Suika.render();
+    Engine.draw({ texture: tex, x: posX, y: posY });
 }
 ```
 
 ---
 
-## Examples
+## Quick Start
 
-Sorry we are currently preparing examples.
+Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 
-See the `game/` directory for:
-* Minimal demo project
-* Sample assets and NovelML snippets
-* SuikaScript usage patterns
+### 1. Download the latest binary:
 
----
+- Download the `All-in-One` file at the top of this page.
+- Extract the downloaded file.
 
-### Why SuikaScript?
+### 2. Run a game script
 
-* **Instant Iteration:** No compile cycles, no waiting. The built-in
-    JIT compiler runs your scripts immediately after editing, so you
-    can tweak gameplay and see results in real-time.
+- For Windows:
+    - Double-click the `playfield.exe` file.
+    - The game will be started.
+- For macOS:
+    - Open the `misc` folder.
+    - Open the `macos` folder.
+    - Open the `Playfield.dmg` file.
+    - Copy the application inside the dmg file alongside the `main.pf` file.
+    - Double-click the copied application file.
+    - The game will be started.
+- For Linux:
+    - Open the `misc` folder.
+    - Open the `linux` folder.
+    - Copy the `PlayfieldEngine-x86_64.AppImage` file alongside the `main.pf` file.
+    - Double-click the copied AppImage file.
+    - The game will be started.
+- For Chromebook:
+    - Open [this URL](https://noctvm.io/w/) on the browser.
+    - Press the `Open Folder` button.
+    - Select the folder where the `main.pf` file exists.
+    - The game will be started.
 
-* **True Native Performance:** Run extensions at full speed on iOS,
-    Android, and consoles. Even on platforms where JIT is restricted,
-    you never have to sacrifice performance thanks to AOT.
+### 3. Edit a game script
 
-* **Smooth Store Approval:** Dramatically lower the risk of
-    rejection. Since final builds consist of native code via AOT,
-    you'll breeze through App Store and console certifications.
+- With Playfield Editor (Currently Windows only):
+    - Double-click the `playfield-editor.exe` file to run the editor.
+    - Open the `main.pf` file from the editor.
+    - Edit the file.
+    - Press Ctrl+R to run the game. (Press R key while holding Ctrl key down)
+- With your favorite editor:
+    - Prior to editing, copy the engine alongside the `main.pf` file.
+    - Open your favorite editor and load the `main.pf` file.
+    - Edit the file and save it.
+    - Run the engine.
 
-* **Easy to Learn, Powerful to Use:** The JavaScript-inspired syntax
-    is friendly for beginners, yet offers the deep flexibility
-    experienced developers expect for complex systems.
+### 4. Explore more features
 
-* **Long-term Stability:** Because we develop the language in-house,
-    you're shielded from breaking changes in upstream projects. We own
-    and control the full stack, so your scripts stay compatible forever.
-
----
-
-## Why Suika3?: Our Philosophy
-
-### Mission: Building a Sustainable Ecosystem
-
-Our dedication to the commercial success of visual novels is a
-strategic response to the long-term health of the medium. We believe
-that for visual novels to flourish in the 2030s, they must transcend
-hobbyist boundaries and re-establish themselves as a thriving creative
-industry.
-
-Since the 2010s, the visual novel market has faced significant growth
-challenges. One critical bottleneck has been the **lack of
-high-performance free/libre software engines** capable of delivering a
-seamless **native experience on iOS and Android**.
-
-Without accessible, professional-grade tools for modern mobile
-platforms, many creators have been restricted to limited distribution
-channels. As a result, the medium has struggled to reach a global,
-mobile-first audience, slowing its overall expansion.
-
-While free and hobbyist projects are culturally indispensable, we
-believe they may not be sufficient on their own to sustain an entire
-creative industry. A truly healthy ecosystem may require:
-
-* **Commercially Viable Games** — Titles that reach players on their
-    primary devices and generate the economic activity necessary for
-    creators to build long-term careers.
-
-* **Economic Independence** — Empowering talent, particularly in Asia
-    and the Global South, to overcome economic barriers through
-    storytelling.
-
-* **A Living Industry** — Transforming the medium from a niche
-    interest into a sustainable market where creativity can lead to
-    self-reliance.
-
-...Is this overly assertive? In our view, it is a natural professional
-expectation for commercial success.
-
-### Our Vision: Catalyst for Growth
-
-We do not aim to provide just another tool. Our goal is to provide a
-**catalyst for growth**.
-
-By offering a "port-anywhere" engine that delivers native performance
-without the overhead of heavy commercial frameworks, we enable
-developers to focus on what matters most: **telling stories that
-endure.**
-
-Because we love visual novels, we are committed to pushing the medium
-forward and ensuring it remains a vibrant and economically viable art
-form for decades to come.
-
-### Our Values: Empowering Talents for Sustainable Careers
-
-Suika3 is dedicated to creators who dream of publishing and selling
-original visual novels on the App Store and Google Play, regardless of
-their hardware limitations.
-
-Our value is to empower talent—particularly in Asia and the Global
-South—to build sustainable careers through their storytelling. We
-believe that with the right tools, creativity can overcome economic
-barriers.
-
-Our commitment to free/libre software is rooted in a simple, practical
-goal: fostering sustainable economic independence. This mission is
-shaped by our core members' personal experiences in Asia and their
-journeys in overcoming adversity. We simply believe that talent, when
-equipped with the right tools, inevitably leads to self-reliance.
-
-Creators with different goals may also find excellent resources in
-other engines like Unity, Godot, or Ren'Py.
+- [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
+- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Playfield Script API](docs/mkdocs-en/docs/api.md)
+- [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
 
 ---
 
 ## Technical Overview
 
-If these specifications excite you, you're probably in the right place.
-
-Suika3 is not merely a wrapper around SDL combined with a scripting language.
-It features its own rendering and audio backends, and its own scripting language,
-positioning it as a fully independent game engine.
+Playfield Engine is not merely a wrapper around SDL combined with a
+scripting language. It features its own rendering and audio backends,
+and its own scripting language, positioning it as a fully independent
+game engine.
 
 ### Core Architecture
 
-Suika3 is based on `PlayField Engine`, a comprehensive 2D game engine.
-This means that Suika3 is fully extensible using the Playfield API.
-(Playfield Engine was actually developed just for Suika3.)
-
 ```
-+------------------------------+
-|        NovelML (Tags)        |
-+------------------------------+
-| Plugin Tags (by SuikaScript) | --> SuikaScript can be compiled into a native binary!
-+------------------------------+
-|       Base Tags (by C)       |
-+------------------------------+
-|    SuikaScript Wrapper API   |
-+------------------------------+
-|         Suika3 C API         |
-+------------------------------+
-|       Playfield C API        |
-+---------------+--------------+
-|   StratoHAL   |   NoctLang   |
-+---------------+--------------+
-|       Operating System       |
-+------------------------------+
++----------------------------------------------------------+
+|                       User Scripts                       |
++----------------------------------------------------------+
+|                 Playfield Script Runtime                 |
++--------------------------------+-------------------------+
+|                    Playfield C Runtime                   |
++--------------------------------+-------------------------+
+|  StratoHAL (Rendering/Audio)   |    NoctLang VM (JIT)    |
++--------------------------------+-------------------------+
 ```
 
 * **Scripting**:
-  Integrates [NoctLang](https://github.com/awemorris/NoctLang),
-  a tiny yet mighty language designed for game scripting.
+  Integrates [NoctLang](https://github.com/awemorris/NoctLang), a
+  tiny yet mighty language designed for game scripting.
 
 * **Rendering**:
-  Supports native DirectX 9/11/12, Metal, OpenGL, OpenGL ES, and WebGL
-  for wide compatibility.
+  Supports native DirectX 9/11/12, Metal, OpenGL, OpenGL ES, and WebGL for wide compatibility.
 
 * **Audio**:
   Provides lightweight audio support through native DirectSound or XAudio2 (Windows),
@@ -380,60 +293,53 @@ This means that Suika3 is fully extensible using the Playfield API.
 ### StratoHAL
 
 StratoHAL originated as the codebase of a 2D game engine developed
-since 2001, and has been Zlib-licensed with a proven record of
-exceptional stability.  Evolving over a quarter century from the
+since 2001, and has been open-sourced with a proven record of
+exceptional stability. Evolving over a quarter century from the
 Windows 9x era, StratoHAL has grown to support macOS, Linux, iOS,
-Android, WebAssembly, and Unity.  It has been running reliably on
-smartphones for more than a decade.  While SDL3 already exists as a
-popular free/libre software alternative, StratoHAL covers the same
-major platforms as SDL3 — and uniquely provides console support
-through Unity without relying on any NDA-restricted code.
+Android, WebAssembly, and Unity. It has been running reliably on
+smartphones for more than a decade. While SDL3 already exists as a
+popular open-source alternative, StratoHAL covers the same major
+platforms as SDL3 — and uniquely provides console support through
+Unity without relying on any NDA-restricted code.
 
-### Platform Support and Components
+### Platform Support
 
-|Platform Type  |OS / Platform       |Graphics                 |Sound                 |SDK                  |
-|---------------|--------------------|-------------------------|----------------------|---------------------|
-|Desktop        |Windows             |DirectX 12/11/9          |DirectSound           |Win32 API            |
-|               |macOS               |Metal                    |Audio Unit            |AppKit (Objective-C) |
-|               |ChromeOS            |WebGL 2                  |OpenAL (Emscripten)   |Emscripten (C)       |
-|               |Linux               |OpenGL 3                 |ALSA                  |C, X11 or Wayland    |
-|               |*BSD                |OpenGL 3                 |OSS (/dev/dsp)        |C, X11               |
-|               |Qt                  |OpenGL 3                 |Qt Sound              |Qt                   |
-|Mobile         |iOS                 |Metal                    |Audio Unit            |UIKit (Objective-C)  |
-|               |Android             |OpenGL ES 2              |OpenSL ES             |Android NDK          |
-|               |HarmonyOS NEXT      |OpenGL ES 2              |OpenSL ES             |OpenHarmony SDK      |
-|Web            |WebAssembly (Wasm)  |WebGL 2                  |OpenAL (Emscripten)   |Emscripten (C)       |
-|Console        |Unity               |Unity                    |Unity                 |Unity Native Plugin  |
-|               |Xbox Series X\|S    |DirectX 12               |XAudio2               |Microsoft GDK        |
+|Platform Type  |OS / Platform       |Notes                                     |
+|---------------|--------------------|------------------------------------------|
+|Desktop        |Windows             |DirectX 12/11/9, DirectSound, XAudio2     |
+|               |macOS               |Metal, Audio Unit                         |
+|               |ChromeOS            |OpenGL, ALSA                              |
+|               |Linux               |OpenGL, ALSA                              |
+|               |*BSD                |OpenGL, OSS (/dev/dsp)                    |
+|               |Qt                  |Qt OpenGL                                 |
+|Mobile         |iOS                 |Metal, Audio Unit                         |
+|               |Android             |OpenGL, OpenSL ES, NDK                    |
+|               |HarmonyOS NEXT      |OpenGL, OpenSL ES                         |
+|Web            |WebAssembly         |WebGL, OpenAL, via Emscripten             |
+|Console        |Unity               |Unity Plugin                              |
+|               |Xbox Series X\|S    |Xbox GDK Native (DirectX 12 + XAudio2)    |
 
 ### Console Unity Plugin Notice
 
 Playfield Engine provides Unity Plugin binaries for platforms
 including Windows 64-bit and game consoles.  These binaries are built
-entirely with the official version of LLVM/Clang toolchain (no
+entirely with the open-source version of LLVM/Clang toolchain (no
 proprietary SDKs).
 
-For Xbox series, you can use the native Microsoft GDK port directly, not via Unity.
+For Xbox series, you can use the native Microsoft GDK port, not via Unity.
 
 ### NoctLang
 
 ```
-SuikaScript = NoctLang + Suika3 API
+Playfield Script = NoctLang + Playfield API
 ```
 
-**NoctLang** is a lightweight scripting language designed for in-app
-scripting.  With a game-oriented syntax, it emphasizes clarity,
-instant startup, and tight integration with the engine.
+**NoctLang** is a lightweight scripting language designed specifically
+for Playfield Engine. With a game-oriented syntax, it emphasizes
+clarity, instant startup, and tight integration with the engine.
 
-The built-in JIT compiler supports a wide range of CPU architectures, including:
-
-* Intel x86 (32-bit)
-* AMD64/x86_64 (64-bit)
-* ARMv7 (32-bit)
-* Arm64 (64-bit)
-* RISC-V (32-bit/64-bit)
-* PowerPC/POWER (32-bit/64-bit)
-* MIPS (32-bit/64-bit)
+The built-in JIT compiler supports a wide range of CPU architectures,
+including both 32-bit and 64-bit of: **Intel, Arm, RISC-V, PowerPC, MIPS.**
 
 For platforms where JIT is restricted (such as mobile or consoles),
 NoctLang can fall back to interpreter mode, and AOT (ahead-of-time)
@@ -453,15 +359,12 @@ even in tightly controlled environments.
 |Linux x86_64   |JIT                |
 |Linux armv7    |JIT                |
 |Linux arm64    |JIT                |
+|FreeBSD x86_64 |JIT                |
 |iOS            |Interpreter or AOT |
 |Android        |Interpreter or AOT |
-|HarmonyOS NEXT |Interpreter or AOT |
+|HarmonyOS      |Interpreter or AOT |
 |WebAssembly    |Interpreter or AOT |
 |Unity Plugin   |Interpreter or AOT |
-|Xbox           |Interpreter or AOT |
-|FreeBSD        |JIT                |
-|NetBSD         |JIT                |
-|OpenBSD        |Interpreter or AOT |
 
 ### Runtime Footprint
 
@@ -469,475 +372,307 @@ even in tightly controlled environments.
 |---------------|---------------|---------------------------------------------------------------|
 |All targets    |~2 MB          |Allocates 256 MB at startup for GC; does not exceed that limit |
 
-The garbage collector commits 256 MB at startup because currently 256
-MB is the maximum heap size in the default configuration.  So the
-required system memory size is 256 MB. (However, this can be adjusted
-to a smaller or larger values.)
+The garbage collector allocates 256 MB at startup because currently 256 MB is the maximum heap size.
+
+### Garbage Collection
+
+Playfield Engine implements a high-performance garbage collector
+similar to the HotSpot VM in Java, so you generally don’t need to
+worry much about delays caused by garbage collection.
+
+* The garbage collector uses a generational GC, managing objects in young and old generations.
+* Young-generation GC runs extremely fast using a copying algorithm (semi-space copy GC).
+* Old-generation GC uses a mark-and-sweep algorithm and performs compaction when necessary (mark-sweep-compact GC).
 
 ---
 
-## Garbage Collection (GC) in Suika3
+## Tests
 
-Suika3 features a high-performance generational garbage collector,
-inspired by the architecture of the Java HotSpot VM. This design
-ensures that developers can focus on creation without being
-interrupted by the dreaded "GC spikes" or frame drops.
+Playfield Engine is tested on the following environments in the
+development.
 
-### Core Mechanism: Generational GC
-
-The system categorizes objects into two groups to optimize memory
-management:
-
-* Young Generation: Most objects die young. Suika3 handles these using
-  a high-speed Copying Algorithm (Semi-space Copy GC), which clears
-  out temporary data in a flash. (typically < 0.1ms)
-
-* Old Generation: Long-lived objects are moved here. This area uses a
-  Mark-Sweep-Compact GC algorithm, which periodically reorganizes
-  memory to prevent fragmentation. (typically 10-300ms)
-
-### Frame-Synchronized Latency Hiding
-
-The real "magic" of Suika3 lies in its timing. By executing the
-Young-generation Copy GC every single frame, the system effectively
-hides the GC processing time within the natural frame interval.
-
-Thanks to this generational strategy, the heavier Old-generation
-Mark-and-Sweep is rarely triggered, maintaining a constant 60 fps
-experience for the player.
-
----
-
-## Supported Platforms
-
-Suika3 primarily targets desktop environments (Windows, Linux, macOS)
-while providing a robust migration path for mobile and embedded
-systems via the Playfield Engine.
-
-### Platform Availability at a Glance
-
-`Supported` means the upstream (`Playfield Engine`) fully supports it.
-
-| Category    | OS / Environment   | Status       | Last Checked | Checked On                       |
-| :---        | :---               | :---         | :---         | :---                             |
-| **Desktop** | Windows            | ✅ Supported | 3 Mar 2026   | Windows 11 (x64/Arm64)           |
-|             | macOS              | ✅ Supported | 1 Mar 2026   | macOS 26 Tahoe (Apple Silicon)   |
-|             | Linux              | ✅ Supported | 3 Mar 2026   | Ubuntu 24.04 LTS (x86_64)        |
-| **Mobile**  | iOS                | ✅ Supported | -            | iOS 18                           |
-|             | Android            | ✅ Supported | -            | Android 15                       |
-|             | HarmonyOS NEXT     | ✅ Supported | -            | API 10+                          |
-| **BSD**     | FreeBSD            | ✅ Supported | -            | 14.0-RELEASE amd64               |
-|             | NetBSD             | ✅ Supported | -            | 10.0 amd64, aarch64, armv7       |
-|             | OpenBSD            | ✅ Supported | -            | 10.0 amd64, aarch64, armv7       |
-| **Web**     | WebAssembly (Wasm) | ✅ Supported | -            | Chrome, Edge, Safari             |
-|             | Chromebook         | ✅ Supported | -            | Chrome Browser / Linux Container |
-| **Other**   | Unity Integration  | ✅ Supported | -            | Unity 6.2 (Windows x86_64)       |
-
-### Windows Compatibility List
-
-Suika3 maintains exceptional backward compatibility, supporting legacy
-systems through specialized runtimes.
-
-| OS      | Version | Patch | CPU    | Required Runtimes                                                                    | 32-bit Binary | 64-bit Binary | Direct3D |
-|---------|---------|-------|--------|--------------------------------------------------------------------------------------|---------------|---------------|----------|
-| Windows | 11      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
-| Windows | 11      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
-| Windows | 10      |       | x86    |                                                                                      | ✅            | ❌            | 12.0     |
-| Windows | 10      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
-| Windows | 10      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
-| Windows | 8.1     |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
-| Windows | 8.1     |       | x64    |                                                                                      | ✅            | ✅            | 11.0     |
-| Windows | 8       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
-| Windows | 8       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | 7       |       | x86    |                                                                                      | ✅            | ❌            | 11.0     |
-| Windows | 7       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | 7       | SP1   | x86    |                                                                                      | ✅            | ❌            | 11.0     |
-| Windows | 7       | SP1   | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
-| Windows | Vista   |       | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   |       | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   | SP1   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | Vista   | SP1   | x64    | DirectX End-User Runtimes (June 2010), Microsoft Visual C++ Redistributable 2015     | ✅            | ✅            | 9.0      |
-| Windows | Vista   | SP2   | x86    | DirectX 11 Platform Update                                                           | ✅            | ❌            | 11.0     |
-| Windows | Vista   | SP2   | x64    | DirectX 11 Platform Update, Microsoft Visual C++ Redistributable 2015                | ✅            | ✅            | 11.0     |
-| Windows | XP      | SP3   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-| Windows | XP      | SP3   | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
-
-### macOS Compatibility List
-
-| OS                | Version    | CPU           | Status     |
-|-------------------|------------|---------------|------------|
-| macOS Tahoe       | 26.0       | Apple / Intel | ✅         |
-| macOS Sequoia     | 15.0       | Apple / Intel | ✅         |
-| macOS Sonoma      | 14.0       | Apple / Intel | ✅         |
-| macOS Ventura     | 13.0       | Apple / Intel | ✅         |
-| macOS Monterey    | 12.0       | Apple / Intel | ✅         |
-| macOS Big Sur     | 11.0       | Apple / Intel | ✅         |
-| macOS Catalina    | 10.15      | Intel         | ✅         |
-| macOS Mojave      | 10.14      | Intel         | ✅         |
-| macOS High Sierra | 10.13      | Intel         | ✅         |
-| macOS Sierra      | 10.12      | Intel         | ✅         |
-| OS X El Capitan   | 10.11      | Intel         | ✅         |
-| Legacy Mac OS X   | 10.7-10.10 | Intel         | N/A        |
-| Legacy Mac OS X   | 10.0-10.6  | PowerPC       | N/A        |
-
-### Linux Compatibility List
-
-| Distribution      | Version               | CPU             | Status |
-|-------------------|-----------------------|-----------------|--------|
-| Raspberry Pi OS   | Debian 13             | arm64, armv7    | ✅     |
-| Ubuntu            | 24.04 / 22.04 / 20.04 | x86_64, arm64   | ✅     |
-| Kubuntu           | 25.04                 | x86_64, arm64   | ✅     |
-| Linux Mint        | 22.3                  | x86_64          | ✅     |
-| Fedora            | 43                    | x86_64          | ✅     |
-
-### iOS Compatibility List
-
-| OS      | Status     |
-|---------|------------|
-| iOS 26  | ✅         |
-| iOS 18  | ✅         |
-| iOS 17  | ✅         |
-| iOS 16  | ✅         |
-| iOS 15  | ✅         |
-| iOS 14  | ✅         |
-| iOS 13  | ✅         |
-| iOS 12  | ✅         |
-| iOS 11  | ✅         |
-| iOS -10 | N/A        |
-
-### Android Compatibility List
-
-| OS          | Status |
-|-------------|--------|
-| Android 16  | ✅     |
-| Android 15  | ✅     |
-| Android 14  | ✅     |
-| Android 13  | ✅     |
-| Android 12  | ✅     |
-| Android 11  | ✅     |
-| Android 10  | ✅     |
-| Android 9   | ✅     |
-| Android 8   | ✅     |
-| Android 7   | ✅     |
-| Android 6   | ✅     |
-| Android 5   | N/A    |
-| Android 4.4 | N/A    |
-
-### HarmonyOS / OpenHarmony Compatibility List
-
-| OS          | Status |
-|-------------|--------|
-| API 12      | ✅     |
-
----
-
-## Documentation
-
-Documentation is also available at [the Website](https://suika3.vn/docs/)
-and it is synchronized to the latest.
-
-* [NovelML 3.0 Syntax Reference](docs/mkdocs-en/docs/tags.md) (In-Progress)
-* [NovelML 3.0 Tag Reference](docs/mkdocs-en/docs/tags.md)
-* [SuikaScript 3.0 Syntax Reference](docs/mkdocs-en/docs/syntax.md)
-* [SuikaScript 3.0 API Reference](docs/mkdocs-en/docs/api.md)
-* [Build Instruction](docs/mkdocs-en/docs/build.md)
-
----
-
-## Localization / Internationalization
-
-Suika3 supports the following languages, and the translation is in progress.
-
-| Language               | Locale Code | Translation Type         | Scope of Translation             | Progress      |
-|------------------------|-------------|--------------------------|----------------------------------|---------------|
-| English                | `en-US`     | Original                 | UI / Docs / Samples              | Baseline      |
-| Spanish                | `es-ES`     | Machine Translation      | UI                               | Not Yet       |
-| French                 | `fr-FR`     | Machine Translation      | UI                               | Not Yet       |
-| Italian                | `it-IT`     | Machine Translation      | UI                               | Not Yet       |
-| German                 | `de-DE`     | Machine Translation      | UI                               | Not Yet       |
-| Greek                  | `el-GR`     | Machine Translation      | UI                               | Not Yet       |
-| Russian                | `ru-RU`     | Machine Translation      | UI                               | Not Yet       |
-| Simplified Chinese     | `zh-CN`     | Machine Translation      | UI                               | Not Yet       |
-| Traditional Chinese    | `zh-TW`     | Machine Translation      | UI                               | Not Yet       |
-| Japanese               | `ja-JP`     | Professional Translation | UI / Docs                        | Not Yet       |
-
-### How to switch languages
-
-Playfield Engine uses the system locale.  To switch languages, set
-your system locale.
-
-### Contributing Translations
-
-We welcome community contributions to improve our translations!
-If you want to help us reach more developers, here is how you can contribute:
-
-0.  Do `grep -r _TR()` and detect original messages.
-1.  **Locate the Files**: Translation assets are managed across three core directories:
-    * `resources/i18n/message.txt` (Suika3 part, `S3_TR()`)
-    * `external/PlayfieldEngine/resources/i18n/message.txt` (Playfield Engine part, `PF_TR()`)
-    * `external/PlayfieldEngine/external/NoctLang/i18n/message.txt` (NoctLang part, `N_TR()`)
-    * `external/PlayfieldEngine/external/StratoHAL/i18n/message.txt` (StratoHAL part, `HAL_TR()`)
-2.  **Submit Your Changes**: 
-    * Found a typo or a weird machine translation? Feel free to open a **Pull Request**.
-    * Want to add a new language? Please open an **Issue** first so we can coordinate!
-
-> [!TIP]
-> Manual/Professional translations are prioritized over machine-generated content. Your human touch makes a huge difference!
-
----
-
-## Third-party Libraries
-
-Our engine is built upon several free/libre software libraries. To
-ensure build reproducibility and long-term maintainability, all
-necessary source code tarballs and patches are bundled within this
-repository under the
-`external/PlayfieldEngine/external/StratoHAL/lib/` directory.
-
-### Core Libraries
-
-| Library          | Purpose             | Key Feature                                            |
-| :---             | :---                | :---                                                   |
-| Playfield Engine | 2D Game Engine      | Our base game engine. (in-house)                       |
-| NoctLang         | Scripting Language  | Our scripting language. (in-house)                     |
-| zlib             | Compression         | Deflate algorithm for general data compression.        |
-| libpng           | Image               | Reference library for supporting PNG images.           |
-| JPEG9            | Image               | Industry-standard JPEG image decompression.            |
-| libwebp          | Image               | Modern, high-efficiency image format support.          |
-| FreeType2        | Font                | High-quality font rendering and glyph processing.      |
-| libogg           | Audio Container     | Bitstream handling for Ogg multimedia files.           |
-| libvorbis        | Audio Codec         | Lossy audio compression used for BGM and SE.           |
-| brotli           | Compression         | High-ratio compression for web and data assets. (WOFF) |
-| bzip2            | Compression         | High-quality data compressor for archives.             |
-
-### License Compliance
-
-Each library is used according to its respective free/libre software
-license. Please refer to the `NOTICE` file in this repository for the
-full text of each license and copyright notice.
+|Type       |OS              |Version |Architecture    |
+|-----------|----------------|--------|----------------|
+|Desktop    |Windows         |11      |x64             |
+|           |                |        |arm64           |
+|           |macOS           |15      |arm64           |
+|           |                |12      |x86_64          |
+|           |Ubuntu          |24.04   |x86_64          |
+|           |                |        |arm64           |
+|           |Kubuntu         |25.04   |x86_64          |
+|Browser    |Chrome          |139     |WebAssembly     |
+|           |Safari          |18.6    |WebAssembly     |
+|Smartphone |iOS             |18      |Simulator       |
+|           |Android         |16      |Simulator       |
+|           |HarmonyOS NEXT  |20      |Simulator       |
+|Console    |Unity           |6.2     |Windows x64     |
 
 ---
 
 ## CMake Presets
 
-Suika3 ships with CMake presets covering various platforms and build
-configurations.
+Playfield Engine ships with CMake presets covering various platforms
+and build configurations.
 
-|Preset                         |Platform              |Compiler   |Directory                              |Target           |Type           |
-|-------------------------------|----------------------|-----------|---------------------------------------|-----------------|---------------|
-|windows-vs2022-x86-debug       |Windows               |MSVC       |out/build/windows-vs2022-x86-debug     |suika3.exe    |Executable     |
-|windows-vs2022-x86-release     |Windows               |MSVC       |out/build/windows-vs2022-x86-release   |suika3.exe    |Executable     |
-|windows-vs2022-x64-debug       |Windows               |MSVC       |out/build/windows-vs2022-x64-debug     |suika3.exe    |Executable     |
-|windows-vs2022-x64-release     |Windows               |MSVC       |out/build/windows-vs2022-x64-release   |suika3.exe    |Executable     |
-|windows-vs2022-arm64-debug     |Windows               |MSVC       |out/build/windows-vs2022-arm64-debug   |suika3.exe    |Executable     |
-|windows-vs2022-arm64-release   |Windows               |MSVC       |out/build/windows-vs2022-arm64-release |suika3.exe    |Executable     |
-|windows-vs2022-gdk-desktop     |Windows               |MSVC       |out/build/windows-vs2022-gdk-desktop   |suika3.exe    |Executable     |
-|windows-vs2022-gdk-xbox-xs     |Windows               |MSVC       |out/build/windows-vs2022-gdk-xbox-xs   |suika3.exe    |Executable     |
-|windows-vs2026-x86-debug       |Windows               |MSVC       |out/build/windows-vs2026-x86-debug     |suika3.exe    |Executable     |
-|windows-vs2026-x86-release     |Windows               |MSVC       |out/build/windows-vs2026-x86-release   |suika3.exe    |Executable     |
-|windows-vs2026-x64-debug       |Windows               |MSVC       |out/build/windows-vs2026-x64-debug     |suika3.exe    |Executable     |
-|windows-vs2026-x64-release     |Windows               |MSVC       |out/build/windows-vs2026-x64-release   |suika3.exe    |Executable     |
-|windows-vs2026-arm64-debug     |Windows               |MSVC       |out/build/windows-vs2026-arm64-debug   |suika3.exe    |Executable     |
-|windows-vs2026-arm64-release   |Windows               |MSVC       |out/build/windows-vs2026-arm64-release |suika3.exe    |Executable     |
-|windows-vs2026-gdk-desktop     |Windows               |MSVC       |out/build/windows-vs2026-gdk-desktop   |suika3.exe    |Executable     |
-|windows-vs2026-gdk-xbox-xs     |Windows               |MSVC       |out/build/windows-vs2026-gdk-xbox-xs   |suika3.exe    |Executable     |
-|windows-mingw-x86              |Windows               |MinGW      |build-mingw-x86                        |suika3.exe    |Executable     |
-|windows-mingw-x86_64           |Windows               |MinGW      |build-mingw-x86_64                     |suika3.exe    |Executable     |
-|windows-mingw-arm64            |Windows               |MinGW-LLVM |build-mingw-arm64                      |suika3.exe    |Executable     |
-|macos                          |macOS                 |Clang      |build-macos                            |Suika3.app    |App Bundle     |
-|linux-x11                      |Linux                 |GCC        |build-linux                            |suika3        |Executable     |
-|linux-wayland                  |Linux                 |GCC        |build-linux                            |suika3        |Executable     |
-|linux-gdm                      |Linux                 |GCC        |build-linux                            |suika3        |Executable     |
-|linux-gdm-rot90                |Linux                 |GCC        |build-linux                            |suika3        |Executable     |
-|freebsd                        |FreeBSD               |Clang      |build-freebsd                          |suika3        |Executable     |
-|netbsd                         |NetBSD                |GCC        |build-netbsd                           |suika3        |Executable     |
-|openbsd                        |OpenBSD               |Clang      |build-openbsd                          |suika3        |Executable     |
-|wasm                           |WebAssembly           |Emscripten |build-wasm                             |index.html    |HTML + Wasm    |
-|wasm-local                     |Chromebook            |Emscripten |build-wasm-local                       |index.html    |HTML + Wasm    |
-|ios-device                     |iOS Device            |Clang      |build-ios-device                       |libsuika3.a   |Static Library |
-|ios-simulator                  |iOS Simulator         |Clang      |build-ios-simulator                    |libsuika3.a   |Static Library |
-|android-x86                    |Android x86           |Clang      |build-android-x86                      |libsuika3.so  |Shared Library |
-|android-x86_64                 |Android x86_64        |Clang      |build-android-x86_64                   |libsuika3.so  |Shared Library |
-|android-armv7                  |Android armv7         |Clang      |build-android-armv7                    |libsuika3.so  |Shared Library |
-|android-arm64                  |Android arm64         |Clang      |build-android-arm64                    |libsuika3.so  |Shared Library |
-|openharmony-arm64              |HarmonyOS NEXT arm64  |Clang      |build-openharmony-arm64                |libsuika3.a   |Static Library |
-|openharmony-armv7              |HarmonyOS NEXT armv7  |Clang      |build-openharmony-armv7                |libsuika3.a   |Static Library |
-|openharmony-x86_64             |HarmonyOS NEXT x86_64 |Clang      |build-openharmony-x86_64               |libsuika3.a   |Static Library |
-|unity-win64                    |Unity Plugin          |Clang-CL   |build-unity-win64                      |libsuika3.dll |DLL Plugin     |
-|unity-switch                   |Unity Plugin          |Clang      |build-unity-switch                     |libsuika3.a   |Static Library |
-|unity-ps5                      |Unity Plugin          |Clang      |build-unity-ps5                        |libsuika3.a   |Static Library |
-|unity-xbox                     |Unity Plugin          |Clang      |build-unity-xbox                       |libsuika3.a   |Static Library |
-
----
-
-## Codebase & Maturity
-
-Suika3 is a robust visual novel engine with over 100k lines of code (LoC).
-This is not a weekend project but a mature codebase evolved over 25+ years.
-
-* **Proven Stability:** Includes core modules refined since 2001.
-
-* **Modern Architecture:** Features a clean HAL (Hardware Abstraction
-    Layer) separated in 2016 and high-performance GPU rendering
-    implemented in 2022.
-
-* **Native Multi-Platform:** Built mostly with C, and the platform
-    native languages, including C++ (DirectX), Swift (macOS/iOS),
-    Objective-C (macOS/iOS), C# (Unity) and Shaders (HLSL/GLSL/Metal).
+|Preset                         |Platform         |Compiler   |Directory                              |Target           |Type           |
+|-------------------------------|-----------------|-----------|---------------------------------------|-----------------|---------------|
+|windows-vs2022-x86-debug       |Windows          |MSVC       |out/build/windows-vs2022-x86-debug     |playfield.exe    |Executable     |
+|windows-vs2022-x86-release     |Windows          |MSVC       |out/build/windows-vs2022-x86-release   |playfield.exe    |Executable     |
+|windows-vs2022-x64-debug       |Windows          |MSVC       |out/build/windows-vs2022-x64-debug     |playfield.exe    |Executable     |
+|windows-vs2022-x64-release     |Windows          |MSVC       |out/build/windows-vs2022-x64-release   |playfield.exe    |Executable     |
+|windows-vs2022-arm64-debug     |Windows          |MSVC       |out/build/windows-vs2022-arm64-debug   |playfield.exe    |Executable     |
+|windows-vs2022-arm64-release   |Windows          |MSVC       |out/build/windows-vs2022-arm64-release |playfield.exe    |Executable     |
+|windows-vs2022-gdk-desktop     |Windows          |MSVC       |out/build/windows-vs2022-gdk-desktop   |playfield.exe    |Executable     |
+|windows-vs2022-gdk-xbox-xs     |Windows          |MSVC       |out/build/windows-vs2022-gdk-xbox-xs   |playfield.exe    |Executable     |
+|windows-vs2026-x86-debug       |Windows          |MSVC       |out/build/windows-vs2026-x86-debug     |playfield.exe    |Executable     |
+|windows-vs2026-x86-release     |Windows          |MSVC       |out/build/windows-vs2026-x86-release   |playfield.exe    |Executable     |
+|windows-vs2026-x64-debug       |Windows          |MSVC       |out/build/windows-vs2026-x64-debug     |playfield.exe    |Executable     |
+|windows-vs2026-x64-release     |Windows          |MSVC       |out/build/windows-vs2026-x64-release   |playfield.exe    |Executable     |
+|windows-vs2026-arm64-debug     |Windows          |MSVC       |out/build/windows-vs2026-arm64-debug   |playfield.exe    |Executable     |
+|windows-vs2026-arm64-release   |Windows          |MSVC       |out/build/windows-vs2026-arm64-release |playfield.exe    |Executable     |
+|windows-vs2026-gdk-desktop     |Windows          |MSVC       |out/build/windows-vs2026-gdk-desktop   |playfield.exe    |Executable     |
+|windows-vs2026-gdk-xbox-xs     |Windows          |MSVC       |out/build/windows-vs2026-gdk-xbox-xs   |playfield.exe    |Executable     |
+|windows-mingw-x86              |Windows          |MinGW      |build-mingw-x86                        |playfield.exe    |Executable     |
+|windows-mingw-x86_64           |Windows          |MinGW      |build-mingw-x86_64                     |playfield.exe    |Executable     |
+|windows-mingw-arm64            |Windows          |MinGW-LLVM |build-mingw-arm64                      |playfield.exe    |Executable     |
+|macos                          |macOS            |Clang      |build-macos                            |Playfield.app    |App Bundle     |
+|linux-x11                      |Linux            |GCC        |build-linux                            |playfield        |Executable     |
+|linux-wayland                  |Linux            |GCC        |build-linux                            |playfield        |Executable     |
+|linux-gdm                      |Linux            |GCC        |build-linux                            |playfield        |Executable     |
+|linux-gdm-rot90                |Linux            |GCC        |build-linux                            |playfield        |Executable     |
+|freebsd                        |FreeBSD          |Clang      |build-freebsd                          |playfield        |Executable     |
+|netbsd                         |NetBSD           |GCC        |build-netbsd                           |playfield        |Executable     |
+|openbsd                        |OpenBSD          |Clang      |build-openbsd                          |playfield        |Executable     |
+|wasm                           |WebAssembly      |Emscripten |build-wasm                             |index.html       |HTML + Wasm    |
+|wasm-local                     |Chromebook       |Emscripten |build-wasm-local                       |index.html       |HTML + Wasm    |
+|ios-device                     |iOS Device       |Clang      |build-ios-device                       |libplayfield.a   |Static Library |
+|ios-simulator                  |iOS Simulator    |Clang      |build-ios-simulator                    |libplayfield.a   |Static Library |
+|android-x86                    |Android x86      |Clang      |build-android-x86                      |libplayfield.so  |Shared Library |
+|android-x86_64                 |Android x86_64   |Clang      |build-android-x86_64                   |libplayfield.so  |Shared Library |
+|android-armv7                  |Android armv7    |Clang      |build-android-armv7                    |libplayfield.so  |Shared Library |
+|android-arm64                  |Android arm64    |Clang      |build-android-arm64                    |libplayfield.so  |Shared Library |
+|openharmony-arm64              |HarmonyOS arm64  |Clang      |build-openharmony-arm64                |libplayfield.a   |Static Library |
+|openharmony-armv7              |HarmonyOS armv7  |Clang      |build-openharmony-armv7                |libplayfield.a   |Static Library |
+|openharmony-x86_64             |HarmonyOS x86_64 |Clang      |build-openharmony-x86_64               |libplayfield.a   |Static Library |
+|unity-win64                    |Unity Plugin     |Clang-CL   |build-unity-win64                      |libplayfield.dll |DLL Plugin     |
+|unity-switch                   |Unity Plugin     |Clang      |build-unity-switch                     |libplayfield.a   |Static Library |
+|unity-ps5                      |Unity Plugin     |Clang      |build-unity-ps5                        |libplayfield.a   |Static Library |
+|unity-xbox                     |Unity Plugin     |Clang      |build-unity-xbox                       |libplayfield.a   |Static Library |
 
 ---
 
-## Quality Assurance
+## Samples
 
-In `Software Engineering`, reliability is a function of time. As
-Suika3 is currently in its pre-release phase, we define its cumulative
-operational time as zero. Consequently, formal quality metrics are not
-yet applicable.
+Samples are added timely.
 
-### Our Path to Stability
+|Name          |Directory            |Description                      |
+|--------------|---------------------|---------------------------------|
+|bouncer       |samples/bouncer      |A block bounce demo.             |
+|rush          |samples/rush         |A jumping game demo.             |
+|heartbeatclock|samples/hearbeatclock|A clock.                         |
+|shoot         |samples/shoot        |A mini shooting.                 |
 
-We are committed to delivering a production-grade engine. Our QA
-roadmap is as follows:
+---
 
-1.  **Release Candidate (RC) Phase**: Upon reaching the RC milestone,
-    we will initiate rigorous tracking of all identified issues.
+## AI Support
 
-2.  **Data-Driven Hardening**: We will analyze bug discovery and
-    resolution rates to quantify the software's stability.
+To generate game templates with AI, please let it load the following references:
 
-3.  **Commercial-Grade Standards**: Our final goal is to achieve a
-    level of robustness that meets the requirements of commercial
-    visual novel productions.
+- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Playfield Script API](docs/mkdocs-en/docs/api.md)
 
-While the engine is still "young" in terms of uptime, the underlying
-architecture inherits over two decades of development philosophy,
-ensuring a solid foundation for the upcoming QA process.
+AI can then create runnable Playfield Engine games directly.
+
+**Note:** In ChatGPT, you need to click the **"+"** button and enable
+**"Web Search"** so that it can read the above references.
+
+---
+
+## Localization / Internationalization
+
+Playfield Engine supports the following locales for the UI messages.
+
+| Language               | Locale Code | Translation Type         | Scope of Translation             |
+|------------------------|-------------|--------------------------|----------------------------------|
+| English                | `en-US`     | Original                 | UI / Docs / Samples              |
+| Spanish                | `es-ES`     | Machine Translation      | UI                               |
+| French                 | `fr-FR`     | Machine Translation      | UI                               |
+| Italian                | `it-IT`     | Machine Translation      | UI                               |
+| German                 | `de-DE`     | Machine Translation      | UI                               |
+| Greek                  | `el-GR`     | Machine Translation      | UI                               |
+| Russian                | `ru-RU`     | Machine Translation      | UI                               |
+| Simplified Chinese     | `zh-CN`     | Machine Translation      | UI                               |
+| Traditional Chinese    | `zh-TW`     | Machine Translation      | UI                               |
+| Japanese               | `ja-JP`     | Professional Translation | UI / Docs                        |
+
+**How to switch languages**  
+Playfield Engine uses the system locale.
+To switch languages, set your system locale.
+
+**Contributing Translations**  
+Translation files are located under the three `i18n/` directories. (main, HAL and NoctLang)
+To propose a new translation or update an existing one, please open an Issue or submit a Pull Request.
+
+---
+
+## Third-party Libraries
+
+Playfield Engine uses the following libraries.
+The source code tarballs for the libraries are included in this repository.
+
+- zlib
+- libpng
+- libogg
+- libvorbis
+- JPEG9
+- libwebp
+- brotli
+- bzip2
+- FreeType2
+
+---
+
+## Compatibily List
+
+**Windows:**
+
+| OS      | Version | Patch | CPU    | Runtimes                                                                             | 32-bit Binary | 64-bit Binary | Direct3D |
+|---------|---------|-------|--------|--------------------------------------------------------------------------------------|---------------|---------------|----------|
+| Windows | XP      | SP3   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
+| Windows | XP      | SP3   | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   |       | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
+| Windows | Vista   |       | x64    | DirectX End-User Runtimes (June 2010)                                                | ✅            | ❌            | 9.0      |
+| Windows | Vista   | SP1   | x86    | DirectX End-User Runtimes (June 2010)                                                | ✅            | -             | 9.0      |
+| Windows | Vista   | SP1   | x64    | DirectX End-User Runtimes (June 2010), Microsoft Visual C++ Redistributable 2015     | ✅            | ✅            | 9.0      |
+| Windows | Vista   | SP2   | x86    | DirectX 11 Platform Update                                                           | ✅            | -             | 11.0     |
+| Windows | Vista   | SP2   | x64    | DirectX 11 Platform Update, Microsoft Visual C++ Redistributable 2015                | ✅            | ✅            | 11.0     |
+| Windows | 7       |       | x86    |                                                                                      | ✅            | -             | 11.0     |
+| Windows | 7       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 7       | SP1   | x86    |                                                                                      | ✅            | -             | 11.0     |
+| Windows | 7       | SP1   | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 8       |       | x86    |                                                                                      | ✅            | -             | 11.0     |
+| Windows | 8       |       | x64    | Microsoft Visual C++ Redistributable 2015                                            | ✅            | ✅            | 11.0     |
+| Windows | 8.1     |       | x86    |                                                                                      | ✅            | -             | 11.0     |
+| Windows | 8.1     |       | x64    |                                                                                      | ✅            | ✅            | 11.0     |
+| Windows | 10      |       | x86    |                                                                                      | ✅            | -             | 12.0     |
+| Windows | 10      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 10      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 11      |       | x64    |                                                                                      | ✅            | ✅            | 12.0     |
+| Windows | 11      |       | arm64  |                                                                                      | ✅            | ✅            | 12.0     |
+
+Note: playfield.exe is the 64-bit binary and playfield32.exe is the 32-bit one.
+
+**macOS:**
+
+| OS                | Version | CPU    | Status |
+|-------------------|---------|--------|--------|
+| OS X El Capitan   | 10.11   | x86_64 | ✅     |
+| macOS Sierra      | 10.12   | x86_64 | ✅     |
+| macOS High Sierra | 10.13   | x86_64 | ✅     |
+| macOS Mojave      | 10.14   | x86_64 | ✅     |
+| macOS Catalina    | 10.15   | x86_64 | ✅     |
+| macOS Big Sur     | 11.0    | arm64  | ✅     |
+| macOS Big Sur     | 11.0    | x86_64 | ✅     |
+| macOS Monterey    | 12.0    | arm64  | ✅     |
+| macOS Monterey    | 12.0    | x86_64 | ✅     |
+| macOS Ventura     | 13.0    | arm64  | ✅     |
+| macOS Ventura     | 13.0    | x86_64 | ✅     |
+| macOS Sonoma      | 14.0    | arm64  | ✅     |
+| macOS Sonoma      | 14.0    | x86_64 | ✅     |
+| macOS Sequoia     | 15.0    | arm64  | ✅     |
+| macOS Sequoia     | 15.0    | x86_64 | ✅     |
+| macOS Tahoe       | 26.0    | arm64  | ✅     |
+| macOS Tahoe       | 26.0    | x86_64 | ✅     |
+
+**Linux:**
+
+* One of the following:
+    * X11 (X11 + GLX + OpenGL 3) [Default]
+    * Wayland (Wayland + EGL + OpenGL ES 2) [Optional]
+    * Framebuffer (GBM + DRM + EGL + OpenGL ES 2) [Optional]
+
+**iOS:**
+
+| OS     | Status |
+|--------|--------|
+| iOS 11 | ✅     |
+| iOS 12 | ✅     |
+| iOS 13 | ✅     |
+| iOS 14 | ✅     |
+| iOS 15 | ✅     |
+| iOS 16 | ✅     |
+| iOS 17 | ✅     |
+| iOS 18 | ✅     |
+| iOS 26 | ✅     |
+
+**Android:**
+
+| OS         | Status |
+|------------|--------|
+| Android 6  | ✅     |
+| Android 7  | ✅     |
+| Android 8  | ✅     |
+| Android 9  | ✅     |
+| Android 10 | ✅     |
+| Android 11 | ✅     |
+| Android 12 | ✅     |
+| Android 13 | ✅     |
+| Android 14 | ✅     |
+| Android 15 | ✅     |
+| Android 16 | ✅     |
+
+**OpenHarmony / HarmonyOS NEXT:**
+
+| OS         | Status |
+|------------|--------|
+| API 20     | ✅     |
+| API 12     | ✅     |
+
+---
+
+## NoctVM Ecosystem
+
+Playfield Engine is a part of the [NoctVM](https://noctvm.io/) ecosystem:
+
+- **NoctLang** — portable scripting language (used in this project)
+- **Playfield Engine* — go-anywhere 2D game engine (this project)
+- NoctUI — a declarative UI library (not used in this project)
+
+Together, they form the foundation of the Noct ecosystem.
+NoctLang itself is just the core language engine with no complex runtime.
+Playfield Engine is one of the runtimes that embeds and extends the NoctLang core.
 
 ---
 
 ## License
 
-Suika3 is
-[free/libre software](https://www.gnu.org/philosophy/free-sw.en.html),
-released under the permissive `ZLib License`.
-
 ```
-Suika3
-Copyright (c) 2026 The Suika3 Community
+Playfield Engine
+© 2025, 2026 Awe Morris
 ```
 
-We see Suika3 as part of a broader effort to help build a sustainable
-creative ecosystem for visual novels, guided by a clear mission,
-vision, and values. At the same time, you are absolutely welcome to
-use Suika3 simply as a useful open-source component within your own
-projects.
+Playfield is available as open-source software under the **zlib License**.
+You're free to use, modify, and share it — even in commercial projects.
 
 ---
 
-## Support & Contact
+## Contact
 
-For general inquiries, bug reports, and technical assistance:
-
-* **GitHub Issues**: Preferred for formal bug tracking and feature
-    requests.
-
-* **[Discord Server](https://discord.gg/YZsq9u9Mgr)**: The best place
-    for real-time discussions and quick questions.
-
-We strive to provide timely support and help creators bring their
-stories to life.
-
-### Professional & Enterprise Support
-
-While the **Suika3 Community** provides active support through GitHub
-and Discord, we recognize that **commercial projects** often require
-dedicated support or guaranteed response times.
-
-For studios and developers requiring **formal maintenance contracts,
-priority bug fixes, or private consultations**, please contact us
-directly via email. We are committed to helping ensure your project's
-success in a high-stakes production environment.
-
-* **Contact**: Awe Morris <awe@noctvm.io>
-
-**Not looking for a formal contract? No problem.** If you are an indie
-developer or hobbyist and prefer to keep things casual, just ping us
-on Discord with any questions. We're always happy to chat, and we'll
-do our best to respond or push a fix as soon as possible! ;-)
+Email: Awe Morris <awe@noctvm.io>
+Project Page: https://noctvm.io/playfield/
 
 ---
 
-## Community
+## Join Us
 
-[Discord Server](https://discord.gg/YZsq9u9Mgr)
+Playfield Engine is still in its early stages. We're building the game
+engine with care, hoping it will inspire and empower creators around
+the world.
 
-### Recruiting
+If you're interested in contributing — whether it's code,
+documentation, testing, or ideas — we'd be happy to have you with us.
 
-We are currently looking for contributors in the following areas:
+Every small step helps shape what Playfield Engine can become. You're
+welcome to join us on this journey.
 
-* Documentation writers
-* HarmonyOS NEXT engineer
-* Android engineers
-* iOS engineers
-
-### Our Commitment to Inclusivity
-
-We are committed to providing a welcoming and safe environment for
-everyone. Any form of discrimination is strictly prohibited.
-
-Our community warmly welcomes developers of all backgrounds, including
-but not limited to:
-
-* **Identity & Expression:** Race, ethnicity, nationality, language,
-    gender identity and expression, sexual orientation, and sex
-    characteristics.
-
-* **Personal Attributes:** Age, body size, personal appearance, illness,
-    and neurodiversity.
-
-* **Life Context:** Faiths, beliefs, disability (e.g. visibility, but
-    not limited), level of experience, education, and socio-economic
-    status.
-
-* **Justice & Inclusion:** We explicitly welcome individuals with past
-    criminal records, firmly believing in the power of second chances
-    and the inherent value of every contributor who participates
-    respectfully.
-
----
-
-## Contribution
-
-We welcome contributions from everyone! Whether you are fixing a bug,
-improving documentation, or proposing new features, your help is what
-drives **Suika3** forward.
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for our contribution
-guidelines and code of conduct.
-
-Please also see [MANIFESTO.md](MANIFESTO.md) for our manifesto.
-
----
-
-## Lineage: The Grand Journey
-
-Suika3 represents the culmination of over two decades of relentless innovation and development:
-
-* **Suika Studio (2001–2004)**: The origin of our codebase, featuring
-  our first GUI-based editors.
-
-* **Unfruitiful (2005–2015)**: A decade of R&D focused on establishing
-  a robust portability layer for cross-platform support.
-
-* **Suika2 (2016–2024)**: The cornerstone of our current architecture
-  and the fruit of a decade of dedicated R&D. It delivers a full
-  visual novel experience with extensive platform compatibility.
-  Several games with Suika3 were sold on App Store.
-
-* **Playfield Engine (2025–)**: A versatile 2D engine derived from the
-  core portability layer of the Suika series.
-
-* **Suika3 (2026–)**: By synthesizing these legacies and introducing
-  **NovelML 3.0 / SuikaScript 3.0**, Suika3 delivers the rock-solid
-  stability of its predecessors alongside the cutting-edge flexibility
-  of modern technology.
+[Join us on Discord](https://discord.gg/ybHWSqDVEX)

@@ -1,22 +1,18 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Suika3
- * SeedScript API
+ * Playfield Engine
+ * C API
  */
 
 /*-
  * SPDX-License-Identifier: Zlib
  *
- * Copyright (c) 2026 The Suika3 Community
- * Copyright (c) 2025-2026 The Playfield Engine Project
- * Copyright (c) 2025-2026 The NoctVM Project
+ * Playfield Engine
  * Copyright (c) 2025-2026 Awe Morris
- * Copyright (c) 2016-2024 The Suika2 Development Team
- * Copyright (c) 1996-2024 Keiichi Tabata
  *
- * This software is derived from the codebase of Playfield Engine, NoctLang,
- * Suika2, Suika Studio, Wind Game Lib, and 98/AT Game Lib.
+ * This software is derived from the codebase of Suika2.
+ * Copyright (c) 1996-2024 Keiichi Tabata
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -35,15 +31,21 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef SUIKA3_API_H
-#define SUIKA3_API_H
+#ifndef PLAYFIELD_API_H
+#define PLAYFIELD_API_H
 
-#include <suika3/suika3.h>
+#include "playfield/playfield.h"
 
 /*
- * Install the API.
+ * Initialize the API.
  */
 bool
-s3i_install_default_api(void);
+pfi_init_api(void);
+
+/*
+ * Cleanup the API.
+ */
+void
+pfi_cleanup_api(void);
 
 #endif
