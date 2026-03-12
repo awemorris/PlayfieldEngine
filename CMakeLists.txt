@@ -347,6 +347,7 @@ set(PLAYFIELD_BASE_SOURCES
   src/common.c
   src/mainloop.c
   src/vm.c
+  src/library.c
 )
 
 # I18N Source
