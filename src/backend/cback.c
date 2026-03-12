@@ -120,6 +120,7 @@ cback_translate_func(
 		return false;
 
 	/* Put an epilogue code. */
+	fprintf(fp, "L_pc_%d:\n", func->bytecode_size);
 	fprintf(fp, "    env->frame->tmpvar = NULL;\n");
 	fprintf(fp, "    return true;\n");
 	fprintf(fp, "}\n\n");
@@ -751,7 +752,7 @@ cback_visit_storesymbol_op(
 	GET_STRING(&symbol, &len, &hash);
 	GET_TMPVAR(&src);
 
-	fprintf(fp, "    if (!rt_storesymbol_helper(env, \"%s\", %d))\n", symbol, src);
+	fprintf(fp, "    if (!rt_storesymbol_helper(env, \"%s\", %uu, %uu, %d))\n", symbol, len, hash, src);
 	fprintf(fp, "        return false;\n");
 
 	return true;
@@ -795,7 +796,7 @@ cback_visit_storedot_op(
 	GET_STRING(&field, &len, &hash);
 	GET_TMPVAR(&src);
 
-	fprintf(fp, "    if (!rt_storedot_helper(env, %d, \"%s\", %d))\n", dict, field, src);
+	fprintf(fp, "    if (!rt_storedot_helper(env, %d, \"%s\", %uu, %uu, %d))\n", dict, field, len, hash, src);
 	fprintf(fp, "        return false;\n");
 
 	return true;
@@ -867,7 +868,7 @@ cback_visit_thiscall_op(
 	for (i = 0; i < arg_count; i++)
 		fprintf(fp, "%d,", arg[i]);
 	fprintf(fp, "};\n");
-	fprintf(fp, "        if (!rt_thiscall_helper(env, %d, %d, \"%s\", %d, arg))\n", dst_tmpvar, obj_tmpvar, name, arg_count);
+	fprintf(fp, "        if (!rt_thiscall_helper(env, %d, %d, \"%s\", %uu, %uu, %d, arg))\n", dst_tmpvar, obj_tmpvar, name, len, hash, arg_count);
 	fprintf(fp, "            return false;\n");
 	fprintf(fp, "    };\n");
 
