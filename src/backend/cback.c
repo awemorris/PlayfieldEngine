@@ -323,6 +323,7 @@ cback_visit_lineinfo_op(
 
 	GET_U32(&line);
 
+	LABEL(*pc);
 	fprintf(fp, "/* line: %d */\n", line);
 
 	return true;
@@ -341,7 +342,7 @@ cback_visit_assign_op(
 	GET_TMPVAR(&dst);
 	GET_TMPVAR(&src);
 
-	fprintf(fp, "env->frame->tmpvar[dst] = tmpvar[src];\n");
+	fprintf(fp, "env->frame->tmpvar[%d] = tmpvar[%d];\n", dst, src);
 
 	return true;
 }
