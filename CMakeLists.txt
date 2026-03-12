@@ -173,7 +173,8 @@ if(   PLAYFIELD_TARGET_IOS
 else()
   if(PLAYFIELD_ENABLE_DIST)
     # For dynamically linked binaries.
-    set(NOCTLANG_ENABLE_SHARED ON)
+    #set(NOCTLANG_ENABLE_SHARED ON)
+    set(NOCTLANG_ENABLE_STATIC ON)
   else()
     # For statically linked binaries.
     set(NOCTLANG_ENABLE_STATIC ON)
@@ -242,9 +243,11 @@ if(   PLAYFIELD_TARGET_IOS
 else()
   if(PLAYFIELD_ENABLE_DIST)
     # For dynamically linked binaries.
-    set(STRATO_ENABLE_SHARED ON)
+    #set(STRATO_ENABLE_SHARED ON)
+    set(STRATO_ENABLE_STATIC ON)
   else()
     # For statically linked binaries.
+    set(STRATO_ENABLE_STATIC ON)
   endif()
 endif()
 
