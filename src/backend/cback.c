@@ -337,7 +337,7 @@ cback_visit_assign_op(
 	GET_TMPVAR(&dst);
 	GET_TMPVAR(&src);
 
-	fprintf(fp, "    env->frame->tmpvar[%d] = tmpvar[%d];\n", dst, src);
+	fprintf(fp, "    env->frame->tmpvar[%d] = env->frame->tmpvar[%d];\n", dst, src);
 
 	return true;
 }
@@ -786,7 +786,7 @@ cback_visit_call_op(
 	fprintf(fp, "};\n");
 	fprintf(fp, "        if (!rt_call_helper(env, %d, %d, %d, arg))\n", dst_tmpvar, func_tmpvar, arg_count);
 	fprintf(fp, "            return false;\n");
-	fprintf(fp, "    };\n");
+	fprintf(fp, "    }\n");
 
 	return true;
 }
@@ -822,7 +822,7 @@ cback_visit_thiscall_op(
 	fprintf(fp, "};\n");
 	fprintf(fp, "        if (!rt_thiscall_helper(env, %d, %d, \"%s\", %uu, %uu, %d, arg))\n", dst_tmpvar, obj_tmpvar, name, len, hash, arg_count);
 	fprintf(fp, "            return false;\n");
-	fprintf(fp, "    };\n");
+	fprintf(fp, "    }\n");
 
 	return true;
 }
