@@ -112,16 +112,14 @@ cback_translate_func(
 	/* Put a prologue code. */
 	fprintf(fp, "bool L_%s(struct rt_env *env)\n", func->func_name);
 	fprintf(fp, "{\n");
-	fprintf(fp, "    struct rt_value tmpvar[%d];\n", func->tmpvar_size);
-	fprintf(fp, "    env->frame->tmpvar = &tmpvar[0];\n");
 
 	/* Visit a bytecode array. */
 	if (!cback_visit_bytecode(func))
 		return false;
 
 	/* Put an epilogue code. */
-	fprintf(fp, "L_pc_%d:\n", func->bytecode_size);
-	fprintf(fp, "    env->frame->tmpvar = NULL;\n");
+	fprintf(fp, "/* epilogue */\n");
+	fprintf(fp, "  L_pc_%d:\n", func->bytecode_size);
 	fprintf(fp, "    return true;\n");
 	fprintf(fp, "}\n\n");
 
@@ -294,15 +292,15 @@ static INLINE bool cback_get_string(
 
 /* Put a label. */
 #define LABEL(pc) \
-	fprintf(fp, "L_pc_%d:\n", (pc));
+	fprintf(fp, "  L_pc_%d:\n", (pc));
 
 /* Unary OP macro. */
 #define UNARY_OP(helper)						\
 	int dst, src;							\
 	GET_TMPVAR(&dst);						\
 	GET_TMPVAR(&src);						\
-	fprintf(fp, "if (!" #helper "(env, %d, %d))", dst, src);	\
-	fprintf(fp, "    return false;\n");
+	fprintf(fp, "    if (!" #helper "(env, %d, %d))", dst, src);	\
+	fprintf(fp, "        return false;\n");
 
 /* Binary OP macro. */
 #define BINARY_OP(helper)							\
@@ -310,8 +308,8 @@ static INLINE bool cback_get_string(
 	GET_TMPVAR(&dst);							\
 	GET_TMPVAR(&src1);							\
 	GET_TMPVAR(&src2);							\
-	fprintf(fp, "if (!" #helper "(env, %d, %d, %d))", dst, src1, src2);	\
-	fprintf(fp, "    return false;\n");
+	fprintf(fp, "    if (!" #helper "(env, %d, %d, %d))", dst, src1, src2);	\
+	fprintf(fp, "        return false;\n");
 
 /* Visit a LOP_LINEINFO instruction. */
 static INLINE bool
@@ -339,7 +337,7 @@ cback_visit_assign_op(
 	GET_TMPVAR(&dst);
 	GET_TMPVAR(&src);
 
-	fprintf(fp, "env->frame->tmpvar[%d] = tmpvar[%d];\n", dst, src);
+	fprintf(fp, "    env->frame->tmpvar[%d] = tmpvar[%d];\n", dst, src);
 
 	return true;
 }
