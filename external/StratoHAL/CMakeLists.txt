@@ -10,7 +10,9 @@ option(STRATO_TARGET_WINDOWS          "Build for Windows"                  OFF)
 option(STRATO_TARGET_MACOS            "Build for macOS"                    OFF)
 option(STRATO_TARGET_LINUX            "Build for Linux X11"                OFF)
 option(STRATO_TARGET_LINUX_WAYLAND    "Build for Linux Wayland"            OFF)
-option(STRATO_TARGET_LINUX_GBM        "Build for Linux Framebuffer"        OFF)
+option(STRATO_TARGET_LINUX_GBM        "Build for Linux GBM Framebuffer"    OFF)
+option(STRATO_TARGET_LINUX_FBDEV      "Build for Linux fbdev Framebuffer"  OFF)
+option(STRATO_TARGET_LINUX_X11SOFT    "Build for Linux X11 Soft Render"    OFF)
 option(STRATO_TARGET_IOS              "Build for iOS"                      OFF)
 option(STRATO_TARGET_ANDROID          "Build for Android"                  OFF)
 option(STRATO_TARGET_OPENHARMONY      "Build for OpenHarmony"              OFF)
@@ -43,6 +45,8 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_LINUX
    OR STRATO_TARGET_LINUX_WAYLAND
    OR STRATO_TARGET_LINUX_GBM
+   OR STRATO_TARGET_LINUX_FBDEV
+   OR STRATO_TARGET_LINUX_X11SOFT
    OR STRATO_TARGET_IOS
    OR STRATO_TARGET_ANDROID
    OR STRATO_TARGET_OPENHARMONY
@@ -146,6 +150,7 @@ else()
 endif()
 
 if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_X11SOFT
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD)
@@ -162,7 +167,8 @@ if(   STRATO_TARGET_LINUX
   endif()
 endif()
 
-if(STRATO_TARGET_LINUX)
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_X11SOFT)
   find_library(ALSA_LIBRARY asound REQUIRED)
 endif()
 
@@ -294,7 +300,7 @@ if(   STRATO_TARGET_LINUX_WAYLAND
     )
 endif()
 
-# For Linux Framebuffer.
+# For Linux GBM Framebuffer.
 if(STRATO_TARGET_LINUX_GBM)
   set(STRATO_SOURCES
       src/image.c
@@ -305,6 +311,34 @@ if(STRATO_TARGET_LINUX_GBM)
       src/glrender.c
       src/asound.c
       src/evgamepad.c
+    )
+endif()
+
+# For Linux fbdev Framebuffer.
+if(STRATO_TARGET_LINUX_FBDEV)
+  set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/fbmain.c
+      src/asound.c
+      src/evgamepad.c
+    )
+endif()
+
+# For Linux X11 Software Rendering.
+if(STRATO_TARGET_LINUX_X11SOFT)
+  set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/asound.c
+      src/evgamepad.c
+      src/x11softmain.c
+      src/icon.c
+      src/gstplay.c
     )
 endif()
 
@@ -477,7 +511,9 @@ endif()
 # Linux
 if(  STRATO_TARGET_LINUX
   OR STRATO_TARGET_LINUX_WAYLAND
-  OR STRATO_TARGET_LINUX_GBM)
+  OR STRATO_TARGET_LINUX_GBM
+  OR STRATO_TARGET_LINUX_FBDEV
+  OR STRATO_TARGET_LINUX_X11SOFT)
 endif()
 
 # iOS
@@ -624,8 +660,13 @@ if(STRATO_TARGET_LINUX_GBM)
   target_compile_definitions(strato PRIVATE HAL_USE_GLES)
 endif()
 
-# Linux Framebuffer
+# Linux GBM Framebuffer
 if(STRATO_TARGET_LINUX_GBM AND STRATO_ENABLE_ROT90)
+  target_compile_definitions(strato PRIVATE HAL_USE_ROT90)
+endif()
+
+# Linux fbdev Framebuffer
+if(STRATO_TARGET_LINUX_FBDEV AND STRATO_ENABLE_ROT90)
   target_compile_definitions(strato PRIVATE HAL_USE_ROT90)
 endif()
 
@@ -748,6 +789,7 @@ endif()
 
 # Linux and *BSD. (X11)
 if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_X11SOFT
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
    OR STRATO_TARGET_OPENBSD
@@ -785,7 +827,7 @@ if(   STRATO_TARGET_LINUX_WAYLAND
   )
 endif()
 
-# Linux framebuffer.
+# Linux GBM framebuffer.
 if(STRATO_TARGET_LINUX_GBM)
   # Add -lm -lpthread -lgbm -ldrm -lEGL -lGLESv2 -lasound
   target_link_libraries(
@@ -802,8 +844,25 @@ if(STRATO_TARGET_LINUX_GBM)
   target_include_directories(strato PUBLIC /usr/include/libdrm)
 endif()
 
+# Linux GBM framebuffer.
+if(STRATO_TARGET_LINUX_FBDEV)
+  # Add -lm -lpthread -lasound
+  target_link_libraries(
+    strato
+    PUBLIC
+    m
+    pthread
+    asound
+  )
+  target_include_directories(strato PUBLIC /usr/include/libdrm)
+endif()
+
 # Linux X11: Add -lasound
-if(STRATO_TARGET_LINUX)
+if(   STRATO_TARGET_LINUX
+   OR STRATO_TARGET_LINUX_WAYLAND
+   OR STRATO_TARGET_LINUX_GBM
+   OR STRATO_TARGET_LINUX_FBDEV
+   OR STRATO_TARGET_LINUX_X11SOFT)
   target_link_libraries(strato PUBLIC asound)
 endif()
 

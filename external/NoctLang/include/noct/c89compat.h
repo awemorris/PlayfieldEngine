@@ -42,123 +42,123 @@ extern "C" {
  * Here, we define two macros that indicates the target architecture
  * and the byte order.
  *
- * |Macro               |Architecture           |
- * |--------------------|-----------------------|
- * |PF_ARCH_X86         |x86 32-bit             |
- * |PF_ARCH_X86_64      |x86 64-bit             |
- * |PF_ARCH_ARM32       |ARMv7                  |
- * |PF_ARCH_ARM64       |Armv8 / Armv9          |
- * |PF_ARCH_PPC32       |PowerPC 32-bit         |
- * |PF_ARCH_PPC64       |PowerPC 64-bit / POWER |
- * |PF_ARCH_MIPS32      |MIPS 32-bit            |
- * |PF_ARCH_MIPS64      |MIPS 64-bit            |
- * |PF_ARCH_RISCV32     |RISC-V 32-bit          |
- * |PF_ARCH_RISCV64     |RISC-V 64-bit          |
+ * |Macro                 |Architecture           |
+ * |----------------------|-----------------------|
+ * |NOCT_ARCH_X86         |x86 32-bit             |
+ * |NOCT_ARCH_X86_64      |x86 64-bit             |
+ * |NOCT_ARCH_ARM32       |ARMv7                  |
+ * |NOCT_ARCH_ARM64       |Armv8 / Armv9          |
+ * |NOCT_ARCH_PPC32       |PowerPC 32-bit         |
+ * |NOCT_ARCH_PPC64       |PowerPC 64-bit / POWER |
+ * |NOCT_ARCH_MIPS32      |MIPS 32-bit            |
+ * |NOCT_ARCH_MIPS64      |MIPS 64-bit            |
+ * |NOCT_ARCH_RISCV32     |RISC-V 32-bit          |
+ * |NOCT_ARCH_RISCV64     |RISC-V 64-bit          |
  *
- * |Macro               |Byte-Order             |
- * |--------------------|-----------------------|
- * |PF_ARCH_LE          |Little Endian          |
- * |PF_ARCH_BE          |Big Endian             |
+ * |Macro                 |Byte-Order             |
+ * |----------------------|-----------------------|
+ * |NOCT_ARCH_LE          |Little Endian          |
+ * |NOCT_ARCH_BE          |Big Endian             |
  */
 
 #if (defined(__i386__) && !defined(__x86_64__)) || defined(_M_IX86)
 
 /* x86 */
-#define PF_ARCH_X86
-#define PF_ARCH_LE		/* Always LE */
+#define NOCT_ARCH_X86
+#define NOCT_ARCH_LE		/* Always LE */
 
 #elif defined(__x86_64__) || defined(_M_X64)
 
 /* x86_64 */
-#define PF_ARCH_X86_64
-#define PF_ARCH_LE		/* Always LE */
+#define NOCT_ARCH_X86_64
+#define NOCT_ARCH_LE		/* Always LE */
 
 #elif defined(__aarch64__) || defined(_M_ARM64)
 
 /* Arm64 */
-#define PF_ARCH_ARM64
+#define NOCT_ARCH_ARM64
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define PF_ARCH_BE	/* Can be BE*/
+#define NOCT_ARCH_BE	/* Can be BE*/
 #else
-#define PF_ARCH_LE	/* Default, always LE on MSVC */
+#define NOCT_ARCH_LE	/* Default, always LE on MSVC */
 #endif
 
 #elif defined(__arm__)
 
 /* Arm32 */
-#define PF_ARCH_ARM32
+#define NOCT_ARCH_ARM32
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define PF_ARCH_BE	/* Can be BE */
+#define NOCT_ARCH_BE	/* Can be BE */
 #else
-#define PF_ARCH_LE	/* Default, always LE on MSVC */
+#define NOCT_ARCH_LE	/* Default, always LE on MSVC */
 #endif
 
 #elif defined(_ARCH_PPC64)
 
 /* PowerPC 64 / POWER */
-#define PF_ARCH_PPC64
+#define NOCT_ARCH_PPC64
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define PF_ARCH_BE	/* Can be BE optionally */
+#define NOCT_ARCH_BE	/* Can be BE optionally */
 #else
-#define PF_ARCH_LE	/* Default, no MSVC support */
+#define NOCT_ARCH_LE	/* Default, no MSVC support */
 #endif
 
 #elif defined(_ARCH_PPC)
 
 /* PowerPC */
-#define PF_ARCH_PPC32
+#define NOCT_ARCH_PPC32
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define PF_ARCH_LE	/* Can be LE optionally */
+#define NOCT_ARCH_LE	/* Can be LE optionally */
 #else
-#define PF_ARCH_BE	/* Default, always BE on MSVC */
+#define NOCT_ARCH_BE	/* Default, always BE on MSVC */
 #endif
 
 #elif defined(__mips64) || defined(__mips64__)
 
 /* MIPS64 */
-#define PF_ARCH_MIPS64
+#define NOCT_ARCH_MIPS64
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define PF_ARCH_LE	/* Can be LE */
+#define NOCT_ARCH_LE	/* Can be LE */
 #else
-#define PF_ARCH_BE	/* Default, no MSVC support */
+#define NOCT_ARCH_BE	/* Default, no MSVC support */
 #endif
 
 #elif defined(__mips__)
 
 /* MIPS32 */
-#define PF_ARCH_MIPS32
+#define NOCT_ARCH_MIPS32
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define PF_ARCH_LE	/* Can be BE optionally */
+#define NOCT_ARCH_LE	/* Can be BE optionally */
 #else
-#define PF_ARCH_BE	/* Default, always BE on MSVC */
+#define NOCT_ARCH_BE	/* Default, always BE on MSVC */
 #endif
 
 #elif defined(__riscv) && (__riscv_xlen == 64)
 
 /* RISC-V 64bit */
-#define PF_ARCH_RISCV64
+#define NOCT_ARCH_RISCV64
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define PF_ARCH_BE	/* Can be BE optionally */
+#define NOCT_ARCH_BE	/* Can be BE optionally */
 #else
-#define PF_ARCH_LE	/* Default, no MSVC support yet */
+#define NOCT_ARCH_LE	/* Default, no MSVC support yet */
 #endif
 
 #elif defined(__riscv) && (__riscv_xlen == 32)
 
 /* RISC-V 32bit */
-#define PF_ARCH_RISCV32
+#define NOCT_ARCH_RISCV32
 
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define PF_ARCH_BE	/* Can be BE optionally */
+#define NOCT_ARCH_BE	/* Can be BE optionally */
 #else
-#define PF_ARCH_LE	/* Default, no MSVC support yet */
+#define NOCT_ARCH_LE	/* Default, no MSVC support yet */
 #endif
 
 #endif
