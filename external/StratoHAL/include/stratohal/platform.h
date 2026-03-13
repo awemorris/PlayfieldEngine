@@ -551,6 +551,90 @@ hal_draw_image_scale(
 	struct hal_image *src_image);
 
 /*
+ * Draw an image on an image. (3D)
+ */
+void
+hal_draw_image_3d_alpha(
+	struct hal_image *dst_image,
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Draw an image on an image. (3D)
+ */
+void
+hal_draw_image_3d_add(
+	struct hal_image *dst_image,
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Draw an image on an image. (3D)
+ */
+void
+hal_draw_image_3d_sub(
+	struct hal_image *dst_image,
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
+ * Draw an image on an image. (3D)
+ */
+void
+hal_draw_image_3d_dim(
+	struct hal_image *dst_image,
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height,
+	int alpha);
+
+/*
  * Clip a rectangle by a source size.
  */
 bool

@@ -445,7 +445,7 @@
     },
     {
       "name":           "linux-gbm",
-      "displayName":    "Linux Framebuffer OpenGL",
+      "displayName":    "Linux GBM Framebuffer OpenGL",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-gbm",
       "cacheVariables": {
@@ -458,7 +458,7 @@
     },
     {
       "name":           "linux-gbm-rot90",
-      "displayName":    "Linux Framebuffer OpenGL Rotate",
+      "displayName":    "Linux GBM Framebuffer OpenGL Rotate",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-gbm-rot90",
       "cacheVariables": {
@@ -468,6 +468,32 @@
         "PLAYFIELD_ENABLE_I18N":       "ON",
         "PLAYFIELD_ENABLE_PACK":       "ON",
         "PLAYFIELD_ENABLE_ROT90":      "ON"
+      }
+    },
+    {
+      "name":           "linux-fbdev",
+      "displayName":    "Linux fbdev Framebuffer OpenGL",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-linux-fbdev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":             "Debug",
+        "PLAYFIELD_TARGET_LINUX_FBDEV": "ON",
+        "PLAYFIELD_ENABLE_JIT":         "ON",
+        "PLAYFIELD_ENABLE_I18N":        "ON",
+        "PLAYFIELD_ENABLE_PACK":        "ON"
+      }
+    },
+    {
+      "name":           "linux-x11-soft",
+      "displayName":    "Linux X11 Software Rendering",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-linux-x11-soft",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":               "Release",
+        "PLAYFIELD_TARGET_LINUX_X11SOFT": "ON",
+        "PLAYFIELD_ENABLE_JIT":           "ON",
+        "PLAYFIELD_ENABLE_I18N":          "ON",
+        "PLAYFIELD_ENABLE_PACK":          "ON"
       }
     },
     {
@@ -833,6 +859,10 @@
     {
       "name": "linux-gbm",
       "configurePreset": "linux-gbm"
+    },
+    {
+      "name": "linux-x11-soft",
+      "configurePreset": "linux-x11-soft"
     },
     {
       "name": "linux-gbm-rot90",

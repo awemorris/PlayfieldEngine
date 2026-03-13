@@ -61,13 +61,13 @@
 #define SAVE_DIR	"save"
 
 /* Back Image */
-static struct image *image;
+static struct hal_image *image;
 
 /* Screen Info */
 static char *window_title;
 static int fb_fd;
 static size_t fb_size;
-static pixel_t *fb_pixels;
+static hal_pixel_t *fb_pixels;
 static int fb_width;
 static int fb_height;
 static int screen_width;
@@ -157,7 +157,7 @@ static bool init_fb(void)
 	fb_width = (int)vinfo.xres_virtual;
 	fb_height = (int)vinfo.yres_virtual;
 	fb_size = (size_t)(fb_height * fb_width * (int)vinfo.bits_per_pixel / 8);
-	fb_pixels = (pixel_t *)mmap(0, fb_size, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0);
+	fb_pixels = (hal_pixel_t *)mmap(0, fb_size, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0);
 	if (fb_pixels == MAP_FAILED) {
 		printf("mmap() failed.\n");
 		close(fb_fd);
@@ -251,19 +251,19 @@ static void process_event(int index)
 		mouse_y = mouse_y < 0 ? 0 : mouse_y;
 		mouse_x = mouse_x > screen_width ? screen_width : mouse_x;
 		mouse_y = mouse_y > screen_height ? screen_height : mouse_y;
-		on_event_mouse_move(mouse_x, mouse_y);
+		hal_callback_on_event_mouse_move(mouse_x, mouse_y);
 	} else if (e.type == EV_KEY) {
 		/* XXX: currently only mouse buttons are supported. */
 		if (e.code == 272) {
 			if (e.value == 1)
-				hal_callback_on_event_mouse_press(MOUSE_LEFT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, mouse_x, mouse_y);
 			else
-				hal_callback_on_event_mouse_release(MOUSE_LEFT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, mouse_x, mouse_y);
 		} else if (e.code ==273) {
 			if (e.value == 1)
-				hal_callback_on_event_mouse_press(MOUSE_RIGHT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, mouse_x, mouse_y);
 			else
-				hal_callback_on_event_mouse_release(MOUSE_RIGHT, mouse_x, mouse_y);
+				hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, mouse_x, mouse_y);
 		}
 	}
 }
@@ -272,12 +272,12 @@ static void process_event(int index)
  * HAL
  */
 
-void hal_notify_image_update(struct image *img)
+void hal_notify_image_update(struct hal_image *img)
 {
 	UNUSED_PARAMETER(img);
 }
 
-void hal_notify_image_free(struct image *img)
+void hal_notify_image_free(struct hal_image *img)
 {
 	UNUSED_PARAMETER(img);
 }
@@ -288,7 +288,7 @@ hal_render_image_normal(
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -322,7 +322,7 @@ hal_render_image_add(
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The width of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -351,12 +351,46 @@ hal_render_image_add(
 }
 
 void
+hal_render_image_sub(
+	int dst_left,			/* The X coordinate of the screen */
+	int dst_top,			/* The Y coordinate of the screen */
+	int dst_width,			/* The width of the destination rectangle */
+	int dst_height,			/* The width of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	hal_draw_image_sub(
+		image,
+		dst_left,
+		dst_top,
+		src_image,
+		src_width,
+		src_height,
+		src_left,
+		src_top,
+		alpha);
+}
+
+void
 hal_render_image_dim(
 	int dst_left,			/* The X coordinate of the screen */
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -412,27 +446,28 @@ hal_render_image_3d_normal(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_alpha(image,
+				(float)x1,
+				(float)y1,
+				(float)x2,
+				(float)y2,
+				(float)x3,
+				(float)y3,
+				(float)x4,
+				(float)y4,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
 }
 
 void
@@ -445,27 +480,96 @@ hal_render_image_3d_add(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_alpha(image,
+				(float)x1,
+				(float)y1,
+				(float)x2,
+				(float)y2,
+				(float)x3,
+				(float)y3,
+				(float)x4,
+				(float)y4,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
+}
+
+void
+hal_render_image_3d_sub(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct hal_image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	hal_draw_image_3d_sub(image,
+			      (float)x1,
+			      (float)y1,
+			      (float)x2,
+			      (float)y2,
+			      (float)x3,
+			      (float)y3,
+			      (float)x4,
+			      (float)y4,
+			      src_image,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
+}
+
+void
+hal_render_image_3d_dim(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct hal_image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	hal_draw_image_3d_dim(image,
+			      (float)x1,
+			      (float)y1,
+			      (float)x2,
+			      (float)y2,
+			      (float)x3,
+			      (float)y3,
+			      (float)x4,
+			      (float)y4,
+			      src_image,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
 }
 
 /*

@@ -284,21 +284,21 @@ VOID GDIRenderImage3DNormal(
 	int src_height,
 	int alpha)
 {
-	/* TODO */
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_alpha(pBackImage,
+							x1,
+							y1,
+							x2,
+							y2,
+							x3,
+							y3,
+							x4,
+							y4,
+							src_image,
+							src_left,
+							src_top,
+							src_width,
+							src_height,
+							alpha);
 }
 
 VOID GDIRenderImage3DAdd(
@@ -317,21 +317,21 @@ VOID GDIRenderImage3DAdd(
 	int src_height,
 	int alpha)
 {
-	/* TODO */
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_add(pBackImage,
+						  x1,
+						  y1,
+						  x2,
+						  y2,
+						  x3,
+						  y3,
+						  x4,
+						  y4,
+						  src_image,
+						  src_left,
+						  src_top,
+						  src_width,
+						  src_height,
+						  alpha);
 }
 
 VOID GDIRenderImage3DSub(
@@ -350,21 +350,21 @@ VOID GDIRenderImage3DSub(
 	int src_height,
 	int alpha)
 {
-	/* TODO */
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_sub(pBackImage,
+						  x1,
+						  y1,
+						  x2,
+						  y2,
+						  x3,
+						  y3,
+						  x4,
+						  y4,
+						  src_image,
+						  src_left,
+						  src_top,
+						  src_width,
+						  src_height,
+						  alpha);
 }
 
 VOID GDIRenderImage3DDim(
@@ -383,19 +383,19 @@ VOID GDIRenderImage3DDim(
 	int src_height,
 	int alpha)
 {
-	/* TODO */
-	UNUSED_PARAMETER(x1);
-	UNUSED_PARAMETER(y1);
-	UNUSED_PARAMETER(x2);
-	UNUSED_PARAMETER(y2);
-	UNUSED_PARAMETER(x3);
-	UNUSED_PARAMETER(y3);
-	UNUSED_PARAMETER(x4);
-	UNUSED_PARAMETER(y4);
-	UNUSED_PARAMETER(src_image);
-	UNUSED_PARAMETER(src_left);
-	UNUSED_PARAMETER(src_top);
-	UNUSED_PARAMETER(src_width);
-	UNUSED_PARAMETER(src_height);
-	UNUSED_PARAMETER(alpha);
+	hal_draw_image_3d_dim(pBackImage,
+						  x1,
+						  y1,
+						  x2,
+						  y2,
+						  x3,
+						  y3,
+						  x4,
+						  y4,
+						  src_image,
+						  src_left,
+						  src_top,
+						  src_width,
+						  src_height,
+						  alpha);
 }

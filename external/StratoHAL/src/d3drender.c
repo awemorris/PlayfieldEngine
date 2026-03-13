@@ -86,14 +86,12 @@ D3DInitialize(
 		return TRUE;
 	}
 
-#if 0
 	/* Fallback to GDI. */
 	if (GDIInitialize(hWnd, nWidth, nHeight))
 	{
 		nGraphicsMode = MODE_GDI;
 		return TRUE;
 	}
-#endif
 
 	hal_log_error("Failed to initialize graphics.");
 

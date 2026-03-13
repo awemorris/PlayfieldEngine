@@ -60,7 +60,7 @@ extern "C" {
 const uint32 kMsgUpdate = 'updt';
 
 BBitmap* bitmap;
-struct image* image;
+struct hal_image* image;
 char *window_title;
 int window_width;
 int window_height;
@@ -84,27 +84,27 @@ class NoctView : public BView
 	{
 		clear_image(image, 0);
 
-		on_event_frame();
+		hal_callback_on_event_frame();
 
 		DrawBitmap(bitmap, BPoint(0, 0));
 	}
 
 	void MouseMoved(BPoint where, uint32 transit, const BMessage* dragMessage) override
 	{
-		on_event_mouse_move((int)where.x, (int)where.y);
+		hal_callback_on_event_mouse_move((int)where.x, (int)where.y);
 	}
 
 	void MouseDown(BPoint where) override
 	{
-		on_event_mouse_move((int)where.x, (int)where.y);
+		hal_callback_on_event_mouse_move((int)where.x, (int)where.y);
 
 		uint32 buttons = 0;
 		if (Window()->CurrentMessage() &&
 		    Window()->CurrentMessage()->FindInt32("buttons", (int32*)&buttons) == B_OK) {
 			if (buttons & B_PRIMARY_MOUSE_BUTTON)
-				on_event_mouse_press(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
+				hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
 			if (buttons & B_SECONDARY_MOUSE_BUTTON)
-				on_event_mouse_press(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
+				hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
 		}
 	}
 
@@ -116,9 +116,9 @@ class NoctView : public BView
 		if (Window()->CurrentMessage() &&
 		    Window()->CurrentMessage()->FindInt32("buttons", (int32*)&buttons) == B_OK) {
 			if (buttons & B_PRIMARY_MOUSE_BUTTON)
-				on_event_mouse_release(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
+				hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, (int)where.x, (int)where.y);
 			if (buttons & B_SECONDARY_MOUSE_BUTTON)
-				on_event_mouse_release(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
+				hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, (int)where.x, (int)where.y);
 		}
 	}
 
@@ -149,9 +149,9 @@ class NoctWindow : public BWindow
 public:
 	NoctWindow(const char *title, int width, int height) :
 		BWindow(BRect(100, 100, width + 100, height + 100),
-				title,
-				B_TITLED_WINDOW,
-				0)
+			title,
+			B_TITLED_WINDOW,
+			0)
 	{
 		bitmap = new BBitmap(BRect(0, 0, width - 1, height - 1), B_RGBA32);
 		create_image_with_pixels(width, height, (pixel_t*)bitmap->Bits(), &image);
@@ -181,10 +181,11 @@ public:
 	{
 	}
 
-	void ReadyToRun() override {
+	void ReadyToRun() override
+	{
 		if (!init_file())
 			exit(1);
-		if (!on_event_boot(&window_title, &window_width, &window_height))
+		if (!hal_callback_on_event_boot(&window_title, &window_width, &window_height))
 			exit(1);
 
 		NoctWindow *window = new NoctWindow(window_title, window_width, window_height);
@@ -200,7 +201,7 @@ public:
 		}
 #endif
 
-		if (!on_event_start())
+		if (!hal_callback_on_event_start())
 			exit(1);
 	}
 };
@@ -232,7 +233,7 @@ hal_render_image_normal(
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
@@ -248,15 +249,15 @@ hal_render_image_normal(
 	if (src_height == -1)
 		src_height = src_image->height;
 
-	draw_image_alpha(image,
-			 dst_left,
-			 dst_top,
-			 src_image,
-			 src_width,
-			 src_height,
-			 src_left,
-			 src_top,
-			 alpha);
+	hal_draw_image_alpha(image,
+			     dst_left,
+			     dst_top,
+			     src_image,
+			     src_width,
+			     src_height,
+			     src_left,
+			     src_top,
+			     alpha);
 }
 
 void
@@ -265,13 +266,64 @@ hal_render_image_add(
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	hal_draw_image_add(image,
+			   dst_left,
+			   dst_top,
+			   src_image,
+			   src_width,
+			   src_height,
+			   src_left,
+			   src_top,
+			   alpha);
+}
+
+void
+hal_render_image_sub(
+	int dst_left,			/* The X coordinate of the screen */
+	int dst_top,			/* The Y coordinate of the screen */
+	int dst_width,			/* The width of the destination rectangle */
+	int dst_height,			/* The height of the destination rectangle */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	hal_draw_image_sub(image,
+			   dst_left,
+			   dst_top,
+			   src_image,
+			   src_width,
+			   src_height,
+			   src_left,
+			   src_top,
+			   alpha);
 }
 
 void
@@ -280,29 +332,55 @@ hal_render_image_dim(
 	int dst_top,			/* The Y coordinate of the screen */
 	int dst_width,			/* The width of the destination rectangle */
 	int dst_height,			/* The height of the destination rectangle */
-	struct image *src_image,	/* [IN] The image to be rendered */
+	struct hal_image *src_image,	/* [IN] The image to be rendered */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
+	if (dst_width == -1)
+		dst_width = src_image->width;
+	if (dst_height == -1)
+		dst_height = src_image->height;
+	if (src_width == -1)
+		src_width = src_image->width;
+	if (src_height == -1)
+		src_height = src_image->height;
+
+	hal_draw_image_dim(image,
+			   dst_left,
+			   dst_top,
+			   src_image,
+			   src_width,
+			   src_height,
+			   src_left,
+			   src_top,
+			   alpha);
 }
 
 void
 hal_render_image_rule(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
+	struct hal_image *src_img,		/* [IN] The source image */
+	struct hal_image *rule_img,		/* [IN] The rule image */
 	int threshold)			/* The threshold (0 to 255) */
 {
+	hal_draw_image_rule(image,
+			    src_img,
+			    rule_img,
+			    threshold);
 }
 
 void
 hal_render_image_melt(
-	struct image *src_img,		/* [IN] The source image */
-	struct image *rule_img,		/* [IN] The rule image */
+	struct hal_image *src_img,		/* [IN] The source image */
+	struct hal_image *rule_img,		/* [IN] The rule image */
 	int progress)			/* The progress (0 to 255) */
 {
+	hal_draw_image_rule(image,
+			    src_img,
+			    rule_img,
+			    progress);
 }
 
 void
@@ -315,13 +393,28 @@ hal_render_image_3d_normal(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
+	hal_draw_image_3d_alpha(back_image,
+				(float)x1,
+				(float)y1,
+				(float)x2,
+				(float)y2,
+				(float)x3,
+				(float)y3,
+				(float)x4,
+				(float)y4,
+				src_image,
+				src_left,
+				src_top,
+				src_width,
+				src_height,
+				alpha);
 }
 
 void
@@ -334,13 +427,96 @@ hal_render_image_3d_add(
 	float y3,			/* y3 */
 	float x4,			/* x4 */
 	float y4,			/* y4 */
-	struct image *src_image,	/* [IN] The source image */
+	struct hal_image *src_image,	/* [IN] The source image */
 	int src_left,			/* The X coordinate of a source image */
 	int src_top,			/* The Y coordinate of a source image */
 	int src_width,			/* The width of the source rectangle */
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
+	hal_draw_image_3d_add(back_image,
+			      (float)x1,
+			      (float)y1,
+			      (float)x2,
+			      (float)y2,
+			      (float)x3,
+			      (float)y3,
+			      (float)x4,
+			      (float)y4,
+			      src_image,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
+}
+
+void
+hal_render_image_3d_sub(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct hal_image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	hal_draw_image_3d_sub(image,
+			      (float)x1,
+			      (float)y1,
+			      (float)x2,
+			      (float)y2,
+			      (float)x3,
+			      (float)y3,
+			      (float)x4,
+			      (float)y4,
+			      src_image,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
+}
+
+void
+hal_render_image_3d_dim(
+	float x1,			/* x1 */
+	float y1,			/* y1 */
+	float x2,			/* x2 */
+	float y2,			/* y2 */
+	float x3,			/* x3 */
+	float y3,			/* y3 */
+	float x4,			/* x4 */
+	float y4,			/* y4 */
+	struct hal_image *src_image,	/* [IN] The source image */
+	int src_left,			/* The X coordinate of a source image */
+	int src_top,			/* The Y coordinate of a source image */
+	int src_width,			/* The width of the source rectangle */
+	int src_height,			/* The height of the source rectangle */
+	int alpha)			/* The alpha value (0 to 255) */
+{
+	hal_draw_image_3d_dim(image,
+			      (float)x1,
+			      (float)y1,
+			      (float)x2,
+			      (float)y2,
+			      (float)x3,
+			      (float)y3,
+			      (float)x4,
+			      (float)y4,
+			      src_image,
+			      src_left,
+			      src_top,
+			      src_width,
+			      src_height,
+			      alpha);
 }
 
 void

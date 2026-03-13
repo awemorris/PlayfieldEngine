@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <limits.h>
 #include <assert.h>
 
 #if defined(HAL_TARGET_WINDOWS)
@@ -41,6 +43,9 @@
 
 /* 512-bit alignment */
 #define ALIGN_BYTES	(64)
+
+/* Scanline max  */
+#define SC_LINES	(1024)
 
 /* Texture ID */
 static int id_top;
@@ -59,9 +64,29 @@ extern bool is_sse_available;
 #endif
 
 /*
+ * Scanline Conversion Buffer
+ */
+static int sc_min_x[SC_LINES];
+static int sc_max_x[SC_LINES];
+static int sc_min_tx[SC_LINES];
+static int sc_max_tx[SC_LINES];
+static int sc_min_ty[SC_LINES];
+static int sc_max_ty[SC_LINES];
+
+/*
  * Forward Declaraion
  */
 
+static void
+scanline_edge(
+        float x1,
+	float y1,
+	float tx1,
+	float ty1,
+        float x2,
+	float y2,
+	float tx2,
+	float ty2);
 bool
 check_draw_image(
 	struct hal_image *dst_image,
@@ -300,6 +325,10 @@ hal_fill_image_alpha(
 #define DRAW_IMAGE_RULE		hal_draw_image_rule
 #define DRAW_IMAGE_MELT		hal_draw_image_melt
 #define DRAW_IMAGE_SCALE	hal_draw_image_scale
+#define DRAW_IMAGE_3D_ALPHA	hal_draw_image_3d_alpha
+#define DRAW_IMAGE_3D_ADD	hal_draw_image_3d_add
+#define DRAW_IMAGE_3D_SUB	hal_draw_image_3d_sub
+#define DRAW_IMAGE_3D_DIM	hal_draw_image_3d_dim
 #include "drawimage.h"
 
 #else
@@ -724,7 +753,166 @@ hal_draw_image_scale(
 		hal_draw_image_scale_scalar(dst_image, virtual_dst_width, virtual_dst_height, virtual_dst_left, virtual_dst_top, src_image);
 }
 
+void
+hal_draw_image_3d_alpha(
+	struct hal_image *dst_image,
+	float x1,
+	float y1,
+	float x2,
+	float y2,
+	float x3,
+	float y3,
+	float x4,
+	float y4,
+	struct hal_image *src_image,
+	int src_left,
+	int src_top,
+	int src_width,
+	int src_height)
+{
+	void hal_draw_image_3d_alpha_avx2(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_avx(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_sse42(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_sse4(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_sse3(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_sse2(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_sse(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+	void hal_draw_image_3d_alpha_scalar(struct hal_image *, int, int, int, int, int, int, int, int, struct hal_image *, int, int, int, int);
+
+	if (is_avx2_available)
+		hal_draw_image_3d_alpha_avx2(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+	else if (is_avx_available)
+		hal_draw_image_3d_alpha_avx(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+#if !defined(_MSC_VER)
+	else if (is_sse42_available)
+		hal_draw_image_3d_alpha_sse42(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+	else if (is_sse4_available)
+		hal_draw_image_3d_alpha_sse4(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+	else if (is_sse3_available)
+		hal_draw_image_3d_alpha_sse3(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
 #endif
+	else if (is_sse2_available)
+		hal_draw_image_3d_alpha_sse2(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+#if !defined(_MSC_VER) && defined(HAL_ARCH_X86)
+	else if (is_sse_available)
+		hal_draw_image_3d_alpha_sse(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+#endif
+	else
+		hal_draw_image_3d_alpha_scalar(dst_image, x1, y1, x2, y2, x3, y3, x4, y4 src_image, src_left, src_top, src_width, src_height);
+}
+
+#endif
+
+/*
+ * Scanline Conversion (for 3D polygon drawing)
+ */
+
+void
+scanline_conversion(
+        float x1,
+        float y1,
+        float tx1,
+        float ty1,
+        float x2,
+        float y2,
+        float tx2,
+        float ty2,
+        float x3,
+        float y3,
+        float tx3,
+        float ty3,
+        float x4,
+        float y4,
+        float tx4,
+        float ty4)
+{
+	int y;
+
+	/* Initialize scanline buffers. */
+	for (y = 0; y < SC_LINES; y++) {
+		sc_min_x[y]  = INT_MAX;
+		sc_max_x[y]  = INT_MIN;
+		sc_min_tx[y] = 0;
+		sc_max_tx[y] = 0;
+		sc_min_ty[y] = 0;
+		sc_max_ty[y] = 0;
+	}
+
+	/* Scan-convert the four edges of the quad */
+	scanline_edge(x1, y1, tx1, ty1, x2, y2, tx2, ty2);
+	scanline_edge(x2, y2, tx2, ty2, x3, y3, tx3, ty3);
+	scanline_edge(x3, y3, tx3, ty3, x1, y1, tx1, ty1);
+	scanline_edge(x2, y2, tx2, ty2, x3, y3, tx3, ty3);
+	scanline_edge(x3, y3, tx3, ty3, x4, y4, tx4, ty4);
+	scanline_edge(x4, y4, tx4, ty4, x2, y2, tx2, ty2);
+}
+
+static void
+scanline_edge(
+        float x1,
+	float y1,
+	float tx1,
+	float ty1,
+        float x2,
+	float y2,
+	float tx2,
+	float ty2)
+{
+	int y_start, y_end, y;
+
+	/* Ignore horizontal edges */
+	if (y1 == y2)
+		return;
+
+	/* Make y1 <= y2 */
+	if (y1 > y2) {
+		float tmp;
+		tmp = x1;  x1 = x2;  x2 = tmp;
+		tmp = y1;  y1 = y2;  y2 = tmp;
+		tmp = tx1; tx1 = tx2; tx2 = tmp;
+		tmp = ty1; ty1 = ty2; ty2 = tmp;
+	}
+
+	/*
+	 * Use half-open interval [y_start, y_end)
+	 * to avoid double-hit at shared vertices.
+	 */
+	y_start = (int)ceilf(y1);
+	y_end   = (int)ceilf(y2);
+
+	if (y_start < 0)
+		y_start = 0;
+	if (y_end > SC_LINES)
+		y_end = SC_LINES;
+
+	for (y = y_start; y < y_end; y++) {
+		float t;
+		float x, tx, ty;
+		int ix, itx, ity;
+
+		/* Sample at the scanline center */
+		t = ((float)y + 0.5f - y1) / (y2 - y1);
+
+		x  = x1  + (x2  - x1)  * t;
+		tx = tx1 + (tx2 - tx1) * t;
+		ty = ty1 + (ty2 - ty1) * t;
+
+		ix  = (int)lroundf(x);
+		itx = (int)lroundf(tx);
+		ity = (int)lroundf(ty);
+
+		if (ix < sc_min_x[y]) {
+			sc_min_x[y]  = ix;
+			sc_min_tx[y] = itx;
+			sc_min_ty[y] = ity;
+		}
+		if (ix > sc_max_x[y]) {
+			sc_max_x[y]  = ix;
+			sc_max_tx[y] = itx;
+			sc_max_ty[y] = ity;
+		}
+	}
+}
 
 /*
  * Clipping
