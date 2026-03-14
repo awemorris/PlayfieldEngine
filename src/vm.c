@@ -756,7 +756,7 @@ static bool Engine_stopSound(NoctEnv *env)
 	return true;
 }
 
-/* Engine.stopSound() */
+/* Engine.setSoundVolume() */
 static bool Engine_setSoundVolume(NoctEnv *env)
 {
 	int stream;
@@ -765,6 +765,41 @@ static bool Engine_setSoundVolume(NoctEnv *env)
 		return false;
 
 	if (!pf_stop_sound(stream))
+		return false;
+
+	return true;
+}
+
+/* Engine.playVideo() */
+static bool Engine_playVideo(NoctEnv *env)
+{
+	const char *file;
+	int is_skippable;
+
+	if (!get_string_param(env, "file", &file))
+		return false;
+
+	if (!pf_play_video(file, false))
+		return false;
+
+	return true;
+}
+
+/* Engine.stopVideo() */
+static bool Engine_stopVideo(NoctEnv *env)
+{
+	pf_stop_video();
+	return true;
+}
+
+/* Engine.stopVideo() */
+static bool Engine_isVideoPlaying(NoctEnv *env)
+{
+	NoctValue tmp;
+
+	bool ret = pf_is_video_playing();
+
+	if (!noct_set_return_make_int(env, &tmp, ret ? 1 : 0))
 		return false;
 
 	return true;
@@ -1085,6 +1120,10 @@ install_api(
 		RTFUNC(destroyTexture),
 		RTFUNC(playSound),
 		RTFUNC(stopSound),
+		RTFUNC(setSoundVolume),
+		RTFUNC(playVideo),
+		RTFUNC(stopVideo),
+		RTFUNC(isVideoPlaying),
 		RTFUNC(loadFont),
 		RTFUNC(createTextTexture),
 		RTFUNC(writeSaveData),

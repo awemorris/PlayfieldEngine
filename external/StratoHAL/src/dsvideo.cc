@@ -34,6 +34,8 @@ extern "C" {
 #include <assert.h>
 };
 
+#include <initguid.h>
+#include <guiddef.h>
 #include <dshow.h>
 
 #define PATH_SIZE	(1024)
@@ -46,7 +48,31 @@ static IMediaEventEx *pEvent;
 
 static BOOL bPlaying;
 
+// MR_VIDEO_RENDER_SERVICE {01069976-9E4F-40c4-A826-3E00AD61DD33}
+DEFINE_GUID(MR_VIDEO_RENDER_SERVICE, 0x01069976, 0x9e4f, 0x40c4, 0xa8, 0x26, 0x3e, 0x00, 0xad, 0x61, 0xdd, 0x33);
+
 static BOOL DisplayRenderFileErrorMessage(HRESULT hr);
+
+//
+// Initialize.
+//
+BOOL DShowInit(VOID)
+{
+	HRESULT hr = CoCreateInstance(CLSID_FilterGraph,
+								  NULL,
+								  CLSCTX_INPROC_SERVER,
+								  IID_IGraphBuilder,
+								  (void**)&pBuilder);
+	if (FAILED(hr))
+		return FALSE;
+
+	if (pBuilder)
+	{
+		pBuilder->Release();
+		pBuilder = NULL;
+	}
+	return TRUE;
+}
 
 //
 // Play a video.
@@ -65,7 +91,7 @@ DShowPlayVideo(
 	// Get an instance of IGraphBuilder.
 	hRes = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER,
 							IID_IGraphBuilder, (void**)&pBuilder);
-	if(hRes != S_OK || !pBuilder)
+	if(hRes != S_OK || pBuilder == NULL)
 	{
 		hal_log_error("CoCreateInstance() failed.");
 		return FALSE;
@@ -168,6 +194,9 @@ DisplayRenderFileErrorMessage(
 VOID
 DShowStopVideo(VOID)
 {
+	if (!bPlaying)
+		return;
+
 	if(pControl != NULL)
 	{
 		pControl->Stop();
