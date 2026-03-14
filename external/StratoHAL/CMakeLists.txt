@@ -33,7 +33,6 @@ option(STRATO_ENABLE_I18N             "Enable translation"                 OFF)
 option(STRATO_ENABLE_OBJECT           "Build an object library"            OFF)
 option(STRATO_ENABLE_SHARED           "Use shared libraries"               OFF)
 option(STRATO_ENABLE_ROT90            "Rotate screen"                      OFF)
-option(STRATO_ENABLE_MEDIAFOUNDATION  "Enable Media Foundation support"    OFF)
 option(STRATO_ENABLE_GST              "Enable GStreamer support"           OFF)
 
 #
@@ -215,43 +214,23 @@ endif()
 # For Windows.
 if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_WINDOWS95)
-  if(STRATO_ENABLE_MEDIAFOUNDATION)
-    set(STRATO_SOURCES
-      src/image.c
-      src/glyph.c
-      src/wave.c
-      src/stdfile.c
-      src/winmain.c
-      src/d3drender.c
-      src/d3d12render.cc
-      src/d3d11render.cc
-      src/d3d9render.cc
-      src/gdirender.c
-      src/dsound.c
-      src/mfvideo.cc
-      src/dsvideo.cc
-      src/digamepad.cc
-      src/xigamepad.c
-    )
-  else()
-    set(STRATO_SOURCES
-      src/image.c
-      src/glyph.c
-      src/wave.c
-      src/stdfile.c
-      src/winmain.c
-      src/d3drender.c
-      src/d3d12render.cc
-      src/d3d11render.cc
-      src/d3d9render.cc
-      src/gdirender.c
-      src/dsound.c
-      src/mfvideo.cc
-      src/dsvideo.cc
-      src/digamepad.cc
-      src/xigamepad.c
-    )
-  endif()
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/stdfile.c
+    src/winmain.c
+    src/d3drender.c
+    src/d3d12render.cc
+    src/d3d11render.cc
+    src/d3d9render.cc
+    src/gdirender.c
+    src/dsound.c
+    src/mfvideo.cc
+    src/dsvideo.cc
+    src/digamepad.cc
+    src/xigamepad.c
+  )
 endif()
 
 # For macOS.

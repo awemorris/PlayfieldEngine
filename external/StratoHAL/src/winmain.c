@@ -336,7 +336,7 @@ InitApp(
 		bFileOK = TRUE;
 	if (!bFileOK)
 	{
-		log_error(S_TR("No startup file."));
+		log_error(HAL_TR("No startup file."));
 		return FALSE;
 	}
 #endif

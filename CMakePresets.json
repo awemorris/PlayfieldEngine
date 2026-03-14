@@ -312,8 +312,7 @@
         "PLAYFIELD_TARGET_WINDOWS":    "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON",
-        "PLAYFIELD_ENABLE_MEDIAFOUNDATION":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON"
       }
     },
     {

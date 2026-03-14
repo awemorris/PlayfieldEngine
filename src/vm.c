@@ -958,7 +958,7 @@ static bool get_int_param(NoctEnv *env, const char *name, int *ret)
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PF_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter \"%s\" is not set."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -997,7 +997,7 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PF_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter \"%s\" is not set."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -1023,7 +1023,7 @@ static bool get_string_param(NoctEnv *env, const char *name, const char **ret)
 		noct_get_string(env, &elem, ret);
 		break;
 	default:
-		noct_error(env, PF_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PF_TR("Unexpected parameter value for \"%s\"."), name);
 		noct_unpin_local(env, 2, &param, &elem);
 		return false;
 	}
@@ -1043,7 +1043,7 @@ static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value)
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, value)) {
-		noct_error(env, PF_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter \"%s\" is not set."), name);
 		noct_unpin_local(env, 1, &param);
 		return false;
 	}
@@ -1063,25 +1063,25 @@ static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *
 	}
 
 	if (!noct_get_dict_elem(env, &param, name, &elem)) {
-		noct_error(env, PF_TR("Parameter %s is not set."), name);
+		noct_error(env, PF_TR("Parameter \"%s\" is not set."), name);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (elem.type != NOCT_VALUE_DICT) {
-		noct_error(env, PF_TR("Unexpected parameter value for %s."), name);
+		noct_error(env, PF_TR("Unexpected parameter value for \"%s\"."), name);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (!noct_get_dict_elem(env, &elem, key, &ival)) {
-		noct_error(env, PF_TR("Parameter %s doesn't have the key %s."), name, key);
+		noct_error(env, PF_TR("Parameter \"%s\" doesn't have the key \"%s\"."), name, key);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}
 
 	if (ival.type != NOCT_VALUE_INT) {
-		noct_error(env, PF_TR("Unexpected parameter value for %s.%s."), name, key);
+		noct_error(env, PF_TR("Unexpected parameter value for \"%s.%s\"."), name, key);
 		noct_unpin_local(env, 3, &param, &elem, &ival);
 		return false;
 	}

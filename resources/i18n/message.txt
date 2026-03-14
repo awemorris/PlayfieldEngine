@@ -240,3 +240,91 @@ zh:无效的存档数据。
 tw:無效的存檔資料。
 ja:セーブデータが無効です。
 ---
+ID:Searching directory "%s".
+es:Buscando en el directorio "%s".
+fr:Recherche dans le répertoire "%s".
+it:Ricerca nella directory "%s".
+de:Suche im Verzeichnis "%s".
+el:Αναζήτηση στον κατάλογο "%s".
+ru:Поиск в каталоге «%s».
+zh:正在搜索目录 "%s"。
+tw:正在搜尋目錄 "%s"。
+ja:ディレクトリ "%s" を検索中。
+---
+ID:Skipping empty directory "%s".
+es:Omitiendo el directorio vacío "%s".
+fr:Ignorer le répertoire vide "%s".
+it:Salto della directory vuota "%s".
+de:Leeres Verzeichnis "%s" wird übersprungen.
+el:Παράλειψη κενού καταλόγου "%s".
+ru:Пропуск пустого каталога «%s».
+zh:跳过空目录 "%s"。
+tw:跳過空目錄 "%s"。
+ja:空のディレクトリ "%s" をスキップします。
+---
+ID:Adding file "%s".
+es:Añadiendo archivo "%s".
+fr:Ajout du fichier "%s".
+it:Aggiunta del file "%s".
+de:Datei "%s" wird hinzugefügt.
+el:Προσθήκη αρχείου "%s".
+ru:Добавление файла «%s».
+zh:正在添加文件 "%s"。
+tw:正在新增檔案 "%s"。
+ja:ファイル "%s" を追加しています。
+---
+ID:Parameter is not set.
+es:El parámetro no está configurado.
+fr:Le paramètre n'est pas défini.
+it:Il parametro non è impostato.
+de:Parameter ist nicht gesetzt.
+el:Η παράμετρος δεν έχει οριστεί.
+ru:Параметр не задан.
+zh:未设置参数。
+tw:未設定參數。
+ja:パラメータが設定されていません。
+---
+ID:Unexpected parameter value for "%s".
+es:Valor de parámetro inesperado para "%s".
+fr:Valeur de paramètre inattendue pour "%s".
+it:Valore del parametro imprevisto per "%s".
+de:Unerwarteter Parameterwert für "%s".
+el:Μη αναμενόμενη τιμή παραμέτρου για "%s".
+ru:Непредвиденное значение параметра для «%s».
+zh:参数 "%s" 的值异常。
+tw:參數 "%s" 的值異常。
+ja:パラメータ "%s" の値が不正です。
+---
+ID:Parameter "%s" doesn't have the key "%s".
+es:El parámetro "%s" no tiene la clave "%s".
+fr:Le paramètre "%s" n'a pas la clé "%s".
+it:Il parametro "%s" non ha la chiave "%s".
+de:Parameter "%s" hat keinen Schlüssel "%s".
+el:Η παράμετρος "%s" δεν έχει το κλειδί "%s".
+ru:Параметр «%s» не содержит ключ «%s».
+zh:参数 "%s" 不包含键 "%s"。
+tw:參數 "%s" 不包含鍵 "%s"。
+ja:パラメータ "%s" にキー "%s" がありません。
+---
+ID:Unexpected parameter value for "%s.%s".
+es:Valor de parametro inesperado para "%s.%s".
+fr:Valeur de paramètre inattendue pour "%s.%s".
+it:Valore del parametro imprevisto per "%s.%s".
+de:Unerwarteter Parameterwert für "%s.%s".
+el:Μη αναμενόμενη τιμή παραμέτρου για "%s.%s".
+ru:Непредвиденное значение параметра для «%s.%s».
+zh:参数 "%s.%s" 的值異常。
+tw:參數 "%s.%s" 的值異常。
+ja:パラメータ "%s.%s" の値が不正です。
+---
+ID:Cannot deserialize function.
+es:No se puede deserializar la función.
+fr:Impossible de désérialiser la fonction.
+it:Impossibile deserializzare la funzione.
+de:Funktion kann nicht deserialisiert werden.
+el:Αδυναμία αποσειριοποίησης της συνάρτησης.
+ru:Не удалось десериализовать функцию.
+zh:无法反序列化函数。
+tw:無法反序列化函式。
+ja:関数をデシリアライズできません。
+---
