@@ -49,7 +49,9 @@ static IMediaEventEx *pEvent;
 static BOOL bPlaying;
 
 // IID_IGraphBuilder {56A868A9-0AD4-11CE-B03A-0020AF0BA770}
+#ifdef _MSC_VER
 DEFINE_GUID(IID_IGraphBuilder, 0x56a868a9, 0x0ad4, 0x11ce, 0xb0, 0x3a, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+#endif
 
 // MR_VIDEO_RENDER_SERVICE {01069976-9E4F-40c4-A826-3E00AD61DD33}
 DEFINE_GUID(MR_VIDEO_RENDER_SERVICE, 0x01069976, 0x9e4f, 0x40c4, 0xa8, 0x26, 0x3e, 0x00, 0xad, 0x61, 0xdd, 0x33);
@@ -117,7 +119,58 @@ DShowPlayVideo(
 	pWindow->put_Owner((OAHWND)hWnd);
 	pWindow->put_MessageDrain((OAHWND)hWnd);
 	pWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
-	pWindow->SetWindowPosition(nOfsX, nOfsY, nWidth, nHeight);
+
+	// Keep aspect ratio.
+	long srcW = 0, srcH = 0;
+	long arW = 0, arH = 0;
+	IBasicVideo2 *pBasicVideo2 = NULL;
+	IBasicVideo *pBasicVideo = NULL;
+	if (SUCCEEDED(pBuilder->QueryInterface(IID_IBasicVideo2, (void **)&pBasicVideo2)) && pBasicVideo2 != NULL)
+	{
+		if (FAILED(pBasicVideo2->GetPreferredAspectRatio(&arW, &arH)) || arW <= 0 || arH <= 0)
+			arW = arH = 0;
+		pBasicVideo2->Release();
+	}
+
+	if ((arW <= 0 || arH <= 0) &&
+		SUCCEEDED(pBuilder->QueryInterface(IID_IBasicVideo, (void **)&pBasicVideo)) &&
+		pBasicVideo != NULL)
+	{
+		pBasicVideo->GetVideoSize(&srcW, &srcH);
+		pBasicVideo->Release();
+		if (srcW > 0 && srcH > 0)
+		{
+			arW = srcW;
+			arH = srcH;
+		}
+	}
+
+	int dstX = nOfsX;
+	int dstY = nOfsY;
+	int dstW = nWidth;
+	int dstH = nHeight;
+	if (arW > 0 && arH > 0 && nWidth > 0 && nHeight > 0)
+	{
+		// Fit into the destination rect while keeping aspect ratio.
+		if ((long long)nWidth * arH > (long long)nHeight * arW)
+		{
+			// destination is wider -> pillarbox
+			dstH = nHeight;
+			dstW = (int)((long long)nHeight * arW / arH);
+			dstX = nOfsX + (nWidth - dstW) / 2;
+			dstY = nOfsY;
+		}
+		else
+		{
+			// destination is taller -> letterbox
+			dstW = nWidth;
+			dstH = (int)((long long)nWidth * arH / arW);
+			dstX = nOfsX;
+			dstY = nOfsY + (nHeight - dstH) / 2;
+		}
+	}
+
+	pWindow->SetWindowPosition(dstX, dstY, dstW, dstH);
 
 	// Set hWnd to get events.
 	pBuilder->QueryInterface(IID_IMediaEventEx, (void**)&pEvent);
