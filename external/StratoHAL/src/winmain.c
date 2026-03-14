@@ -983,6 +983,71 @@ WndProcVideo(
 	case WM_GRAPHNOTIFY:
 		ProcessGraphNotify();
 		break;
+	case WM_LBUTTONDOWN:
+		if (bRunning)
+		{
+			hal_callback_on_event_mouse_press(
+				HAL_MOUSE_LEFT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
+		return 0;
+	case WM_LBUTTONUP:
+		if (bRunning)
+		{
+			hal_callback_on_event_mouse_release(
+				HAL_MOUSE_LEFT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
+		return 0;
+	case WM_RBUTTONDOWN:
+		if (bRunning)
+		{
+			hal_callback_on_event_mouse_press(
+				HAL_MOUSE_RIGHT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
+		return 0;
+	case WM_RBUTTONUP:
+		if (bRunning)
+		{
+			hal_callback_on_event_mouse_release(
+				HAL_MOUSE_RIGHT,
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
+		return 0;
+	case WM_MOUSEMOVE:
+		if (bRunning)
+		{
+			hal_callback_on_event_mouse_move(
+				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
+				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
+		}
+		return 0;
+	case WM_MOUSEWHEEL:
+		if (bRunning)
+		{
+			if((int)(short)HIWORD(wParam) > 0)
+			{
+				hal_callback_on_event_key_press(HAL_KEY_UP);
+				hal_callback_on_event_key_release(HAL_KEY_UP);
+			}
+			else if((int)(short)HIWORD(wParam) < 0)
+			{
+				hal_callback_on_event_key_press(HAL_KEY_DOWN);
+				hal_callback_on_event_key_release(HAL_KEY_DOWN);
+			}
+		}
+		return 0;
+	case WM_KILLFOCUS:
+		if (bRunning)
+		{
+			hal_callback_on_event_key_release(HAL_KEY_CONTROL);
+		}
+		return 0;
 	default:
 		break;
 	}
