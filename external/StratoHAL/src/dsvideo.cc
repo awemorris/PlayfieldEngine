@@ -111,7 +111,7 @@ DShowPlayVideo(
 
 	// Specify an owner window.
 	pBuilder->QueryInterface(IID_IVideoWindow, (void **)&pWindow);
-	if(pBuilder == NULL)
+	if(pWindow == NULL)
 	{
 		hal_log_error("IGraphBuilder::QueryInterface() failed.");
 		return FALSE;
