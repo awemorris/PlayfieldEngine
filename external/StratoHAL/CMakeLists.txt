@@ -711,6 +711,7 @@ endif()
 
 # Windows compile options.
 if(   STRATO_TARGET_WINDOWS
+   OR STRATO_TARGET_WINDOWS95
    OR STRATO_TARGET_GDK_WINDOWS
    OR STRATO_TARGET_GDK_XBOX_XS)
   # -municode
@@ -728,6 +729,9 @@ if(STRATO_TARGET_WINDOWS95)
   # /utf-8
   if(MSVC)
     target_compile_options(strato PUBLIC /utf-8)
+  endif()
+  if(MINGW)
+    add_definitions(-UUNICODE -U_UNICODE)
   endif()
 endif()
 
@@ -775,6 +779,9 @@ if(   STRATO_TARGET_WINDOWS
     target_link_options(strato PUBLIC -mwindows)
     if(STRATO_TARGET_WINDOWS)
       target_link_options(strato PUBLIC -municode)
+    endif()
+    if(STRATO_TARGET_WINDOWS95)
+      add_definitions(-UUNICODE -U_UNICODE)
     endif()
   endif()
 
