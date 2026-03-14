@@ -48,6 +48,9 @@ static IMediaEventEx *pEvent;
 
 static BOOL bPlaying;
 
+// IID_IGraphBuilder {56A868A9-0AD4-11CE-B03A-0020AF0BA770}
+DEFINE_GUID(IID_IGraphBuilder, 0x56a868a9, 0x0ad4, 0x11ce, 0xb0, 0x3a, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+
 // MR_VIDEO_RENDER_SERVICE {01069976-9E4F-40c4-A826-3E00AD61DD33}
 DEFINE_GUID(MR_VIDEO_RENDER_SERVICE, 0x01069976, 0x9e4f, 0x40c4, 0xa8, 0x26, 0x3e, 0x00, 0xad, 0x61, 0xdd, 0x33);
 
@@ -243,7 +246,8 @@ DShowIsVideoPlaying(VOID)
 BOOL
 DShowProcessEvents(VOID)
 {
-	assert(pEvent != NULL);
+	if (pEvent == NULL)
+		return FALSE;
 
 	// Get a playback complete event. (Don't process other events.)
 	LONG code;

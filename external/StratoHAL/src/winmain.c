@@ -377,12 +377,17 @@ InitApp(
 	DInputInitialize(hInstance, hWndMain);
 
 	/* Init video. */
-//	if (MFVInit())
-//		bMFVEnabled = TRUE;
-//	else if (DShowInit())
-//		bDShowEnabled = TRUE;
-	if (DShowInit())
+#if defined(HAL_ARCH_X86_64) || defined(HAL_ARCH_ARM64)
+	/* On 64-bit environments, DirectShow does not work properly. So, we use Media Foundation if available. */
+	if (MFVInit())
+		bMFVEnabled = TRUE;
+#else
+	/* On 32-bit environments, we first try using Media Foundation, and if it fails, we try using DirectShow. */
+	if (MFVInit())
+		bMFVEnabled = TRUE;
+	else if (DShowInit())
 		bDShowEnabled = TRUE;
+#endif
 
 	return TRUE;
 }
@@ -443,6 +448,7 @@ InitWindow(
 	wcexRender.hCursor        = LoadCursor(NULL, MAKEINTRESOURCE((WORD)(intptr_t)IDC_ARROW));
 	wcexRender.hbrBackground  = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wcexRender.lpszClassName  = tszWindowClassRender;
+	wcexRender.hIconSm        = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON));
 	if (!RegisterClassEx(&wcexRender))
 		return FALSE;
 
@@ -455,6 +461,7 @@ InitWindow(
 	wcexVideo.hCursor       = LoadCursor(NULL, MAKEINTRESOURCE((WORD)(intptr_t)IDC_ARROW));
 	wcexVideo.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wcexVideo.lpszClassName = tszWindowClassVideo;
+	wcexVideo.hIconSm       = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON));
 	if (!RegisterClassEx(&wcexVideo))
 		return FALSE;
 
@@ -537,15 +544,14 @@ InitWindow(
 	UpdateWindow(hWndMain);
 
 	/* Create the render window. */
-	GetClientRect(hWndMain, &rc);
 	hWndRender = CreateWindowEx(0,
 								tszWindowClassRender,
-								"",
+                                _T(""),
 								WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 								0,
 								0,
-								nWinWidth,
-								nWinHeight,
+								nWindowWidth,
+								nWindowHeight,
 								hWndMain,
 								NULL,
 								hInstance,
@@ -559,15 +565,14 @@ InitWindow(
 	UpdateWindow(hWndRender);
 
 	/* Create a video window. */
-	GetClientRect(hWndMain, &rc);
 	hWndVideo = CreateWindowEx(0,
 							   tszWindowClassVideo,
-							   "",
+							   _T(""),
 							   WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 							   0,
 							   0,
-							   nWinWidth,
-							   nWinHeight,
+							   nWindowWidth,
+							   nWindowHeight,
 							   hWndMain,
 							   NULL,
 							   hInstance,
@@ -967,8 +972,6 @@ WndProcVideo(
 	WPARAM wParam,
 	LPARAM lParam)
 {
-	int kc;
-
 	switch(message)
 	{
 	case WM_DESTROY:
@@ -1638,8 +1641,15 @@ ProcessGraphNotify(VOID)
 {
 	if (bDShowEnabled)
 	{
-		if(!DShowProcessEvents())
+		if (!DShowProcessEvents())
+		{
 			bVideoMode = FALSE;
+
+			ShowWindow(hWndRender, SW_SHOW);
+			ShowWindow(hWndVideo, SW_HIDE);
+			UpdateWindow(hWndRender);
+			UpdateWindow(hWndVideo);
+		}
 	}
 }
 
