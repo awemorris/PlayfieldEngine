@@ -40,7 +40,14 @@
 #include <sys/types.h>
 #include <sys/audioio.h>
 #elif defined(__sun)
-#include <sys/audioio.h>
+#if defined(_STRUCTURED_PROC) || (defined(OSVERSION) && OSVERSION >= 11)
+#include <sys/param.h>
+#include <sys/soundcard.h> /* Solaris 11 (OSS) */
+#define USE_SUN_OSS
+#else
+#include <sys/param.h>
+#include <sys/audioio.h> /* Solaris 10 */
+#define USE_SUN_AUDIO
 #endif
 
 #include <stdio.h>
@@ -188,7 +195,23 @@ init_sound(void)
 		hal_log_error("ioctl() failed on " DEVICE);
 		return false;
 	}
-#elif defined(__sun)
+#elif defined(USE_SUN_OSS)
+	int format = AFMT_S16_LE; // 16bit Little Endian
+	int channels = 2;
+	int rate = SAMPLING_RATE;
+	if (ioctl(dsp_fd, SNDCTL_DSP_SETFMT, &format)) {
+		hal_log_error("ioctl() SNDCTL_DSP_SETFMT failed on " DEVICE);
+		return false;
+	}
+	if (ioctl(dsp_fd, SNDCTL_DSP_CHANNELS, &channels)) {
+		hal_log_error("ioctl() SNDCTL_DSP_CHANNELS failed on " DEVICE);
+		return false;
+	}
+	if (ioctl(dsp_fd, SNDCTL_DSP_SPEED, &rate)) {
+		hal_log_error("ioctl() SNDCTL_DSP_SPEED failed on " DEVICE);
+		return false;
+	}
+#elif defined(USE_SUN_AUDIO)
 	audio_info_t info;
 	AUDIO_INITINFO(&info);
 	info.play.sample_rate = SAMPLING_RATE;
