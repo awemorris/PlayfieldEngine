@@ -771,6 +771,7 @@
       "binaryDir":      "${sourceDir}/build-solaris11",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Debug",
+        "CMAKE_C_COMPILER":            "cc",
         "PLAYFIELD_TARGET_SOLARIS11":  "ON",
         "PLAYFIELD_ENABLE_PACK":       "ON"
       }
@@ -965,6 +966,10 @@
     {
       "name": "openbsd",
       "configurePreset": "openbsd"
+    },
+    {
+      "name": "solaris11",
+      "configurePreset": "solaris11"
     }
   ]
 }
