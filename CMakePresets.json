@@ -483,7 +483,7 @@
     },
     {
       "name":           "linux-fbdev",
-      "displayName":    "Linux fbdev Framebuffer OpenGL",
+	"displayName":    "Linux fbdev Framebuffer (softrender)",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-fbdev",
       "cacheVariables": {
@@ -770,7 +770,7 @@
       "generator":      "Unix Makefiles",
       "binaryDir":      "${sourceDir}/build-solaris11",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Debug",
+        "CMAKE_BUILD_TYPE":            "Release",
         "CMAKE_C_COMPILER":            "cc",
         "CMAKE_CXX_COMPILER":          "CC",
         "PLAYFIELD_TARGET_SOLARIS11":  "ON",
