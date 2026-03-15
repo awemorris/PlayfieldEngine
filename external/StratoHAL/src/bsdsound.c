@@ -49,6 +49,7 @@
 #include <sys/audioio.h> /* Solaris 10 */
 #define USE_SUN_AUDIO
 #endif
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
