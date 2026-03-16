@@ -129,10 +129,12 @@ jobs:
 
       - name: Build for x86_64
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake --preset linux
+          cmake --build --preset linux
+          #cmake -B build -DCMAKE_BUILD_TYPE=Release
+          #cmake --build build --config Release
           mkdir -p AppDir/usr/bin
-          cp build/playfield AppDir/usr/bin/
+          cp build-linux/playfield AppDir/usr/bin/
           cp resources/linux/AppRun AppDir/
           cp playfield.desktop AppDir/
           cp resources/icon.png AppDir/playfield.png

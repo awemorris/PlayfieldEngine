@@ -403,29 +403,33 @@
       }
     },
     {
-      "name":           "linux-x11",
+      "name":           "linux",
       "displayName":    "Linux X11 OpenGL",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-linux-x11",
+      "binaryDir":      "${sourceDir}/build-linux",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "PLAYFIELD_TARGET_LINUX":      "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
       }
     },
     {
-      "name":           "linux-x11-debug",
-      "displayName":    "Linux X11 OpenGL",
+      "name":           "linux-debug",
+      "displayName":    "Linux X11 OpenGL Debug",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-linux-x11-debug",
+      "binaryDir":      "${sourceDir}/build-linux-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Debug",
         "PLAYFIELD_TARGET_LINUX":      "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
       }
     },
     {
@@ -438,7 +442,9 @@
         "PLAYFIELD_TARGET_LINUX_WAYLAND": "ON",
         "PLAYFIELD_ENABLE_JIT":           "ON",
         "PLAYFIELD_ENABLE_I18N":          "ON",
-        "PLAYFIELD_ENABLE_PACK":          "ON"
+        "PLAYFIELD_ENABLE_PACK":          "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
       }
     },
     {
@@ -451,12 +457,14 @@
         "PLAYFIELD_TARGET_LINUX_WAYLAND": "ON",
         "PLAYFIELD_ENABLE_JIT":           "ON",
         "PLAYFIELD_ENABLE_I18N":          "ON",
-        "PLAYFIELD_ENABLE_PACK":          "ON"
+        "PLAYFIELD_ENABLE_PACK":          "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
       }
     },
     {
       "name":           "linux-gbm",
-      "displayName":    "Linux GBM Framebuffer OpenGL",
+      "displayName":    "Linux GBM OpenGL ES",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-gbm",
       "cacheVariables": {
@@ -464,12 +472,14 @@
         "PLAYFIELD_TARGET_LINUX_GBM":  "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
       }
     },
     {
       "name":           "linux-gbm-rot90",
-      "displayName":    "Linux GBM Framebuffer OpenGL Rotate",
+      "displayName":    "Linux GBM OpenGL ES Rotate",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-gbm-rot90",
       "cacheVariables": {
@@ -478,12 +488,13 @@
         "PLAYFIELD_ENABLE_JIT":        "ON",
         "PLAYFIELD_ENABLE_I18N":       "ON",
         "PLAYFIELD_ENABLE_PACK":       "ON",
-        "PLAYFIELD_ENABLE_ROT90":      "ON"
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
       }
     },
     {
       "name":           "linux-fbdev",
-	"displayName":    "Linux fbdev Framebuffer (softrender)",
+      "displayName":    "Linux fbdev Soft3D",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-linux-fbdev",
       "cacheVariables": {
@@ -491,31 +502,24 @@
         "PLAYFIELD_TARGET_LINUX_FBDEV": "ON",
         "PLAYFIELD_ENABLE_JIT":         "ON",
         "PLAYFIELD_ENABLE_I18N":        "ON",
-        "PLAYFIELD_ENABLE_PACK":        "ON"
+        "PLAYFIELD_ENABLE_PACK":        "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
       }
     },
     {
-      "name":           "linux-x11-soft",
-      "displayName":    "Linux X11 Software Rendering",
+      "name":           "linux-x11soft",
+      "displayName":    "Linux X11 Soft3D",
       "generator":      "Ninja",
-      "binaryDir":      "${sourceDir}/build-linux-x11-soft",
+      "binaryDir":      "${sourceDir}/build-linux-x11soft",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":               "Release",
         "PLAYFIELD_TARGET_LINUX_X11SOFT": "ON",
         "PLAYFIELD_ENABLE_JIT":           "ON",
         "PLAYFIELD_ENABLE_I18N":          "ON",
-        "PLAYFIELD_ENABLE_PACK":          "ON"
-      }
-    },
-    {
-      "name":           "ios",
-      "displayName":    "iOS",
-      "generator":      "Xcode",
-      "binaryDir":      "${sourceDir}/build-ios",
-      "toolchainFile":  "${sourceDir}/cmake/toolchains/ios.cmake",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE":            "Debug",
-        "PLAYFIELD_TARGET_IOS":        "ON"
+        "PLAYFIELD_ENABLE_PACK":          "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
       }
     },
     {
@@ -731,14 +735,44 @@
     },
     {
       "name":           "freebsd",
-      "displayName":    "FreeBSD",
+      "displayName":    "FreeBSD X11 OpenGL",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-freebsd",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "PLAYFIELD_TARGET_FREEBSD":    "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+      }
+    },
+    {
+      "name":           "freebsd-wayland",
+      "displayName":    "FreeBSD Wayland",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-freebsd",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":                  "Release",
+        "PLAYFIELD_TARGET_FREEBSD_WALYLAND": "ON",
+        "PLAYFIELD_ENABLE_JIT":              "ON",
+        "PLAYFIELD_ENABLE_PACK":             "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":         "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":          "ON"
+      }
+    },
+    {
+      "name":           "freebsd-x11soft",
+      "displayName":    "FreeBSD X11 Soft3D",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-freebsd-x11soft",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":                  "Release",
+        "PLAYFIELD_TARGET_FREEBSD_X11SOFT":  "ON",
+        "PLAYFIELD_ENABLE_JIT":              "ON",
+        "PLAYFIELD_ENABLE_PACK":             "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":         "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":          "ON"
       }
     },
     {
@@ -750,18 +784,49 @@
         "CMAKE_BUILD_TYPE":            "Release",
         "PLAYFIELD_TARGET_NETBSD":     "ON",
         "PLAYFIELD_ENABLE_JIT":        "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+      }
+    },
+    {
+      "name":           "netbsd-x11soft",
+      "displayName":    "NetBSD",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-netbsd-x11soft",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":                 "Release",
+        "PLAYFIELD_TARGET_NETBSD_X11SOFT":  "ON",
+        "PLAYFIELD_ENABLE_JIT":             "ON",
+        "PLAYFIELD_ENABLE_PACK":            "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":        "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":         "ON"
       }
     },
     {
       "name":           "openbsd",
-      "displayName":    "OpenBSD",
+      "displayName":    "OpenBSD X11 OpenGL",
       "generator":      "Ninja",
       "binaryDir":      "${sourceDir}/build-openbsd",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE":            "Release",
         "PLAYFIELD_TARGET_OPENBSD":    "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+      }
+    },
+    {
+      "name":           "openbsd-x11soft",
+      "displayName":    "OpenBSD X11 Soft3D",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-openbsd-x11soft",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":                 "Release",
+        "PLAYFIELD_TARGET_OPENBSD_X11SOFT": "ON",
+        "PLAYFIELD_ENABLE_PACK":            "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":        "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":         "ON"
       }
     },
     {
@@ -774,7 +839,9 @@
         "CMAKE_C_COMPILER":            "cc",
         "CMAKE_CXX_COMPILER":          "CC",
         "PLAYFIELD_TARGET_SOLARIS11":  "ON",
-        "PLAYFIELD_ENABLE_PACK":       "ON"
+        "PLAYFIELD_ENABLE_PACK":       "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
       }
     },
     {
@@ -787,7 +854,9 @@
         "CMAKE_C_COMPILER":             "xlc",
         "CMAKE_CXX_COMPILER":           "xlc++",
         "PLAYFIELD_TARGET_GENERICUNIX": "ON",
-        "PLAYFIELD_ENABLE_PACK":        "ON"
+        "PLAYFIELD_ENABLE_PACK":        "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
       }
     },
     {
@@ -800,7 +869,9 @@
         "CMAKE_C_COMPILER":             "cc",
         "CMAKE_CXX_COMPILER":           "aCC",
         "PLAYFIELD_TARGET_GENERICUNIX": "ON",
-        "PLAYFIELD_ENABLE_PACK":        "ON"
+        "PLAYFIELD_ENABLE_PACK":        "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
       }
     },
     {
@@ -813,7 +884,22 @@
         "CMAKE_C_COMPILER":             "cc",
         "CMAKE_CXX_COMPILER":           "c++",
         "PLAYFIELD_TARGET_GENERICUNIX": "ON",
-        "PLAYFIELD_ENABLE_PACK":        "ON"
+        "PLAYFIELD_ENABLE_PACK":        "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+      }
+    },
+    {
+      "name":           "haiku",
+      "displayName":    "Haiku",
+      "generator":      "Ninja",
+      "binaryDir":      "${sourceDir}/build-haiku",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":             "Release",
+        "PLAYFIELD_TARGET_HAIKU":       "ON",
+        "PLAYFIELD_ENABLE_PACK":        "ON",
+        "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+        "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
       }
     }
   ],
@@ -916,24 +1002,32 @@
       "configurePreset": "macos-cli-debug"
     },
     {
-      "name": "linux-x11",
-      "configurePreset": "linux-x11"
+      "name": "linux",
+      "configurePreset": "linux"
+    },
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug"
     },
     {
       "name": "linux-wayland",
       "configurePreset": "linux-wayland"
     },
     {
+      "name": "linux-wayland-debug",
+      "configurePreset": "linux-wayland-debug"
+    },
+    {
       "name": "linux-gbm",
       "configurePreset": "linux-gbm"
     },
     {
-      "name": "linux-x11-soft",
-      "configurePreset": "linux-x11-soft"
-    },
-    {
       "name": "linux-gbm-rot90",
       "configurePreset": "linux-gbm-rot90"
+    },
+    {
+      "name": "linux-x11soft",
+      "configurePreset": "linux-x11soft"
     },
     {
       "name": "ios-device",
@@ -1000,16 +1094,48 @@
       "configurePreset": "freebsd"
     },
     {
+      "name": "freebsd-wayland",
+      "configurePreset": "freebsd-wayland"
+    },
+    {
+      "name": "freebsd-x11soft",
+      "configurePreset": "freebsd-x11soft"
+    },
+    {
       "name": "netbsd",
       "configurePreset": "netbsd"
+    },
+    {
+      "name": "netbsd-x11soft",
+      "configurePreset": "netbsd-x11soft"
     },
     {
       "name": "openbsd",
       "configurePreset": "openbsd"
     },
     {
+      "name": "openbsd-x11soft",
+      "configurePreset": "openbsd-x11soft"
+    },
+    {
       "name": "solaris11",
       "configurePreset": "solaris11"
+    },
+    {
+      "name": "aix",
+      "configurePreset": "aix"
+    },
+    {
+      "name": "hpux",
+      "configurePreset": "hpux"
+    },
+    {
+      "name": "unix",
+      "configurePreset": "unix"
+    },
+    {
+      "name": "haiku",
+      "configurePreset": "haiku"
     }
   ]
 }
