@@ -557,6 +557,7 @@ jobs:
 
       - name: Copy for macOS app.
         run: |
+          ls -lha macos/
           cp macos/Playfield.dmg dist/misc/macos/
           cp macos/playfield-pack dist/misc/macos/
 
