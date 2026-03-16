@@ -223,6 +223,11 @@ jobs:
           cp -Rv Playfield.app tmp/Playfield.app
           hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname Playfield Playfield.dmg
           codesign --sign "Developer ID Application" Playfield.dmg
+        run-lib:
+          cmake --preset macos-lib
+          cmake --build --preset macos-lib
+          xcodebuild -create-xcframework -library build-macos-lib/libplayfield.a -headers include -output Playfield.xcframework
+          tar czf Playfield.xcframework.tar.gz Playfield.xcframework
 
       - name: Upload macOS
         uses: actions/upload-artifact@v4
@@ -231,6 +236,7 @@ jobs:
           path: |
             build-macos/Playfield.dmg
             build-macos/playfield-pack
+            build-macos-lib/Playfield.xcframework.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -510,6 +516,7 @@ jobs:
           mkdir dist/misc
           mkdir dist/misc/windows
           mkdir dist/misc/macos
+          mkdir dist/misc/macos/project
           mkdir dist/misc/linux
           mkdir dist/misc/wasm
           mkdir dist/misc/ios
@@ -548,10 +555,25 @@ jobs:
           name: macos
           path: macos
 
-      - name: Copy for macOS.
+      - name: Copy for macOS app.
         run: |
           cp macos/Playfield.dmg dist/misc/macos/
           cp macos/playfield-pack dist/misc/macos/
+
+      - name: Copy for macOS project.
+        run: |
+          mkdir dist/misc/macos/project/Resources/
+          cp resources/assets.arc dist/misc/macos/project/Resources/
+          mkdir dist/misc/macos/project/Resources/video
+          mkdir dist/misc/macos/project/Game.xcodeproj
+          cp resources/projects/macos/Game.xcodeproj/project.pbxproj dist/misc/macos/project/Game.xcodeproj/
+          mkdir dist/misc/macos/project/Game
+          tar xfz macos/Playfield.xcframework.tar.gz -C dist/misc/macos/project/Game/
+          cp -R resources/projects/macos/Game/Assets.xcassets dist/misc/macos/project/Game/
+          cp resources/projects/macos/Game/main.m dist/misc/macos/project/Game/
+          cp resources/projects/macos/Game/Info.plist dist/misc/macos/project/Game/
+          cp resources/projects/macos/Game/macos.entitlements dist/misc/macos/project/Game/
+          cp resources/projects/macos/Game/LaunchScreen.storyboard dist/misc/macos/project/Game/
 
       - name: Download Linux artifacts
         uses: actions/download-artifact@v4
