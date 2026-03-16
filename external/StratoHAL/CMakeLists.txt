@@ -272,9 +272,7 @@ endif()
 if(   STRATO_TARGET_LINUX
    OR STRATO_TARGET_FREEBSD
    OR STRATO_TARGET_NETBSD
-   OR STRATO_TARGET_OPENBSD
-   OR STRATO_TARGET_SOLARIS11
-)
+   OR STRATO_TARGET_OPENBSD)
   set(STRATO_SOURCES
       src/image.c
       src/glyph.c
@@ -342,6 +340,7 @@ if(   STRATO_TARGET_LINUX_X11SOFT
       src/wave.c
       src/stdfile.c
       src/asound.c
+      src/bsdsound.c
       src/evgamepad.c
       src/x11softmain.c
       src/icon.c

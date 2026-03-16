@@ -28,7 +28,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__SunOS)
 
 #include "stratohal/platform.h"
 
@@ -39,16 +39,12 @@
 #elif defined(__OpenBSD__)
 #include <sys/types.h>
 #include <sys/audioio.h>
-#elif defined(__sun)
-#if defined(_STRUCTURED_PROC) || (defined(OSVERSION) && OSVERSION >= 11)
-#include <sys/param.h>
-#include <sys/soundcard.h> /* Solaris 11 (OSS) */
+#elif defined(__SunOS_5_11)
+#include <sys/soundcard.h>   /* Solaris 11 (OSS) */
 #define USE_SUN_OSS
 #else
-#include <sys/param.h>
-#include <sys/audioio.h> /* Solaris 10 */
+#include <sys/audioio.h>     /* Solaris 10 */
 #define USE_SUN_AUDIO
-#endif
 #endif
 
 #include <stdio.h>
@@ -72,8 +68,8 @@
 #define DEVICE		"/dev/audio0"
 #elif defined(__OpenBSD__)
 #define DEVICE		"/dev/audio0"
-#elif defined(__sun)
-#define DEVICE		"/dev/audio"
+#elif defined(__SunOS_5_11)
+#define DEVICE		"/dev/dsp"
 #endif
 
 /*
