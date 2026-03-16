@@ -79,7 +79,7 @@ static void showLogAtExit(void);
 // main
 //
 
-#if defined(USE_MAIN2)
+#if defined(HAL_USE_MAIN2)
 #define main main2
 #endif
 

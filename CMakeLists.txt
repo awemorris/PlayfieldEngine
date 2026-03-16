@@ -42,6 +42,7 @@ option(PLAYFIELD_ENABLE_I18N             "Enable translation"                   
 option(PLAYFIELD_ENABLE_PACK             "Enable packager"                            OFF)
 option(PLAYFIELD_ENABLE_BYTECOMP         "Enable bytecode compiler"                   OFF)
 option(PLAYFIELD_ENABLE_AOTCOMP          "Enable AOT compiler"                        OFF)
+option(PLAYFIELD_ENABLE_EDITOR           "Enable simple editor for Windows"           OFF)
 option(PLAYFIELD_ENABLE_ROT90            "Rotate screen for GBM"                      OFF)
 option(PLAYFIELD_ENABLE_GST              "Enable Gstreamer support"                   OFF)
 
