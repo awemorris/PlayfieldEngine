@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D21EC6F62F68989200F95F0A /* assets.arc in Resources */ = {isa = PBXBuildFile; fileRef = D21EC6F42F68989200F95F0A /* assets.arc */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		D21EC6F42F68989200F95F0A /* assets.arc */ = {isa = PBXFileReference; lastKnownFileType = file; path = assets.arc; sourceTree = "<group>"; };
 		D298F9992F686F2F0031E055 /* Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Game.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -29,10 +34,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D21EC6F32F68989200F95F0A /* video */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = video;
+			sourceTree = "<group>";
+		};
+		D21EC6F52F68989200F95F0A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D21EC6F32F68989200F95F0A /* video */,
+				D21EC6F42F68989200F95F0A /* assets.arc */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D298F9902F686F2F0031E055 = {
 			isa = PBXGroup;
 			children = (
 				D298F99B2F686F2F0031E055 /* Game */,
+				D21EC6F52F68989200F95F0A /* Resources */,
 				D298F99A2F686F2F0031E055 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D21EC6F62F68989200F95F0A /* assets.arc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

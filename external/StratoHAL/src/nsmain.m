@@ -92,7 +92,7 @@ int main(int argc, const char *argv[]) {
 
     // Run.
     [NSApplication sharedApplication];
-    [NSApp setDelegate:[[AppDelegate alloc] init]];
+    [NSApp setDelegate:[[NSClassFromString(@"AppDelegate") alloc] init]];
     [NSApp run];
 
     showLogAtExit();
