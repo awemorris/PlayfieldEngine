@@ -378,7 +378,7 @@
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
                 "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
-                "PLAYFIELD_ENABLE_EDITOR":     "ON"
+                "PLAYFIELD_ENABLE_EDITOR":     "OFF"
             }
         },
         {
