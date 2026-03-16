@@ -12,14 +12,15 @@
             "toolset":        "v143",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":  "Release",
+                "CMAKE_BUILD_TYPE":           "Release",
+                "PLAYFIELD_ENABLE_JIT":       "ON",
+                "PLAYFIELD_ENABLE_I18N":      "ON",
+                "PLAYFIELD_ENABLE_PACK":      "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER": "ON",
+                "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
             "condition": {
                 "type": "equals",
@@ -35,14 +36,15 @@
             "toolset":        "v143",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":  "Release",
+                "CMAKE_BUILD_TYPE":           "Release",
+                "PLAYFIELD_ENABLE_JIT":       "ON",
+                "PLAYFIELD_ENABLE_I18N":      "ON",
+                "PLAYFIELD_ENABLE_PACK":      "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER": "ON",
+                "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
             "condition": {
                 "type": "equals",
@@ -58,14 +60,15 @@
             "toolset":        "v143",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":  "Release",
+                "CMAKE_BUILD_TYPE":           "Release",
+                "PLAYFIELD_ENABLE_JIT":       "ON",
+                "PLAYFIELD_ENABLE_I18N":      "ON",
+                "PLAYFIELD_ENABLE_PACK":      "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER": "ON",
+                "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
             "condition": {
                 "type": "equals",
@@ -154,14 +157,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Release",
+                "CMAKE_BUILD_TYPE":             "Release",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -177,14 +181,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "CMAKE_BUILD_TYPE":          "Debug",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Debug",
+                "CMAKE_BUILD_TYPE":             "Debug",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -200,14 +205,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Release",
+                "CMAKE_BUILD_TYPE":             "Release",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -223,14 +229,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "CMAKE_BUILD_TYPE":          "Debug",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Debug",
+                "CMAKE_BUILD_TYPE":             "Debug",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -246,14 +253,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Release",
-                "CMAKE_BUILD_TYPE":          "Release",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Release",
+                "CMAKE_BUILD_TYPE":             "Release",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -269,14 +277,15 @@
             "toolset":        "v145",
             "binaryDir":      "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "CMAKE_BUILD_TYPE":          "Debug",
-                "PLAYFIELD_ENABLE_JIT":      "ON",
-                "PLAYFIELD_ENABLE_I18N":     "ON",
-                "PLAYFIELD_ENABLE_PACK":     "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP": "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":  "ON",
-                "PLAYFIELD_ENABLE_EDITOR":   "ON"
+                "CMAKE_CONFIGURATION_TYPES":    "Debug",
+                "CMAKE_BUILD_TYPE":             "Debug",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
+                "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
             "condition": {
                 "type": "equals",
@@ -344,6 +353,7 @@
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
                 "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
         },
@@ -361,6 +371,7 @@
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
                 "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
         },
@@ -378,6 +389,7 @@
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
                 "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":  "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":     "OFF"
             }
         },
@@ -395,6 +407,7 @@
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
                 "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
         },
