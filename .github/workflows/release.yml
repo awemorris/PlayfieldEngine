@@ -223,7 +223,6 @@ jobs:
           cp -Rv Playfield.app tmp/Playfield.app
           hdiutil create -fs HFS+ -format UDBZ -srcfolder tmp -volname Playfield Playfield.dmg
           codesign --sign "Developer ID Application" Playfield.dmg
-        run-lib:
           cmake --preset macos-lib
           cmake --build --preset macos-lib
           xcodebuild -create-xcframework -library build-macos-lib/libplayfield.a -headers include -output Playfield.xcframework
