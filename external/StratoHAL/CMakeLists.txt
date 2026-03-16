@@ -629,7 +629,7 @@ endif()
 
 # macOS library
 if(STRATO_TARGET_MACOS)
-  if(STRATO_ENABLE_STATIC OR STRATO_ENABLE_STATIC)
+  if(STRATO_ENABLE_OBJECT)
     target_compile_definitions(strato PUBLIC HAL_USE_MAIN2)
   endif()
 endif()

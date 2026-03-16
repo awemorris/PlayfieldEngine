@@ -445,7 +445,8 @@
                 "PLAYFIELD_ENABLE_JIT":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BUNDLE":     "OFF"
+                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
+                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
             }
         },
         {
