@@ -558,8 +558,8 @@ jobs:
       - name: Copy for macOS app.
         run: |
           ls -lha macos/
-          cp macos/Playfield.dmg dist/misc/macos/
-          cp macos/playfield-pack dist/misc/macos/
+          cp macos/build-macos/Playfield.dmg dist/misc/macos/
+          cp macos/build-macos/playfield-pack dist/misc/macos/
 
       - name: Copy for macOS project.
         run: |
@@ -569,7 +569,7 @@ jobs:
           mkdir dist/misc/macos/project/Game.xcodeproj
           cp resources/projects/macos/Game.xcodeproj/project.pbxproj dist/misc/macos/project/Game.xcodeproj/
           mkdir dist/misc/macos/project/Game
-          tar xfz macos/Playfield.xcframework.tar.gz -C dist/misc/macos/project/Game/
+          tar xfz macos/build-macos-lib/Playfield.xcframework.tar.gz -C dist/misc/macos/project/Game/
           cp -R resources/projects/macos/Game/Assets.xcassets dist/misc/macos/project/Game/
           cp resources/projects/macos/Game/main.m dist/misc/macos/project/Game/
           cp resources/projects/macos/Game/Info.plist dist/misc/macos/project/Game/
