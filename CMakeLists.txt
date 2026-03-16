@@ -93,6 +93,7 @@ else()
     set(PLAYFIELD_ENABLE_JIT                      ON)
     set(PLAYFIELD_ENABLE_I18N                     ON)
     set(PLAYFIELD_ENABLE_PACK                     ON)
+    set(PLAYFIELD_ENABLE_WEBSERVER                ON)
 
   elseif(APPLE AND NOT IOS)
     set(PLAYFIELD_TARGET_MACOS_CLI                ON)

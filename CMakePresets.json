@@ -384,7 +384,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":            "Release",
                 "PLAYFIELD_TARGET_WINDOWS95":  "ON",
-                "PLAYFIELD_ENABLE_JIT":        "ON",
+                "PLAYFIELD_ENABLE_JIT":        "OFF",
                 "PLAYFIELD_ENABLE_I18N":       "OFF",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
