@@ -198,20 +198,14 @@ endif()
 set(NOCTLANG_DISABLE_INSTALL ON)
 
 # Magic:
-#  For iOS/Android/OpenHarmony/Unity,
 #  merge object files that consists in libnoctlang.a into libplayfield.a.
-if(   PLAYFIELD_TARGET_IOS
-   OR PLAYFIELD_TARGET_ANDROID
-   OR PLAYFIELD_TARGET_OPENHARMONY
-   OR PLAYFIELD_TARGET_UNITY
-)
+if(PLAYFIELD_ENABLE_STATIC OR PLAYFIELD_ENABLE_SHARED)
   # For library generation.
   set(NOCTLANG_ENABLE_OBJECT ON)
 else()
   if(PLAYFIELD_ENABLE_DIST)
     # For dynamically linked binaries.
-    #set(NOCTLANG_ENABLE_SHARED ON)    # This will be enabled after NoctLang is packaged by OS.
-    set(NOCTLANG_ENABLE_STATIC ON)
+    set(NOCTLANG_ENABLE_STATIC ON)  # This will be changed to SHARED after NoctLang is packaged by OS.
   else()
     # For statically linked binaries.
     set(NOCTLANG_ENABLE_STATIC ON)
