@@ -279,7 +279,6 @@ elseif(PLAYFIELD_TARGET_UWP)
   set(STRATO_TARGET_UWP ON)
 endif()
 
-# Unity
 if(PLAYFIELD_TARGET_UNITY_SWITCH)
   set(STRATO_TARGET_UNITY_SWITCH)
 elseif(PLAYFIELD_TARGET_UNITY_PS5)
@@ -288,22 +287,20 @@ elseif(PLAYFIELD_TARGET_UNITY_XBOX)
   set(STRATO_TARGET_UNITY_XBOX)
 endif()
 
-# Merge subproject objects into libplayfield.
-if(   PLAYFIELD_TARGET_IOS
-   OR PLAYFIELD_TARGET_ANDROID
-   OR PLAYFIELD_TARGET_OPENHARMONY
-   OR PLAYFIELD_TARGET_UNITY
-)
-  # Generate object libraryies.
+# Linking
+if(PLAYFIELD_ENABLE_STATIC)
+  # If we make a library, subproject must be objects.
+  set(STRATO_ENABLE_OBJECT ON)
+elseif(PLAYFIELD_ENABLE_SHARED)
+  # If we make a library, subproject must be objects.
   set(STRATO_ENABLE_OBJECT ON)
 else()
+  # We make an executable. Make StratoHAL a static library.
+  set(STRATO_ENABLE_STATIC ON)
+
+  # If we use dynamic link for dependencies.
   if(PLAYFIELD_ENABLE_DIST)
-    # For dynamically linked binaries.
-    #set(STRATO_ENABLE_SHARED ON)   # This will be enabled after StratoHAL is packaged by OS.
-    set(STRATO_ENABLE_STATIC ON)
-  else()
-    # For statically linked binaries.
-    set(STRATO_ENABLE_STATIC ON)
+    set(STRATO_ENABLE_DIST ON)
   endif()
 endif()
 
@@ -447,7 +444,7 @@ if(   PLAYFIELD_TARGET_IOS
     set(PLAYFIELD_LIB_TYPE STATIC)
   endif()
 
-  if(PLAYFIELD_ENABLE_DIST)
+  if(NOT PLAYFIELD_ENABLE_DIST)
     set(
       PLAYFIELD_DEPS
       $<TARGET_OBJECTS:png>
