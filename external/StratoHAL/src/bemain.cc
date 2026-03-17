@@ -73,11 +73,15 @@ extern "C" void fill_buffer(void *cookie, void *buffer, size_t size, const media
 
 class NoctView : public BView
 {
-	public:
+private:
+	int last_buttons;
+
+public:
 	NoctView(BRect frame) :
 		BView(frame, "noctview", B_FOLLOW_ALL, B_WILL_DRAW)
 	{
 		SetViewColor(255, 255, 255);
+		last_button = 0;
 	}
 
 	void Draw(BRect updateRect) override
