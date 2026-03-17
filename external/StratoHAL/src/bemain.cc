@@ -191,7 +191,7 @@ public:
 		NoctWindow *window = new NoctWindow(window_title, window_width, window_height);
 		window->Show();
 
-#if 0
+#if 1
 		media_raw_audio_format format = {
 			44100.0, 2, media_raw_audio_format::B_AUDIO_SHORT, B_MEDIA_LITTLE_ENDIAN, 4
 		};
