@@ -1030,6 +1030,11 @@ if(   STRATO_TARGET_GDK_WINDOWS
   endif()
 endif()
 
+# Haiku
+if(STRATO_TARGET_HAIKU)
+  target_link_libraries(strato PUBLIC be media)
+endif()
+
 # UWP
 if(STRATO_TARGET_UWP)
   target_link_libraries(strato PUBLIC windowsapp d3d12 dxgi dxguid xaudio2 gameinput)
