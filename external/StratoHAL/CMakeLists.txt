@@ -416,7 +416,7 @@ if(STRATO_TARGET_LINUX_GBM)
     )
 endif()
 
-# fbdev
+# Fbdev
 if(STRATO_TARGET_LINUX_FBDEV)
   set(STRATO_SOURCES
       src/image.c
@@ -518,6 +518,16 @@ if(   STRATO_TARGET_GDK_WINDOWS
     src/d3d12render.cc
     src/gigamepad.cpp
     src/xa2sound.cpp
+  )
+endif()
+
+# Haiku
+if(STRATO_TARGET_HAIKU)
+  set(STRATO_SOURCES
+    src/image.c
+    src/glyph.c
+    src/wave.c
+    src/bemain.cpp
   )
 endif()
 
