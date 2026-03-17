@@ -527,6 +527,7 @@ if(STRATO_TARGET_HAIKU)
     src/image.c
     src/glyph.c
     src/wave.c
+    src/stdfile.c
     src/bemain.cc
   )
 endif()
