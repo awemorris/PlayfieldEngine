@@ -36,8 +36,8 @@ option(PLAYFIELD_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"    
 
 # Options
 option(PLAYFIELD_ENABLE_STATIC           "Build a static library"                     OFF)
-option(PLAYFIELD_ENABLE_OBJECT           "Build a static library"                     OFF)
 option(PLAYFIELD_ENABLE_SHARED           "Build a dynamic library"                    OFF)
+option(PLAYFIELD_ENABLE_OBJECT           "Build an object library"                    OFF)
 option(PLAYFIELD_ENABLE_DIST             "Link shared libraries"                      OFF)
 option(PLAYFIELD_ENABLE_JIT              "Enable JIT"                                 OFF)
 option(PLAYFIELD_ENABLE_I18N             "Enable translation"                         OFF)
