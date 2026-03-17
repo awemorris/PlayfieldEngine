@@ -82,7 +82,7 @@ class NoctView : public BView
 
 	void Draw(BRect updateRect) override
 	{
-		clear_image(image, 0);
+		hallclear_image(image, 0);
 
 		hal_callback_on_event_frame();
 
@@ -110,7 +110,7 @@ class NoctView : public BView
 
 	void MouseUp(BPoint where) override
 	{
-		on_event_mouse_move((int)where.x, (int)where.y);
+		hal_on_callback_event_mouse_move((int)where.x, (int)where.y);
 
 		uint32 buttons = 0;
 		if (Window()->CurrentMessage() &&
@@ -154,7 +154,7 @@ public:
 			0)
 	{
 		bitmap = new BBitmap(BRect(0, 0, width - 1, height - 1), B_RGBA32);
-		create_image_with_pixels(width, height, (pixel_t*)bitmap->Bits(), &image);
+		hal_create_image_with_pixels(width, height, (pixel_t*)bitmap->Bits(), &image);
 
 		NoctView* view = new NoctView(Bounds());
 		AddChild(view);
@@ -400,7 +400,7 @@ hal_render_image_3d_normal(
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
-	hal_draw_image_3d_alpha(back_image,
+	hal_draw_image_3d_alpha(image,
 				(float)x1,
 				(float)y1,
 				(float)x2,
@@ -434,7 +434,7 @@ hal_render_image_3d_add(
 	int src_height,			/* The height of the source rectangle */
 	int alpha)			/* The alpha value (0 to 255) */
 {
-	hal_draw_image_3d_add(back_image,
+	hal_draw_image_3d_add(image,
 			      (float)x1,
 			      (float)y1,
 			      (float)x2,
