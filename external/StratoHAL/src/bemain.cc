@@ -251,7 +251,7 @@ hal_render_image_normal(
 
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
-		hal_draw_image_3d_alpha(back_image,
+		hal_draw_image_3d_alpha(image,
 					dst_left,
 					dst_top,
 					dst_left + dst_width,
@@ -267,7 +267,7 @@ hal_render_image_normal(
 					src_height,
 					alpha);
 	} else {
-		hal_draw_image_alpha(back_image,
+		hal_draw_image_alpha(image,
 				     dst_left,
 				     dst_top,
 				     src_image,
@@ -303,7 +303,7 @@ hal_render_image_add(
 
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
-		hal_draw_image_3d_add(back_image,
+		hal_draw_image_3d_add(image,
 				      dst_left,
 				      dst_top,
 				      dst_left + dst_width,
@@ -319,7 +319,7 @@ hal_render_image_add(
 				      src_height,
 				      alpha);
 	} else {
-		hal_draw_image_add(back_image,
+		hal_draw_image_add(image,
 				   dst_left,
 				   dst_top,
 				   src_image,
@@ -355,7 +355,7 @@ hal_render_image_sub(
 
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
-		hal_draw_image_3d_sub(back_image,
+		hal_draw_image_3d_sub(image,
 				      dst_left,
 				      dst_top,
 				      dst_left + dst_width,
@@ -371,7 +371,7 @@ hal_render_image_sub(
 				      src_height,
 				      alpha);
 	} else {
-		hal_draw_image_sub(back_image,
+		hal_draw_image_sub(image,
 				   dst_left,
 				   dst_top,
 				   src_image,
@@ -407,7 +407,7 @@ hal_render_image_dim(
 
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
-		hal_draw_image_3d_dim(back_image,
+		hal_draw_image_3d_dim(image,
 				      dst_left,
 				      dst_top,
 				      dst_left + dst_width,
@@ -423,7 +423,7 @@ hal_render_image_dim(
 				      src_height,
 				      alpha);
 	} else {
-		hal_draw_image_dim(back_image,
+		hal_draw_image_dim(image,
 				   dst_left,
 				   dst_top,
 				   src_image,
