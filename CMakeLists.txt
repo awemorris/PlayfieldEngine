@@ -36,6 +36,7 @@ option(PLAYFIELD_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"    
 
 # Options
 option(PLAYFIELD_ENABLE_STATIC           "Build a static library"                     OFF)
+option(PLAYFIELD_ENABLE_OBJECT           "Build a static library"                     OFF)
 option(PLAYFIELD_ENABLE_SHARED           "Build a dynamic library"                    OFF)
 option(PLAYFIELD_ENABLE_DIST             "Link shared libraries"                      OFF)
 option(PLAYFIELD_ENABLE_JIT              "Enable JIT"                                 OFF)
@@ -200,7 +201,9 @@ set(NOCTLANG_DISABLE_INSTALL ON)
 
 # Magic:
 #  merge object files that consists in libnoctlang.a into libplayfield.a.
-if(PLAYFIELD_ENABLE_STATIC OR PLAYFIELD_ENABLE_SHARED)
+if(   PLAYFIELD_ENABLE_STATIC
+   OR PLAYFIELD_ENABLE_SHARED
+   OR PLAYFIELD_ENABLE_OBJECT)
   # For library generation.
   set(NOCTLANG_ENABLE_OBJECT ON)
 else()
@@ -289,14 +292,13 @@ elseif(PLAYFIELD_TARGET_UNITY_XBOX)
 endif()
 
 # Linking
-if(PLAYFIELD_ENABLE_STATIC)
-  # If we make a library, subproject must be objects.
-  set(STRATO_ENABLE_OBJECT ON)
-elseif(PLAYFIELD_ENABLE_SHARED)
-  # If we make a library, subproject must be objects.
+if(   PLAYFIELD_ENABLE_STATIC
+   OR PLAYFIELD_ENABLE_SHARED
+   OR PLAYFIELD_ENABLE_OBJECT)
+  # If we make a library, StratoHAL must be objects.
   set(STRATO_ENABLE_OBJECT ON)
 else()
-  # We make an executable. Make StratoHAL a static library.
+  # If we make an executable, StratoHAL should be a static library.
   set(STRATO_ENABLE_STATIC ON)
 
   # If we use dynamic link for dependencies.
