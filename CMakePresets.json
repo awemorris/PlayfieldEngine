@@ -971,7 +971,7 @@
         {
             "name":           "haiku",
             "displayName":    "Haiku",
-            "generator":      "Ninja",
+            "generator":      "Unix Makefiles",
             "binaryDir":      "${sourceDir}/build-haiku",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":             "Release",
