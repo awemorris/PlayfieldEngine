@@ -236,6 +236,8 @@ jobs:
           path: |
             build-macos/Playfield.dmg
             build-macos/playfield-pack
+            build-macos/suika3-bytecomp
+            build-macos/suika3-aotcomp
             Playfield.xcframework.tar.gz
           if-no-files-found: error
           retention-days: 7
@@ -410,19 +412,22 @@ jobs:
           path: llvm-21
           key: llvm-21
 
-      - name: Set up dependencies
+      - name: Install apt packages
         run: git submodule update --init
 
-      - name: Install deps
+      - name: Install apt packages
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build flex bison mingw-w64
 
-      - name: Setup for Unity
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Setup LLVM for Unity
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
         run: |
           curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-Linux-X64.tar.xz
           mkdir llvm-21 && tar -xJf llvm.tar.xz -C llvm-21 --strip-components=1
+
+      - name: Setup PATH for LLVM
+        run: |
           echo "`pwd`/llvm-21/bin" >> $GITHUB_PATH
           clang --version
 
