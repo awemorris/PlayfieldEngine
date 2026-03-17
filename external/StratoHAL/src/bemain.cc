@@ -81,7 +81,7 @@ public:
 		BView(frame, "noctview", B_FOLLOW_ALL, B_WILL_DRAW)
 	{
 		SetViewColor(255, 255, 255);
-		last_button = 0;
+		last_buttons = 0;
 	}
 
 	void Draw(BRect updateRect) override
