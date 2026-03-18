@@ -592,7 +592,7 @@
             "generator":      "Ninja",
             "binaryDir":      "${sourceDir}/build-linux-x11soft",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE":               "Release",
+                "CMAKE_BUILD_TYPE":               "Debug",
                 "PLAYFIELD_TARGET_LINUX_X11SOFT": "ON",
                 "PLAYFIELD_ENABLE_JIT":           "ON",
                 "PLAYFIELD_ENABLE_I18N":          "ON",
