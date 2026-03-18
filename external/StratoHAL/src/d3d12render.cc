@@ -873,6 +873,7 @@ CreateSwapchain()
 
 	if (g_isUWP)
 	{
+		ComPtr<IDXGISwapChain1> swapChain;
 		hr = factory->CreateSwapChainForCoreWindow(
 			g_commandQueue.Get(),
 			g_pNativeWindow,
@@ -881,27 +882,26 @@ CreateSwapchain()
 			&swapChain);
 		if (FAILED(hr))
 			return FALSE;
+		hr = swapChain.As(&g_swapChain);
+		if (FAILED(hr))
+			return FALSE;
 	}
 	else
 	{
-		hr = factory->CreateSwapChainForHwnd(
-			g_commandQueue.Get(),
-			g_hWnd,
-			&swapChainDesc,
-			nullptr,
-			nullptr,
-			&swapChain);
+		ComPtr<IDXGISwapChain1> swapChain;
+		hr = factory->CreateSwapChainForHwnd(g_commandQueue.Get(),  g_hWnd, &swapChainDesc, nullptr, nullptr,&swapChain);
 		if (FAILED(hr))
 			return FALSE;
 
 		hr = factory->MakeWindowAssociation(g_hWnd, DXGI_MWA_NO_ALT_ENTER);
 		if (FAILED(hr))
 			return FALSE;
-	}
 
-    hr = swapChain.As(&g_swapChain);
-    if (FAILED(hr))
-        return FALSE;
+		hr = swapChain.As(&g_swapChain);
+		if (FAILED(hr))
+			return FALSE;
+
+	}
 
     g_frameIndex = g_swapChain->GetCurrentBackBufferIndex();
 
