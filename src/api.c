@@ -948,6 +948,8 @@ pf_create_text_texture_outline(
 		w = 1;
 	if (h == 0)
 		h = 1;
+	w += outline_width * 2;
+	h += outline_width * 2;
 
 	/* Create a texture. */
 	if (!create_texture(w, h, &tid, &img))

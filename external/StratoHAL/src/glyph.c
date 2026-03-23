@@ -557,11 +557,13 @@ draw_glyph_with_outline(
 	FT_Glyph glyph;
 	FT_BitmapGlyph bitmapGlyph;
 	int descent;
+	int h_outline, h_body;
 
 	/* Draw inner outline. */
 	FT_Stroker_New(library, &stroker);
 	FT_Stroker_Set(stroker, outline_size * 64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
 	glyphIndex = FT_Get_Char_Index(face[font_index], codepoint);
+	FT_Set_Pixel_Sizes(face[font_index], 0, (FT_UInt)font_size);
 	FT_Load_Glyph(face[font_index], glyphIndex, FT_LOAD_DEFAULT);
 	FT_Get_Glyph(face[font_index]->glyph, &glyph);
 	FT_Glyph_StrokeBorder(&glyph, stroker, true, true);
@@ -594,6 +596,8 @@ draw_glyph_with_outline(
 					    outline_color);
 		}
 	}
+	descent = (int)bitmapGlyph->bitmap.rows - bitmapGlyph->top;
+	*ret_h = font_size + descent;
 	FT_Done_Glyph(glyph);
 	FT_Stroker_Done(stroker);
 
@@ -601,6 +605,7 @@ draw_glyph_with_outline(
 	FT_Stroker_New(library, &stroker);
 	FT_Stroker_Set(stroker, outline_size * 64, FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
 	glyphIndex = FT_Get_Char_Index(face[font_index], codepoint);
+	FT_Set_Pixel_Sizes(face[font_index], 0, (FT_UInt)font_size);
 	FT_Load_Glyph(face[font_index], glyphIndex, FT_LOAD_DEFAULT);
 	FT_Get_Glyph(face[font_index]->glyph, &glyph);
 	FT_Glyph_StrokeBorder(&glyph, stroker, false, true);
@@ -633,17 +638,16 @@ draw_glyph_with_outline(
 					    outline_color);
 		}
 	}
-	descent = (int)(face[font_index]->glyph->metrics.height / SCALE) -
-		  (int)(face[font_index]->glyph->metrics.horiBearingY / SCALE);
 	*ret_w = (int)face[font_index]->glyph->advance.x / SCALE;
-	*ret_h = font_size + descent + 2;
+	descent = (int)bitmapGlyph->bitmap.rows - bitmapGlyph->top + outline_size;
+	if (font_size + descent > *ret_h)
+		*ret_h = font_size + descent;
 	FT_Done_Glyph(glyph);
 	FT_Stroker_Done(stroker);
-	if (img == NULL)
-		return true;
 
 	/* Draw body. */
 	glyphIndex = FT_Get_Char_Index(face[font_index], codepoint);
+	FT_Set_Pixel_Sizes(face[font_index], 0, (FT_UInt)font_size);
 	FT_Load_Glyph(face[font_index], glyphIndex, FT_LOAD_DEFAULT);
 	FT_Get_Glyph(face[font_index]->glyph, &glyph);
 	FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, NULL, true);
@@ -675,8 +679,10 @@ draw_glyph_with_outline(
 					    color);
 		}
 	}
+	descent = (int)bitmapGlyph->bitmap.rows - bitmapGlyph->top;
+	if (font_size + descent > *ret_h)
+		*ret_h = font_size + descent;
 
-	/* End drawing. */
 	FT_Done_Glyph(glyph);
 
 	/* Update a GPU texture. */
@@ -816,7 +822,8 @@ draw_glyph_func(
 {
 	unsigned char *src_ptr, src_pix;
 	hal_pixel_t *dst_ptr, src_r, src_g, src_b, src_a;
-
+	uint32_t dst_pix, dst_r, dst_g, dst_b, dst_a;
+	uint32_t pix_r, pix_g, pix_b, pix_a;
 	float color_r, color_g, color_b;
 	int image_real_x, image_real_y;
 	int font_real_x, font_real_y;
@@ -845,19 +852,15 @@ draw_glyph_func(
 		font_real_width += image_real_x;
 		image_real_x = 0;
 	}
-	if (image_real_x + font_real_width >= image_width) {
-		font_real_width -= (image_real_x + font_real_width) -
-				   image_width;
-	}
+	if (image_real_x + font_real_width > image_width)
+		font_real_width -= (image_real_x + font_real_width) - image_width;
 	if (image_real_y < 0) {
 		font_real_y -= image_real_y;
 		font_real_height += image_real_y;
 		image_real_y = 0;
 	}
-	if (image_real_y + font_real_height >= image_height) {
-		font_real_height -= (image_real_y + font_real_height) -
-				    image_height;
-	}
+	if (image_real_y + font_real_height > image_height)
+		font_real_height -= (image_real_y + font_real_height) - image_height;
 
 	/* Draw. */
 	color_r = (float)((color >> 16) & 0xff);
@@ -868,23 +871,55 @@ draw_glyph_func(
 	for (py = font_real_y; py < font_real_y + font_real_height; py++) {
 		for (px = font_real_x; px < font_real_x + font_real_width; px++) {
 			src_pix = *src_ptr++;
+			dst_pix = *dst_ptr;
 
 			src_a = src_pix;
-			if (src_pix == 0) {
-				src_r = 0;
-				src_g = 0;
-				src_b = 0;
+			src_r = color_r;
+			src_g = color_g;
+			src_b = color_b;
+
+			dst_a = dst_pix >> 24;
+			dst_r = (dst_pix >> 16) & 0xff;
+			dst_g = (dst_pix >> 8) & 0xff;
+			dst_b = dst_pix & 0xff;
+
+			if (src_a == 0) {
+				pix_a = dst_a;
+				pix_r = dst_r;
+				pix_g = dst_g;
+				pix_b = dst_b;
+			} else if (dst_a == 0) {
+				pix_a = src_a;
+				pix_r = src_r;
+				pix_g = src_g;
+				pix_b = src_b;
 			} else {
-				src_r = color_r;
-				src_g = color_g;
-				src_b = color_b;
+				pix_a = src_a > dst_a ? src_a : dst_a;
+				pix_r = (uint32_t)(
+					    (
+						(((float)src_r / 255.0f) * ((float)src_a / 255.0f)) +
+						(((float)dst_r / 255.0f) * (1.0f - (float)src_a / 255.0f))
+					    ) * 255.0f
+					);
+				pix_g = (uint32_t)(
+					    (
+						(((float)src_g / 255.0f) * ((float)src_a / 255.0f)) +
+						(((float)dst_g / 255.0f) * (1.0f - (float)src_a / 255.0f))
+					    ) * 255.0f
+					);
+				pix_b = (uint32_t)(
+					    (
+						(((float)src_b / 255.0f) * ((float)src_a / 255.0f)) +
+						(((float)dst_b / 255.0f) * (1.0f - (float)src_a / 255.0f))
+					    ) * 255.0f
+					);
 			}
 
 			*dst_ptr++ =
-				(src_a << 24) |
-				(src_r << 16) |
-				(src_g << 8) |
-				src_b;
+				((pix_a & 0xff) << 24) |
+				((pix_r & 0xff) << 16) |
+				((pix_g & 0xff) << 8) |
+				(pix_b & 0xff);
 		}
 		dst_ptr += image_width - font_real_width;
 		src_ptr += font_width - font_real_width;
@@ -935,19 +970,16 @@ draw_glyph_dim_func(
 		font_real_width += image_real_x;
 		image_real_x = 0;
 	}
-	if (image_real_x + font_real_width >= image_width) {
+	if (image_real_x + font_real_width > image_width)
 		font_real_width -= (image_real_x + font_real_width) -
 				   image_width;
-	}
 	if (image_real_y < 0) {
 		font_real_y -= image_real_y;
 		font_real_height += image_real_y;
 		image_real_y = 0;
 	}
-	if (image_real_y + font_real_height >= image_height) {
-		font_real_height -= (image_real_y + font_real_height) -
-				    image_height;
-	}
+	if (image_real_y + font_real_height > image_height)
+		font_real_height -= (image_real_y + font_real_height) - image_height;
 
 	/* Draw. */
 	dst_ptr = image + image_real_y * image_width + image_real_x;
