@@ -201,6 +201,7 @@ pf_draw_texture(
 
 /*
  * Draw a texture image on a texture image. (3D)
+ */
 void
 pf_draw_texture_3d(
 	int dst_tex_id,
