@@ -79,14 +79,10 @@
 static char *window_title;
 static int screen_width;
 static int screen_height;
-static int viewport_width;
-static int viewport_height;
 static float mouse_scale = 1.0f;
 static int mouse_ofs_x;
 static int mouse_ofs_y;
 static bool is_full_screen;
-static int physical_width;
-static int physical_height;
 static int bpp;
 
 /* X11 Objects */
@@ -157,8 +153,6 @@ static void event_button_press(XEvent *event);
 static void event_button_release(XEvent *event);
 static void event_motion_notify(XEvent *event);
 static void event_resize(XEvent *event);
-static void update_viewport_size(int width, int height);
-static Bool want_configure(Display* d, XEvent* ev, XPointer arg);
 
 /*
  * Main
@@ -475,7 +469,7 @@ bool init_x11_graphics(void)
 		/* Calculate the scanline padding. Use BitmapPad() for XYBitmap. */
 		bitmap_pad = BitmapPad(display);
 		stride = ((screen_width + bitmap_pad - 1) / bitmap_pad) * (bitmap_pad / 8);
-		size = (size_t)stride * screen_height;
+		size = (size_t)stride * (uint32_t)screen_height;
 
 		/* Allocate an image buffer which may be freed by XDestroyImage(). */
 		if (posix_memalign((void **)&low_bpp_pixels, 64, size) != 0)
@@ -692,7 +686,6 @@ create_icon_image(void)
 {
 	XWMHints *win_hints;
 	XpmAttributes attr;
-	bool is_colormap_created;
 	Colormap cm;
 	int ret;
 
@@ -745,6 +738,9 @@ cleanup_hal(void)
 {
 	/* Cleanup sound. */
 	cleanup_sound();
+
+	/* Cleanup the window. */
+	cleanup_x11_graphics();
 
 	/* Destroy the window. */
 	destroy_window();
@@ -852,9 +848,9 @@ run_frame(void)
 			uint16_t *dst_row = (uint16_t *)(low_bpp_pixels + y * ximage->bytes_per_line);
 			hal_pixel_t *src_row = src + y * screen_width;
 			for (x = 0; x < screen_width; x++) {
-				uint8_t r = hal_get_pixel_r(src_row[x]);
-				uint8_t g = hal_get_pixel_g(src_row[x]);
-				uint8_t b = hal_get_pixel_b(src_row[x]);
+				uint8_t r = (uint8_t)hal_get_pixel_r(src_row[x]);
+				uint8_t g = (uint8_t)hal_get_pixel_g(src_row[x]);
+				uint8_t b = (uint8_t)hal_get_pixel_b(src_row[x]);
 				dst_row[x] = (uint16_t)(((uint16_t)(r & 0xf8) << 8) |	/* RGB565 */
 							((uint16_t)(g & 0xfc) << 3) |
 							((uint16_t)(b & 0xf8) >> 3));
@@ -867,9 +863,9 @@ run_frame(void)
 			uint8_t *dst_row = low_bpp_pixels + y * ximage->bytes_per_line;
 			hal_pixel_t *src_row = src + y * screen_width;
 			for (x = 0; x < screen_width; x++) {
-				uint8_t r = hal_get_pixel_r(src_row[x]);
-				uint8_t g = hal_get_pixel_g(src_row[x]);
-				uint8_t b = hal_get_pixel_b(src_row[x]);
+				uint8_t r = (uint8_t)hal_get_pixel_r(src_row[x]);
+				uint8_t g = (uint8_t)hal_get_pixel_g(src_row[x]);
+				uint8_t b = (uint8_t)hal_get_pixel_b(src_row[x]);
 				dst_row[x] = (uint8_t)((r & 0xe0) | ((g & 0xe0) >> 3) | ((b & 0xc0) >> 6));
 			}
 		}
@@ -877,15 +873,15 @@ run_frame(void)
 		int x, y;
 		int stride = ximage->bytes_per_line;
 		hal_pixel_t *src = (hal_pixel_t *)back_image->pixels;
-		memset(low_bpp_pixels, 0, (size_t)stride * screen_height);
+		memset(low_bpp_pixels, 0, (size_t)stride * (size_t)screen_height);
 		for (y = 0; y < screen_height; y++) {
 			uint8_t *dst_row = low_bpp_pixels + y * stride;
 			hal_pixel_t *src_row = src + y * screen_width;
 
 			for (x = 0; x < screen_width; x++) {
-				uint8_t r = hal_get_pixel_r(src_row[x]);
-				uint8_t g = hal_get_pixel_g(src_row[x]);
-				uint8_t b = hal_get_pixel_b(src_row[x]);
+				uint8_t r = (uint8_t)hal_get_pixel_r(src_row[x]);
+				uint8_t g = (uint8_t)hal_get_pixel_g(src_row[x]);
+				uint8_t b = (uint8_t)hal_get_pixel_b(src_row[x]);
 				int lum = (r * 77 + g * 150 + b * 29) >> 8;
 				if (lum >= 128) {
 					if (ximage->bitmap_bit_order == MSBFirst)
@@ -1198,14 +1194,14 @@ event_button_press(
 	case Button1:
 		hal_callback_on_event_mouse_press(
 			HAL_MOUSE_LEFT,
-			(int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
-			(int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
+			(int)((float)(event->xbutton.x - mouse_ofs_x) * mouse_scale),
+			(int)((float)(event->xbutton.y - mouse_ofs_y) * mouse_scale));
 		break;
 	case Button3:
 		hal_callback_on_event_mouse_press(
 			HAL_MOUSE_RIGHT,
-			(int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
-			(int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
+			(int)((float)(event->xbutton.x - mouse_ofs_x) * mouse_scale),
+			(int)((float)(event->xbutton.y - mouse_ofs_y) * mouse_scale));
 		break;
 	case Button4:
 		hal_callback_on_event_key_press(HAL_KEY_UP);
@@ -1230,14 +1226,14 @@ event_button_release(
 	case Button1:
 		hal_callback_on_event_mouse_release(
 			HAL_MOUSE_LEFT,
-			(int)(event->xbutton.x / mouse_scale),
-			(int)(event->xbutton.y / mouse_scale));
+			(int)((float)event->xbutton.x / mouse_scale),
+			(int)((float)event->xbutton.y / mouse_scale));
 		break;
 	case Button3:
 		hal_callback_on_event_mouse_release(
 			HAL_MOUSE_RIGHT,
-			(int)(event->xbutton.x / mouse_scale),
-			(int)(event->xbutton.y / mouse_scale));
+			(int)((float)event->xbutton.x / mouse_scale),
+			(int)((float)event->xbutton.y / mouse_scale));
 		break;
 	}
 }
@@ -1247,8 +1243,8 @@ static void event_motion_notify(XEvent *event)
 {
 	/* Call an event handler. */
 	hal_callback_on_event_mouse_move(
-		(int)((event->xbutton.x - mouse_ofs_x) * mouse_scale),
-		(int)((event->xbutton.y - mouse_ofs_y) * mouse_scale));
+		(int)((float)(event->xbutton.x - mouse_ofs_x) * mouse_scale),
+		(int)((float)(event->xbutton.y - mouse_ofs_y) * mouse_scale));
 }
 
 /* Process a ConfigureNotify event. */
@@ -1256,6 +1252,7 @@ static void
 event_resize(
 	XEvent *event)
 {
+	UNUSED_PARAMETER(event);
 }
 
 /*
@@ -1455,6 +1452,8 @@ void
 hal_notify_image_update(
 	struct hal_image *img)
 {
+	/* We don't use VRAM directly. No need to upload to VRAM. */
+	UNUSED_PARAMETER(img);
 }
 
 /*
@@ -1464,6 +1463,8 @@ void
 hal_notify_image_free(
 	struct hal_image *img)
 {
+	/* We don't use VRAM directly. No need to free VRAM. */
+	UNUSED_PARAMETER(img);
 }
 
 /*
@@ -1494,14 +1495,14 @@ hal_render_image_normal(
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
 		hal_draw_image_3d_alpha(back_image,
-					dst_left,
-					dst_top,
-					dst_left + dst_width - 1,
-					dst_top,
-					dst_left,
-					dst_top + dst_height - 1,
-					dst_left + dst_width - 1,
-					dst_top + dst_height - 1,
+					(float)dst_left,
+					(float)dst_top,
+					(float)dst_left + (float)dst_width - 1.0f,
+					(float)dst_top,
+					(float)dst_left,
+					(float)dst_top + (float)dst_height - 1.0f,
+					(float)dst_left + (float)dst_width - 1.0f,
+					(float)dst_top + (float)dst_height - 1.0f,
 					src_image,
 					src_left,
 					src_top,
@@ -1549,14 +1550,14 @@ hal_render_image_add(
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
 		hal_draw_image_3d_add(back_image,
-				      dst_left,
-				      dst_top,
-				      dst_left + dst_width - 1,
-				      dst_top,
-				      dst_left,
-				      dst_top + dst_height - 1,
-				      dst_left + dst_width - 1,
-				      dst_top + dst_height - 1,
+				      (float)dst_left,
+				      (float)dst_top,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top,
+				      (float)dst_left,
+				      (float)dst_top + (float)dst_height - 1.0f,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top + (float)dst_height - 1.0f,
 				      src_image,
 				      src_left,
 				      src_top,
@@ -1604,14 +1605,14 @@ hal_render_image_sub(
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
 		hal_draw_image_3d_sub(back_image,
-				      dst_left,
-				      dst_top,
-				      dst_left + dst_width - 1,
-				      dst_top,
-				      dst_left,
-				      dst_top + dst_height - 1,
-				      dst_left + dst_width - 1,
-				      dst_top + dst_height - 1,
+				      (float)dst_left,
+				      (float)dst_top,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top,
+				      (float)dst_left,
+				      (float)dst_top + (float)dst_height - 1.0f,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top + (float)dst_height - 1.0f,
 				      src_image,
 				      src_left,
 				      src_top,
@@ -1659,14 +1660,14 @@ hal_render_image_dim(
 	if (dst_width != src_width ||
 	    dst_height != src_height) {
 		hal_draw_image_3d_dim(back_image,
-				      dst_left,
-				      dst_top,
-				      dst_left + dst_width - 1,
-				      dst_top,
-				      dst_left,
-				      dst_top + dst_height - 1,
-				      dst_left + dst_width - 1,
-				      dst_top + dst_height - 1,
+				      (float)dst_left,
+				      (float)dst_top,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top,
+				      (float)dst_left,
+				      (float)dst_top + (float)dst_height - 1.0f,
+				      (float)dst_left + (float)dst_width - 1.0f,
+				      (float)dst_top + (float)dst_height - 1.0f,
 				      src_image,
 				      src_left,
 				      src_top,
@@ -1939,8 +1940,8 @@ hal_enter_full_screen_mode(void)
 	xev.xclient.message_type = wm_state;
 	xev.xclient.format = 32;
 	xev.xclient.data.l[0] = 1;
-	xev.xclient.data.l[1] = fs_atom;
-	xev.xclient.data.l[2] = 0; // no second property
+	xev.xclient.data.l[1] = (long)fs_atom;
+	xev.xclient.data.l[2] = 0; /* no second property */
 	xev.xclient.data.l[3] = 1;
 
 	XSendEvent(display,
@@ -1973,7 +1974,7 @@ hal_leave_full_screen_mode(void)
 	xev.xclient.message_type = wm_state;
 	xev.xclient.format = 32;
 	xev.xclient.data.l[0] = 0;
-	xev.xclient.data.l[1] = fs_atom;
+	xev.xclient.data.l[1] = (long)fs_atom;
 	xev.xclient.data.l[2] = 0;
 	xev.xclient.data.l[3] = 1;
 

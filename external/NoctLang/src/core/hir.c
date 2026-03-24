@@ -48,7 +48,7 @@
 #define HIR_FUNC_MAX	128
 
 char *hir_file_name;
-int hir_func_count;
+uint32_t hir_func_count;
 struct hir_block *hir_func_tbl[HIR_FUNC_MAX];
 
 /*
@@ -196,7 +196,7 @@ hir_build(void)
 void
 hir_cleanup(void)
 {
-	int i;
+	uint32_t i;
 
 	if (hir_file_name != NULL) {
 		hir_free(hir_file_name);
@@ -214,7 +214,7 @@ hir_cleanup(void)
 /*
  * Get a number of constructed functions.
  */
-int
+uint32_t
 hir_get_function_count(void)
 {
 	return hir_func_count;
@@ -224,11 +224,10 @@ hir_get_function_count(void)
  * Get a constructed HIR function.
  */
 struct hir_block *
-hir_get_function(int index)
+hir_get_function(uint32_t index)
 {
 	struct hir_block *func;
 
-	assert(index >= 0);
 	assert(index < hir_func_count);
 
 	func = hir_func_tbl[index];
@@ -1668,7 +1667,7 @@ hir_visit_array_expr(
 {
 	struct hir_expr *e;
 	struct ast_expr *elem;
-	int count, index;
+	uint32_t count, index;
 
 	assert(hexpr != NULL);
 	assert(*hexpr == NULL);
@@ -1694,12 +1693,12 @@ hir_visit_array_expr(
 		}
 
 		e->val.array.elem_count = count;
-		e->val.array.elem = hir_malloc(count * sizeof(struct hir_exp *));
+		e->val.array.elem = hir_malloc((uint32_t)count * sizeof(struct hir_exp *));
 		if (e->val.array.elem == NULL) {
 			hir_out_of_memory();
 			return false;
 		}
-		memset(e->val.array.elem, 0, count * sizeof(struct hir_exp *));
+		memset(e->val.array.elem, 0, (size_t)count * sizeof(struct hir_exp *));
 	}
 
 	/* Visit the argument expressions. */
@@ -1729,7 +1728,7 @@ hir_visit_dict_expr(
 {
 	struct hir_expr *e;
 	struct ast_kv *kv;
-	int count, index;
+	uint32_t count, index;
 
 	assert(hexpr != NULL);
 	assert(*hexpr == NULL);
@@ -1948,7 +1947,7 @@ hir_visit_param_list(
 	struct ast_func *afunc)
 {
 	struct ast_param *param;
-	int param_count;
+	uint32_t param_count;
 
 	/* If there is no param_list. */
 	if (afunc->param_list == NULL) {
@@ -2015,7 +2014,7 @@ static void
 hir_free_block(
 	struct hir_block *b)
 {
-	int i;
+	uint32_t i;
 
 	switch (b->type) {
 	case HIR_BLOCK_FUNC:
@@ -2128,7 +2127,7 @@ static void
 hir_free_expr(
 	struct hir_expr *e)
 {
-	int i;
+	uint32_t i;
 
 	switch (e->type) {
 	case HIR_EXPR_TERM:
@@ -2372,6 +2371,7 @@ static char *hir_strdup(const char *s)
 
 static void hir_free(void *p)
 {
+	UNUSED_PARAMETER(p);
 }
 
 /*

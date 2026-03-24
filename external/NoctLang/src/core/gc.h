@@ -121,7 +121,7 @@ struct rt_gc_info {
 	struct rt_gc_object *remember_set;
 
 	/* Compaction address tables. */
-	int compact_count;
+	uint32_t compact_count;
 	void **compact_before;
 	void **compact_after;
 };
@@ -164,7 +164,7 @@ struct rt_gc_object {
 	bool is_marked;
 
 	/* Promotion count. */
-	int promotion_count;
+	uint32_t promotion_count;
 
 	/* Forwarding pointer. */
 	struct rt_gc_object *forward;
@@ -190,7 +190,7 @@ struct rt_array *rt_gc_alloc_array(struct rt_env *env, size_t size);
 struct rt_dict *rt_gc_alloc_dict(struct rt_env *env, size_t size);
 
 /* Write barrier: registers a container in the remember set if it references a young object. */
-void rt_gc_array_write_barrier(struct rt_env *env, struct rt_array *arr, int index, struct rt_value *val);
+void rt_gc_array_write_barrier(struct rt_env *env, struct rt_array *arr, uint32_t index, struct rt_value *val);
 
 /* Write barrier: registers a container in the remember set if it references a young object. */
 void rt_gc_dict_write_barrier(struct rt_env *env, struct rt_dict *dict, struct rt_value *val);

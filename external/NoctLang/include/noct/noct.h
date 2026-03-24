@@ -165,7 +165,7 @@ bool
 noct_register_bytecode(
 	NoctEnv *env,
 	uint8_t *data,
-	size_t size);
+	uint32_t size);
 
 /*
  * Registers an FFI function.
@@ -175,7 +175,7 @@ bool
 noct_register_cfunc(
 	NoctEnv *env,
 	const char *name,
-	int param_count,
+	uint32_t param_count,
 	const char *param_name[],
 	bool (*cfunc)(NoctEnv *env),
 	NoctFunc **ret_func);
@@ -191,7 +191,7 @@ bool
 noct_enter_vm(
 	NoctEnv *env,
 	const char *func_name,
-	int arg_count,
+	uint32_t arg_count,
 	NoctValue *arg,
 	NoctValue *ret);
 
@@ -230,7 +230,7 @@ bool
 noct_call(
 	NoctEnv *env,
 	NoctFunc *func,
-	int arg_count,
+	uint32_t arg_count,
 	NoctValue *arg,
 	NoctValue *ret);
 
@@ -339,7 +339,7 @@ bool
 noct_get_string_len(
 	NoctEnv *env,
 	NoctValue *val,
-	size_t *len);
+	uint32_t *len);
 
 /*
  * Retrieves the string from a value with type checking.
@@ -837,7 +837,7 @@ bool
 noct_set_array_elem_make_int(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int i);
 
@@ -858,7 +858,7 @@ bool
 noct_set_array_elem_make_float(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float f);
 
@@ -879,7 +879,7 @@ bool
 noct_set_array_elem_make_string(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char *data);
 
@@ -1073,7 +1073,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_int(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int *i);
 
@@ -1091,7 +1091,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_float(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float *f);
 
@@ -1109,7 +1109,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_string(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char **data);
 
@@ -1121,7 +1121,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_array(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -1132,7 +1132,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_dict(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val);
 
 /*
@@ -1149,7 +1149,7 @@ NOCT_DLL
 bool
 noct_get_arg_check_func(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	NoctFunc **f);
 

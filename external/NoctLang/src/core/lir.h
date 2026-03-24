@@ -20,10 +20,10 @@ struct hir_block;
 struct lir_func {
 	char *file_name;
 	char *func_name;
-	int param_count;
+	uint32_t param_count;
 	char *param_name[LIR_PARAM_SIZE];
-	int tmpvar_size;
-	int bytecode_size;
+	uint32_t tmpvar_size;
+	uint32_t bytecode_size;
 	uint8_t *bytecode;
 };
 

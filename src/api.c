@@ -199,7 +199,11 @@ pf_create_color_texture(
 	tex_tbl[index].img = tex_tbl[index].img;
 
 	/* Clear the image. */
-	hal_clear_image(tex_tbl[index].img, hal_make_pixel(a, r, g, b));
+	hal_clear_image(tex_tbl[index].img,
+			hal_make_pixel((uint32_t)a,
+				       (uint32_t)r,
+				       (uint32_t)g,
+				       (uint32_t)b));
 	hal_notify_image_update(tex_tbl[index].img);
 
 	/* Succeeded. */
@@ -229,7 +233,7 @@ create_texture(
 	if (!hal_create_image(width, height, img))
 		return false;
 	
-	memset((*img)->pixels, 0, width * height * 4);
+	memset((*img)->pixels, 0, (size_t)(width * height * 4));
 
 	/* Mark as used. */
 	tex_tbl[index].is_used = true;
@@ -1302,8 +1306,7 @@ make_save_file_name(
 	const char *key)
 {
 	char buf[1024];
-	int i;
-	size_t len, pos;
+	size_t i, len, pos;
 
 	strcpy(buf, HAL_SAVE_DIR "/");
 
@@ -1600,7 +1603,7 @@ pf_get_call_arg_array_int(
 		return false;
 
 	/* Get the array element. */
-	if (!noct_get_array_elem_check_int(env, &array, index, &value, val))
+	if (!noct_get_array_elem_check_int(env, &array, (uint32_t)index, &value, val))
 		return false;
 
 	return true;
@@ -1629,7 +1632,7 @@ pf_get_call_arg_array_float(
 		return false;
 
 	/* Get the array element. */
-	if (!noct_get_array_elem_check_float(env, &array, index, &value, val))
+	if (!noct_get_array_elem_check_float(env, &array, (uint32_t)index, &value, val))
 		return false;
 
 	return true;
@@ -1659,7 +1662,7 @@ pf_get_call_arg_array_string(
 		return false;
 
 	/* Get the array element. */
-	if (!noct_get_array_elem_check_string(env, &array, index, &value, &s))
+	if (!noct_get_array_elem_check_string(env, &array, (uint32_t)index, &value, &s))
 		return false;
 
 	/* Duplicate the string. */
@@ -1839,7 +1842,7 @@ pf_set_return_int_array(
 		return false;
 
 	for (i = 0; i < len; i++) {
-		if (!noct_set_array_elem_make_int(env, &array, i, &value, val[i]))
+		if (!noct_set_array_elem_make_int(env, &array, (uint32_t)i, &value, val[i]))
 			return false;
 	}
 
@@ -1867,7 +1870,7 @@ pf_set_return_float_array(
 		return false;
 
 	for (i = 0; i < len; i++) {
-		if (!noct_set_array_elem_make_float(env, &array, i, &value, val[i]))
+		if (!noct_set_array_elem_make_float(env, &array, (uint32_t)i, &value, val[i]))
 			return false;
 	}
 
@@ -1895,7 +1898,7 @@ pf_set_return_string_array(
 		return false;
 
 	for (i = 0; i < len; i++) {
-		if (!noct_set_array_elem_make_string(env, &array, i, &value, val[i]))
+		if (!noct_set_array_elem_make_string(env, &array, (uint32_t)i, &value, val[i]))
 			return false;
 	}
 

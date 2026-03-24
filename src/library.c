@@ -9,5 +9,7 @@
 
 bool init_aot_code(struct rt_env *env)
 {
+	UNUSED_PARAMETER(env);
+
 	return true;
 }

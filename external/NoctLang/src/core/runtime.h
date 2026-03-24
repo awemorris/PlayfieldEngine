@@ -123,7 +123,7 @@ struct rt_func {
 
 	/* JIT-generated code. */
 	bool (*jit_code)(struct rt_env *env);
-	uint32_t call_count;
+	int call_count;
 
 	/* Function pointer. (if a cfunc) */
 	bool (*cfunc)(struct rt_env *env);
@@ -163,7 +163,7 @@ struct rt_frame {
 	/*
 	 * Size of the tmpvar table.
 	 */
-	int tmpvar_size;
+	uint32_t tmpvar_size;
 
 	/*
 	 * Current running function.
@@ -174,7 +174,7 @@ struct rt_frame {
 	 * Pinned C local variables.
 	 */
 	struct rt_value *pinned[RT_LOCAL_PIN_MAX];
-	int pinned_count;
+	uint32_t pinned_count;
 
 	/*
 	 * tmpvar body.
@@ -240,8 +240,8 @@ struct rt_env {
  */
 struct rt_vm {
 	/* Global symbols. */
-	int global_alloc_size;
-	int global_size;
+	uint32_t global_alloc_size;
+	uint32_t global_size;
 	struct rt_bindglobal *global;
 
 	/* Function list. */
@@ -255,7 +255,7 @@ struct rt_vm {
 
 	/* Pinned C global variables. */
 	struct rt_value *pinned[RT_GLOBAL_PIN_MAX];
-	int pinned_count;
+	uint32_t pinned_count;
 
 	/* Is JIT code written and not commited? */
 	bool is_jit_dirty;
@@ -296,17 +296,17 @@ bool rt_register_source(struct rt_env *env, const char *file_name, const char *s
 bool rt_register_bytecode(struct rt_env *env, size_t size, uint8_t *data);
 
 /* Register an FFI C function. */
-bool rt_register_cfunc(struct rt_env *env, const char *name, int param_count, const char *param_name[], bool (*cfunc)(struct rt_env *env), struct rt_func **ret_func);
+bool rt_register_cfunc(struct rt_env *env, const char *name, uint32_t param_count, const char *param_name[], bool (*cfunc)(struct rt_env *env), struct rt_func **ret_func);
 
 /*
  * Call
  */
 
 /* Call a function with a name. */
-bool rt_call_with_name(struct rt_env *env, const char *func_name, int arg_count, struct rt_value *arg, struct rt_value *ret);
+bool rt_call_with_name(struct rt_env *env, const char *func_name, uint32_t arg_count, struct rt_value *arg, struct rt_value *ret);
 
 /* Call a function. */
-bool rt_call(struct rt_env *env, struct rt_func *func, int arg_count, struct rt_value *arg, struct rt_value *ret);
+bool rt_call(struct rt_env *env, struct rt_func *func, uint32_t arg_count, struct rt_value *arg, struct rt_value *ret);
 
 /*
  * String
@@ -332,13 +332,13 @@ bool rt_make_empty_array(struct rt_env *env, struct rt_value *val);
 bool rt_get_array_size(struct rt_env *env, struct rt_array *arr, uint32_t *size);
 
 /* Retrieves an array element. */
-bool rt_get_array_elem(struct rt_env *env, struct rt_array *arr, int index, struct rt_value *val);
+bool rt_get_array_elem(struct rt_env *env, struct rt_array *arr, uint32_t index, struct rt_value *val);
 
 /* Stores an value to an array. */
-bool rt_set_array_elem(struct rt_env *env, struct rt_array **arr, int index, struct rt_value *val);
+bool rt_set_array_elem(struct rt_env *env, struct rt_array **arr, uint32_t index, struct rt_value *val);
 
 /* Resizes an array. */
-bool rt_resize_array(struct rt_env *env, struct rt_array **arr, int size);
+bool rt_resize_array(struct rt_env *env, struct rt_array **arr, uint32_t size);
 
 /* Make a shallow copy of an array. */
 bool rt_make_array_copy(struct rt_env *env, struct rt_array **dst, struct rt_array *src);
@@ -353,10 +353,10 @@ bool rt_get_dict_size(struct rt_env *env, struct rt_dict *dict, uint32_t *size);
 bool rt_check_dict_key(struct rt_env *env, struct rt_dict *dict, const char *key, bool *ret);
 
 /* Get a dictionary key by index. */
-bool rt_get_dict_key_by_index(struct rt_env *env, struct rt_dict *dict, int index, struct rt_value *key);
+bool rt_get_dict_key_by_index(struct rt_env *env, struct rt_dict *dict, uint32_t index, struct rt_value *key);
 
 /* Get a dictionary value by index. */
-bool rt_get_dict_value_by_index(struct rt_env *env, struct rt_dict *dict, int index, struct rt_value *val);
+bool rt_get_dict_value_by_index(struct rt_env *env, struct rt_dict *dict, uint32_t index, struct rt_value *val);
 
 /* Retrieves the value by a key in a dictionary. */
 bool rt_get_dict_elem(struct rt_env *env, struct rt_dict *dict, const char *key, struct rt_value *val);

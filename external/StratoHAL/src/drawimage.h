@@ -638,15 +638,15 @@ DRAW_IMAGE_3D_ALPHA(
 
 	scanline_conversion((float)x1,
 			    (float)y1,
-			    0,
-			    0,
+			    (float)src_left,
+			    (float)src_top,
 			    (float)x2,
 			    (float)y2,
 			    (float)src_width,
-			    0,
+			    (float)src_top,
 			    (float)x3,
 			    (float)y3,
-			    0,
+			    (float)src_left,
 			    (float)src_height,
 			    (float)x4,
 			    (float)y4,
@@ -663,7 +663,7 @@ DRAW_IMAGE_3D_ALPHA(
 
 	for (y = 0; y < dst_y_max; y++) {
 		int min_x, max_x;
-		float tx, ty, tx_inc, ty_inc;
+		float div, tx, ty, tx_inc, ty_inc;
 
 		min_x = sc_min_x[y];
 		max_x = sc_max_x[y];
@@ -678,9 +678,10 @@ DRAW_IMAGE_3D_ALPHA(
 
 		tx = sc_min_tx[y];
 		ty = sc_min_ty[y];
-		if (sc_max_x[y] - sc_min_x[y] != 0) {
-			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / (sc_max_x[y] - sc_min_x[y]);
-			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / (sc_max_x[y] - sc_min_x[y]);
+		div = (float)sc_max_x[y] - (float)sc_min_x[y];
+		if (div != 0) {
+			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / div;
+			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / div;
 		} else {
 			tx_inc = 0;
 			ty_inc = 0;
@@ -697,11 +698,11 @@ DRAW_IMAGE_3D_ALPHA(
 			if (tx < 0)
 				tx = 0;
 			if (tx >= sw)
-				tx = sw - 1;
+				tx = (float)sw - 1;
 			if (ty < 0)
 				ty = 0;
 			if (ty >= sh)
-				ty = sh - 1;
+				ty = (float)sh - 1;
 
 			/* Sample the texture. */
 			src_pix	= src_pixel[(int)ty * sw + (int)tx];
@@ -760,19 +761,19 @@ DRAW_IMAGE_3D_ADD(
 	uint32_t src_pix, dst_pix;
 	uint32_t add_r, add_g, add_b;
 	uint32_t src_r, src_g, src_b,  dst_r, dst_g, dst_b;
-	float a, src_a, dst_a;
+	float a, src_a;
 
 	scanline_conversion((float)x1,
 			    (float)y1,
-			    0,
-			    0,
+			    (float)src_left,
+			    (float)src_top,
 			    (float)x2,
 			    (float)y2,
 			    (float)src_width,
-			    0,
+			    (float)src_top,
 			    (float)x3,
 			    (float)y3,
-			    0,
+			    (float)src_left,
 			    (float)src_height,
 			    (float)x4,
 			    (float)y4,
@@ -789,7 +790,7 @@ DRAW_IMAGE_3D_ADD(
 
 	for (y = 0; y < dst_y_max; y++) {
 		int min_x, max_x;
-		float tx, ty, tx_inc, ty_inc;
+		float div, tx, ty, tx_inc, ty_inc;
 
 		min_x = sc_min_x[y];
 		max_x = sc_max_x[y];
@@ -804,9 +805,10 @@ DRAW_IMAGE_3D_ADD(
 
 		tx = sc_min_tx[y];
 		ty = sc_min_ty[y];
-		if (sc_max_x[y] - sc_min_x[y] != 0) {
-			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / (sc_max_x[y] - sc_min_x[y]);
-			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / (sc_max_x[y] - sc_min_x[y]);
+		div = (float)sc_max_x[y] - (float)sc_min_x[y];
+		if (div != 0) {
+			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / div;
+			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / div;
 		} else {
 			tx_inc = 0;
 			ty_inc = 0;
@@ -823,11 +825,11 @@ DRAW_IMAGE_3D_ADD(
 			if (tx < 0)
 				tx = 0;
 			if (tx >= sw)
-				tx = sw - 1;
+				tx = (float)sw - 1;
 			if (ty < 0)
 				ty = 0;
 			if (ty >= sh)
-				ty = sh - 1;
+				ty = (float)sh - 1;
 
 			/* Sample the texture. */
 			src_pix	= src_pixel[(int)ty * sw + (int)tx];
@@ -896,19 +898,19 @@ DRAW_IMAGE_3D_SUB(
 	uint32_t src_pix, dst_pix;
 	uint32_t add_r, add_g, add_b;
 	uint32_t src_r, src_g, src_b,  dst_r, dst_g, dst_b;
-	float a, src_a, dst_a;
+	float a, src_a;
 
 	scanline_conversion((float)x1,
 			    (float)y1,
-			    0,
-			    0,
+			    (float)src_left,
+			    (float)src_top,
 			    (float)x2,
 			    (float)y2,
 			    (float)src_width,
-			    0,
+			    (float)src_top,
 			    (float)x3,
 			    (float)y3,
-			    0,
+			    (float)src_left,
 			    (float)src_height,
 			    (float)x4,
 			    (float)y4,
@@ -925,7 +927,7 @@ DRAW_IMAGE_3D_SUB(
 
 	for (y = 0; y < dst_y_max; y++) {
 		int min_x, max_x;
-		float tx, ty, tx_inc, ty_inc;
+		float div, tx, ty, tx_inc, ty_inc;
 
 		min_x = sc_min_x[y];
 		max_x = sc_max_x[y];
@@ -940,9 +942,10 @@ DRAW_IMAGE_3D_SUB(
 
 		tx = sc_min_tx[y];
 		ty = sc_min_ty[y];
-		if (sc_max_x[y] - sc_min_x[y] != 0) {
-			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / (sc_max_x[y] - sc_min_x[y]);
-			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / (sc_max_x[y] - sc_min_x[y]);
+		div = (float)sc_max_x[y] - (float)sc_min_x[y];
+		if (div != 0) {
+			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / div;
+			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / div;
 		} else {
 			tx_inc = 0;
 			ty_inc = 0;
@@ -959,11 +962,11 @@ DRAW_IMAGE_3D_SUB(
 			if (tx < 0)
 				tx = 0;
 			if (tx >= sw)
-				tx = sw - 1;
+				tx = (float)sw - 1;
 			if (ty < 0)
 				ty = 0;
 			if (ty >= sh)
-				ty = sh - 1;
+				ty = (float)sh - 1;
 
 			/* Sample the texture. */
 			src_pix	= src_pixel[(int)ty * sw + (int)tx];
@@ -1030,20 +1033,19 @@ DRAW_IMAGE_3D_DIM(
 	int sw, sh, dw, dst_y_max;
 	uint32_t *dst_pixel, *src_pixel;
 	uint32_t src_pix, dst_pix;
-	uint32_t add_r, add_g, add_b;
 	float a, src_r, src_g, src_b, src_a, dst_r, dst_g, dst_b, dst_a;
 
 	scanline_conversion((float)x1,
 			    (float)y1,
-			    0,
-			    0,
+			    (float)src_left,
+			    (float)src_top,
 			    (float)x2,
 			    (float)y2,
 			    (float)src_width,
-			    0,
+			    (float)src_top,
 			    (float)x3,
 			    (float)y3,
-			    0,
+			    (float)src_left,
 			    (float)src_height,
 			    (float)x4,
 			    (float)y4,
@@ -1060,7 +1062,7 @@ DRAW_IMAGE_3D_DIM(
 
 	for (y = 0; y < dst_y_max; y++) {
 		int min_x, max_x;
-		float tx, ty, tx_inc, ty_inc;
+		float div, tx, ty, tx_inc, ty_inc;
 
 		min_x = sc_min_x[y];
 		max_x = sc_max_x[y];
@@ -1075,9 +1077,10 @@ DRAW_IMAGE_3D_DIM(
 
 		tx = sc_min_tx[y];
 		ty = sc_min_ty[y];
-		if (sc_max_x[y] - sc_min_x[y] != 0) {
-			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / (sc_max_x[y] - sc_min_x[y]);
-			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / (sc_max_x[y] - sc_min_x[y]);
+		div = (float)sc_max_x[y] - (float)sc_min_x[y];		
+		if (div != 0) {
+			tx_inc = (sc_max_tx[y] - sc_min_tx[y]) / div;
+			ty_inc = (sc_max_ty[y] - sc_min_ty[y]) / div;
 		} else {
 			tx_inc = 0;
 			ty_inc = 0;
@@ -1094,11 +1097,11 @@ DRAW_IMAGE_3D_DIM(
 			if (tx < 0)
 				tx = 0;
 			if (tx >= sw)
-				tx = sw - 1;
+				tx = (float)sw - 1;
 			if (ty < 0)
 				ty = 0;
 			if (ty >= sh)
-				ty = sh - 1;
+				ty = (float)sh - 1;
 
 			/* Sample the texture. */
 			src_pix	= src_pixel[(int)ty * sw + (int)tx];
