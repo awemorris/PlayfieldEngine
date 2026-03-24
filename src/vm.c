@@ -61,7 +61,9 @@ static bool load_startup_file(void);
 static bool call_setup(char **title, int *width, int *height, bool *fullscreen);
 static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *value, bool is_inside_obj);
 static bool get_int_param(NoctEnv *env, const char *name, int *ret);
+#if 0
 static bool get_float_param(NoctEnv *env, const char *name, float *ret);
+#endif
 static bool get_string_param(NoctEnv *env, const char *name, const char **ret);
 static bool get_value_param(NoctEnv *env, const char *name, NoctValue *value);
 static bool get_dict_elem_int_param(NoctEnv *env, const char *name, const char *key, int *ret);
@@ -291,9 +293,11 @@ pfi_get_vm_int(
 {
 	NoctValue dict, dict_val;
 
+	UNUSED_PARAMETER(prop_name);
+
 	if (!noct_get_global(env, "Engine", &dict))
 		return false;
-	if (!noct_get_dict_elem_check_int(env, &dict, "exitFlag", &dict_val, val))
+	if (!noct_get_dict_elem_check_int(env, &dict, prop_name, &dict_val, val))
 		return false;
 
 	return true;
@@ -366,8 +370,7 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	int ival;
 	float fval;
 	const char *sval;
-	uint32_t items;
-	int i;
+	uint32_t i, items;
 	char digits[1024];
 
 	if (!noct_get_value_type(env, value, &type))
@@ -471,7 +474,7 @@ static bool import(NoctEnv *env)
 		}
 	} else {
 		/* It's a bytecode file. */
-		if (!noct_register_bytecode(env, (void *)data, len)) {
+		if (!noct_register_bytecode(env, (void *)data, (uint32_t)len)) {
 			const char *file, *msg;
 			int line;
 			noct_get_error_file(env, &file);
@@ -774,7 +777,6 @@ static bool Engine_setSoundVolume(NoctEnv *env)
 static bool Engine_playVideo(NoctEnv *env)
 {
 	const char *file;
-	int is_skippable;
 
 	if (!get_string_param(env, "file", &file))
 		return false;
@@ -788,6 +790,8 @@ static bool Engine_playVideo(NoctEnv *env)
 /* Engine.stopVideo() */
 static bool Engine_stopVideo(NoctEnv *env)
 {
+	UNUSED_PARAMETER(env);
+
 	pf_stop_video();
 	return true;
 }
@@ -806,10 +810,12 @@ static bool Engine_isVideoPlaying(NoctEnv *env)
 }
 
 /* Engine.loadFont() */
-static bool Engine_loadFont(NoctEnv *rt)
+static bool Engine_loadFont(NoctEnv *env)
 {
 	int slot;
 	const char *file;
+
+	UNUSED_PARAMETER(env);
 
 	if (!get_int_param(env, "slot", &slot))
 		return false;
@@ -852,7 +858,10 @@ static bool Engine_createTextTexture(NoctEnv *env)
 	if (!pf_create_text_texture(slot,
 				    text,
 				    size,
-				    hal_make_pixel(a, r, g, b),
+				    hal_make_pixel((uint32_t)a,
+						   (uint32_t)r,
+						   (uint32_t)g,
+						   (uint32_t)b),
 				    &tex_id,
 				    &tex_width,
 				    &tex_height))
@@ -1110,6 +1119,7 @@ install_api(
 	} funcs[] = {
 #define RTFUNC(name) {Engine_##name, #name, "Engine." # name}
 		{print, NULL, "print"},
+		{import, NULL, "import"},
 		RTFUNC(getDate),
 		RTFUNC(createColorTexture),
 		RTFUNC(loadTexture),
@@ -1232,8 +1242,7 @@ serialize_save_data_recursively(
 	int ival;
 	float fval;
 	const char *sval;
-	uint32_t size;
-	int i;
+	uint32_t i, size;
 
 	if (!noct_get_value_type(env, value, &type))
 		return false;
@@ -1244,7 +1253,7 @@ serialize_save_data_recursively(
 			return false;
 		if (!ser_put_u8(ctx, SER_TYPE_INT))
 			return false;
-		if (!ser_put_u32(ctx, ival))
+		if (!ser_put_u32(ctx, (uint32_t)ival))
 			return false;
 		return true;
 	case NOCT_VALUE_FLOAT:
@@ -1253,7 +1262,7 @@ serialize_save_data_recursively(
 		ival = *(int *)&fval;
 		if (!ser_put_u8(ctx, SER_TYPE_FLOAT))
 			return false;
-		if (!ser_put_u32(ctx, ival))
+		if (!ser_put_u32(ctx, (uint32_t)ival))
 			return false;
 		return true;
 	case NOCT_VALUE_STRING:
@@ -1343,8 +1352,7 @@ deserialize_save_data_recursively(
 	uint32_t ival;
 	float fval;
 	char *sval;
-	int size;
-	int i;
+	uint32_t i, size;
 
 	if (!ser_get_u8(ctx, &type))
 		return false;
@@ -1353,7 +1361,7 @@ deserialize_save_data_recursively(
 	case SER_TYPE_INT:
 		if (!ser_get_u32(ctx, &ival))
 			return false;
-		if (!noct_make_int(env, value, ival))
+		if (!noct_make_int(env, value, (int)ival))
 			return false;
 		return true;
 	case SER_TYPE_FLOAT:
@@ -1374,7 +1382,7 @@ deserialize_save_data_recursively(
 			return false;
 		if (!noct_make_empty_array(env, value))
 			return false;
-		if (!noct_resize_array(env, value, size))
+		if (!noct_resize_array(env, value, (uint32_t)size))
 			return false;
 		for (i = 0; i < size; i++) {
 			NoctValue elem;

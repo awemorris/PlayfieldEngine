@@ -144,6 +144,7 @@ void
 rt_gc_cleanup(
 	struct rt_vm *vm)
 {
+	UNUSED_PARAMETER(vm);
 }
 
 /*
@@ -722,9 +723,11 @@ void
 rt_gc_array_write_barrier(
 	struct rt_env *env,
 	struct rt_array *arr,
-	int index,
+	uint32_t index,
 	struct rt_value *val)
 {
+	UNUSED_PARAMETER(index);
+
 	/*
 	 * If all of the following are satisfied, add the array to the
 	 * remember set.
@@ -788,7 +791,8 @@ rt_gc_young_gc_body(
 {
 	struct rt_gc_object *obj;
 	struct rt_frame *frame;
-	int sp, i;
+	uint32_t i;
+	int sp;
 
 	env->vm->gc.graduate_new_list = NULL;
 
@@ -828,7 +832,7 @@ rt_gc_young_gc_body(
 	 */
 
 	/* For all global variables. */
-	for (i = 0; i < env->vm->global_alloc_size; i++) {
+	for (i = 0; i < (uint32_t)env->vm->global_alloc_size; i++) {
 		if (env->vm->global[i].name == NULL || env->vm->global[i].is_removed)
 			continue;
 		if (IS_REF_VAL(&env->vm->global[i].val)) {
@@ -838,7 +842,7 @@ rt_gc_young_gc_body(
 	}
 
 	/* For all call frames. */
-	for (sp = env->cur_frame_index; sp >= 0; sp--) {
+	for (sp = (int)env->cur_frame_index; sp >= 0; sp--) {
 		frame = &env->frame_alloc[sp];
 
 		/* For all temporary variables in the frame. */
@@ -981,7 +985,7 @@ rt_gc_copy_young_object_recursively(
 	struct rt_array *arr;
 	struct rt_dict *dict;
 	bool is_promoted;
-	int i;
+	uint32_t i;
 
 	/* If this is an array or dictionary, get the forwarder. */
 	rt_gc_array_dict_follow_newer(env, obj);
@@ -1145,6 +1149,8 @@ rt_gc_array_dict_follow_newer(
 	struct rt_env *env,
 	struct rt_gc_object **obj)
 {
+	UNUSED_PARAMETER(env);
+
 	if ((*obj)->type == RT_GC_TYPE_ARRAY) {
 		struct rt_array *arr = (struct rt_array *)*obj;
 		if (arr->newer == NULL)
@@ -1253,7 +1259,7 @@ rt_gc_promote_dict(
 {
 	struct rt_dict *old_dict, *new_dict;
 	size_t alloc_size;
-	int index, i, j;
+	uint32_t index, i, j;
 
 	/* Get the allocation size. */
 	old_dict = (struct rt_dict *)obj;
@@ -1269,10 +1275,10 @@ rt_gc_promote_dict(
 		if (old_dict->key[i].type != NOCT_VALUE_STRING)
 			continue; /* Removed or empty. */
 
-		index = string_hash(old_dict->key[i].val.str->data) & (new_dict->alloc_size - 1);
+		index = string_hash(old_dict->key[i].val.str->data) & ((uint32_t)new_dict->alloc_size - 1);
 		for (j = index;
-		     j != ((index - 1 + new_dict->alloc_size) & (new_dict->alloc_size - 1));
-		     j = (j + 1) & (new_dict->alloc_size - 1)) {
+		     j != ((index - 1 + (uint32_t)new_dict->alloc_size) & (new_dict->alloc_size - 1));
+		     j = (j + 1) & ((uint32_t)new_dict->alloc_size - 1)) {
 			if (new_dict->key[j].type != NOCT_VALUE_STRING) {
 				/* Copy the item. */
 				new_dict->key[j] = old_dict->key[i];
@@ -1323,7 +1329,7 @@ rt_gc_copy_array_to_graduate(
 	struct rt_array *old_obj)
 {
 	struct rt_array *new_obj;
-	int i;
+	uint32_t i;
 	size_t size;
 
 	assert(env != NULL);
@@ -1371,7 +1377,7 @@ rt_gc_copy_dict_to_graduate(
 	struct rt_dict *old_obj)
 {
 	struct rt_dict *new_obj;
-	int i;
+	uint32_t i;
 	size_t size;
 
 	assert(env != NULL);
@@ -1398,7 +1404,7 @@ rt_gc_copy_dict_to_graduate(
 
 	/* Check for cross-generation references. */
 	if (new_obj->head.region == RT_GC_REGION_TENURE) {
-		for (i = 0; i < new_obj->size; i++) {
+		for (i = 0; i < (uint32_t)new_obj->size; i++) {
 			if (IS_YOUNG_OBJ(new_obj->key[i].val.obj)) {
 				new_obj->head.rem_flg = true;
 				INSERT_TO_LIST(&new_obj->head, env->vm->gc.remember_set,rem_prev, rem_next);
@@ -1440,7 +1446,8 @@ rt_gc_old_gc_body(
 {
 	struct rt_gc_object *obj, *next_obj;
 	struct rt_frame *frame;
-	int sp, i;
+	uint32_t i;
+	int sp;
 
 	/*
 	 * Clear marks.
@@ -1472,7 +1479,7 @@ rt_gc_old_gc_body(
 	 */
 
 	/* For all global variables. */
-	for (i = 0; i < env->vm->global_alloc_size; i++) {
+	for (i = 0; i < (uint32_t)env->vm->global_alloc_size; i++) {
 		if (env->vm->global[i].name == NULL || env->vm->global[i].is_removed)
 			continue;
 		if (IS_REF_VAL(&env->vm->global[i].val))
@@ -1525,7 +1532,7 @@ rt_gc_mark_old_object_recursively(
 	struct rt_env *env,
 	struct rt_gc_object **obj)
 {
-	int i;
+	uint32_t i;
 
 	/* Follow the newer array/dict. */
 	rt_gc_array_dict_follow_newer(env, obj);
@@ -1602,7 +1609,8 @@ rt_gc_compact_gc(
 {
 	struct rt_gc_object *obj, **objpp;
 	char *cur_blk, *remap_top;
-	int sp, i, index;
+	uint32_t index, i;
+	int sp;
 	struct rt_frame *frame;
 
 	/*
@@ -1689,7 +1697,7 @@ rt_gc_compact_gc(
 		if (i == env->vm->gc.compact_count - 1) {
 			memset((char *)env->vm->gc.compact_after[i] + obj_size,
 			       0,
-			       env->vm->gc.tenure_freelist.end - ((char *)env->vm->gc.compact_after[i] + obj_size));
+			       (size_t)(env->vm->gc.tenure_freelist.end - ((char *)env->vm->gc.compact_after[i] + obj_size)));
 		}
 	}
 
@@ -1722,7 +1730,7 @@ rt_gc_compact_gc(
 	}
 
 	/* For all global variables. */
-	for (i = 0; i < env->vm->global_alloc_size; i++) {
+	for (i = 0; i < (uint32_t)env->vm->global_alloc_size; i++) {
 		if (env->vm->global[i].name == NULL || env->vm->global[i].is_removed)
 			continue;
 		if (IS_REF_VAL(&env->vm->global[i].val))
@@ -1774,10 +1782,10 @@ rt_gc_update_tenure_ref(
 	struct rt_env *env,
 	struct rt_gc_object **obj)
 {
-	int i;
+	uint32_t i;
 
 	/* Search in the compaction table. */
-	for (i = 0; i < env->vm->gc.compact_count; i++) {
+	for (i = 0; i < (uint32_t)env->vm->gc.compact_count; i++) {
 		if (env->vm->gc.compact_before[i] == *obj)
 			break;
 	}
@@ -1794,10 +1802,10 @@ rt_gc_update_tenure_ref_recursively(
 	struct rt_env *env,
 	struct rt_gc_object **obj)
 {
-	int i;
+	uint32_t i;
 
 	/* Search in the compaction table. */
-	for (i = 0; i < env->vm->gc.compact_count; i++) {
+	for (i = 0; i < (uint32_t)env->vm->gc.compact_count; i++) {
 		if (env->vm->gc.compact_before[i] == *obj)
 			break;
 	}
@@ -1856,7 +1864,7 @@ rt_gc_unpin_global(
 	struct rt_env *env,
 	struct rt_value *val)
 {
-	int i;
+	uint32_t i;
 
 	assert(env != NULL);
 	assert(val != NULL);
@@ -1905,7 +1913,7 @@ rt_gc_unpin_local(
 	struct rt_env *env,
 	struct rt_value *val)
 {
-	int i;
+	uint32_t i;
 
 	assert(env != NULL);
 	assert(val != NULL);
@@ -2040,7 +2048,7 @@ rt_gc_tenure_alloc(
 	}
 
 	/* Check if the remaining size fits. */
-	if (size > env->vm->gc.tenure_freelist.end - cur - sizeof(size_t))
+	if (size > (size_t)(env->vm->gc.tenure_freelist.end - (uintptr_t)cur - sizeof(size_t)))
 		return NULL;
 
 	/* Allocate at the end of the free list. */
@@ -2056,6 +2064,8 @@ rt_gc_tenure_free(
 {
 	size_t *header;
 	size_t size;
+
+	UNUSED_PARAMETER(env);
 
 	/* Get the header address. */
 	header = (size_t *)((char *)p - sizeof(size_t));

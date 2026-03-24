@@ -93,6 +93,9 @@ int main(int argc, char *argv[])
 /* Show the usage message. */
 static void show_usage(int argc, char *argv[])
 {
+	UNUSED_PARAMETER(argc);
+	UNUSED_PARAMETER(argv);
+
 	wide_printf("Script AOT Compiler\n");
 	wide_printf("Usage: %s <files>\n", argv[0]);
 }
@@ -139,7 +142,7 @@ static bool add_file_hook_c(const char *fname)
 {
 	char *data;
 	size_t len;
-	int func_count, j;
+	uint32_t func_count, j;
 
 	/* Load an argument file. */
 	if (!load_file_content(fname, &data, &len))
@@ -202,10 +205,9 @@ static int wide_printf(const char *format, ...)
 {
 	static char buf[4096];
 	va_list ap;
-	int size;
 
 	va_start(ap, format);
-	size = vsnprintf(buf, sizeof(buf), format, ap);
+	vsnprintf(buf, sizeof(buf), format, ap);
 	va_end(ap);
 
 #if !defined(_WIN32)
@@ -238,7 +240,7 @@ static bool load_file_content(const char *fname, char **data, size_t *size)
 
 	/* Get the file size. */
 	fseek(fp, 0, SEEK_END);
-	*size = ftell(fp);
+	*size = (size_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
 	/* Allocate a buffer. */

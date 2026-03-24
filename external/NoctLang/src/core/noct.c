@@ -65,7 +65,7 @@ bool
 noct_register_bytecode(
 	NoctEnv *env,
 	uint8_t *data,
-	size_t size)
+	uint32_t size)
 {
 	assert(env != NULL);
 	assert(size > 0);
@@ -82,14 +82,13 @@ bool
 noct_register_cfunc(
 	NoctEnv *env,
 	const char *name,
-	int param_count,
+	uint32_t param_count,
 	const char *param_name[],
 	bool (*cfunc)(NoctEnv *env),
 	NoctFunc **ret_func)
 {
 	assert(env != NULL);
 	assert(name != NULL);
-	assert(param_count >= 0);
 	assert(cfunc != NULL);
 
 	if (!rt_register_cfunc(env, name, param_count, param_name, cfunc, ret_func))
@@ -120,13 +119,12 @@ bool
 noct_enter_vm(
 	NoctEnv *env,
 	const char *func_name,
-	int arg_count,
+	uint32_t arg_count,
 	NoctValue *arg,
 	NoctValue *ret)
 {
 	assert(env != NULL);
 	assert(func_name != NULL);
-	assert(arg_count >= 0);
 
 	if (!rt_call_with_name(env, func_name, arg_count, arg, ret))
 		return false;
@@ -181,13 +179,12 @@ bool
 noct_call(
 	NoctEnv *env,
 	NoctFunc *func,
-	int arg_count,
+	uint32_t arg_count,
 	NoctValue *arg,
 	NoctValue *ret)
 {
 	assert(env != NULL);
 	assert(func != NULL);
-	assert(arg_count >= 0);
 
 	if (!rt_call(env, func, arg_count, arg, ret))
 		return false;
@@ -341,7 +338,7 @@ bool
 noct_get_string_len(
 	NoctEnv *env,
 	NoctValue *val,
-	size_t *len)
+	uint32_t *len)
 {
 	assert(env != NULL);
 	assert(val != NULL);
@@ -354,7 +351,7 @@ noct_get_string_len(
 	}
 
 	/* Get the size. */
-	*len = val->val.str->len;
+	*len = (uint32_t)val->val.str->len;
 
 	return true;
 }
@@ -438,7 +435,6 @@ noct_get_array_elem(
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Check the type. */
@@ -464,7 +460,6 @@ noct_set_array_elem(
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Check the type. */
@@ -566,7 +561,6 @@ noct_get_dict_key_by_index(
 {
 	assert(env != NULL);
 	assert(dict != NULL);
-	assert(index >= 0);
 	assert(key != NULL);
 	
 	/* Check the type. */
@@ -592,7 +586,6 @@ noct_get_dict_value_by_index(
 {
 	assert(env != NULL);
 	assert(dict != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	
 	/* Check the type. */
@@ -751,7 +744,6 @@ noct_get_arg(
 	NoctValue *val)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	*val = env->frame->tmpvar[index];
@@ -932,6 +924,8 @@ noct_get_heap_usage(
 	NoctEnv *env,
 	size_t *ret)
 {
+	UNUSED_PARAMETER(env);
+
 	/* TODO: */
 	*ret = 0;
 
@@ -1013,7 +1007,6 @@ noct_get_array_elem_check_int(
 
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(i != NULL);
 
 	/* Get the element. */
@@ -1047,7 +1040,6 @@ noct_get_array_elem_check_float(
 
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(f != NULL);
 
 	/* Get the element. */
@@ -1081,7 +1073,6 @@ noct_get_array_elem_check_string(
 
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(data != NULL);
 
@@ -1113,7 +1104,6 @@ noct_get_array_elem_check_array(
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Get the element. */
@@ -1134,12 +1124,11 @@ bool
 noct_get_array_elem_dict(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Get the element. */
@@ -1166,7 +1155,6 @@ noct_get_array_elem_check_func(
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Get the element. */
@@ -1194,13 +1182,12 @@ bool
 noct_set_array_elem_make_int(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int i)
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Make an integer value. */
@@ -1219,13 +1206,12 @@ bool
 noct_set_array_elem_make_float(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float f)
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Make an integer value. */
@@ -1244,13 +1230,12 @@ bool
 noct_set_array_elem_make_string(
 	NoctEnv *env,
 	NoctValue *array,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char *data)
 {
 	assert(env != NULL);
 	assert(array != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(data != NULL);
 
@@ -1533,12 +1518,11 @@ NOCT_DLL
 bool
 noct_get_arg_check_int(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	int *i)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(i != NULL);
 
@@ -1564,12 +1548,11 @@ NOCT_DLL
 bool
 noct_get_arg_check_float(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	float *f)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(f != NULL);
 
@@ -1595,12 +1578,11 @@ NOCT_DLL
 bool
 noct_get_arg_check_string(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	const char **data)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(data != NULL);
 
@@ -1626,11 +1608,10 @@ NOCT_DLL
 bool
 noct_get_arg_check_array(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Get the argument. */
@@ -1653,11 +1634,10 @@ NOCT_DLL
 bool
 noct_get_arg_check_dict(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	/* Get the argument. */
@@ -1679,12 +1659,11 @@ NOCT_DLL
 bool
 noct_get_arg_func(
 	NoctEnv *env,
-	int index,
+	uint32_t index,
 	NoctValue *val,
 	NoctFunc **f)
 {
 	assert(env != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	assert(f != NULL);
 

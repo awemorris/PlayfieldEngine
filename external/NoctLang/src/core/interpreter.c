@@ -829,7 +829,7 @@ rt_visit_jmp_op(
         GET_ADDR(&target);
 
         /* Jump. */
-        *pc = (int)target;
+        *pc = target;
 
         return true;
 }
@@ -857,7 +857,7 @@ rt_visit_jmpiftrue_op(
 
         /* Jump. */
         if (env->frame->tmpvar[src].val.i == 1)
-                *pc = (int)target;
+                *pc = target;
 
         return true;
 }
@@ -885,7 +885,7 @@ rt_visit_jmpiffalse_op(
 
         /* Jump. */
         if (env->frame->tmpvar[src].val.i == 0)
-                *pc = (int)target;
+                *pc = target;
 
         return true;
 }

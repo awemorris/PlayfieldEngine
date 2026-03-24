@@ -857,7 +857,7 @@ scanline_edge(
 	float tx2,
 	float ty2)
 {
-	int y_start, y_end, y;
+	int y;
 
 	/* Horizontal edge. */
 	if (y1 == y2) {
@@ -866,24 +866,24 @@ scanline_edge(
 			return;
 
 		if (x1 < x2) {
-			if (x1 < sc_min_x[y_start]) {
-				sc_min_x[y_start]  = x1;
-				sc_min_tx[y_start] = tx1;
-				sc_min_ty[y_start] = ty1;
+			if (x1 < sc_min_x[y]) {
+				sc_min_x[y]  = (int)ceilf(x1);
+				sc_min_tx[y] = tx1;
+				sc_min_ty[y] = ty1;
 			}
 			if (x2 > sc_max_x[y]) {
-				sc_max_x[y]  = x2;
+				sc_max_x[y]  = (int)ceilf(x2);
 				sc_max_tx[y] = tx2;
 				sc_max_ty[y] = ty2;
 			}
 		} else {
 			if (x2 < sc_min_x[y]) {
-				sc_min_x[y]  = x2;
+				sc_min_x[y]  = (int)ceilf(x2);
 				sc_min_tx[y] = tx2;
 				sc_min_ty[y] = ty2;
 			}
 			if (x1 > sc_max_x[y]) {
-				sc_max_x[y]  = x1;
+				sc_max_x[y]  = (int)ceilf(x1);
 				sc_max_tx[y] = tx1;
 				sc_max_ty[y] = ty2;
 			}
@@ -902,7 +902,7 @@ scanline_edge(
 
 	/* Vertical edge. */
 	if (x1 == x2) {
-		for (y = y1; y <= y2; y++) {
+		for (y = (int)ceilf(y1); y <= (int)ceilf(y2); y++) {
 			float t, ty;
 
 			if (y < 0)
@@ -914,12 +914,12 @@ scanline_edge(
 			ty = ty1 + (ty2 - ty1) * t;
 
 			if (x1 < sc_min_x[y]) {
-				sc_min_x[y]  = x1;
+				sc_min_x[y]  = (int)ceilf(x1);
 				sc_min_tx[y] = tx1;
 				sc_min_ty[y] = ty;
 			}
 			if (x1 > sc_max_x[y]) {
-				sc_max_x[y]  = x1;
+				sc_max_x[y]  = (int)ceilf(x1);
 				sc_max_tx[y] = tx1;
 				sc_max_ty[y] = ty;
 			}
@@ -928,7 +928,7 @@ scanline_edge(
 	}
 
 	/* Non horizontal, non vertical. */
-	for (y = y1; y <= y2; y++) {
+	for (y = (int)ceilf(y1); y <= (int)ceilf(y2); y++) {
 		float t, x, tx, ty;
 		int ix;
 

@@ -557,7 +557,6 @@ draw_glyph_with_outline(
 	FT_Glyph glyph;
 	FT_BitmapGlyph bitmapGlyph;
 	int descent;
-	int h_outline, h_body;
 
 	/* Draw inner outline. */
 	FT_Stroker_New(library, &stroker);
@@ -824,7 +823,7 @@ draw_glyph_func(
 	hal_pixel_t *dst_ptr, src_r, src_g, src_b, src_a;
 	uint32_t dst_pix, dst_r, dst_g, dst_b, dst_a;
 	uint32_t pix_r, pix_g, pix_b, pix_a;
-	float color_r, color_g, color_b;
+	uint32_t color_r, color_g, color_b;
 	int image_real_x, image_real_y;
 	int font_real_x, font_real_y;
 	int font_real_width, font_real_height;
@@ -863,9 +862,9 @@ draw_glyph_func(
 		font_real_height -= (image_real_y + font_real_height) - image_height;
 
 	/* Draw. */
-	color_r = (float)((color >> 16) & 0xff);
-	color_g = (float)((color >> 8) & 0xff);
-	color_b = (float)(color & 0xff);
+	color_r = (color >> 16) & 0xff;
+	color_g = (color >> 8) & 0xff;
+	color_b = color & 0xff;
 	dst_ptr = image + image_real_y * image_width + image_real_x;
 	src_ptr = font + font_real_y * font_width + font_real_x;
 	for (py = font_real_y; py < font_real_y + font_real_height; py++) {
