@@ -1028,7 +1028,7 @@ rt_storearray_helper(
 		}
 
 		/* Store to the array. */
-		if (!rt_set_array_elem(env, &arr_val->val.arr, subscr_val->val.i, val_val))
+		if (!rt_set_array_elem(env, &arr_val->val.arr, (uint32_t)subscr_val->val.i, val_val))
 			return false;
 		return true;
 	} else if (arr_val->type == NOCT_VALUE_DICT) {
@@ -1082,7 +1082,7 @@ rt_loadarray_helper(
 		}
 
 		/* Load the array element. */
-		if (!rt_get_array_elem(env, arr_val->val.arr, subscr_val->val.i, dst_val))
+		if (!rt_get_array_elem(env, arr_val->val.arr, (uint32_t)subscr_val->val.i, dst_val))
 			return false;
 		return true;
 	} else if (arr_val->type == NOCT_VALUE_DICT) {
@@ -1176,7 +1176,7 @@ rt_getdictkeybyindex_helper(
 	}
 
 	/* Load the element. */
-	if (!rt_get_dict_key_by_index(env, dict_val->val.dict, subscr_val->val.i, dst_val))
+	if (!rt_get_dict_key_by_index(env, dict_val->val.dict, (uint32_t)subscr_val->val.i, dst_val))
 		return false;
 
 	return true;
@@ -1210,7 +1210,7 @@ rt_getdictvalbyindex_helper(
 	}
 
 	/* Load the element. */
-	if (!rt_get_dict_value_by_index(env, dict_val->val.dict, subscr_val->val.i, dst_val))
+	if (!rt_get_dict_value_by_index(env, dict_val->val.dict, (uint32_t)subscr_val->val.i, dst_val))
 		return false;
 
 	return true;
@@ -1359,7 +1359,7 @@ rt_call_helper(
 		arg_val[i] = env->frame->tmpvar[arg[i]];
 
 	/* Do call. */
-	if (!rt_call(env, callee, arg_count, &arg_val[0], &ret))
+	if (!rt_call(env, callee, (uint32_t)arg_count, &arg_val[0], &ret))
 		return false;
 
 	/* Store a return value. */
@@ -1419,7 +1419,7 @@ rt_thiscall_helper(
 		arg_val[i] = env->frame->tmpvar[arg[i - 1]];
 
 	/* Do call. */
-	if (!rt_call(env, callee, arg_count, &arg_val[0], &ret))
+	if (!rt_call(env, callee, (uint32_t)arg_count, &arg_val[0], &ret))
 		return false;
 
 	/* Store a return value. */

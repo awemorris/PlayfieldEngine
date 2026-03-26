@@ -38,7 +38,7 @@ static bool rt_intrin_compact_gc(NoctEnv *env);
 struct intrin_item {
 	const char *field_name;
 	const char *reg_name;
-	int param_count;
+	uint32_t param_count;
 	const char *param[NOCT_ARG_MAX];
 	bool (*cfunc)(struct rt_env *rt);
 	bool is_thiscall;
@@ -90,6 +90,8 @@ rt_get_intrin_thiscall_func(
 	struct rt_func **func)
 {
 	int i;
+
+	UNUSED_PARAMETER(env);
 
 	for (i = 0; i < (int)(sizeof(intrin_items) / sizeof(struct intrin_item)); i++) {
 		if (!intrin_items[i].is_thiscall)
@@ -325,7 +327,7 @@ rt_intrin_newArray(
 
 	if (!noct_make_empty_array(env, &arr))
 		return false;
-	if (!noct_resize_array(env, &arr, size_i))
+	if (!noct_resize_array(env, &arr, (uint32_t)size_i))
 		return false;
 	if (!noct_set_return(env, &arr))
 		return false;
@@ -348,7 +350,7 @@ rt_intrin_resize(
 	if (!noct_get_arg_check_int(env, 1, &size, &size_i))
 		return false;
 
-	if (!noct_resize_array(env, &arr, size_i))
+	if (!noct_resize_array(env, &arr, (uint32_t)size_i))
 		return false;
 
 	return true;
@@ -410,7 +412,6 @@ rt_intrin_charAt(
 	NoctValue str, index, ret;
 	const char *str_s;
 	int index_i;
-	size_t len;
 	const char *s;
 	char d[8];
 	int i, ofs;
@@ -421,8 +422,6 @@ rt_intrin_charAt(
 		return false;
 	if (!noct_get_arg_check_int(env, 1, &index, &index_i))
 		return false;
-
-	len = get_string_length(str_s);
 
 	if (index_i < 0) {
 		if (!noct_make_string(env, &ret, ""))
@@ -447,7 +446,7 @@ rt_intrin_charAt(
 
 		if (i == index_i) {
 			/* Succeeded. */
-			strncpy(d, &str_s[ofs], mblen);
+			strncpy(d, &str_s[ofs], (size_t)mblen);
 			d[mblen] = '\0';
 			if (!noct_set_return_make_string(env, &ret, d))
 				return false;
@@ -507,7 +506,7 @@ rt_intrin_substring(
 		}
 		if (i == start_i)
 			copy_start = ofs;
-		if (i == (size_t)start_i + (size_t)len_i)
+		if (i == start_i + len_i)
 			break;
 		if (copy_start != -1)
 			copy_mblen += mblen;

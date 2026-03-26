@@ -43,7 +43,7 @@ extern int noct_conf_optimize;
 static uint8_t bytecode[BYTECODE_BUF_SIZE];
 
 /* Cuurent bytecode length. */
-static int bytecode_top;
+static uint32_t bytecode_top;
 
 /*
  * Variable table.
@@ -51,8 +51,8 @@ static int bytecode_top;
 
 #define TMPVAR_MAX	128
 
-static int tmpvar_top;
-static int tmpvar_count;
+static uint32_t tmpvar_top;
+static uint32_t tmpvar_count;
 
 /*
  * Relocation table.
@@ -90,7 +90,7 @@ static char lir_error_message[1024];
 /*
  * Forward declaration.
  */
-static int lir_count_local(struct hir_block *func);
+static uint32_t lir_count_local(struct hir_block *func);
 static bool lir_visit_block(struct hir_block *block);
 static bool lir_visit_basic_block(struct hir_block *block);
 static bool lir_check_succ_loop_head(struct hir_block *block, struct hir_block **loop);
@@ -145,7 +145,7 @@ lir_build(
 	struct lir_func **lir_func)
 {
 	struct hir_block *cur_block;
-	int i;
+	uint32_t i;
 
 	assert(hir_func != NULL);
 	assert(hir_func->type == HIR_BLOCK_FUNC);
@@ -240,12 +240,12 @@ lir_build(
 }
 
 /* Count the number of the local variables in a func. */
-static int
+static uint32_t
 lir_count_local(
 	struct hir_block *func)
 {
 	struct hir_local *local;
-	int count;
+	uint32_t count;
 
 	count = 0;
 	local = func->val.func.local;
@@ -1332,14 +1332,13 @@ lir_visit_call_expr(
 	struct hir_block *block)
 {
 	int arg_tmpvar[HIR_PARAM_SIZE];
-	int arg_count;
+	uint32_t arg_count;
 	int func_tmpvar;
 	int i;
 
 	assert(expr != NULL);
 	assert(expr->type == HIR_EXPR_CALL);
 	assert(expr->val.call.func != NULL);
-	assert(expr->val.call.arg_count >= 0);
 	assert(expr->val.call.arg_count < HIR_PARAM_SIZE);
 
 	arg_count = expr->val.call.arg_count;
@@ -1351,7 +1350,7 @@ lir_visit_call_expr(
 		return false;
 
 	/* Visit the arg exprs. */
-	for (i = 0; i < arg_count; i++) {
+	for (i = 0; i < (int)arg_count; i++) {
 		if (!lir_increment_tmpvar(&arg_tmpvar[i]))
 			return false;
 		if (!lir_visit_expr(arg_tmpvar[i], expr->val.call.arg[i], block))
@@ -1367,12 +1366,12 @@ lir_visit_call_expr(
 		return false;
 	if (!lir_put_imm8((uint8_t)arg_count))
 		return false;
-	for (i = 0; i < arg_count; i++) {
+	for (i = 0; i < (int)arg_count; i++) {
 		if (!lir_put_tmpvar((uint16_t)arg_tmpvar[i]))
 			return false;
 	}
 
-	for (i = arg_count - 1; i >= 0; i--)
+	for (i = (int)arg_count - 1; i >= 0; i--)
 		lir_decrement_tmpvar(arg_tmpvar[i]);
 	lir_decrement_tmpvar(func_tmpvar);
 
@@ -1393,10 +1392,9 @@ lir_visit_thiscall_expr(
 	assert(expr != NULL);
 	assert(expr->type == HIR_EXPR_THISCALL);
 	assert(expr->val.thiscall.func != NULL);
-	assert(expr->val.thiscall.arg_count >= 0);
 	assert(expr->val.thiscall.arg_count < HIR_PARAM_SIZE);
 
-	arg_count = expr->val.thiscall.arg_count;
+	arg_count = (int)expr->val.thiscall.arg_count;
 	
 	/* Visit the object expr. */
 	if (!lir_increment_tmpvar(&obj_tmpvar))
@@ -1441,10 +1439,9 @@ lir_visit_array_expr(
 	struct hir_expr *expr,
 	struct hir_block *block)
 {
-	int elem_count;
+	uint32_t elem_count, i;
 	int elem_tmpvar;
 	int index_tmpvar;
-	int i;
 
 	assert(expr != NULL);
 	assert(expr->type == HIR_EXPR_ARRAY);
@@ -1497,15 +1494,13 @@ lir_visit_dict_expr(
 	struct hir_expr *expr,
 	struct hir_block *block)
 {
-	int kv_count;
+	uint32_t kv_count, i;
 	int key_tmpvar;
 	int value_tmpvar;
 	int index_tmpvar;
-	int i;
 
 	assert(expr != NULL);
 	assert(expr->type == HIR_EXPR_DICT);
-	assert(expr->val.dict.kv_count >= 0);
 
 	kv_count = expr->val.dict.kv_count;
 	
@@ -1804,7 +1799,7 @@ lir_increment_tmpvar(
 		return false;
 	}
 
-	*tmpvar_index = tmpvar_top;
+	*tmpvar_index = (int)tmpvar_top;
 
 	tmpvar_top++;
 	if (tmpvar_top > tmpvar_count)
@@ -1817,7 +1812,7 @@ static bool
 lir_decrement_tmpvar(
 	int tmpvar_index)
 {
-	assert(tmpvar_index == tmpvar_top - 1);
+	assert(tmpvar_index == (int)tmpvar_top - 1);
 	assert(tmpvar_top > 0);
 
 	tmpvar_top--;
@@ -2023,7 +2018,7 @@ patch_block_address(void)
 void
 lir_cleanup(struct lir_func *func)
 {
-	int i;
+	uint32_t i;
 
 	assert(func != NULL);
 

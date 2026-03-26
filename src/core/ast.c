@@ -69,6 +69,7 @@ static struct ast_stmt *ast_accept_xassign_stmt(int line, struct ast_expr *lhs, 
 static struct ast_stmt *ast_accept_plusplus_or_minusminus_stmt(int line, struct ast_expr *expr,int type);
 static struct ast_expr *ast_accept_binary_expr(struct ast_expr *expr1, struct ast_expr *expr2, int type);
 static struct ast_expr *ast_accept_unary_expr(struct ast_expr *e, int type);
+#if 0
 static void ast_free_func_list(struct ast_func_list *func_list);
 static void ast_free_func(struct ast_func *func);
 static void ast_free_arg_list(struct ast_arg_list *arg_list);
@@ -79,6 +80,7 @@ static void ast_free_expr(struct ast_expr *expr);
 static void ast_free_kv_list(struct ast_kv_list *kv_list);
 static void ast_free_kv(struct ast_kv *kv);
 static void ast_free_term(struct ast_term *term);
+#endif
 static struct ast_expr *ast_copy_expr(struct ast_expr *expr);
 static struct ast_term *ast_copy_term(struct ast_term *term);
 static struct ast_arg_list *ast_copy_arg_list(struct ast_arg_list *arg_list);
@@ -1612,6 +1614,7 @@ ast_accept_arg_list(
 	return arg_list;
 }
 
+#if 0
 /* Free an AST func_list. */
 static void
 ast_free_func_list(
@@ -1945,6 +1948,7 @@ ast_free_term(
 	ast_free(term);
 	term = NULL;
 }
+#endif
 
 /* Copy an AST expr. */
 static struct ast_expr *
@@ -2228,4 +2232,7 @@ char *ast_strdup(const char *s)
 
 void ast_free(void *p)
 {
+	UNUSED_PARAMETER(p);
+
+	/* We use arena allocator. */
 }

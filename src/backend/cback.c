@@ -44,12 +44,12 @@ static const char BROKEN_BYTECODE[] = "Broken bytecode.";
 
 struct c_func {
 	char *name;
-	int param_count;
+	uint32_t param_count;
 	char *param_name[ARG_MAX];
 };
 
 static struct c_func func_table[FUNC_MAX];
-static int func_count;
+static uint32_t func_count;
 
 /*
  * Translation context.
@@ -61,7 +61,7 @@ static FILE *fp;
  * Forward declaration
  */
 static bool cback_visit_bytecode(struct lir_func *func);
-static bool cback_visit_op(struct lir_func *func, int *pc);
+static bool cback_visit_op(struct lir_func *func, uint32_t *pc);
 static bool cback_write_dll_init(void);
 
 /*
@@ -91,7 +91,7 @@ bool
 cback_translate_func(
 	struct lir_func *func)
 {
-	int i;
+	uint32_t i;
 
 	/* Save a function name. */
 	func_table[func_count].name = strdup(func->func_name);
@@ -131,7 +131,7 @@ static bool
 cback_visit_bytecode(
 	struct lir_func *func)
 {
-	int pc;
+	uint32_t pc;
 
 	pc = 0;
 	while (pc < func->bytecode_size) {
@@ -146,7 +146,7 @@ cback_visit_bytecode(
 #define GET_U8(v) if (!cback_get_u8(func, pc, v)) return false
 static INLINE bool cback_get_u8(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 1 > func->bytecode_size) {
@@ -165,7 +165,7 @@ static INLINE bool cback_get_u8(
 #define GET_U16(v) if (!cback_get_u16(func, pc, v)) return false
 static INLINE bool cback_get_u16(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 2 > func->bytecode_size) {
@@ -185,7 +185,7 @@ static INLINE bool cback_get_u16(
 #define GET_TMPVAR(v) if (!cback_get_tmpvar(func, pc, v)) return false
 static INLINE bool cback_get_tmpvar(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         int *val)
 {
         if (*pc + 2 > func->bytecode_size) {
@@ -195,7 +195,7 @@ static INLINE bool cback_get_tmpvar(
 
         *val = ((uint32_t)func->bytecode[*pc] << 8) |
                 (uint32_t)func->bytecode[*pc + 1];
-        if (*val >= (uint32_t)func->tmpvar_size) {
+        if ((uint32_t)*val >= (uint32_t)func->tmpvar_size) {
                 puts(BROKEN_BYTECODE);
                 return false;
         }
@@ -209,7 +209,7 @@ static INLINE bool cback_get_tmpvar(
 #define GET_U32(v) if (!cback_get_u32(func, pc, v)) return false
 static INLINE bool cback_get_u32(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         uint32_t *val)
 {
         if (*pc + 4 > func->bytecode_size) {
@@ -231,7 +231,7 @@ static INLINE bool cback_get_u32(
 #define GET_ADDR(v) if (!cback_get_addr(func, pc, v)) return false
 static INLINE bool cback_get_addr(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         uint32_t *val)
 {
         if (*pc + 4 > func->bytecode_size) {
@@ -258,7 +258,7 @@ static INLINE bool cback_get_addr(
 #define GET_STRING(s, l, h) if (!cback_get_string(func, pc, s, l, h)) return false
 static INLINE bool cback_get_string(
         struct lir_func *func,
-        int *pc,
+        uint32_t *pc,
         const char **s,
         uint32_t *len,
         uint32_t *hash)
@@ -278,7 +278,7 @@ static INLINE bool cback_get_string(
                 ((uint32_t)func->bytecode[*pc + 6] << 8) |
                 (uint32_t)func->bytecode[*pc + 7];
 
-        if (*pc + 8 + *len > func->bytecode_size) {
+        if ((uint32_t)*pc + 8 + *len > (uint32_t)func->bytecode_size) {
                 puts(BROKEN_BYTECODE);
                 return false;
         }
@@ -315,7 +315,7 @@ static INLINE bool cback_get_string(
 static INLINE bool
 cback_visit_lineinfo_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	uint32_t line;
 
@@ -330,7 +330,7 @@ cback_visit_lineinfo_op(
 static INLINE bool
 cback_visit_assign_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst, src;
 
@@ -346,7 +346,7 @@ cback_visit_assign_op(
 static INLINE bool
 cback_visit_iconst_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 	uint32_t val;
@@ -364,7 +364,7 @@ cback_visit_iconst_op(
 static INLINE bool
 cback_visit_fconst_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 	uint32_t raw;
@@ -385,7 +385,7 @@ cback_visit_fconst_op(
 static INLINE bool
 cback_visit_sconst_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 	const char *s;
@@ -404,7 +404,7 @@ cback_visit_sconst_op(
 static INLINE bool
 cback_visit_aconst_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 
@@ -420,7 +420,7 @@ cback_visit_aconst_op(
 static INLINE bool
 cback_visit_dconst_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 
@@ -436,7 +436,7 @@ cback_visit_dconst_op(
 static INLINE bool
 cback_visit_inc_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 
@@ -449,7 +449,7 @@ cback_visit_inc_op(
 static INLINE bool
 cback_visit_add_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_add_helper);
 	return true;
@@ -459,7 +459,7 @@ cback_visit_add_op(
 static INLINE bool
 cback_visit_sub_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_sub_helper);
 	return true;
@@ -469,7 +469,7 @@ cback_visit_sub_op(
 static INLINE bool
 cback_visit_mul_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_mul_helper);
 	return true;
@@ -479,7 +479,7 @@ cback_visit_mul_op(
 static INLINE bool
 cback_visit_div_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_div_helper);
 	return true;
@@ -489,7 +489,7 @@ cback_visit_div_op(
 static INLINE bool
 cback_visit_mod_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_mod_helper);
 	return true;
@@ -499,7 +499,7 @@ cback_visit_mod_op(
 static INLINE bool
 cback_visit_and_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_and_helper);
 	return true;
@@ -509,7 +509,7 @@ cback_visit_and_op(
 static INLINE bool
 cback_visit_or_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_or_helper);
 	return true;
@@ -519,7 +519,7 @@ cback_visit_or_op(
 static INLINE bool
 cback_visit_xor_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_xor_helper);
 	return true;
@@ -529,7 +529,7 @@ cback_visit_xor_op(
 static INLINE bool
 cback_visit_shl_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_shl_helper);
 	return true;
@@ -539,7 +539,7 @@ cback_visit_shl_op(
 static INLINE bool
 cback_visit_shr_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_shr_helper);
 	return true;
@@ -549,7 +549,7 @@ cback_visit_shr_op(
 static INLINE bool
 cback_visit_neg_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	UNARY_OP(rt_neg_helper);
 	return true;
@@ -559,7 +559,7 @@ cback_visit_neg_op(
 static INLINE bool
 cback_visit_not_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	UNARY_OP(rt_not_helper);
 	return true;
@@ -569,7 +569,7 @@ cback_visit_not_op(
 static INLINE bool
 cback_visit_lt_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_lt_helper);
 	return true;
@@ -579,7 +579,7 @@ cback_visit_lt_op(
 static INLINE bool
 cback_visit_lte_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_lte_helper);
 	return true;
@@ -589,7 +589,7 @@ cback_visit_lte_op(
 static INLINE bool
 cback_visit_gt_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_gt_helper);
 	return true;
@@ -599,7 +599,7 @@ cback_visit_gt_op(
 static INLINE bool
 cback_visit_gte_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_gte_helper);
 	return true;
@@ -609,7 +609,7 @@ cback_visit_gte_op(
 static INLINE bool
 cback_visit_eq_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_eq_helper);
 	return true;
@@ -619,7 +619,7 @@ cback_visit_eq_op(
 static INLINE bool
 cback_visit_neq_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_neq_helper);
 	return true;
@@ -629,7 +629,7 @@ cback_visit_neq_op(
 static INLINE bool
 cback_visit_storearray_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_storearray_helper);
 	return true;
@@ -639,7 +639,7 @@ cback_visit_storearray_op(
 static INLINE bool
 cback_visit_loadarray_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_loadarray_helper);
 	return true;
@@ -649,7 +649,7 @@ cback_visit_loadarray_op(
 static INLINE bool
 cback_visit_len_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	UNARY_OP(rt_len_helper);
 	return true;
@@ -659,7 +659,7 @@ cback_visit_len_op(
 static INLINE bool
 cback_visit_getdictkeybyindex_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_getdictkeybyindex_helper);
 	return true;
@@ -669,7 +669,7 @@ cback_visit_getdictkeybyindex_op(
 static INLINE bool
 cback_visit_getdictvalbyindex_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	BINARY_OP(rt_getdictvalbyindex_helper);
 	return true;
@@ -679,7 +679,7 @@ cback_visit_getdictvalbyindex_op(
 static INLINE bool
 cback_visit_loadsymbol_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst;
 	const char *symbol;
@@ -699,7 +699,7 @@ cback_visit_loadsymbol_op(
 static INLINE bool
 cback_visit_storesymbol_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	const char *symbol;
 	uint32_t len, hash;
@@ -719,7 +719,7 @@ cback_visit_storesymbol_op(
 static INLINE bool
 cback_visit_loaddot_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst, dict;
 	const char *field;
@@ -740,7 +740,7 @@ cback_visit_loaddot_op(
 static INLINE bool
 cback_visit_storedot_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int src, dict;
 	const char *field;
@@ -761,7 +761,7 @@ cback_visit_storedot_op(
 static INLINE bool
 cback_visit_call_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst_tmpvar;
 	int func_tmpvar;
@@ -795,7 +795,7 @@ cback_visit_call_op(
 static INLINE bool
 cback_visit_thiscall_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int dst_tmpvar;
 	int obj_tmpvar;
@@ -831,7 +831,7 @@ cback_visit_thiscall_op(
 static inline bool
 cback_visit_jmp_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	uint32_t target;
 
@@ -846,7 +846,7 @@ cback_visit_jmp_op(
 static bool
 cback_visit_jmpiftrue_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int src;
 	uint32_t target;
@@ -864,7 +864,7 @@ cback_visit_jmpiftrue_op(
 static INLINE bool
 cback_visit_jmpiffalse_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int src;
 	uint32_t target;
@@ -882,7 +882,7 @@ cback_visit_jmpiffalse_op(
 static bool
 cback_visit_op(
 	struct lir_func *func,
-	int *pc)
+	uint32_t *pc)
 {
 	int op;
 
@@ -1082,7 +1082,7 @@ bool cback_finalize_dll(void)
 
 static bool cback_write_dll_init(void)
 {
-	int i, j;
+	uint32_t i, j;
 
 	fprintf(fp, "bool init_aot_code(struct rt_env *env)\n");
 	fprintf(fp, "{\n");

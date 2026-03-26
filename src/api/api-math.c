@@ -32,7 +32,7 @@ static bool cfunc_Math_random(struct rt_env *env);
 struct ffi_item {
 	const char *global_name;
 	const char *field_name;
-	int param_count;
+	uint32_t param_count;
 	const char *param[NOCT_ARG_MAX];
 	bool (*cfunc)(NoctEnv *env);
 };
@@ -63,7 +63,7 @@ bool noct_register_api_math(NoctEnv *env)
 		return false;
 
 	/* Register functions. */
-	for (i = 0; i < sizeof(ffi_items) / sizeof(struct ffi_item); i++) {
+	for (i = 0; i < (int)(sizeof(ffi_items) / sizeof(struct ffi_item)); i++) {
 		NoctValue funcval;
 
 		/* Register a cfunc. */

@@ -102,7 +102,7 @@ struct hir_block {
 			char *name;
 
 			/* Parameter names. */
-			int param_count;
+			uint32_t param_count;
 			char *param_name[HIR_PARAM_SIZE];
 
 			/* File name. */
@@ -233,7 +233,7 @@ struct hir_expr {
 			struct hir_expr *func;
 
 			/* Argument expressions. */
-			int arg_count;
+			uint32_t arg_count;
 			struct hir_expr *arg[HIR_PARAM_SIZE];
 		} call;
 
@@ -246,14 +246,14 @@ struct hir_expr {
 			char *func;
 
 			/* Argument expressions. */
-			int arg_count;
+			uint32_t arg_count;
 			struct hir_expr *arg[HIR_PARAM_SIZE];
 		} thiscall;
 
 		/* Array Literal Expression */
 		struct {
 			/* Element count. */
-			int elem_count;
+			uint32_t elem_count;
 
 			/* Element expressions. */
 			struct hir_expr **elem;
@@ -262,7 +262,7 @@ struct hir_expr {
 		/* Dictionary Literal Expression */
 		struct {
 			/* Key-value pair count. */
-			int kv_count;
+			uint32_t kv_count;
 
 			/* Key strings. */
 			char **key;
@@ -322,10 +322,10 @@ bool hir_build(void);
 void hir_cleanup(void);
 
 /* Get a number of constructed HIR functions. */
-int hir_get_function_count(void);
+uint32_t hir_get_function_count(void);
 
 /* Get a constructed HIR function. */
-struct hir_block *hir_get_function(int index);
+struct hir_block *hir_get_function(uint32_t index);
 
 /* Get a file name. */
 const char *hir_get_file_name(void);

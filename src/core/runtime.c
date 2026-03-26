@@ -50,8 +50,8 @@ int noct_conf_optimize = 0;
 /* Forward declarations. */
 static void rt_free_func(struct rt_env *rt, struct rt_func *func);
 static bool rt_register_lir(struct rt_env *rt, struct lir_func *lir);
-static bool rt_register_bytecode_function(struct rt_env *rt, uint8_t *data, size_t size, int *pos, char *file_name);
-static const char *rt_read_bytecode_line(uint8_t *data, size_t size, int *pos);
+static bool rt_register_bytecode_function(struct rt_env *rt, uint8_t *data, size_t size, uint32_t *pos, char *file_name);
+static const char *rt_read_bytecode_line(uint8_t *data, size_t size, uint32_t *pos);
 static bool rt_enter_frame(struct rt_env *env, struct rt_func *func);
 static void rt_leave_frame(struct rt_env *env);
 static bool rt_expand_array(struct rt_env *env, struct rt_array *old_arr, struct rt_array **new_arr_pp, size_t size);
@@ -180,6 +180,8 @@ rt_free_func(
 {
 	int i;
 
+	UNUSED_PARAMETER(env);
+
 	noct_free(func->name);
 	func->name = NULL;
 	for (i = 0; i < NOCT_ARG_MAX; i++) {
@@ -249,7 +251,7 @@ rt_register_source(
 {
 	struct hir_block *hfunc;
 	struct lir_func *lfunc;
-	int i, func_count;
+	uint32_t i, func_count;
 	bool is_succeeded;
 
 	is_succeeded = false;
@@ -315,7 +317,7 @@ rt_register_lir(
 {
 	struct rt_func *func;
 	struct rt_value global;
-	int i;
+	uint32_t i;
 
 	func = noct_malloc(sizeof(struct rt_func));
 	if (func == NULL) {
@@ -389,7 +391,7 @@ rt_register_bytecode(
 {
 	char *file_name;
 	const char *line;
-	int pos, func_count, i;
+	uint32_t pos, func_count, i;
 	bool succeeded;
 
 	pos = 0;
@@ -423,7 +425,7 @@ rt_register_bytecode(
 		line = rt_read_bytecode_line(data, size, &pos);
 		if (line == NULL)
 			break;
-		func_count = atoi(line);
+		func_count = (uint32_t)atoi(line);
 
 		/* Read functions. */
 		for (i = 0; i < func_count; i++) {
@@ -451,12 +453,12 @@ rt_register_bytecode_function(
 	struct rt_env *env,
 	uint8_t *data,
 	size_t size,
-	int *pos,
+	uint32_t *pos,
 	char *file_name)
 {
 	struct lir_func lfunc;
 	const char *line;
-	int i;
+	uint32_t i;
 	bool succeeded;
 
 	memset(&lfunc, 0, sizeof(lfunc));
@@ -491,7 +493,7 @@ rt_register_bytecode_function(
 		line = rt_read_bytecode_line(data, size, pos);
 		if (line == NULL)
 			break;
-		lfunc.param_count = atoi(line);
+		lfunc.param_count = (uint32_t)atoi(line);
 
 		/* Get parameters. */
 		for (i = 0; i < lfunc.param_count; i++) {
@@ -514,7 +516,7 @@ rt_register_bytecode_function(
 		line = rt_read_bytecode_line(data, size, pos);
 		if (line == NULL)
 			break;
-		lfunc.tmpvar_size = atoi(line);
+		lfunc.tmpvar_size = (uint32_t)atoi(line);
 
 		/* Check "Bytecode Size". */
 		line = rt_read_bytecode_line(data, size, pos);
@@ -525,7 +527,7 @@ rt_register_bytecode_function(
 		line = rt_read_bytecode_line(data, size, pos);
 		if (line == NULL)
 			break;
-		lfunc.bytecode_size = atoi(line);
+		lfunc.bytecode_size = (uint32_t)atoi(line);
 
 		/* Load LIR. */
 		lfunc.bytecode = data + *pos;
@@ -562,13 +564,13 @@ static const char *
 rt_read_bytecode_line(
 	uint8_t *data,
 	size_t size,
-	int *pos)
+	uint32_t *pos)
 {
 	static char line[1024];
-	int i;
+	uint32_t i;
 
-	for (i = 0; i < (int)sizeof(line); i++) {
-		if (*pos >= (int)size)
+	for (i = 0; i < sizeof(line); i++) {
+		if (*pos >= size)
 			return NULL;
 
 		line[i] = (char)data[*pos];
@@ -588,14 +590,14 @@ bool
 rt_register_cfunc(
 	struct rt_env *env,
 	const char *name,
-	int param_count,
+	uint32_t param_count,
 	const char *param_name[],
 	bool (*cfunc)(struct rt_env *env),
 	struct rt_func **ret_func)
 {
 	struct rt_func *func;
 	struct rt_value global;
-	int i;
+	uint32_t i;
 
 	func = noct_malloc(sizeof(struct rt_func));
 	if (func == NULL) {
@@ -642,7 +644,7 @@ bool
 rt_call_with_name(
 	struct rt_env *env,
 	const char *func_name,
-	int arg_count,
+	uint32_t arg_count,
 	struct rt_value *arg,
 	struct rt_value *ret)
 {
@@ -681,12 +683,12 @@ bool
 rt_call(
 	struct rt_env *env,
 	struct rt_func *func,
-	int arg_count,
+	uint32_t arg_count,
 	struct rt_value *arg,
 	struct rt_value *ret)
 {
 	char old_file_name[256];
-	int i;
+	uint32_t i;
 
 #if defined(NOCT_USE_MULTITHREAD)
 	/* Make a GC safe point. */
@@ -931,7 +933,7 @@ rt_make_empty_array(
 	struct rt_value *val)
 {
 	struct rt_array *arr;
-	const int START_SIZE = 16;
+	const uint32_t START_SIZE = 16;
 
 	/* Allocate an array. */
 	arr = rt_gc_alloc_array(env, START_SIZE);
@@ -979,20 +981,19 @@ bool
 rt_get_array_elem(
 	struct rt_env *env,
 	struct rt_array *arr,
-	int index,
+	uint32_t index,
 	struct rt_value *val)
 {
 	struct rt_array *real_arr;
 
 	assert(env != NULL);
 	assert(arr != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	ACQUIRE_OBJ(arr, real_arr);
 
 	/* Check the array boundary. */
-	if (index < 0 || index >= real_arr->size) {
+	if (index >= real_arr->size) {
 		RELEASE_OBJ(real_arr);
 
 		rt_error(env, N_TR("Array index %d is out-of-range."), index);
@@ -1014,7 +1015,7 @@ bool
 rt_set_array_elem(
 	struct rt_env *env,
 	struct rt_array **arr,
-	int index,
+	uint32_t index,
 	NoctValue *val)
 {
 	struct rt_array *real_arr;
@@ -1022,7 +1023,6 @@ rt_set_array_elem(
 	assert(env != NULL);
 	assert(arr != NULL);
 	assert(*arr != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 
 	ACQUIRE_OBJ(*arr, real_arr);
@@ -1079,7 +1079,7 @@ bool
 rt_resize_array(
 	struct rt_env *env,
 	struct rt_array **arr,
-	int size)
+	uint32_t size)
 {
 	struct rt_array *real_arr;
 
@@ -1128,7 +1128,7 @@ rt_expand_array(
 {
 	struct rt_array *new_arr;
 	size_t old_size;
-	int i;
+	uint32_t i;
 
 	assert(env != NULL);
 	assert(old_arr->newer == NULL);
@@ -1178,7 +1178,7 @@ rt_make_array_copy(
 	struct rt_array *src)
 {
 	struct rt_array *src_real;
-	int i;
+	uint32_t i;
 
 	assert(env != NULL);
 	assert(dst != NULL);
@@ -1195,7 +1195,7 @@ rt_make_array_copy(
 
 	/* Copy the array with write-barrier. */
 	(*dst)->size = src_real->size;
-	for (i = 0; i < (int)src_real->size; i++) {
+	for (i = 0; i < src_real->size; i++) {
 		/* Copy. */
 		(*dst)->table[i] = src_real->table[i];
 
@@ -1217,7 +1217,7 @@ rt_make_empty_dict(
 {
 	struct rt_dict *dict;
 
-	const int START_SIZE = 2;
+	const uint32_t START_SIZE = 2;
 
 	/* Allocate a dictionary. */
 	dict = rt_gc_alloc_dict(env, START_SIZE);
@@ -1269,19 +1269,20 @@ rt_check_dict_key(
 {
 	struct rt_dict *real_dict;
 	size_t len;
-	uint32_t hash;
-	int i, index;
+	uint32_t hash, i, index;
+
+	UNUSED_PARAMETER(env);
 
 	ACQUIRE_OBJ(dict, real_dict);
 
 	len = strlen(key) + 1; /* +1 for NUL */
 	hash = string_hash(key);
-	index = hash & (real_dict->alloc_size - 1);
+	index = hash & ((uint32_t)real_dict->alloc_size - 1);
 
 	/* Search the key. */
 	for (i = index;
-	     i != ((index - 1 + real_dict->alloc_size) & (real_dict->alloc_size - 1));
-	     i = (i + 1) & (real_dict->alloc_size - 1)) {
+	     i != ((index - 1 + (uint32_t)real_dict->alloc_size) & ((uint32_t)real_dict->alloc_size - 1));
+	     i = (i + 1) & ((uint32_t)real_dict->alloc_size - 1)) {
 		if (IS_DICT_KEY_REMOVED(real_dict->key[i]) ||
 		    IS_DICT_KEY_EMPTY(real_dict->key[i]))
 			continue;
@@ -1315,21 +1316,20 @@ bool
 rt_get_dict_key_by_index(
 	struct rt_env *env,
 	struct rt_dict *dict,
-	int index,
+	uint32_t index,
 	struct rt_value *key)
 {
 	struct rt_dict *real_dict;
-	int count, i;
+	uint32_t count, i;
 
 	assert(env != NULL);
 	assert(dict != NULL);
-	assert(index >= 0);
 	assert(key != NULL);
 	
 	ACQUIRE_OBJ(dict, real_dict);
 
 	/* Check the boundary. */
-	if (index < 0 || index >= real_dict->size) {
+	if (index >= real_dict->size) {
 		RELEASE_OBJ(real_dict);
 
 		rt_error(env, N_TR("Dictionary index %d is out-of-range."), index);
@@ -1362,21 +1362,20 @@ bool
 rt_get_dict_value_by_index(
 	struct rt_env *env,
 	struct rt_dict *dict,
-	int index,
+	uint32_t index,
 	struct rt_value *val)
 {
 	struct rt_dict *real_dict;
-	int count, i;
+	uint32_t count, i;
 
 	assert(env != NULL);
 	assert(dict != NULL);
-	assert(index >= 0);
 	assert(val != NULL);
 	
 	ACQUIRE_OBJ(dict, real_dict);
 
 	/* Check the boundary. */
-	if (index < 0 || index >= real_dict->size) {
+	if (index >= real_dict->size) {
 		RELEASE_OBJ(real_dict);
 
 		rt_error(env, N_TR("Dictionary index %d is out-of-range."), index);
@@ -1436,7 +1435,7 @@ rt_get_dict_elem_with_hash(
 	struct rt_value *val)
 {
 	struct rt_dict *real_dict;
-	int index, i;
+	uint32_t index, i;
 
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -1446,10 +1445,10 @@ rt_get_dict_elem_with_hash(
 
 	ACQUIRE_OBJ(dict, real_dict);
 
-	index = hash & (real_dict->alloc_size - 1);
+	index = hash & (uint32_t)(real_dict->alloc_size - 1);
 	for (i = index;
 	     i != ((index - 1 + real_dict->alloc_size) & (real_dict->alloc_size - 1));
-	     i = (i + 1) & (real_dict->alloc_size - 1)) {
+	     i = (i + 1) & ((uint32_t)real_dict->alloc_size - 1)) {
 		if (IS_DICT_KEY_REMOVED(real_dict->key[i]))
 			continue;
 		if (IS_DICT_KEY_EMPTY(real_dict->key[i]))
@@ -1509,7 +1508,7 @@ rt_set_dict_elem_with_hash(
 	struct rt_value *val)
 {
 	struct rt_dict *real_dict, *append_dict;
-	int index, i;
+	uint32_t index, i;
 
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -1521,10 +1520,10 @@ rt_set_dict_elem_with_hash(
 	ACQUIRE_OBJ(*dict, real_dict);
 
 	/* Search for the key to replace the value. */
-	index = hash & (real_dict->alloc_size - 1);
+	index = hash & ((uint32_t)real_dict->alloc_size - 1);
 	for (i = index;
 	     i != ((index - 1 + real_dict->alloc_size) & (real_dict->alloc_size - 1));
-	     i = (i + 1) & (real_dict->alloc_size - 1)) {
+	     i = (i + 1) & ((uint32_t)real_dict->alloc_size - 1)) {
 		if (IS_DICT_KEY_REMOVED(real_dict->key[i]) ||
 		    IS_DICT_KEY_EMPTY(real_dict->key[i]))
 			break;
@@ -1561,10 +1560,10 @@ rt_set_dict_elem_with_hash(
 	assert(append_dict->size < append_dict->alloc_size);
 
 	/* Append. */
-	index = hash & (append_dict->alloc_size - 1);
+	index = hash & ((uint32_t)append_dict->alloc_size - 1);
 	for (i = index;
 	     i != ((index - 1 + append_dict->alloc_size) & (append_dict->alloc_size - 1));
-	     i = (i + 1) & (append_dict->alloc_size - 1)) {
+	     i = (i + 1) & ((uint32_t)append_dict->alloc_size - 1)) {
 		if (IS_DICT_KEY_REMOVED(append_dict->key[i]) ||
 		    IS_DICT_KEY_EMPTY(append_dict->key[i])) {
 			/* Make a key value. */
@@ -1600,7 +1599,7 @@ rt_expand_dict(
 {
 	struct rt_dict *new_dict;
 	size_t old_size, new_size;
-	int index, i, j;
+	uint32_t index, i, j;
 
 	assert(env != NULL);
 	assert(old_dict != NULL);
@@ -1622,10 +1621,10 @@ rt_expand_dict(
 		if (IS_DICT_KEY_REMOVED(old_dict->key[i]) || IS_DICT_KEY_EMPTY(old_dict->key[i]))
 			continue;
 
-		index = string_hash(old_dict->key[i].val.str->data) & (new_dict->alloc_size - 1);
+		index = string_hash(old_dict->key[i].val.str->data) & ((uint32_t)new_dict->alloc_size - 1);
 		for (j = index;
 		     j != ((index - 1 + new_dict->alloc_size) & (new_dict->alloc_size - 1));
-		     j = (j + 1) & (new_dict->alloc_size - 1)) {
+		     j = (j + 1) & ((uint32_t)new_dict->alloc_size - 1)) {
 			if (IS_DICT_KEY_EMPTY(new_dict->key[j])) {
 				/* Copy the key and values. */
 				new_dict->key[j] = old_dict->key[i];
@@ -1681,7 +1680,7 @@ rt_remove_dict_elem_with_hash(
 	uint32_t hash)
 {
 	struct rt_dict *real_dict;
-	int index, i;
+	uint32_t index, i;
 
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -1691,10 +1690,10 @@ rt_remove_dict_elem_with_hash(
 	ACQUIRE_OBJ(dict, real_dict);
 
 	/* Search for the key. */
-	index = hash & (real_dict->alloc_size - 1);
+	index = hash & ((uint32_t)real_dict->alloc_size - 1);
 	for (i = index;
 	     i != ((index - 1 + real_dict->alloc_size) & (real_dict->alloc_size - 1));
-	     i = (i + 1) & (real_dict->alloc_size - 1)) {
+	     i = (i + 1) & ((uint32_t)real_dict->alloc_size - 1)) {
 		if (IS_DICT_KEY_REMOVED(real_dict->key[i]))
 			continue;
 		if (IS_DICT_KEY_EMPTY(real_dict->key[i]))
@@ -1797,7 +1796,7 @@ static bool
 rt_init_global(
 	struct rt_env *env)
 {
-	const int START_SIZE = 2;
+	const uint32_t START_SIZE = 2;
 
 	assert(env->vm->global == NULL);
 
@@ -1819,7 +1818,7 @@ static void
 rt_cleanup_global(
 	struct rt_env *env)
 {
-	int i;
+	uint32_t i;
 
 	assert(env->vm->global != NULL);
 
@@ -1841,15 +1840,14 @@ rt_check_global(
 	struct rt_env *env,
 	const char *name)
 {
-	int index, i;
-	uint32_t len, hash;
+	uint32_t index, i, len, hash;
 
 	ACQUIRE_GLOBAL();
 
 	string_hash_and_len(name, &hash, &len);
 	len++;	/* Including NUL. */
 
-	index = hash & (env->vm->global_alloc_size - 1) ;
+	index = hash & ((uint32_t)env->vm->global_alloc_size - 1) ;
 	for (i = index;
 	     i != ((index - 1 + env->vm->global_alloc_size) & (env->vm->global_alloc_size - 1));
 	     i = (i + 1) & (env->vm->global_alloc_size - 1)) {
@@ -1909,11 +1907,11 @@ rt_get_global_with_hash(
 	uint32_t hash,
 	struct rt_value *val)
 {
-	int index, i;
+	uint32_t index, i;
 
 	ACQUIRE_GLOBAL();
 
-	index = hash & (env->vm->global_alloc_size - 1) ;
+	index = hash & ((uint32_t)env->vm->global_alloc_size - 1) ;
 	for (i = index;
 	     i != ((index - 1 + env->vm->global_alloc_size) & (env->vm->global_alloc_size - 1));
 	     i = (i + 1) & (env->vm->global_alloc_size - 1)) {
@@ -1971,7 +1969,7 @@ rt_set_global_with_hash(
 	uint32_t hash,
 	struct rt_value *val)
 {
-	int index, i;
+	uint32_t index, i;
 
 	ACQUIRE_GLOBAL();
 
@@ -1982,7 +1980,7 @@ rt_set_global_with_hash(
 	}
 
 	/* Search a place to insert or overwrite. */
-	index = hash & (env->vm->global_alloc_size - 1) ;
+	index = hash & ((uint32_t)env->vm->global_alloc_size - 1) ;
 	for (i = index;
 	     i != ((index - 1 + env->vm->global_alloc_size) & (env->vm->global_alloc_size - 1));
 	     i = (i + 1) & (env->vm->global_alloc_size - 1)) {
@@ -2029,7 +2027,7 @@ rt_expand_global(
 	struct rt_env *env)
 {
 	struct rt_bindglobal *old_tbl,*new_tbl;
-	int old_size, new_size, i, j, index;
+	uint32_t old_size, new_size, i, j, index;
 
 	/* Allocate the new table. */
 	old_size = env->vm->global_alloc_size;
