@@ -807,11 +807,11 @@ hal_get_system_language(void)
     if ([language hasPrefix:@"fr-CA"])
             return "fr-ca";
     if ([language hasPrefix:@"fr"])
-            return "fr";
+            return "fr-fr";
 
     // Spanish
     if ([language hasPrefix:@"es-ES"])
-            return "es";
+            return "es-es";
     if ([language hasPrefix:@"es"])
             return "es-la";
 

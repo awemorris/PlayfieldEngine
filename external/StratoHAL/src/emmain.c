@@ -1325,13 +1325,13 @@ void init_lang_code(void)
 	    break;
     /* French */
     case 200:
-	    lang_code = "fr";
+	    lang_code = "fr-fr";
 	    break;
     case 201: lang_code = "fr-ca";
 	    break;
     /* Spanish */
     case 300:
-	    lang_code = "es";
+	    lang_code = "es-es";
 	    break;
     case 301:
 	    lang_code = "es-la";

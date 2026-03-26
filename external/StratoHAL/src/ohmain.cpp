@@ -263,10 +263,10 @@ SetLanguage(
     else if (strncmp(lang, "fr-CA", 5) == 0)
         langName = "fr-ca";
     else if (strncmp(lang, "fr", 2) == 0)
-        langName = "fr";
+        langName = "fr-fr";
     /* Spanish */
     else if (strncmp(lang, "es-ES", 5) == 0)
-        langName = "es";
+        langName = "es-es";
     else if (strncmp(lang, "es", 2) == 0)
         langName = "es-la";
     /* Chinese */

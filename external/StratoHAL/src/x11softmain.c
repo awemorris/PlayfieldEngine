@@ -2021,11 +2021,11 @@ hal_get_system_language(void)
 	if (strncmp(locale, "fr_CA", 5) == 0)
 		return "fr-ca";
 	if (strncmp(locale, "fr", 2) == 0)
-		return "fr";
+		return "fr-fr";
 
 	/* Spanish */
 	if (strncmp(locale, "es_ES", 5) == 0)
-		return "es";
+		return "es-es";
 	if (strncmp(locale, "es", 2) == 0)
 		return "es-la";
 

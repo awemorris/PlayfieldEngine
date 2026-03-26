@@ -213,10 +213,10 @@ init_locale(
     else if (strncmp(langCode, "fr_CA", 5) == 0)
 	    lang_code = "fr-ca";
     else if (strncmp(langCode, "fr", 2) == 0)
-	    lang_code = "fr";
+	    lang_code = "fr-fr";
     /* Spanish */
     else if (strncmp(langCode, "es_ES", 5) == 0)
-	    lang_code = "es";
+	    lang_code = "es-es";
     else if (strncmp(langCode, "es", 2) == 0)
 	    lang_code = "es-la";
     /* Chinese */

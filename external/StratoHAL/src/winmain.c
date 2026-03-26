@@ -2168,8 +2168,8 @@ hal_get_system_language(void)
         }
     case LANG_SPANISH:
 		switch (sublangId) {
-		case SUBLANG_SPANISH:         return "es";
-		case SUBLANG_SPANISH_MODERN:  return "es";
+		case SUBLANG_SPANISH:         return "es-es";
+		case SUBLANG_SPANISH_MODERN:  return "es-es";
 		default:                      return "es-la";
 		}
     case LANG_GERMAN:
