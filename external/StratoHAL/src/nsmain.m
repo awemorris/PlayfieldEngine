@@ -1377,28 +1377,58 @@ hal_leave_full_screen_mode(void)
 const char *
 hal_get_system_language(void)
 {
-    NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
-    if ([language hasPrefix:@"ja"])
-        return "ja";
+    NSArray *languages = [NSLocale preferredLanguages];
+    if (languages.count == 0)
+            return "en";
+    
+    NSString *language = [languages objectAtIndex:0];
+
+    // English
+    if ([language hasPrefix:@"en-AU"])
+            return "en-au";
+    if ([language hasPrefix:@"en-GB"])
+            return "en-gb";
+    if ([language hasPrefix:@"en-NZ"])
+            return "en-nz";
+    if ([language hasPrefix:@"en-US"])
+            return "en-us";
     if ([language hasPrefix:@"en"])
-        return "en";
+            return "en";
+
+    // French
+    if ([language hasPrefix:@"fr-CA"])
+            return "fr-ca";
     if ([language hasPrefix:@"fr"])
-        return "fr";
-    if ([language hasPrefix:@"de"])
-        return "de";
+            return "fr";
+
+    // Spanish
+    if ([language hasPrefix:@"es-ES"])
+            return "es";
     if ([language hasPrefix:@"es"])
-        return "es";
-    if ([language hasPrefix:@"it"])
-        return "it";
-    if ([language hasPrefix:@"el"])
-        return "el";
-    if ([language hasPrefix:@"ru"])
-        return "ru";
+            return "es-la";
+
+    // Chinese
     if ([language hasPrefix:@"zh-Hans"])
-        return "zh";
-    if ([language hasPrefix:@"zh-Hant"])
-        return "tw";
-    return "other";
+            return "zh-cn";
+    if ([language hasPrefix:@"zh-Hant"] || [language hasPrefix:@"zh-HK"])
+            return "zh-tw";
+
+    // Others (Single)
+    if ([language hasPrefix:@"de"])
+            return "de";
+    if ([language hasPrefix:@"it"])
+            return "it";
+    if ([language hasPrefix:@"el"])
+            return "el";
+    if ([language hasPrefix:@"ru"])
+            return "ru";
+    if ([language hasPrefix:@"ko"])
+            return "ko";
+    if ([language hasPrefix:@"ja"])
+            return "ja";
+
+    // Other.
+    return "en";
 }
 
 // Not used in macOS.
