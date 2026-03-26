@@ -296,42 +296,6 @@ SetLanguage(
     return nullptr;
 }
 
-
-    if (strncmp(lang, "en", 2) == 0) {
-        langName = "en";
-    } else if (strncmp(lang, "fr", 2) == 0) {
-        langName = "fr";
-    } else if (strncmp(lang, "it", 2) == 0) {
-        langName = "it";
-    } else if (strncmp(lang, "es", 2) == 0) {
-        langName = "es";
-    } else if (strncmp(lang, "de", 2) == 0) {
-        langName = "de";
-    } else if (strncmp(lang, "el", 2) == 0) {
-        langName = "el";
-    } else if (strncmp(lang, "ru", 2) == 0) {
-        langName = "ru";
-    } else if (strncmp(lang, "zh-Hans", 7) == 0) {
-            langName = "zh";
-    } else if (strncmp(lang, "zh-CN", 5) == 0) {
-            langName = "zh";
-    } else if (strncmp(lang, "zh-Hant", 7) == 0) {
-            langName = "tw";
-    } else if (strncmp(lang, "zh-TW", 5) == 0) {
-            langName = "tw";
-    } else if (strncmp(lang, "zh-HK", 5) == 0) {
-            langName = "tw";
-    } else if (strncmp(lang, "zh", 2) == 0) {
-            langName = "zh";
-    } else if (strcmp(lang, "ja") == 0) {
-        langName = "ja";
-    } else {
-        langName = "other";
-    }
-
-    return nullptr;
-}
-
 //
 // ArkTS: startGame()
 //

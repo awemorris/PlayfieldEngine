@@ -108,7 +108,7 @@ static int screen_height;
 /*
  * Forward declarations.
  */
-static void init_locale(void);
+static void init_locale(JNIEnv *env);
 static void do_delayed_remove_rfile_ref(void);
 
 /*
