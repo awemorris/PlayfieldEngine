@@ -275,7 +275,7 @@ static VOID DrawPrimitives3D(float x1,
 							 int alpha,
 							 int pipeline);
 static BOOL UploadTextureIfNeeded(struct hal_image *img);
-#if 1
+#if 0
 static void CompileShader(const char *pSrc, unsigned char *pDst, BOOL bHLSL);
 #endif
 
@@ -1311,7 +1311,7 @@ UploadTextureIfNeeded(
 //  - The following is a code to compile shader (includin assembly and HLSL).
 //  - You need d3dx9_43.dll to compile shaders. (use -ld3dx9)
 //
-#if 1
+#if 0
 #include <d3dx9.h>
 #include <stdio.h>
 

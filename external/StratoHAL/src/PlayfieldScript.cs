@@ -79,6 +79,7 @@ public class PlayfieldScript : MonoBehaviour
         _dimShader = Resources.Load<Shader>("DimShader");
         _ruleShader = Resources.Load<Shader>("RuleShader");
         _meltShader = Resources.Load<Shader>("MeltShader");
+        _crossShader = Resources.Load<Shader>("CrossShader");
 
         // Make a command buffer.
         _commandBuffer = new CommandBuffer();
@@ -216,10 +217,12 @@ public class PlayfieldScript : MonoBehaviour
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_rule(int src_img, int rule_img, int threshold);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_melt(int src_img, int rule_img, int progress);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_cross(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_render_image_3d_cross(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_reset_lap_timer(IntPtr origin);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate Int64 delegate_get_lap_timer_millisec(IntPtr origin);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_play_sound(int stream, byte *wave);
@@ -260,10 +263,12 @@ public class PlayfieldScript : MonoBehaviour
                                                       IntPtr render_image_dim,
                                                       IntPtr render_image_rule,
                                                       IntPtr render_image_melt,
+                                                      IntPtr render_image_cross,
                                                       IntPtr render_image_3d_normal,
                                                       IntPtr render_image_3d_add,
                                                       IntPtr render_image_3d_sub,
                                                       IntPtr render_image_3d_dim,
+                                                      IntPtr render_image_3d_cross,
                                                       IntPtr reset_lap_timer,
                                                       IntPtr get_lap_timer_millisec,
                                                       IntPtr play_sound,
@@ -316,10 +321,12 @@ public class PlayfieldScript : MonoBehaviour
     static delegate_render_image_dim d_render_image_dim;
     static delegate_render_image_rule d_render_image_rule;
     static delegate_render_image_melt d_render_image_melt;
+    static delegate_render_image_cross d_render_image_cross;
     static delegate_render_image_3d_normal d_render_image_3d_normal;
     static delegate_render_image_3d_add d_render_image_3d_add;
     static delegate_render_image_3d_sub d_render_image_3d_sub;
-    static delegate_render_image_3d_dim d_render_image_3d_dim
+    static delegate_render_image_3d_dim d_render_image_3d_dim;
+    static delegate_render_image_3d_cross d_render_image_3d_cross;
     static delegate_reset_lap_timer d_reset_lap_timer;
     static delegate_get_lap_timer_millisec d_get_lap_timer_millisec;
     static delegate_play_sound d_play_sound;
@@ -377,10 +384,12 @@ public class PlayfieldScript : MonoBehaviour
     static IntPtr p_render_image_dim;
     static IntPtr p_render_image_rule;
     static IntPtr p_render_image_melt;
+    static IntPtr p_render_image_cross;
     static IntPtr p_render_image_3d_normal;
     static IntPtr p_render_image_3d_add;
     static IntPtr p_render_image_3d_sub;
     static IntPtr p_render_image_3d_dim;
+    static IntPtr p_render_image_3d_cross;
     static IntPtr p_reset_lap_timer;
     static IntPtr p_get_lap_timer_millisec;
     static IntPtr p_play_sound;
@@ -459,10 +468,12 @@ public class PlayfieldScript : MonoBehaviour
         d_render_image_dim = new delegate_render_image_dim(render_image_dim);
         d_render_image_rule = new delegate_render_image_rule(render_image_rule);
         d_render_image_melt = new delegate_render_image_melt(render_image_melt);
+        d_render_image_cross = new delegate_render_image_melt(render_image_cross);
         d_render_image_3d_normal = new delegate_render_image_3d_normal(render_image_3d_normal);
         d_render_image_3d_add = new delegate_render_image_3d_add(render_image_3d_add);
         d_render_image_3d_sub = new delegate_render_image_3d_sub(render_image_3d_sub);
         d_render_image_3d_dim = new delegate_render_image_3d_dim(render_image_3d_dim);
+        d_render_image_3d_cross = new delegate_render_image_3d_dim(render_image_3d_cross);
         d_reset_lap_timer = new delegate_reset_lap_timer(reset_lap_timer);
         d_get_lap_timer_millisec = new delegate_get_lap_timer_millisec(get_lap_timer_millisec);
         d_play_sound = new delegate_play_sound(play_sound);
@@ -516,10 +527,12 @@ public class PlayfieldScript : MonoBehaviour
         p_render_image_dim = Marshal.GetFunctionPointerForDelegate(d_render_image_dim);
         p_render_image_rule = Marshal.GetFunctionPointerForDelegate(d_render_image_rule);
         p_render_image_melt = Marshal.GetFunctionPointerForDelegate(d_render_image_melt);
+        p_render_image_cross = Marshal.GetFunctionPointerForDelegate(d_render_image_cross);
         p_render_image_3d_normal = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_normal);
         p_render_image_3d_add = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_add);
         p_render_image_3d_sub = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_sub);
         p_render_image_3d_dim = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_dim);
+        p_render_image_3d_cross = Marshal.GetFunctionPointerForDelegate(d_render_image_3d_cross);
         p_reset_lap_timer = Marshal.GetFunctionPointerForDelegate(d_reset_lap_timer);
         p_get_lap_timer_millisec = Marshal.GetFunctionPointerForDelegate(d_get_lap_timer_millisec);
         p_play_sound = Marshal.GetFunctionPointerForDelegate(d_play_sound);
@@ -573,10 +586,12 @@ public class PlayfieldScript : MonoBehaviour
         GCHandle.Alloc(p_render_image_dim, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_rule, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_melt, GCHandleType.Pinned);
+        GCHandle.Alloc(p_render_image_cross, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_normal, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_add, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_sub, GCHandleType.Pinned);
         GCHandle.Alloc(p_render_image_3d_dim, GCHandleType.Pinned);
+        GCHandle.Alloc(p_render_image_3d_cross, GCHandleType.Pinned);
         GCHandle.Alloc(p_reset_lap_timer, GCHandleType.Pinned);
         GCHandle.Alloc(p_get_lap_timer_millisec, GCHandleType.Pinned);
         GCHandle.Alloc(p_play_sound, GCHandleType.Pinned);
@@ -630,10 +645,12 @@ public class PlayfieldScript : MonoBehaviour
         GC.KeepAlive(p_render_image_dim);
         GC.KeepAlive(p_render_image_rule);
         GC.KeepAlive(p_render_image_melt);
+        GC.KeepAlive(p_render_image_cross);
         GC.KeepAlive(p_render_image_3d_normal);
         GC.KeepAlive(p_render_image_3d_add);
         GC.KeepAlive(p_render_image_3d_sub);
         GC.KeepAlive(p_render_image_3d_dim);
+        GC.KeepAlive(p_render_image_3d_cross);
         GC.KeepAlive(p_reset_lap_timer);
         GC.KeepAlive(p_get_lap_timer_millisec);
         GC.KeepAlive(p_play_sound);
@@ -688,10 +705,12 @@ public class PlayfieldScript : MonoBehaviour
             p_render_image_dim,
             p_render_image_rule,
             p_render_image_melt,
+            p_render_image_cross,
             p_render_image_3d_normal,
             p_render_image_3d_add,
             p_render_image_3d_sub,
             p_render_image_3d_dim,
+            p_render_image_3d_cross,
             p_reset_lap_timer,
             p_get_lap_timer_millisec,
             p_play_sound,
@@ -1336,6 +1355,88 @@ public class PlayfieldScript : MonoBehaviour
         _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
     }
 
+    [AOT.MonoPInvokeCallback(typeof(delegate_render_image_melt))]
+    static unsafe void render_image_cross(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha)
+	{
+        ManagedImage src1Image = imageDict[src1_img];
+        if (srcImage1.need_upload)
+        {
+            src1Image.texture.SetPixels(srcImage1.pixels, 0);
+            src1Image.texture.Apply();
+            src1Image.need_upload = false;
+            imageDict[src1_img] = srcImage;
+        }
+
+        ManagedImage src2Image = imageDict[src2_img];
+        if (src2Image.need_upload)
+        {
+            src2Image.texture.SetPixels(src2Image.pixels, 0);
+            src2Image.texture.Apply();
+            src2Image.need_upload = false;
+            imageDict[src2_img] = src2Image;
+        }
+
+        Vector3[] vertices = new Vector3[] {
+            new Vector3(-1.0f, -1.0f, 0),
+            new Vector3((float)viewportWidth / (float)viewportWidth * 2.0f - 1.0f, -1.0f, 0),
+            new Vector3(-1.0f, (float)viewportHeight / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3((float)viewportWidth / (float)viewportWidth * 2.0f - 1.0f, (float)viewportHeight / (float)viewportHeight * 2.0f - 1.0f, 0),
+        };
+
+        Vector2[] uv1 = new Vector2[] {
+            new Vector2((float)-src1_left / (float)src1Image.width,
+						(float)-src1_top / (float)src1Image.height),
+            new Vector2((float)(viewportWidth - src1_left) / (float)src1Image.width,
+						(float)-src1_top / (float)src1Image.height),
+            new Vector2((float)-src1_left / (float)src1Image.width,
+			            (float)(viewportHeight - src1_top) / (float)src1Image.height),
+            new Vector2((float)(viewportWidth - src1_left) / (float)src1Image.width,
+			            (float)(viewportHeight - src1_top) / (float)src1Image.height)
+        };
+
+        Vector2[] uv2 = new Vector2[] {
+            new Vector2((float)-src2_left / (float)src2Image.width,
+						(float)-src2_top / (float)src2Image.height),
+            new Vector2((float)(viewportWidth - src2_left) / (float)src2Image.width,
+						(float)-src2_top / (float)src2Image.height),
+            new Vector2((float)-src2_left / (float)src2Image.width,
+			            (float)(viewportHeight - src2_top) / (float)src2Image.height),
+            new Vector2((float)(viewportWidth - src2_left) / (float)src2Image.width,
+			            (float)(viewportHeight - src2_top) / (float)src2Image.height)
+        };
+
+        Color[] colors = new Color[] {
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f)
+        };
+
+        int[] triangles = new int[] { 0, 1, 2, 1, 3, 2 };
+
+        Vector3[] normals = new Vector3[] {
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1)
+        };
+
+        Material material = new Material(_instance._meltShader);
+        material.mainTexture = srcImage.texture;
+        material.SetTexture("_Src2Tex", src2Image.texture);
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv1;
+		mesh.SetUVs(1, uv2);
+        mesh.colors = colors;
+        mesh.normals = normals;
+        mesh.RecalculateBounds();
+
+        _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
+	}
+
     [AOT.MonoPInvokeCallback(typeof(delegate_render_image_3d_normal))]
     static unsafe void render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
     {
@@ -1559,6 +1660,135 @@ public class PlayfieldScript : MonoBehaviour
 
         _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
     }
+
+    [AOT.MonoPInvokeCallback(typeof(delegate_render_image_melt))]
+    static unsafe void render_image_3d_cross(int src1_image, int src2_image, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha)
+	{
+        ManagedImage src1Image = imageDict[src1_img];
+        if (srcImage1.need_upload)
+        {
+            src1Image.texture.SetPixels(srcImage1.pixels, 0);
+            src1Image.texture.Apply();
+            src1Image.need_upload = false;
+            imageDict[src1_img] = srcImage;
+        }
+
+        ManagedImage src2Image = imageDict[src2_img];
+        if (src2Image.need_upload)
+        {
+            src2Image.texture.SetPixels(src2Image.pixels, 0);
+            src2Image.texture.Apply();
+            src2Image.need_upload = false;
+            imageDict[src2_img] = src2Image;
+        }
+
+        Vector3[] vertices = new Vector3[] {
+            new Vector3(-1.0f, -1.0f, 0),
+            new Vector3((float)viewportWidth / (float)viewportWidth * 2.0f - 1.0f, -1.0f, 0),
+            new Vector3(-1.0f, (float)viewportHeight / (float)viewportHeight * 2.0f - 1.0f, 0),
+            new Vector3((float)viewportWidth / (float)viewportWidth * 2.0f - 1.0f, (float)viewportHeight / (float)viewportHeight * 2.0f - 1.0f, 0),
+        };
+
+		float s1_tx[] = new float[4], s1_ty[] = new float[4];
+		float s2_tx[] = new float[4], s2_typ[] new float[4];
+		float screen_x[] = new float[] { 0.0f, (float)viewportWidth, 0.0f, (float)viewportWidth };
+		float screen_y[] = new float[] { 0.0f, 0.0f, (float)viewportHeight, (float)viewportHeight };
+
+		{
+			float dx1 = src1_x2 - src1_x1;
+			float dy1 = src1_y2 - src1_y1;
+			float dx2 = src1_x3 - src1_x1;
+			float dy2 = src1_y3 - src1_y1;
+			float det = dx1 * dy2 - dy1 * dx2;
+
+			if (det != 0.0f) {
+				for (int i = 0; i < 4; i++) {
+					float rx = screen_x[i] - src1_x1;
+					float ry = screen_y[i] - src1_y1;
+					float a = ( dy2 * rx - dx2 * ry) / det;
+					float b = (-dy1 * rx + dx1 * ry) / det;
+					s1_tx[i] = a * (float)src1_image->width;
+					s1_ty[i] = b * (float)src1_image->height;
+				}
+			} else {
+				for (int i = 0; i < 4; i++) s1_tx[i] = s1_ty[i] = 0.0f;
+			}
+		}
+
+		{
+			float dx1 = src2_x2 - src2_x1;
+			float dy1 = src2_y2 - src2_y1;
+			float dx2 = src2_x3 - src2_x1;
+			float dy2 = src2_y3 - src2_y1;
+			float det = dx1 * dy2 - dy1 * dx2;
+
+			if (det != 0.0f) {
+				for (int i = 0; i < 4; i++) {
+					float rx = screen_x[i] - src2_x1;
+					float ry = screen_y[i] - src2_y1;
+					float a = ( dy2 * rx - dx2 * ry) / det;
+					float b = (-dy1 * rx + dx1 * ry) / det;
+					s2_tx[i] = a * (float)src2_image->width;
+					s2_ty[i] = b * (float)src2_image->height;
+				}
+			} else {
+				for (int i = 0; i < 4; i++) s2_tx[i] = s2_ty[i] = 0.0f;
+			}
+		}
+
+        Vector2[] uv1 = new Vector2[] {
+            new Vector2(s1_tx[0] / (float)src1Image.width,
+						s1_ty[0] / (float)src1Image.height),
+            new Vector2(s1_tx[1] / (float)src1Image.width,
+						s1_ty[1] / (float)src1Image.height),
+            new Vector2(s1_tx[2] / (float)src1Image.width,
+						s1_ty[2] / (float)src1Image.height),
+            new Vector2(s1_tx[3] / (float)src1Image.width,
+						s1_ty[3] / (float)src1Image.height),
+        };
+
+        Vector2[] uv2 = new Vector2[] {
+            new Vector2(s2_tx[0] / (float)src2Image.width,
+						s2_ty[0] / (float)src2Image.height),
+            new Vector2(s2_tx[1] / (float)src2Image.width,
+						s2_ty[1] / (float)src2Image.height),
+            new Vector2(s2_tx[2] / (float)src2Image.width,
+						s2_ty[2] / (float)src2Image.height),
+            new Vector2(s2_tx[3] / (float)src2Image.width,
+						s2_ty[3] / (float)src2Image.height),
+        };
+
+        Color[] colors = new Color[] {
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f),
+            new Color(0, 0, 0, alpha / 255.0f)
+        };
+
+        int[] triangles = new int[] { 0, 1, 2, 1, 3, 2 };
+
+        Vector3[] normals = new Vector3[] {
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1),
+            new Vector3(0, 0, -1)
+        };
+
+        Material material = new Material(_instance._meltShader);
+        material.mainTexture = src1Image.texture;
+        material.SetTexture("_Src2Tex", src2Image.texture);
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uv1;
+		mesh.SetUVs(1, uv2);
+        mesh.colors = colors;
+        mesh.normals = normals;
+        mesh.RecalculateBounds();
+
+        _instance._commandBuffer.DrawMesh(mesh, Matrix4x4.identity, material);
+	}
 
     [AOT.MonoPInvokeCallback(typeof(delegate_reset_lap_timer))]
     static unsafe void reset_lap_timer(IntPtr origin)

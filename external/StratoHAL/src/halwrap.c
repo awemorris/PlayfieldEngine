@@ -60,10 +60,12 @@ void CDECL (*wrap_render_image_sub)(int dst_left, int dst_top, int dst_width, in
 void CDECL (*wrap_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_rule)(int src_img, int rule_img, int threshold);
 void CDECL (*wrap_render_image_melt)(int src_img, int rule_img, int progress);
+void CDECL (*wrap_render_image_cross)(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha);
 void CDECL (*wrap_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
 void CDECL (*wrap_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void CDECL (*wrap_render_image_3d_cross)(int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
 void CDECL (*wrap_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin);
 uint64_t CDECL (*wrap_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin);
 void CDECL (*wrap_play_sound)(int stream, UNSAFEPTR(void *) wave);
@@ -109,10 +111,12 @@ void init_hal_func_table
  void CDECL (*p_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_rule)(int src_img, int rule_img, int threshold),
  void CDECL (*p_render_image_melt)(int src_img, int rule_img, int progress),
+ void CDECL (*p_render_image_cross)(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha),
  void CDECL (*p_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
  void CDECL (*p_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
+ void CDECL (*p_render_image_3d_cross)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha),
  void CDECL (*p_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin),
  uint64_t CDECL (*p_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin),
  void CDECL (*p_play_sound)(int stream, UNSAFEPTR(void *) wave),
@@ -150,10 +154,12 @@ void init_hal_func_table
 	wrap_render_image_dim = p_render_image_dim;
 	wrap_render_image_rule = p_render_image_rule;
 	wrap_render_image_melt = p_render_image_melt;
+	wrap_render_image_cross = p_render_image_cross;
 	wrap_render_image_3d_normal = p_render_image_3d_normal;
 	wrap_render_image_3d_add = p_render_image_3d_add;
 	wrap_render_image_3d_sub = p_render_image_3d_sub;
 	wrap_render_image_3d_dim = p_render_image_3d_dim;
+	wrap_render_image_3d_cross = p_render_image_3d_cross;
 	wrap_reset_lap_timer = p_reset_lap_timer;
 	wrap_get_lap_timer_millisec = p_get_lap_timer_millisec;
 	wrap_play_sound = p_play_sound;
@@ -429,6 +435,19 @@ hal_render_image_melt(
 }
 
 void
+hal_render_image_cross(
+	struct hal_image *src1_img,
+	struct hal_image *src2_img,
+	float src1_left,
+	float src1_top,
+	float src2_left,
+	float src2_top,
+	int alpha)
+{
+	wrap_render_image_cross(src1_img->id, src2_img->id, src1_left, src1_top, src2_left, src2_top, alpha);
+}
+
+void
 hal_render_image_3d_normal(
 	float x1,
 	float y1,
@@ -558,6 +577,49 @@ hal_render_image_3d_dim(
 				 src_width,
 				 src_height,
 				 alpha);
+}
+
+void
+hal_render_image_3d_cross(
+	struct hal_image *src1_img,
+	struct hal_image *src2_img,
+	float src1_x1,
+	float src1_y1,
+	float src1_x2,
+	float src1_y2,
+	float src1_x3,
+	float src1_y3,
+	float src1_x4,
+	float src1_y4,
+	float src2_x1,
+	float src2_y1,
+	float src2_x2,
+	float src2_y2,
+	float src2_x3,
+	float src2_y3,
+	float src2_x4,
+	float src2_y4,
+	int alpha)
+{
+	wrap_render_image_3d_cross(src1_img->id,
+				   src2_img->id,
+				   src1_x1,
+				   src1_y1,
+				   src1_x2,
+				   src1_y2,
+				   src1_x3,
+				   src1_y3,
+				   src1_x4,
+				   src1_y4,
+				   src2_x1,
+				   src2_y1,
+				   src2_x2,
+				   src2_y2,
+				   src2_x3,
+				   src2_y3,
+				   src2_x4,
+				   src2_y4,
+				   alpha);
 }
 
 void
