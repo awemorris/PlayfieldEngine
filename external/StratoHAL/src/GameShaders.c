@@ -28,96 +28,113 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-const char *gameShader =
-        "#include <metal_stdlib>                                                                \n"
-        "#include <metal_common>                                                                \n"
-        "#include <simd/simd.h>                                                                 \n"
-        "                                                                                       \n"
-        "using namespace metal;                                                                 \n"
-        "                                                                                       \n"
-        "enum GameVertexInputIndex {                                                            \n"
-        "    GameVertexInputIndexVertices = 0,                                                  \n"
-        "};                                                                                     \n"
-        "                                                                                       \n"
-        "enum {                                                                                 \n"
-        "    GameTextureIndexColor = 0,                                                         \n"
-        "    GameTextureIndexRule = 1,                                                          \n"
-        "};                                                                                     \n"
-        "                                                                                       \n"
-        "struct GameVertex {                                                                    \n"
-        "    vector_float2 xy;                                                                  \n"
-        "    vector_float2 uv;                                                                  \n"
-        "    float alpha;                                                                       \n"
-        "    float padding;  // This is absolutely needed for 64-bit alignments                 \n"
-        "};                                                                                     \n"
-        "                                                                                       \n"
-        "// Vertex shader outputs and fragment shader inputs                                    \n"
-        "struct RasterizerData {                                                                \n"
-        "    float4 position [[position]];                                                      \n"
-        "    float2 textureCoordinate;                                                          \n"
-        "    float alpha;                                                                       \n"
-        "};                                                                                     \n"
-        "                                                                                       \n"
-        "vertex RasterizerData                                                                  \n"
-        "vertexShader(uint vertexID [[vertex_id]],                                              \n"
-        "             constant GameVertex *vertexArray [[buffer(GameVertexInputIndexVertices)]])\n"
-        "{                                                                                      \n"
-        "    RasterizerData out;                                                                \n"
-        "    out.position = vector_float4(vertexArray[vertexID].xy, 0, 1);                      \n"
-        "    out.textureCoordinate = vertexArray[vertexID].uv;                                  \n"
-        "    out.alpha = vertexArray[vertexID].alpha;                                           \n"
-        "    return out;                                                                        \n"
-        "}                                                                                      \n"
-        "                                                                                       \n"
-        "fragment float4                                                                        \n"
-        "fragmentNormalShader(RasterizerData in [[stage_in]],                                   \n"
-        "                     texture2d<half> colorTexture [[texture(GameTextureIndexColor)]])  \n"
-        "{                                                                                      \n"
-        "    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear);          \n"
-        "    const half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate);  \n"
-        "    return float4(colorSample.r, colorSample.g, colorSample.b, colorSample.a * in.alpha); \n"
-        "}                                                                                      \n"
-        "                                                                                       \n"
-        "fragment float4                                                                        \n"
-        "fragmentCopyShader(RasterizerData in [[stage_in]],                                     \n"
-        "                   texture2d<half> colorTexture [[texture(GameTextureIndexColor)]])    \n"
-        "{                                                                                      \n"
-        "    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear);          \n"
-        "    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate);     \n"
-        "    colorSample.a = 1.0;                                                               \n"
-        "    return float4(colorSample);                                                        \n"
-        "}                                                                                      \n"
-        "                                                                                       \n"
-        "fragment float4                                                                        \n"
-        "fragmentDimShader(RasterizerData in [[stage_in]],                                      \n"
-        "                  texture2d<half> colorTexture [[texture(GameTextureIndexColor)]])     \n"
-        "{                                                                                      \n"
-        "    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);         \n"
-        "    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate);     \n"
-        "    colorSample.rgb *= 0.5;                                                            \n"
-        "    return float4(colorSample);                                                        \n"
-        "}                                                                                      \n"
-        "                                                                                       \n"
-        "fragment float4                                                                        \n"
-        "fragmentRuleShader(RasterizerData in [[stage_in]],                                     \n"
-        "                   texture2d<half> colorTexture [[texture(GameTextureIndexColor)]],    \n"
-        "                   texture2d<half> ruleTexture [[texture(GameTextureIndexRule)]])      \n"
-        "{                                                                                      \n"
-        "    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);         \n"
-        "    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate);     \n"
-        "    const half4 ruleSample = ruleTexture.sample(textureSampler, in.textureCoordinate); \n"
-        "    colorSample.a = 1.0 - step(in.alpha, (float)ruleSample.b);                         \n"
-        "    return float4(colorSample.r, colorSample.g, colorSample.b, colorSample.a);         \n"
-        "}                                                                                      \n"
-        "                                                                                       \n"
-        "fragment float4                                                                        \n"
-        "fragmentMeltShader(RasterizerData in [[stage_in]],                                     \n"
-        "                   texture2d<half> colorTexture [[texture(GameTextureIndexColor)]],    \n"
-        "                   texture2d<half> ruleTexture [[texture(GameTextureIndexRule)]])      \n"
-        "{                                                                                      \n"
-        "    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);         \n"
-        "    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate);     \n"
-        "    const half4 ruleSample = ruleTexture.sample(textureSampler, in.textureCoordinate); \n"
-        "    colorSample.a = clamp((1.0 - ruleSample.b) + (in.alpha * 2.0 - 1.0), 0.0, 1.0);    \n"
-        "    return float4(colorSample);                                                        \n"
-        "}                                                                                      \n";
+const char *gameShader = R"(
+#include <metal_stdlib>
+#include <metal_common>
+#include <simd/simd.h>
+
+using namespace metal;
+
+enum GameVertexInputIndex {
+    GameVertexInputIndexVertices = 0,
+};
+
+enum {
+    GameTextureIndexSrc1 = 0,
+    GameTextureIndexSrc2 = 1,
+};
+
+// Vertex shader inputs
+struct GameVertex {
+    vector_float2 xy;
+    vector_float2 uv1;
+    vector_float2 uv2;
+    float alpha;
+    float padding;  // This is absolutely needed for 64-bit alignments
+};
+
+// Vertex shader outputs and fragment shader inputs
+struct RasterizerData {
+    float4 position [[position]];
+    float2 textureCoordinate1;
+    float2 textureCoordinate2;
+    float alpha;
+};
+
+vertex RasterizerData
+vertexShader(uint vertexID [[vertex_id]],
+             constant GameVertex *vertexArray [[buffer(GameVertexInputIndexVertices)]])
+{
+    RasterizerData out;
+    out.position = vector_float4(vertexArray[vertexID].xy, 0, 1);
+    out.textureCoordinate1 = vertexArray[vertexID].uv1;
+    out.textureCoordinate2 = vertexArray[vertexID].uv2;
+    out.alpha = vertexArray[vertexID].alpha;
+    return out;
+}
+
+fragment float4
+fragmentNormalShader(RasterizerData in [[stage_in]],
+                     texture2d<half> colorTexture [[texture(GameTextureIndexSrc1)]])
+{
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear);
+    const half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate1);
+    return float4(colorSample.r, colorSample.g, colorSample.b, colorSample.a * in.alpha);
+}
+
+fragment float4
+fragmentCopyShader(RasterizerData in [[stage_in]],
+                   texture2d<half> colorTexture [[texture(GameTextureIndexSrc1)]])
+{
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear);
+    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate1);
+    colorSample.a = 1.0;
+    return float4(colorSample);
+}
+
+fragment float4
+fragmentDimShader(RasterizerData in [[stage_in]],
+                  texture2d<half> colorTexture [[texture(GameTextureIndexSrc1)]])
+{
+    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);
+    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate1);
+    colorSample.rgb *= 0.5;
+    return float4(colorSample);
+}
+
+fragment float4
+fragmentRuleShader(RasterizerData in [[stage_in]],
+                   texture2d<half> colorTexture [[texture(GameTextureIndexSrc1)]],
+                   texture2d<half> ruleTexture [[texture(GameTextureIndexSrc2)]])
+{
+    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);
+    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate1);
+    const half4 ruleSample = ruleTexture.sample(textureSampler, in.textureCoordinate2);
+    colorSample.a = 1.0 - step(in.alpha, (float)ruleSample.b);
+    return float4(colorSample.r, colorSample.g, colorSample.b, colorSample.a);
+}
+
+fragment float4
+fragmentMeltShader(RasterizerData in [[stage_in]],
+                   texture2d<half> colorTexture [[texture(GameTextureIndexSrc1)]],
+                   texture2d<half> ruleTexture [[texture(GameTextureIndexSrc2)]])
+{
+    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);
+    half4 colorSample = colorTexture.sample(textureSampler, in.textureCoordinate1);
+    const half4 ruleSample = ruleTexture.sample(textureSampler, in.textureCoordinate2);
+    colorSample.a = clamp((1.0 - ruleSample.b) + (in.alpha * 2.0 - 1.0), 0.0, 1.0);
+    return float4(colorSample);
+}
+
+fragment float4
+fragmentCrossShader(RasterizerData in [[stage_in]],
+                    texture2d<half> src1Texture [[texture(GameTextureIndexSrc1)]],
+                    texture2d<half> src2Texture [[texture(GameTextureIndexSrc2)]])
+{
+    constexpr sampler textureSampler (mag_filter::linear, min_filter::linear);
+    const half4 src1Sample = src1Texture.sample(textureSampler, in.textureCoordinate1);
+    const half4 src2Sample = src2Texture.sample(textureSampler, in.textureCoordinate2);
+    const half a = (half)in.alpha;
+    return float4(src2Sample * (1.0h - a) + src1Sample * a);
+}
+)";

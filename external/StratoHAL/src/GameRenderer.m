@@ -67,6 +67,7 @@ static id<MTLRenderPipelineState> theSubPipelineState;
 static id<MTLRenderPipelineState> theDimPipelineState;
 static id<MTLRenderPipelineState> theRulePipelineState;
 static id<MTLRenderPipelineState> theMeltPipelineState;
+static id<MTLRenderPipelineState> theCrossPipelineState;
 static id<MTLCommandBuffer> theCommandBuffer;
 static id<MTLBlitCommandEncoder> theBlitEncoder;
 static id<MTLRenderCommandEncoder> theRenderEncoder;
@@ -89,13 +90,21 @@ static BOOL runFrame(void);
 static void drawPrimitives(int dst_left, int dst_top, int dst_width, int dst_height,
                            struct hal_image *src_image,
                            struct hal_image *rule_image,
-                           int src_left, int src_top, int src_width, int src_height,
+                           int src1_left, int src1_top, int src1_width, int src1_height,
+                           int src2_left, int src2_top, int src2_width, int src2_height,
                            int alpha,
                            id<MTLRenderPipelineState> pipeline);
 static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
                              struct hal_image *src_image,
                              struct hal_image *rule_image,
-                             int src_left, int src_top, int src_width, int src_height,
+                             float src1_x1, float src1_y1,
+                             float src1_x2, float src1_y2,
+                             float src1_x3, float src1_y3,
+                             float src1_x4, float src1_y4,
+                             float src2_x1, float src2_y1,
+                             float src2_x2, float src2_y2,
+                             float src2_x3, float src2_y3,
+                             float src2_x4, float src2_y4,
                              int alpha,
                              id<MTLRenderPipelineState> pipeline);
 
@@ -124,6 +133,8 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
 
     // Load shaders.
     id<MTLLibrary> defaultLibrary = [theDevice newLibraryWithSource:[NSString stringWithUTF8String:gameShader] options:nil error:&error];
+    if (!defaultLibrary)
+        NSLog(@"Failed to create pipeline state: %@", error);
     id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
     if (!vertexFunction) {
         NSLog(@"vertexFunction not found!");
@@ -233,6 +244,23 @@ static void drawPrimitives3D(float x1, float y1, float x2, float y2, float x3, f
     meltPipelineStateDescriptor.colorAttachments[0].destinationAlphaBlendFactor = MTLBlendFactorOne;
     meltPipelineStateDescriptor.depthAttachmentPixelFormat = theMTKView.depthStencilPixelFormat;
     theMeltPipelineState = [theDevice newRenderPipelineStateWithDescriptor:meltPipelineStateDescriptor error:&error];
+    NSAssert(theMeltPipelineState, @"Failed to create pipeline state: %@", error);
+
+    // Construct a cross shader pipeline.
+    MTLRenderPipelineDescriptor *crossPipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
+    crossPipelineStateDescriptor.label = @"Cross Texturing Pipeline";
+    crossPipelineStateDescriptor.vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+    crossPipelineStateDescriptor.fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentCrossShader"];
+    crossPipelineStateDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat;
+    crossPipelineStateDescriptor.colorAttachments[0].blendingEnabled = TRUE;
+    crossPipelineStateDescriptor.colorAttachments[0].rgbBlendOperation = MTLBlendOperationAdd;
+    crossPipelineStateDescriptor.colorAttachments[0].alphaBlendOperation = MTLBlendOperationAdd;
+    crossPipelineStateDescriptor.colorAttachments[0].sourceRGBBlendFactor = MTLBlendFactorSourceAlpha;
+    crossPipelineStateDescriptor.colorAttachments[0].sourceAlphaBlendFactor = MTLBlendFactorOne;
+    crossPipelineStateDescriptor.colorAttachments[0].destinationRGBBlendFactor = MTLBlendFactorOneMinusSourceAlpha;
+    crossPipelineStateDescriptor.colorAttachments[0].destinationAlphaBlendFactor = MTLBlendFactorOne;
+    crossPipelineStateDescriptor.depthAttachmentPixelFormat = theMTKView.depthStencilPixelFormat;
+    theCrossPipelineState = [theDevice newRenderPipelineStateWithDescriptor:crossPipelineStateDescriptor error:&error];
     NSAssert(theMeltPipelineState, @"Failed to create pipeline state: %@", error);
 
     // Create a command queue.
@@ -430,6 +458,7 @@ hal_render_image_normal(
                    src_top,
                    src_width,
                    src_height,
+                   0, 0, 0, 0,
                    alpha,
                    theNormalPipelineState);
 }
@@ -469,6 +498,7 @@ hal_render_image_add(
                    src_top,
                    src_width,
                    src_height,
+                   0, 0, 0, 0,
                    alpha,
                    theAddPipelineState);
 }
@@ -508,6 +538,7 @@ hal_render_image_sub(
                    src_top,
                    src_width,
                    src_height,
+                   0, 0, 0, 0,
                    alpha,
                    theSubPipelineState);
 }
@@ -548,6 +579,7 @@ hal_render_image_dim(
                    src_top,
                    src_width,
                    src_height,
+                   0, 0, 0, 0,
                    alpha,
                    theDimPipelineState);
 }
@@ -571,6 +603,10 @@ hal_render_image_rule(
                    0,
                    src_img->width,
                    src_img->height,
+                   0,
+                   0,
+                   rule_img->width,
+                   rule_img->height,
                    threshold,
                    theRulePipelineState);
 }
@@ -594,8 +630,55 @@ hal_render_image_melt(
                    0,
                    src_img->width,
                    src_img->height,
+                   0,
+                   0,
+                   rule_img->width,
+                   rule_img->height,
                    progress,
                    theMeltPipelineState);
+}
+
+//
+// Render an image to the screen with the "rule" shader pipeline.
+//
+void
+hal_render_image_cross(
+	struct hal_image *src1_image,
+	struct hal_image *src2_image,
+	float src1_left,
+	float src1_top,
+	float src2_left,
+	float src2_top,
+	int alpha)
+{
+	drawPrimitives3D(0,
+                     0,
+                     screen_width,
+                     0,
+                     0,
+                     screen_height,
+                     screen_width,
+                     screen_height,
+                     src1_image,
+                     src2_image,
+                     -src1_left,
+                     -src1_top,
+                     screen_width - src1_left,
+                     -src1_top,
+                     -src1_left,
+                     screen_height - src1_top,
+                     screen_width - src1_left,
+                     screen_height - src1_top,
+                     -src2_left,
+                     -src2_top,
+                     screen_width - src2_left,
+                     -src2_top,
+                     -src2_left,
+                     screen_height - src2_top,
+                     screen_width - src2_left,
+                     screen_height - src2_top,
+                     alpha,
+                     theCrossPipelineState);
 }
 
 //
@@ -607,89 +690,47 @@ drawPrimitives(
     int dst_top,
     int dst_width,
     int dst_height,
-    struct hal_image *src_image,
-    struct hal_image *rule_image,
-    int src_left,
-    int src_top,
-    int src_width,
-    int src_height,
+    struct hal_image *src1_image,
+    struct hal_image *src2_image,
+    int src1_left,
+    int src1_top,
+    int src1_width,
+    int src1_height,
+    int src2_left,
+    int src2_top,
+    int src2_width,
+    int src2_height,
     int alpha,
     id<MTLRenderPipelineState> pipeline)
 {
-    // Calc the half size of the window.
-    float hw = (float)screen_width / 2.0f;
-    float hh = (float)screen_height / 2.0f;
-
-    // Get the texture size.
-    float tw = (float)src_image->width;
-    float th = (float)src_image->height;
-    
-    // The vertex shader input
-    float vsIn[24];
-
-    // Set the left top vertex.
-    vsIn[0] = ((float)dst_left - hw) / hw;   // X (-1.0 to 1.0, left to right)
-    vsIn[1] = -((float)dst_top - hh) / hh;   // Y (-1.0 to 1.0, bottom to top)
-    vsIn[2] = (float)src_left / tw;          // U (0.0 to 1.0, left to right)
-    vsIn[3] = (float)src_top / th;           // V (0.0 to 1.0, top to bottom)
-    vsIn[4] = (float)alpha / 255.0f;         // Alpha (0.0 to 1.0)
-    vsIn[5] = 0;                             // Padding for a 64-bit boundary
-
-    // Set the right top vertex.
-    vsIn[6] = ((float)dst_left + (float)dst_width - hw) / hw;    // X (-1.0 to 1.0, left to right)
-    vsIn[7] = -((float)dst_top - hh) / hh;                   // Y (-1.0 to 1.0, bottom to top)
-    vsIn[8] = (float)(src_left + src_width) / tw;                // U (0.0 to 1.0, left to right)
-    vsIn[9] = (float)(src_top) / th;                         // V (0.0 to 1.0, top to bottom)
-    vsIn[10] = (float)alpha / 255.0f;                        // Alpha (0.0 to 1.0)
-    vsIn[11] = 0;                                            // Padding for a 64-bit boundary
-    
-    // Set the left bottom vertex.
-    vsIn[12] = ((float)dst_left - hw) / hw;                  // X (-1.0 to 1.0, left to right)
-    vsIn[13] = -((float)dst_top + (float)dst_height - hh) / hh;  // Y (-1.0 to 1.0, bottom to top)
-    vsIn[14] = (float)src_left / tw;                         // U (0.0 to 1.0, left to right)
-    vsIn[15] = (float)(src_top + src_height) / th;               // V (0.0 to 1.0, top to bottom)
-    vsIn[16] = (float)alpha / 255.0f;                        // Alpha (0.0 to 1.0)
-    vsIn[17] = 0;                                            // Padding for a 64-bit boundary
-
-    // Set the right bottom vertex.
-    vsIn[18] = ((float)dst_left + (float)dst_width - hw) / hw;   // X (-1.0 to 1.0, left to right)
-    vsIn[19] = -((float)dst_top + (float)dst_height - hh) / hh;  // Y (-1.0 to 1.0, bottom to top)
-    vsIn[20] = (float)(src_left + src_width) / tw;               // U (0.0 to 1.0, left to right)
-    vsIn[21] = (float)(src_top + src_height) / th;               // V (0.0 to 1.0, top to bottom)
-    vsIn[22] = (float)alpha / 255.0f;                        // Alpha (0.0 to 1.0)
-    vsIn[23] = 0;                                            // Padding for a 64-bit boundary
-
-    // Upload textures if they are pending.
-    if (theBlitEncoder != nil) {
-        [theBlitEncoder endEncoding];
-        theBlitEncoder = nil;
-    }
-
-    // Draw two triangles.
-    if (theRenderEncoder == nil) {
-        theMTKView.currentRenderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
-        theMTKView.currentRenderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-        theMTKView.currentRenderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
-        theRenderEncoder = [theCommandBuffer renderCommandEncoderWithDescriptor:theMTKView.currentRenderPassDescriptor];
-        theRenderEncoder.label = @"MyRenderEncoder";
-
-        MTLViewport viewport;
-        viewport.originX = [theViewController screenOffset].x;
-        viewport.originY = [theViewController screenOffset].y;
-        viewport.width = [theViewController screenSize].width;
-        viewport.height = [theViewController screenSize].height;
-        viewport.zfar = 0;
-        viewport.znear = 0;
-        [theRenderEncoder setViewport:viewport];
-    }
-    [theRenderEncoder setRenderPipelineState:pipeline];
-    id<MTLTexture> tex1 = (__bridge id<MTLTexture> _Nullable)(src_image->texture);
-    id<MTLTexture> tex2 = rule_image != NULL ? (__bridge id<MTLTexture> _Nullable)(rule_image->texture) : nil;
-    [theRenderEncoder setVertexBytes:vsIn length:sizeof(vsIn) atIndex:GameVertexInputIndexVertices];
-    [theRenderEncoder setFragmentTexture:tex1 atIndex:GameTextureIndexColor];
-    if (tex2 != nil)
-        [theRenderEncoder setFragmentTexture:tex2 atIndex:GameTextureIndexRule];
-    [theRenderEncoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4];
+    drawPrimitives3D(dst_left,
+                     dst_top,
+                     dst_left + dst_width,
+                     dst_top,
+                     dst_left,
+                     dst_top + dst_height,
+                     dst_left + dst_width,
+                     dst_top + dst_height,
+                     src1_image,
+                     src2_image,
+                     src1_left,
+                     src1_top,
+                     src1_left + src1_width,
+                     src1_top,
+                     src1_left,
+                     src1_top + src1_height,
+                     src1_left + src1_width,
+                     src1_top + src1_height,
+                     src2_left,
+                     src2_top,
+                     src2_left + src2_width,
+                     src2_top,
+                     src2_left,
+                     src2_top + src2_height,
+                     src2_left + src2_width,
+                     src2_top + src2_height,
+                     alpha,
+                     pipeline);
 }
 
 //
@@ -724,8 +765,13 @@ hal_render_image_3d_normal(
                      NULL,
                      src_left,
                      src_top,
-                     src_width,
-                     src_height,
+                     src_left + src_width,
+                     src_top,
+                     src_left,
+                     src_top + src_height,
+                     src_left + src_width,
+                     src_top + src_height,
+                     0, 0, 0, 0, 0, 0, 0, 0,
                      alpha,
                      theNormalPipelineState);
 }
@@ -762,8 +808,13 @@ hal_render_image_3d_add(
                      NULL,
                      src_left,
                      src_top,
-                     src_width,
-                     src_height,
+                     src_left + src_width,
+                     src_top,
+                     src_left,
+                     src_top + src_height,
+                     src_left + src_width,
+                     src_top + src_height,
+                     0, 0, 0, 0, 0, 0, 0, 0,
                      alpha,
                      theAddPipelineState);
 }
@@ -800,8 +851,13 @@ hal_render_image_3d_sub(
                      NULL,
                      src_left,
                      src_top,
-                     src_width,
-                     src_height,
+                     src_left + src_width,
+                     src_top,
+                     src_left,
+                     src_top + src_height,
+                     src_left + src_width,
+                     src_top + src_height,
+                     0, 0, 0, 0, 0, 0, 0, 0,
                      alpha,
                      theSubPipelineState);
 }
@@ -838,10 +894,123 @@ hal_render_image_3d_dim(
                      NULL,
                      src_left,
                      src_top,
-                     src_width,
-                     src_height,
+                     src_left + src_width,
+                     src_top,
+                     src_left,
+                     src_top + src_height,
+                     src_left + src_width,
+                     src_top + src_height,
+                     0, 0, 0, 0, 0, 0, 0, 0,
                      alpha,
                      theDimPipelineState);
+}
+
+//
+// Render two images for a cross fading.
+//
+void
+hal_render_image_3d_cross(
+	struct hal_image *src1_image,
+	struct hal_image *src2_image,
+	float src1_x1,
+	float src1_y1,
+	float src1_x2,
+	float src1_y2,
+	float src1_x3,
+	float src1_y3,
+	float src1_x4,
+	float src1_y4,
+	float src2_x1,
+	float src2_y1,
+	float src2_x2,
+	float src2_y2,
+	float src2_x3,
+	float src2_y3,
+	float src2_x4,
+	float src2_y4,
+	int alpha)
+{
+    UNUSED_PARAMETER(src1_x4);
+    UNUSED_PARAMETER(src1_y4);
+    UNUSED_PARAMETER(src2_x4);
+    UNUSED_PARAMETER(src2_y4);
+
+    float s1_tx[4], s1_ty[4];
+    float s2_tx[4], s2_ty[4];
+    float screen_x[] = { 0.0f, (float)screen_width, 0.0f, (float)screen_width };
+    float screen_y[] = { 0.0f, 0.0f, (float)screen_height, (float)screen_height };
+
+    {
+        float dx1 = src1_x2 - src1_x1;
+        float dy1 = src1_y2 - src1_y1;
+        float dx2 = src1_x3 - src1_x1;
+        float dy2 = src1_y3 - src1_y1;
+        float det = dx1 * dy2 - dy1 * dx2;
+
+        if (det != 0.0f) {
+            for (int i = 0; i < 4; i++) {
+                float rx = screen_x[i] - src1_x1;
+                float ry = screen_y[i] - src1_y1;
+                float a = ( dy2 * rx - dx2 * ry) / det;
+                float b = (-dy1 * rx + dx1 * ry) / det;
+                s1_tx[i] = a * (float)src1_image->width;
+                s1_ty[i] = b * (float)src1_image->height;
+            }
+        } else {
+            for (int i = 0; i < 4; i++) s1_tx[i] = s1_ty[i] = 0.0f;
+        }
+    }
+
+    {
+        float dx1 = src2_x2 - src2_x1;
+        float dy1 = src2_y2 - src2_y1;
+        float dx2 = src2_x3 - src2_x1;
+        float dy2 = src2_y3 - src2_y1;
+        float det = dx1 * dy2 - dy1 * dx2;
+
+        if (det != 0.0f) {
+            for (int i = 0; i < 4; i++) {
+                float rx = screen_x[i] - src2_x1;
+                float ry = screen_y[i] - src2_y1;
+                float a = ( dy2 * rx - dx2 * ry) / det;
+                float b = (-dy1 * rx + dx1 * ry) / det;
+                s2_tx[i] = a * (float)src2_image->width;
+                s2_ty[i] = b * (float)src2_image->height;
+            }
+        } else {
+            for (int i = 0; i < 4; i++) s2_tx[i] = s2_ty[i] = 0.0f;
+        }
+    }
+
+    drawPrimitives3D(
+        0.0f,
+        0.0f,
+		(float)screen_width,
+        0.0f,
+        0.0f,
+        (float)screen_height,
+        (float)screen_width,
+        (float)screen_height,
+        src1_image,
+        src2_image,
+        s1_tx[0],
+        s1_ty[0],
+        s1_tx[1],
+        s1_ty[1],
+        s1_tx[2],
+        s1_ty[2],
+        s1_tx[3],
+        s1_ty[3],
+        s2_tx[0],
+        s2_ty[0],
+        s2_tx[1],
+        s2_ty[1],
+        s2_tx[2],
+        s2_ty[2],
+        s2_tx[3],
+        s2_ty[3],
+        alpha,
+        theCrossPipelineState);
 }
 
 //
@@ -857,12 +1026,24 @@ drawPrimitives3D(
     float y3,
     float x4,
     float y4,
-    struct hal_image *src_image,
-    struct hal_image *rule_image,
-    int src_left,
-    int src_top,
-    int src_width,
-    int src_height,
+    struct hal_image *src1_image,
+    struct hal_image *src2_image,
+	float src1_tx1,
+	float src1_ty1,
+	float src1_tx2,
+	float src1_ty2,
+	float src1_tx3,
+	float src1_ty3,
+	float src1_tx4,
+	float src1_ty4,
+	float src2_tx1,
+	float src2_ty1,
+	float src2_tx2,
+	float src2_ty2,
+	float src2_tx3,
+	float src2_ty3,
+	float src2_tx4,
+	float src2_ty4,
     int alpha,
     id<MTLRenderPipelineState> pipeline)
 {
@@ -871,43 +1052,57 @@ drawPrimitives3D(
     float hh = (float)screen_height / 2.0f;
 
     // Get the texture size.
-    float tw = (float)src_image->width;
-    float th = (float)src_image->height;
-    
-    // The vertex shader input
-    float vsIn[24];
+    float tw1 = (float)src1_image->width;
+    float th1 = (float)src1_image->height;
+    float tw2 = 1.0f;
+    float th2 = 1.0f;
+    if (src2_image != NULL) {
+        tw2 = (float)src2_image->width;
+        th2 = (float)src2_image->height;
+    }
+
+    // The vertex shader input.
+    float vsIn[32];
 
     // Set the left top vertex.
-    vsIn[0] = ((float)x1 - hw) / hw;        // X (-1.0 to 1.0, left to right)
-    vsIn[1] = -((float)y1 - hh) / hh;       // Y (-1.0 to 1.0, bottom to top)
-    vsIn[2] = (float)src_left / tw;         // U (0.0 to 1.0, left to right)
-    vsIn[3] = (float)src_top / th;          // V (0.0 to 1.0, top to bottom)
-    vsIn[4] = (float)alpha / 255.0f;        // Alpha (0.0 to 1.0)
-    vsIn[5] = 0;                            // Padding for a 64-bit boundary
+    vsIn[0] = ((float)x1 - hw) / hw;               // X (-1.0 to 1.0, left to right)
+    vsIn[1] = -((float)y1 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
+    vsIn[2] = src1_tx1 / tw1;                       // Src1 U (0.0 to 1.0, left to right)
+    vsIn[3] = src1_ty1 / th1;                       // Src1 V (0.0 to 1.0, top to bottom)
+    vsIn[4] = src2_tx1 / tw2;                       // Src2 U (0.0 to 1.0, left to right)
+    vsIn[5] = src2_ty1 / th2;                       // Src2 V (0.0 to 1.0, top to bottom)
+    vsIn[6] = (float)alpha / 255.0f;               // Alpha (0.0 to 1.0)
+    vsIn[7] = 0;                                   // Padding for a 64-bit boundary
 
     // Set the right top vertex.
-    vsIn[6] = ((float)x2 - hw) / hw;               // X (-1.0 to 1.0, left to right)
-    vsIn[7] = -((float)y2 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
-    vsIn[8] = (float)(src_left + src_width) / tw;  // U (0.0 to 1.0, left to right)
-    vsIn[9] = (float)(src_top) / th;               // V (0.0 to 1.0, top to bottom)
-    vsIn[10] = (float)alpha / 255.0f;              // Alpha (0.0 to 1.0)
-    vsIn[11] = 0;                                  // Padding for a 64-bit boundary
+    vsIn[8] = ((float)x2 - hw) / hw;               // X (-1.0 to 1.0, left to right)
+    vsIn[9] = -((float)y2 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
+    vsIn[10] = src1_tx2 / tw1;                      // Src1 U (0.0 to 1.0, left to right)
+    vsIn[11] = src1_ty2 / th1;                      // Src1 V (0.0 to 1.0, top to bottom)
+    vsIn[12] = src2_tx2 / tw2;                      // Src2 U (0.0 to 1.0, left to right)
+    vsIn[13] = src2_ty2 / tw2;                      // Src2 V (0.0 to 1.0, top to bottom)
+    vsIn[14] = (float)alpha / 255.0f;              // Alpha (0.0 to 1.0)
+    vsIn[15] = 0;                                  // Padding for a 64-bit boundary
 
     // Set the left bottom vertex.
-    vsIn[12] = ((float)x3 - hw) / hw;               // X (-1.0 to 1.0, left to right)
-    vsIn[13] = -((float)y3 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
-    vsIn[14] = (float)src_left / tw;                // U (0.0 to 1.0, left to right)
-    vsIn[15] = (float)(src_top + src_height) / th;  // V (0.0 to 1.0, top to bottom)
-    vsIn[16] = (float)alpha / 255.0f;               // Alpha (0.0 to 1.0)
-    vsIn[17] = 0;                                   // Padding for a 64-bit boundary
-
-    // Set the right bottom vertex.
-    vsIn[18] = ((float)x4 - hw) / hw;               // X (-1.0 to 1.0, left to right)
-    vsIn[19] = -((float)y4 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
-    vsIn[20] = (float)(src_left + src_width) / tw;  // U (0.0 to 1.0, left to right)
-    vsIn[21] = (float)(src_top + src_height) / th;  // V (0.0 to 1.0, top to bottom)
+    vsIn[16] = ((float)x3 - hw) / hw;               // X (-1.0 to 1.0, left to right)
+    vsIn[17] = -((float)y3 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
+    vsIn[18] = src1_tx3 / tw1;                       // Src1 U (0.0 to 1.0, left to right)
+    vsIn[19] = src1_ty3 / th1;                       // Src1 V (0.0 to 1.0, top to bottom)
+    vsIn[20] = src2_tx3 / tw2;                       // Src2 U (0.0 to 1.0, left to right)
+    vsIn[21] = src2_ty3 / th2;                       // Src2 V (0.0 to 1.0, top to bottom)
     vsIn[22] = (float)alpha / 255.0f;               // Alpha (0.0 to 1.0)
     vsIn[23] = 0;                                   // Padding for a 64-bit boundary
+
+    // Set the right bottom vertex.
+    vsIn[24] = ((float)x4 - hw) / hw;               // X (-1.0 to 1.0, left to right)
+    vsIn[25] = -((float)y4 - hh) / hh;              // Y (-1.0 to 1.0, bottom to top)
+    vsIn[26] = src1_tx4 / tw1;                       // Src1 U (0.0 to 1.0, left to right)
+    vsIn[27] = src1_ty4 / th1;                       // Src1 V (0.0 to 1.0, top to bottom)
+    vsIn[28] = src2_tx4 / tw2;                       // Src2 U (0.0 to 1.0, left to right)
+    vsIn[29] = src2_ty4 / th2;                       // Src2 V (0.0 to 1.0, top to bottom)
+    vsIn[30] = (float)alpha / 255.0f;               // Alpha (0.0 to 1.0)
+    vsIn[31] = 0;                                   // Padding for a 64-bit boundary
 
     // Upload textures if they are pending.
     if (theBlitEncoder != nil) {
@@ -933,11 +1128,11 @@ drawPrimitives3D(
         [theRenderEncoder setViewport:viewport];
     }
     [theRenderEncoder setRenderPipelineState:pipeline];
-    id<MTLTexture> tex1 = (__bridge id<MTLTexture> _Nullable)(src_image->texture);
-    id<MTLTexture> tex2 = rule_image != NULL ? (__bridge id<MTLTexture> _Nullable)(rule_image->texture) : nil;
+    id<MTLTexture> tex1 = (__bridge id<MTLTexture> _Nullable)(src1_image->texture);
+    id<MTLTexture> tex2 = src2_image != NULL ? (__bridge id<MTLTexture> _Nullable)(src2_image->texture) : nil;
     [theRenderEncoder setVertexBytes:vsIn length:sizeof(vsIn) atIndex:GameVertexInputIndexVertices];
-    [theRenderEncoder setFragmentTexture:tex1 atIndex:GameTextureIndexColor];
+    [theRenderEncoder setFragmentTexture:tex1 atIndex:GameTextureIndexSrc1];
     if (tex2 != nil)
-        [theRenderEncoder setFragmentTexture:tex2 atIndex:GameTextureIndexRule];
+        [theRenderEncoder setFragmentTexture:tex2 atIndex:GameTextureIndexSrc2];
     [theRenderEncoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4];
 }

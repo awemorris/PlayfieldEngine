@@ -38,13 +38,14 @@ enum GameVertexInputIndex {
 };
 
 enum {
-    GameTextureIndexColor = 0,
-    GameTextureIndexRule = 1,
+    GameTextureIndexSrc1 = 0,
+    GameTextureIndexSrc2 = 1,
 };
 
 struct GameVertex {
     vector_float2 xy;
-    vector_float2 uv;
+    vector_float2 uv1;
+    vector_float2 uv2;
     float alpha;
     float padding;  // This is absolutely needed for 64-bit alignments
 };
