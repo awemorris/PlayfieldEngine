@@ -97,6 +97,10 @@ VOID D3D12RenderImageMelt(struct hal_image* src_image, struct hal_image* rule_im
 VOID D3D11RenderImageMelt(struct hal_image *src_image, struct hal_image *rule_image, int progress);
 VOID D3D9RenderImageMelt(struct hal_image *src_image, struct hal_image *rule_image, int progress);
 VOID GDIRenderImageMelt(struct hal_image *src_image, struct hal_image *rule_image, int progress);
+VOID D3D12RenderImageCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_left, float src1_top, float src2_left, float src2_top, int alpha);
+VOID D3D11RenderImageCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_left, float src1_top, float src2_left, float src2_top, int alpha);
+VOID D3D9RenderImageCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_left, float src1_top, float src2_left, float src2_top, int alpha);
+VOID GDIRenderImageCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_left, float src1_top, float src2_left, float src2_top, int alpha);
 VOID D3D12RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
 VOID D3D11RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image* src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
 VOID D3D9RenderImage3DNormal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
@@ -113,5 +117,9 @@ VOID D3D12RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, flo
 VOID D3D11RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
 VOID D3D9RenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
 VOID GDIRenderImage3DDim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, struct hal_image *src_image, int src_left, int src_top, int src_width, int src_height, int alpha);
+VOID D3D12RenderImage3DCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
+VOID D3D11RenderImage3DCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
+VOID D3D9RenderImage3DCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
+VOID GDIRenderImage3DCross(struct hal_image *src1_image, struct hal_image *src2_image, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
 
 #endif
