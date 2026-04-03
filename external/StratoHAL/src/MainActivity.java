@@ -96,6 +96,9 @@ public class MainActivity extends Activity {
     // Window height
     private static int VIEWPORT_HEIGHT = 720;
 
+	// Language
+	private static String language = "en";
+
     //
     // JNI (do not touch)
     //
@@ -199,6 +202,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         isFinished = false;
+
+        // Get the language.
+        language = getResources().getConfiguration().locale.getLanguage();
 
         // Do full screen settings. (step1)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
