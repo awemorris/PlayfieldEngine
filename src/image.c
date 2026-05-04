@@ -139,6 +139,13 @@ hal_create_image(
 		free(*img);
 		return false;
 	}
+#elif defined(HAL_TARGET_SOLARIS10)
+	pixels = memalign(64, (size_t)w * (size_t)h * sizeof(hal_pixel_t));
+	if (pixels == NULL) {
+		hal_log_out_of_memory();
+		free(*img);
+		return false;
+	}
 #elif !defined(HAL_TARGET_UNITY)
 	if (posix_memalign((void **)&pixels, 64, (size_t)w * (size_t)h * sizeof(hal_pixel_t)) != 0) {
 		hal_log_out_of_memory();
@@ -158,6 +165,7 @@ hal_create_image(
 	(*img)->width = w;
 	(*img)->height = h;
 	(*img)->pixels = pixels;
+	(*img)->no_free = false;
 	(*img)->id = id_top++;
 
 	return true;
@@ -1040,7 +1048,7 @@ scanline_edge(
 
 		if (x1 < x2) {
 			if (x1 < scbuf[iy].sc_min_x) {
-				scbuf[iy].sc_min_x  = (int)ceilf(x1);
+				scbuf[iy].sc_min_x  = (int)floorf(x1);
 				scbuf[iy].sc_min_tx = tx1;
 				scbuf[iy].sc_min_ty = ty1;
 			}
@@ -1051,7 +1059,7 @@ scanline_edge(
 			}
 		} else {
 			if (x2 < scbuf[iy].sc_min_x) {
-				scbuf[iy].sc_min_x  = (int)ceilf(x2);
+				scbuf[iy].sc_min_x  = (int)floorf(x2);
 				scbuf[iy].sc_min_tx = tx2;
 				scbuf[iy].sc_min_ty = ty2;
 			}
@@ -1449,6 +1457,7 @@ struct png_reader {
 };
 
 static void png_read_callback(png_structp png_ptr, png_bytep buf, png_size_t len);
+static void png_warning_silent(png_structp png_ptr, png_const_charp warning_msg);
 
 /*
  * Create an image with a PNG file.
@@ -1505,6 +1514,7 @@ hal_create_image_with_png(
 	reader.size = size;
 	reader.pos = 0;
 	png_set_read_fn(png_ptr, &reader, png_read_callback);
+	png_set_error_fn(png_ptr, NULL, NULL, png_warning_silent);
 	png_set_sig_bytes(png_ptr, 8);
 	png_read_info(png_ptr, info_ptr);
 
@@ -1603,6 +1613,15 @@ png_read_callback(
 	memcpy(buf, reader->data + reader->pos, len);
 
 	reader->pos += len;
+}
+
+static void
+png_warning_silent(
+	png_structp png_ptr,
+	png_const_charp warning_msg)
+{
+	UNUSED_PARAMETER(png_ptr);
+	UNUSED_PARAMETER(warning_msg);
 }
 
 /*

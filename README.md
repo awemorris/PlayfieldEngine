@@ -1,10 +1,11 @@
 StratoHAL
 =========
 
-`StratoHAL` is a portable hardware abstraction layer for game engines.
+`libstrato` is a portable hardware abstraction layer for the
+[NoctVM](https://github.com/awemorris/NoctVM) runtime.
 
-It provides a game loop with a unified interface for audio, graphics,
-and input across multiple platforms.
+`libstrato` provides a game loop with a unified interface for audio,
+graphics, and input across multiple platforms.
 
 ---
 
@@ -16,38 +17,34 @@ and input across multiple platforms.
     - Gamepad and keyboard input
 
 - Supports:
-    - Windows
-    - macOS
-    - Linux
-    - FreeBSD
-    - iOS
-    - Android
-    - HarmonyOS NEXT
-    - WebAssembly
-    - Solaris 11/10
-    - Haiku
-    - Xbox GDK
-    - Also available as a native Unity Plugin for game consoles (PS, Switch, Xbox)
+    - Windows, macOS, Linux, iOS, Android, WebAssembly
+    - Also available as a native Unity Plugin for game consoles (PS, Switch, etc)
 
-- Graphics Backends:
-    - DirectX 9/11/12
-    - Metal
-    - OpenGL
-    - Unity
+- Backends:
+    - DirectX 9/11/12, Metal, OpenGL, Unity, and more
 
-- Audio Backends:
-    - DirectSound
-    - XAudio2
-    - AudioUnit
-    - ALSA
-    - OSS
-    - OpenAL
-    - OpenSL ES
-    - /dev/audio
-    - Unity
+- Easy to extend with custom backends
+
+---
+
+## Design Philosophy
+
+`libstrato` simplifies the chaotic hardware jungle into a simple
+horizon.  HALs should be elegant, lightweight, and invisible.
+
+---
+
+## About the Name
+
+"Strato" comes from a Latin word "stratum", i.e., a layer.
+
+`NoctVM` rises into clarity, supported by `libstrato`.
 
 ---
 
 ## Author's Note
 
-`StratoHAL` is one of the core building blocks of `Playfield Engine`.
+`libstrato` is one of the core building blocks of `NoctVM`, alongside
+`NoctLang`, though the two remain independent. It is designed to
+provide a unified foundation across gaming platforms, with a clear and
+consistent game loop at its heart.
