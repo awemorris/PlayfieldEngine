@@ -2,16 +2,24 @@ StratoHAL
 =========
 
 `StratoHAL` is a highly portable hardware abstraction layer (HAL) for
-game applications. It is written as one of the core building blocks of
-the [Suika3](https://github.com/awemorris/suika3) game scripting
-runtime, and later, it was published as an independent library.
+game applications. With 25+ years of its history as in-house software,
+it has been published as free/libre software to serve as a core
+building block of the Suika3 game scripting runtime. Today, it
+continues to evolve as an independent library, bridging classic and
+modern platforms.
 
-It provides:
+`StratoHAL` provides:
+
 - Built-in game loop and callback mechanism.
 - API for 2D graphics, audio, and input.
 - GPU acceleration as well as software rendering.
 
-It runs across many modern and classic platforms:
+## Platforms
+
+`StratoHAL` supports most major platforms that SDL3 covers. In
+addition, it also supports software rendering for small embedded
+devices and older computers before the GPU era.
+
 - Windows
 - macOS
 - Linux
@@ -27,10 +35,6 @@ It runs across many modern and classic platforms:
 - Xbox (via Unity Plugin, DevKit required)
 - PlayStation 4 / PlayStation 5 (via Unity Plugin, DevKit required)
 - Switch / Switch 2 (via Unity Plugin, DevKit required)
-
-StratoHAL supports most major platforms that SDL3 covers. In addition,
-it supports software rendering for small embedded devices and older
-computers.
 
 ## Backends
 
@@ -58,4 +62,50 @@ computers.
 
 ## About the Name
 
-"Strato" comes from a Latin word "stratum", i.e., a layer, for hardware abstracion.
+"Strato" comes from a Latin word "stratum", i.e., a layer, for hardware abstraction.
+
+## Usage
+
+`StratoHAL` runs the built-in main loop. It calls back the user
+application via the callback functions. User application must
+implement the following.
+
+```
+/*
+ * Called back when the app boots to determine the window title, width, and height.
+ */
+bool hal_callback_on_event_boot(char **title, int *width, int *height);
+
+/*
+ * Called back when the game start.
+ */
+bool hal_callback_on_event_start(void);
+
+/*
+ * Called back when the game stops.
+ */
+void hal_callback_on_event_stop(void);
+
+/*
+ * Called back every frame.
+ */
+bool hal_callback_on_event_frame(void);
+
+/*
+ * Called back when an input happened.
+ */
+void hal_callback_on_event_key_press(int key);
+void hal_callback_on_event_key_release(int key);
+void hal_callback_on_event_mouse_press(int button, int x, int y);
+void hal_callback_on_event_mouse_release(int button, int x, int y);
+void hal_callback_on_event_mouse_move(int x, int y);
+void hal_callback_on_event_analog_input(int input, int val);
+void hal_callback_on_event_touch_cancel(void);
+void hal_callback_on_event_swipe_down(void);
+void hal_callback_on_event_swipe_up(void);
+```
+
+Graphic and audio APIs are self-described in
+[include/stratohal/platform.h](include/stratohal/platform.h).
+
+Examples are found in [Playfield Engine](https://github.com/awemorris/PlayfieldEngine).
