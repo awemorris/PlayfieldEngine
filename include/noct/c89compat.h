@@ -1,8 +1,8 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Strato HAL
- * C89 compatibility header
+ * Noct Programming Language
+ * Copyright (c) 2025, 2026, Awe Morris
  */
 
 /*-

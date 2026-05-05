@@ -6,30 +6,8 @@
  */
 
 /*
- * Runtime
+ * Ahead-of-Time Compilation Helpers
  */
-
-#ifndef NOCT_RUNTIME_H
-#define NOCT_RUNTIME_H
-
-#include <noct/noct.h>
-#include "gc.h"
-
-/*
- * Maximum number of the stack depth.
- */
-#define RT_FRAME_MAX		32
-
-/*
- * Maximum number of the tmpvar in a stack.
- */
-#define RT_TMPVAR_MAX		128
-
-/*
- * Maximum number of the C pinned variables.
- */
-#define RT_GLOBAL_PIN_MAX	64
-#define RT_LOCAL_PIN_MAX	32
 
 struct rt_vm;
 struct rt_env;
@@ -41,238 +19,6 @@ struct rt_array;
 struct rt_dict;
 struct rt_func;
 struct rt_bindglobal;
-
-/*
- * String object.
- */
-struct rt_string {
-	struct rt_gc_object head;
-
-	char *data;
-	size_t len;	/* Including the tail NUL character*/
-	uint32_t hash;
-};
-
-/*
- * Array object.
- */
-struct rt_array {
-	struct rt_gc_object head;
-
-	/* Allocation size. */
-	size_t alloc_size;
-
-	/* Current size. */
-	size_t size;
-
-	/* Value table. */
-	struct rt_value *table;
-
-	/* Copy-On-Resize forwarding. (RCU-style) */
-	struct rt_array *newer;
-
-#if defined(NOCT_USE_MULTITHREAD)
-	/* Atomic counter. */
-	int counter;
-#endif
-};
-
-/*
- * Dictionary object.
- */
-struct rt_dict {
-	struct rt_gc_object head;
-
-	/* Allocation size. */
-	size_t alloc_size;
-
-	/* Current used elements. */
-	size_t size;
-
-	/* Key table. */
-	struct rt_value *key;
-
-	/* Value table. */
-	struct rt_value *value;
-
-	/* Copy-On-Resize forwarding. (RCU-style) */
-	struct rt_dict *newer;
-
-#if defined(NOCT_USE_MULTITHREAD)
-	/* Atomic counter. */
-	int counter;
-#endif
-};
-
-#define RT_DICT_KEY_REMOVED ((struct rt_value *)((intptr_t)-1))
-
-/*
- * Function object.
- */
-struct rt_func {
-	struct rt_gc_object head;
-
-	char *name;
-	uint32_t param_count;
-	char *param_name[NOCT_ARG_MAX];
-
-	char *file_name;
-
-	/* Bytecode for a function. (if not a cfunc) */
-	uint32_t bytecode_size;
-	uint8_t *bytecode;
-	uint32_t tmpvar_size;
-
-	/* JIT-generated code. */
-	bool (*jit_code)(struct rt_env *env);
-	int call_count;
-
-	/* Function pointer. (if a cfunc) */
-	bool (*cfunc)(struct rt_env *env);
-
-	/* Next. */
-	struct rt_func *next;
-};
-
-/*
- * Global variable entry.
- */
-struct rt_bindglobal {
-	/* Symbol name. */
-	char *name;
-
-	/* Hash cache for the symbol name. */
-	uint32_t name_len;
-	uint32_t name_hash;
-
-	/* Value. */
-	struct rt_value val;
-
-	/* Removed flag for linear search. */
-	bool is_removed;
-};
-
-/*
- * Calling frame.
- */
-struct rt_frame {
-	/*
-	 * tmpvar pointer.
-	 *  - Do not move. JIT assumes its offset.
-	 */
-	struct rt_value *tmpvar;
-
-	/*
-	 * Size of the tmpvar table.
-	 */
-	uint32_t tmpvar_size;
-
-	/*
-	 * Current running function.
-	 */
-	struct rt_func *func;
-
-	/*
-	 * Pinned C local variables.
-	 */
-	struct rt_value *pinned[RT_LOCAL_PIN_MAX];
-	uint32_t pinned_count;
-
-	/*
-	 * tmpvar body.
-	 */
-	struct rt_value tmpvar_alloc[RT_TMPVAR_MAX];
-};
-
-/*
- * Runtime environment.
- */
-struct rt_env {
-	/*
-	 * [Stack Pointer]
-	 *  - Do not move this. JIT codegen assumes its offset.
-	 */
-	struct rt_frame *frame;
-
-	/*
-	 * [Execution Line]
-	 *  - Do not move. JIT codegen assumes the offset.
-	 */
-	int line;
-
-	/*
-	 * Do not move. (8-byte alisgnment)
-	 */
-	int _dummy;
-
-	/*
-	 * Reference to VM.
-	 */
-	struct rt_vm *vm;
-
-	/*
-	 * Stack allocation table, referenced by the "frame" field.
-	 */
-	struct rt_frame frame_alloc[RT_FRAME_MAX];
-	int cur_frame_index;
-
-	/*
-	 * Execution file name. Set by "rt_call()".
-	 */
-	char file_name[256];
-
-	/*
-	 * Error message. Set by "rt_error()".
-	 */
-	char error_message[1024];
-
-	/*
-	 * Env linked list.
-	 */
-	struct rt_env *next;
-
-#if defined(NOCT_USE_MULTITHREAD)
-	/* Atomic counter for GC. */
-	int gc_in_progress_counter;
-#endif
-};
-
-/*
- * VM.
- */
-struct rt_vm {
-	/* Global symbols. */
-	uint32_t global_alloc_size;
-	uint32_t global_size;
-	struct rt_bindglobal *global;
-
-	/* Function list. */
-	struct rt_func *func_list;
-
-	/* GC. */
-	struct rt_gc_info gc;
-
-	/* Env list. */
-	struct rt_env *env_list;
-
-	/* Pinned C global variables. */
-	struct rt_value *pinned[RT_GLOBAL_PIN_MAX];
-	uint32_t pinned_count;
-
-	/* Is JIT code written and not commited? */
-	bool is_jit_dirty;
-
-#if defined(NOCT_USE_MULTITHREAD)
-	/* In-flight counter for GC exclusion. */
-	int in_flight_counter;
-
-	/* GC stop-the-world counter. */
-	int gc_stw_counter;
-
-	/* Atomic counter for global variables. */
-	int global_var_counter;
-#endif
-};
 
 /*
  * Initialization
@@ -613,5 +359,226 @@ rt_error(
 void
 rt_out_of_memory(
 	struct rt_env *env);
+
+/*
+ * Execution Helpers
+ */
+
+bool
+rt_assign_helper(
+	struct rt_env *rt,
+	int dst,
+	int src);
+
+bool
+rt_add_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_sub_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_mul_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_div_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_mod_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_and_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_or_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_xor_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_shl_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_shr_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_neg_helper(
+	struct rt_env *rt,
+	int dst,
+	int src);
+
+bool
+rt_not_helper(
+	struct rt_env *rt,
+	int dst,
+	int src);
+
+bool
+rt_lt_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_lte_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_eq_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_neq_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_gte_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_gt_helper(
+	struct rt_env *rt,
+	int dst,
+	int src1,
+	int src2);
+
+bool
+rt_storearray_helper(
+	struct rt_env *rt,
+	int arr,
+	int subscr,
+	int val);
+
+bool
+rt_loadarray_helper(
+	struct rt_env *rt,
+	int dst,
+	int arr,
+	int subscr);
+
+bool
+rt_len_helper(
+	struct rt_env *rt,
+	int dst,
+	int src);
+
+bool
+rt_getdictkeybyindex_helper(
+	struct rt_env *rt,
+	int dst,
+	int dict,
+	int subscr);
+
+bool
+rt_getdictvalbyindex_helper(
+	struct rt_env *rt,
+	int dst,
+	int dict,
+	int subscr);
+
+bool
+rt_loadsymbol_helper(
+	struct rt_env *rt,
+	int dst,
+	const char *symbol,
+	uint32_t symbol_len,
+	uint32_t symbol_hash);
+
+bool
+rt_storesymbol_helper(
+	struct rt_env *rt,
+	const char *symbol,
+	uint32_t symbol_len,
+	uint32_t symbol_hash,
+	int src);
+
+bool
+rt_loaddot_helper(
+	struct rt_env *rt,
+	int dst,
+	int dict,
+	const char *field,
+	uint32_t field_len,
+	uint32_t field_hash);
+
+bool
+rt_storedot_helper(
+	struct rt_env *rt,
+	int dict,
+	const char *field,
+	uint32_t field_len,
+	uint32_t field_hash,
+	int src);
+
+bool
+rt_call_helper(
+	struct rt_env *rt,
+	int dst,
+	int func,
+	int arg_count,
+	int *arg);
+
+bool
+rt_thiscall_helper(
+	struct rt_env *rt,
+	int dst,
+	int obj,
+	const char *name,
+	uint32_t name_len,
+	uint32_t name_hash,
+	int arg_count,
+	int *arg);
 
 #endif
