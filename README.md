@@ -397,6 +397,15 @@ across supported platforms.
 
 ---
 
+## Documentation
+
+- [Syntax](docs/syntax.md)
+- [API](docs/api.md)
+- [FFI](docs/ffi.md)
+- [Virtual Machine Specification](docs/vmspec.md)
+
+---
+
 ## License
 
 Noct is open source, released under the zlib license.
