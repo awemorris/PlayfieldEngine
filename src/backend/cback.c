@@ -1,7 +1,8 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Noct Programming Language
+ * Copyright (c) 2025, 2026, Awe Morris
  */
 
 /*
@@ -77,8 +78,7 @@ cback_init(
 		return false;
 	}
 
-	fprintf(fp, "#include \"runtime.h\"\n");
-	fprintf(fp, "#include \"execution.h\"\n");
+	fprintf(fp, "#include <noct/aot.h>\"\n");
 	fprintf(fp, "\n");
 
 	return true;
@@ -161,6 +161,7 @@ static INLINE bool cback_get_u8(
         return true;
 }
 
+#if 0
 /* Get a u16 from bytecode. */
 #define GET_U16(v) if (!cback_get_u16(func, pc, v)) return false
 static INLINE bool cback_get_u16(
@@ -173,13 +174,14 @@ static INLINE bool cback_get_u16(
                 return false;
         }
 
-        *val = ((uint32_t)func->bytecode[*pc] << 8) |
-                (uint32_t)func->bytecode[*pc + 1];
+        *val = (int)(((uint32_t)func->bytecode[*pc] << 8) |
+		     (uint32_t)func->bytecode[*pc + 1]);
 
         *pc = *pc + 2;
 
         return true;
 }
+#endif
 
 /* Get a u16 tmpvar index from bytecode. */
 #define GET_TMPVAR(v) if (!cback_get_tmpvar(func, pc, v)) return false
@@ -193,8 +195,8 @@ static INLINE bool cback_get_tmpvar(
                 return false;
         }
 
-        *val = ((uint32_t)func->bytecode[*pc] << 8) |
-                (uint32_t)func->bytecode[*pc + 1];
+        *val = (int)(((uint32_t)func->bytecode[*pc] << 8) |
+		     (uint32_t)func->bytecode[*pc + 1]);
         if ((uint32_t)*val >= (uint32_t)func->tmpvar_size) {
                 puts(BROKEN_BYTECODE);
                 return false;
@@ -996,6 +998,14 @@ cback_visit_op(
 		if (!cback_visit_neq_op(func, pc))
 			return false;
 		break;
+	case OP_SHL:
+		if (!cback_visit_shl_op(func, pc))
+			return false;
+		break;
+	case OP_SHR:
+		if (!cback_visit_shr_op(func, pc))
+			return false;
+		break;
 	case OP_STOREARRAY:
 		if (!cback_visit_storearray_op(func, pc))
 			return false;
@@ -1058,7 +1068,7 @@ cback_visit_op(
 			return false;
 		break;
 	default:
-		printf("Unknow opcode.");
+		printf("Unknown opcode.");
 		return false;
 	}
 

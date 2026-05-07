@@ -1,7 +1,8 @@
 /* -*- coding: utf-8; tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * Copyright (c) 2025, Awe Morris. All rights reserved.
+ * Noct Programming Language
+ * Copyright (c) 2025, 2026, Awe Morris
  */
 
 /*
@@ -524,6 +525,15 @@ noct_make_dict_copy(
 	NoctEnv *env,
 	NoctValue *dst,
 	NoctValue *src);
+
+/*
+ * Retrieves a tmpvar size from the current stack frame.
+ */
+NOCT_DLL
+bool
+noct_get_tmpvar_size(
+	NoctEnv *env,
+	uint32_t *size);
 
 /*
  * Retrieves a function argument from the current stack frame.
