@@ -14,7 +14,7 @@ option(NOCT_ENABLE_OBJECT       "Build objects only"          OFF)
 option(NOCT_ENABLE_CLI          "Build a CLI binary"          ON)
 option(NOCT_ENABLE_JIT          "Enable JIT compilation"      ON)
 option(NOCT_ENABLE_I18N         "Enable translation feature"  ON)
-option(NOCT_ENABLE_I18N_LIBINTL "Enable gettext()"            OFF)
+option(NOCT_ENABLE_I18N_LIBINTL "Enable gettext"              OFF)
 option(NOCT_ENABLE_INSTALL      "Enable installation"         ON)
 
 option(NOCT_ENABLE_MDOC         "Install mdoc(7) man page"    OFF)
@@ -234,6 +234,12 @@ if(NOCT_ENABLE_I18N)
   target_compile_definitions(noctapi PRIVATE NOCT_USE_TRANSLATION)
 endif()  
 
+# NOCT_USE_LIBINTL
+if(NOCT_ENABLE_I18N_LIBINTL)
+  target_compile_definitions(noct    PRIVATE NOCT_USE_LIBINTL)
+  target_compile_definitions(noctapi PRIVATE NOCT_USE_LIBINTL)
+endif()  
+
 # NOCT_TARGET_UNITY
 if(NOCT_TARGET_UNITY)
   target_compile_definitions(noct    PUBLIC NOCT_TARGET_UNITY)
@@ -274,7 +280,7 @@ endif()
 # LDFLAGS
 #
 
-if(NOCT_ENABLE_I18N_GNU)
+if(NOCT_ENABLE_I18N_INTL)
   target_link_libraries(noct    PUBLIC ${INTL_LIBRARY})
   target_link_libraries(noctapi PUBLIC ${INTL_LIBRARY})
 endif()
@@ -382,5 +388,4 @@ if(NOCT_ENABLE_INSTALL)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
             DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
   endif()
-
 endif()
