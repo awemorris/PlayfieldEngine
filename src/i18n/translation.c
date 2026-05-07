@@ -1,3 +1,8 @@
+/*
+ * Noct Programming Language
+ * Copyright (c) 2025, 2026, Awe Morris
+ */
+
 #include <string.h>
 
 const char *noct_get_system_language(void);
