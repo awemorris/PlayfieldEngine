@@ -764,13 +764,13 @@ if(PLAYFIELD_ENABLE_BYTECOMP)
   endif()
 
   add_executable(
-    playfield-bytecomp
+    playfield-bcc
     src/compiler.c
     ${PLAYFIELD_BYTECOMP_RESOURCE}
   )
 
   target_include_directories(
-    playfield-bytecomp
+    playfield-bcc
     PRIVATE
     include
     external/StratoHAL/include
@@ -779,13 +779,13 @@ if(PLAYFIELD_ENABLE_BYTECOMP)
   )
 
   if(NOT PLAYFIELD_ENABLE_DIST)
-    target_link_libraries(playfield-bytecomp noct)
+    target_link_libraries(playfield-bcc noct)
   else()
-    target_link_libraries(playfield-bytecomp ${NOCT_LIBRARY})
+    target_link_libraries(playfield-bcc ${NOCT_LIBRARY})
   endif()
 
   if(UNIX)
-    target_link_libraries(playfield-bytecomp m)
+    target_link_libraries(playfield-bcc m)
   endif()
 endif()
 
@@ -801,14 +801,14 @@ if(PLAYFIELD_ENABLE_AOTCOMP)
   endif()
 
   add_executable(
-    playfield-aotcomp
+    playfield-aotc
     src/aot.c
     external/NoctLang/src/backend/cback.c
     ${PLAYFIELD_AOTCOMP_RESOURCE}
   )
 
   target_include_directories(
-    playfield-aotcomp
+    playfield-aotc
     PRIVATE
     include
     external/StratoHAL/include
@@ -817,13 +817,13 @@ if(PLAYFIELD_ENABLE_AOTCOMP)
   )
 
   if(NOT PLAYFIELD_ENABLE_DIST)
-    target_link_libraries(playfield-aotcomp noct)
+    target_link_libraries(playfield-aotc noct)
   else()
-    target_link_libraries(playfield-aotcomp ${NOCT_LIBRARY})
+    target_link_libraries(playfield-aotc ${NOCT_LIBRARY})
   endif()
 
   if(UNIX)
-    target_link_libraries(playfield-aotcomp m)
+    target_link_libraries(playfield-aotc m)
   endif()
 endif()
 
@@ -962,22 +962,33 @@ endif()
 if(PLAYFIELD_ENABLE_INSTALL)
   include(GNUInstallDirs)
 
-  if(   PLAYFIELD_ENABLE_STATIC
-     OR PLAYFIELD_ENABLE_SHARED
-     OR PLAYFIELD_ENABLE_OBJECT)
-    install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  else()
-    if(PLAYFIELD_ENABLE_BYTECOMP)
-      install(TARGETS playfield-bytecomp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-    endif()
-    if(PLAYFIELD_ENABLE_AOTCOMP)
-      install(TARGETS playfield-aotcomp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-    endif()
-    if(PLAYFIELD_ENABLE_PACK)
-      install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-    endif()
+  # libplayfield
+  install(TARGETS playfield RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
+  # playfield
+  if(PLAYFIELD_ENABLE_BIN)
+    install(TARGETS playfieldbin RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  endif()
+
+  # playfield-bcc
+  if(PLAYFIELD_ENABLE_BYTECOMP)
+    install(TARGETS playfield-bcc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
+
+  # playfield-aotc
+  if(PLAYFIELD_ENABLE_AOTCOMP)
+    install(TARGETS playfield-aotc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
+
+  # playfield-pack
+  if(PLAYFIELD_ENABLE_PACK)
+    install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
+
+  # Manpages.
+  if(PLAYFIELD_ENABLE_BIN)
     if(   PLAYFIELD_TARGET_FREEBSD
+       OR PLAYFIELD_TARGET_FREEBSD_X11
        OR PLAYFIELD_TARGET_FREEBSD_WAYLAND
        OR PLAYFIELD_TARGET_FREEBSD_X11SOFT
        OR PLAYFIELD_TARGET_NETBSD
@@ -991,14 +1002,14 @@ if(PLAYFIELD_ENABLE_INSTALL)
         RENAME      "playfield.1"
       )
       install(
-        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-bytecomp.1.mdoc"
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-bcc.1.mdoc"
         DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-        RENAME      "playfield-bytecomp.1"
+        RENAME      "playfield-bcc.1"
       )
       install(
-        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-aotcomp.1.mdoc"
+        FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-aotc.1.mdoc"
         DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-        RENAME      "playfield-aotcomp.1"
+        RENAME      "playfield-aotc.1"
       )
       install(
         FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1.mdoc"
@@ -1009,8 +1020,8 @@ if(PLAYFIELD_ENABLE_INSTALL)
       # UNIX and Linux manpage
       install(
         FILES       "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield.1"
-                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-bytecomp.1"
-                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-aotcomp.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-bcc.1"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-aotc.1"
                     "${CMAKE_CURRENT_SOURCE_DIR}/resources/manpage/playfield-pack.1"
         DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
       )
