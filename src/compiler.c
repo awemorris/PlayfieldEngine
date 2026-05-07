@@ -152,15 +152,15 @@ static bool compile_source(const char *file_name)
 		return false;
 	}
 
-	/* Make an output file name. (*.pfc) */
+	/* Make an output file name. (*.raybc) */
 	strcpy(bc_fname, file_name);
 	dot = strstr(bc_fname, ".");
 	if (dot != NULL)
-		strcpy(dot, ".pfc");
+		strcpy(dot, ".raybc");
 	else
-		strcat(bc_fname, ".pfc");
+		strcat(bc_fname, ".raybc");
 
-	/* Open an output .nb bytecode file. */
+	/* Open an output .raybc bytecode file. */
 	fp = fopen(bc_fname, "wb");
 	if (fp == NULL) {
 		wide_printf(PF_TR("Cannot open file \"%s\"."), bc_fname);

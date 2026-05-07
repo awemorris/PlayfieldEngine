@@ -4,7 +4,7 @@ Playfield Engine
 [![License: zlib](https://img.shields.io/badge/License-zlib-blue.svg)](LICENSE)
 
 `Playfield Engine` is a 2D game scripting runtime that works everywhere.
-With scripts written in `Playfield Script`,
+With scripts written in `Ray`,
 it can render graphics and play sounds seamlessly across platforms.
 
 [Official Page](https://noctvm.io/playfield/)
@@ -13,33 +13,12 @@ it can render graphics and play sounds seamlessly across platforms.
  |
 [Japanese Page](https://noctvm.io/playfield-ja/)
 
-## Download v0.8.16 now!
-
-| Platform                                                  | Downloads                                                                                                                |
-|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| <img src="docs/img/logo-win.png" align="middle"> Windows  | [Windows 64-bit Installer (For Windows 10/11)](https://noctvm.io/dl/playfield/playfield-installer-0.8.16.exe)            |
-|                                                           | [Windows 64-bit ZIP (For Windows 10/11)](https://noctvm.io/dl/playfield/playfield-win64-0.8.16.zip)                      |
-|                                                           | [Windows Arm64 ZIP (For Windows 11 Arm64)](https://noctvm.io/dl/playfield/playfield-winarm64-0.8.16.zip)                 |
-|                                                           | [Windows 32-bit ZIP (For Windows XP)](https://noctvm.io/dl/playfield/playfield-win32-0.8.16.zip)                         |
-|                                                           | [Windows Pack Tool (For All Windows)](https://noctvm.io/dl/playfield/playfield-pack-0.8.16.zip)                          |
-| <img src="docs/img/logo-mac.png" align="middle"> Mac      | [macOS Arm64/Intel DMG (For macOS 10.12+)](https://noctvm.io/dl/playfield/Playfield-0.8.16.dmg)                          |
-| <img src="docs/img/logo-linux.png" align="middle"> Linux  | [Linux x86_64 AppImage](https://noctvm.io/dl/playfield/Playfield-0.8.16-x86_64.AppImage)                                 |
-|                                                           | [Linux aarch64 AppImage (For Raspberry Pi OS 64-bit)](https://noctvm.io/dl/playfield/Playfield-0.8.16-aarch64.AppImage)  |
-| Others                                                    | [WebAssembly (HTML)](https://noctvm.io/dl/playfield/playfield-wasm-0.8.16.zip)                                           |
-|                                                           | [iOS (Xcode)](https://noctvm.io/dl/playfield/playfield-ios-0.8.16.zip)                                                   |
-|                                                           | [Android (Android Studio)](https://noctvm.io/dl/playfield/playfield-android-0.8.16.zip)                                  |
-|                                                           | [HarmonyOS NEXT](https://noctvm.io/dl/playfield/playfield-openharmony-0.8.16.zip)                                        |
-|                                                           | [Unity Plugin](https://noctvm.io/dl/playfield/playfield-unity-0.8.16.zip)                                                |
-| Samples                                                   | [Sample Games](https://noctvm.io/dl/playfield/playfield-samples-0.8.16.zip)                                              |
-| Source Code                                               | [Source Code](https://noctvm.io/dl/playfield/playfield-src-0.8.16.zip)                                                   |
-
-
 ## Feature Highlights
 
 Built completely from scratch, Playfield Engine features:
 
 - **Comfortable Scripting:**
-    - Powered by Playfield Script, a C/JavaScript-like scripting language designed in-house.
+    - Powered by `Ray`, a C/JavaScript-like scripting language designed in-house.
     - Native performance with a built-in JIT compiler.
     - Write a script and run it instantly — **Jot and Run, Boom!**
 - **Portable Rendering & Audio:**
@@ -265,8 +244,8 @@ Precompiled binaries are available for Windows, macOS, Linux, and Chromebook!
 ### 4. Explore more features
 
 - [Getting Started](docs/mkdocs-en/docs/gettingstarted.md)
-- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
-- [Playfield Script API](docs/mkdocs-en/docs/api.md)
+- [Ray Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Ray API](docs/mkdocs-en/docs/api.md)
 - [How To Build Playfield Engine](docs/mkdocs-en/docs/build.md)
 
 ---
@@ -282,13 +261,13 @@ game engine.
 
 ```
 +----------------------------------------------------------+
-|                       User Scripts                       |
+| User Ray Scripts                                         |
 +----------------------------------------------------------+
-|                 Playfield Script Runtime                 |
+| Playfield Ray API                                        |
 +--------------------------------+-------------------------+
-|                    Playfield C Runtime                   |
+| Playfield C API                                          |
 +--------------------------------+-------------------------+
-|  StratoHAL (Rendering/Audio)   |    NoctLang VM (JIT)    |
+| StratoHAL (Rendering/Audio)    | NoctLang VM (JIT)       |
 +--------------------------------+-------------------------+
 ```
 
@@ -344,7 +323,7 @@ For Xbox series, you can use the native Microsoft GDK port, not via Unity.
 ### NoctLang
 
 ```
-Playfield Script = NoctLang + Playfield API
+Ray = NoctLang + Playfield API
 ```
 
 **NoctLang** is a lightweight scripting language designed specifically
@@ -492,8 +471,8 @@ Samples are added timely.
 
 To generate game templates with AI, please let it load the following references:
 
-- [Playfield Script Syntax](docs/mkdocs-en/docs/syntax.md)
-- [Playfield Script API](docs/mkdocs-en/docs/api.md)
+- [Ray Syntax](docs/mkdocs-en/docs/syntax.md)
+- [Ray API](docs/mkdocs-en/docs/api.md)
 
 AI can then create runnable Playfield Engine games directly.
 
