@@ -1,7 +1,7 @@
 NoctLang - The Noct Programming Language
 ========================================
 
-Noct is a tiny yet mighty programming language for scripting.
+`Noct` is a tiny yet mighty programming language for sandboxed scripting.
 
 **Small enough to learn today, powerful enough to ship tomorrow!**
 
@@ -27,15 +27,27 @@ By adding your own APIs, you can build a customized scripting runtime.
 For example, in [Playfield Engine](https://github.com/awemorris/PlayfieldEngine),
 we integrate Noct with game-specific APIs and refer to it as Playfield Script.
 
+---
+
 ## Status
 
-Actively developed while remaining stable!
+**Stable.**
 
-The core virtual machine of the Noct language has been completed and is already being used through integration with other projects.
+The core virtual machine is completed, and is already being used
+through integration with other projects.
 
-Current development efforts focus on building the standard library, the standalone Noct command, and the package management system.
+- [Playfield Engine](https://github.com/awemorris/PlayfieldEngine)
+- [Suika3](https://github.com/awemorris/suika3).
 
-### JIT Targets:
+Roatmap:
+- Expanding the standard library with modular, opt-in API components.
+- Implementing a package management system for the CLI and REPL.
+
+---
+
+## Platform Support
+
+### JIT Backends:
 
 - x86, x86_64
 - ARMv7, Arm64
@@ -49,6 +61,7 @@ Current development efforts focus on building the standard library, the standalo
 - iOS, Android
 - *BSD
 - Game Consoles
+- Any POSIX compliant OS
 
 Note: On major smartphones and consoles, runtime code generation (JIT)
 is generally prohibited or tightly restricted by platform
@@ -128,6 +141,8 @@ Hello, Tom!
 ```
 
 That's it. You've written your first Noct program.
+
+---
 
 ## Installation
 
@@ -379,6 +394,15 @@ Noct is tested on Windows, macOS, and Linux.
 Continuous integration is powered by GitHub Actions.  Each push to the
 main branch triggers builds and binary releases, ensuring stability
 across supported platforms.
+
+---
+
+## Documentation
+
+- [Syntax](docs/syntax.md)
+- [API](docs/api.md)
+- [FFI](docs/ffi.md)
+- [Virtual Machine Specification](docs/vmspec.md)
 
 ---
 
