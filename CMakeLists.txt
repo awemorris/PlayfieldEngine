@@ -220,7 +220,7 @@ if(NOT PLAYFIELD_ENABLE_DIST)
   set(NOCT_DISABLE_INSTALL ON)
 
   # Magic:
-  #  merge object files that consists in libnoctlang.a into libplayfield.a.
+  #  merge object files that consists in libnoct.a into libplayfield.a.
   if(   PLAYFIELD_ENABLE_STATIC
      OR PLAYFIELD_ENABLE_SHARED
      OR PLAYFIELD_ENABLE_OBJECT)
@@ -609,7 +609,7 @@ endif()
 # Link NoctLang and Strato
 if(NOT PLAYFIELD_ENABLE_DIST)
   target_link_libraries(playfield PUBLIC
-    noctlang
+    noct
     strato
   )
 else()
@@ -758,7 +758,7 @@ endif()
 # Bytecode Compiler Target
 #
 
-if(PLAYFIELD_ENABLE_BYTECOMP AND NOT PLAYFIELD_ENABLE_DIST)
+if(PLAYFIELD_ENABLE_BYTECOMP)
   if(PLAYFIELD_TARGET_WINDOWS OR PLAYFIELD_TARGET_WINDOWS95)
     set(PLAYFIELD_BYTECOMP_RESOURCE resources/windows/bytecomp-resource.rc)
   endif()
@@ -778,7 +778,11 @@ if(PLAYFIELD_ENABLE_BYTECOMP AND NOT PLAYFIELD_ENABLE_DIST)
     external/NoctLang/src/backend
   )
 
-  target_link_libraries(playfield-bytecomp noctlang)
+  if(NOT PLAYFIELD_ENABLE_DIST)
+    target_link_libraries(playfield-bytecomp noct)
+  else()
+    target_link_libraries(playfield-bytecomp ${NOCT_LIBRARY})
+  endif()
 
   if(UNIX)
     target_link_libraries(playfield-bytecomp m)
@@ -791,7 +795,7 @@ endif()
 # AOT Compiler Target
 #
 
-if(PLAYFIELD_ENABLE_AOTCOMP AND NOT PLAYFIELD_ENABLE_DIST)
+if(PLAYFIELD_ENABLE_AOTCOMP)
   if(PLAYFIELD_TARGET_WINDOWS OR PLAYFIELD_TARGET_WINDOWS95)
     set(PLAYFIELD_AOTCOMP_RESOURCE resources/windows/aotcomp-resource.rc)
   endif()
@@ -812,7 +816,11 @@ if(PLAYFIELD_ENABLE_AOTCOMP AND NOT PLAYFIELD_ENABLE_DIST)
     external/NoctLang/src/backend
   )
 
-  target_link_libraries(playfield-aotcomp noctlang)
+  if(NOT PLAYFIELD_ENABLE_DIST)
+    target_link_libraries(playfield-aotcomp noct)
+  else()
+    target_link_libraries(playfield-aotcomp ${NOCT_LIBRARY})
+  endif()
 
   if(UNIX)
     target_link_libraries(playfield-aotcomp m)
