@@ -45,6 +45,7 @@ option(STRATO_ENABLE_INSTALL          "Install files"                           
 option(STRATO_ENABLE_DIST             "Use system libraries"                    OFF)
 option(STRATO_ENABLE_PACK             "Build packager"                          OFF)
 option(STRATO_ENABLE_I18N             "Enable translation"                      OFF)
+option(STRATO_ENABLE_I18N_LIBINTL     "Enable gettext"                          OFF)
 option(STRATO_ENABLE_ROT90            "Rotate screen"                           OFF)
 option(STRATO_ENABLE_GST              "Enable Gstreamer support"                OFF)
 option(STRATO_ENABLE_MAIN2            "Enable macOS main2()"                    OFF)
@@ -187,6 +188,19 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU"
   # GCC/Clang
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g -DNDEBUG")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -g -DNDEBUG")
+endif()
+
+# ---
+
+#
+# gettext
+#
+
+if(STRATO_ENABLE_I18N_LIBINTL)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+  find_package(INTL REQUIRED)
+  include(GNUInstallDirs)
+  add_definitions(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 endif()
 
 # ---
@@ -918,6 +932,11 @@ if(STRATO_ENABLE_I18N)
   target_compile_definitions(strato PRIVATE HAL_USE_TRANSLATION)
 endif()
 
+# gettext
+if(NOCT_ENABLE_I18N_LIBINTL)
+  target_compile_definitions(strato PRIVATE HAL_USE_LIBINTL)
+endif()  
+
 # Rotation
 if(STRATO_ENABLE_ROT90)
   target_compile_definitions(strato PRIVATE HAL_USE_ROT90)
@@ -977,6 +996,10 @@ endif()
 #
 # LDFLAGS
 #
+
+if(STRATO_ENABLE_I18N_INTL)
+  target_link_libraries(straro PUBLIC ${INTL_LIBRARY})
+endif()
 
 # Libraries.
 if(STRATO_ENABLE_SHARED OR STRATO_ENABLE_DIST)
@@ -1313,4 +1336,9 @@ if(STRATO_ENABLE_INSTALL)
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/stratohal)
   install(TARGETS strato RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
   install(TARGETS stratopack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+  if(STRATO_ENABLE_I18N_LIBINTL)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
+            DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
+  endif()
 endif()

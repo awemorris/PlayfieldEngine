@@ -574,7 +574,7 @@ static INLINE uint16_t hal_host_to_le_16(uint16_t d) {
 /*
  * Message Translation
  */
-#if defined(HAL_USE_TRANSLATION)
+#if defined(HAL_USE_TRANSLATION) && !defined(HAL_USE_LIBINTL)
 
 /* Translate messages. */
 #define HAL_TR(s)	hal_gettext(s)
@@ -582,12 +582,18 @@ static INLINE uint16_t hal_host_to_le_16(uint16_t d) {
 /* Translator. */
 const char *hal_gettext(const char *s);
 
+#elif defined(HAL_USE_TRANSLATION) && defined(HAL_USE_LIBINTL)
+
+#include <libintl.h>
+
+#define HAL_TR(s) dgettext("libstrato", s)
+
 #else
 
 /* No translation. */
 #define HAL_TR(s)	(s)
 
-#endif /* defined(HAL_USE_TRANSLATION) */
+#endif
 
 #ifdef __cplusplus
 }
