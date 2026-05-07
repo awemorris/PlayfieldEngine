@@ -681,7 +681,7 @@ es:No se puede abrir el archivo %s.\n
 fr:Impossible d'ouvrir le fichier %s.\n
 de:Datei %s kann nicht geöffnet werden.\n
 it:Impossibile aprire il file %s.\n
-el:Δεν είναι δυνατό το άνοιγμα του αρχείου %s.
+el:Δεν είναι δυνατό το άνοιγμα του αρχείου %s.\n
 ru:Не удаётся открыть файл %s.\n
 zh:无法打开文件 %s。\n
 tw:無法開啟檔案 %s。\n

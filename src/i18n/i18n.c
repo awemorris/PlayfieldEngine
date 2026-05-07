@@ -9,7 +9,15 @@
  * Pseudo gettext support.
  */
 
-#if defined(NOCT_USE_TRANSLATION)
+#if defined(NOCT_USE_TRANSLATION) && defined(NOCT_USE_GETTEXT)
+
+void noct_init_locale(void)
+{
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+}
+
+#elif defined(NOCT_USE_TRANSLATION) && !defined(NOCT_USE_GETTEXT)
 
 #include <stdio.h>
 #include <stdlib.h>

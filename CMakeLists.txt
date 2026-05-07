@@ -14,6 +14,7 @@ option(NOCT_ENABLE_OBJECT       "Build objects only"          OFF)
 option(NOCT_ENABLE_CLI          "Build a CLI binary"          ON)
 option(NOCT_ENABLE_JIT          "Enable JIT compilation"      ON)
 option(NOCT_ENABLE_I18N         "Enable translation feature"  ON)
+option(NOCT_ENABLE_I18N_LIBINTL "Enable gettext()"            OFF)
 option(NOCT_ENABLE_INSTALL      "Enable installation"         ON)
 
 option(NOCT_ENABLE_MDOC         "Install mdoc(7) man page"    OFF)
@@ -24,6 +25,8 @@ option(NOCT_TARGET_UNITY        "Build for Unity"             OFF)
 
 # Experimental.
 option(NOCT_ENABLE_MULTITHREAD  "Enable multithread support"  OFF)
+
+# ---
 
 #
 # Debug/Release
@@ -52,6 +55,8 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID STREQUAL "GNU"
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -g -DNDEBUG")
 endif()
 
+# ---
+
 #
 # Checks
 #
@@ -73,6 +78,8 @@ if(HAVE_SYS_TYPES_H)
   add_definitions(-DHAVE_SYS_TYPES_H=1)
 endif()
 
+# ---
+
 #
 # FLEX
 #
@@ -84,6 +91,8 @@ endif()
 #  ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.c
 #  COMPILE_FLAGS "--prefix=ast_yy"
 #)
+
+# ---
 
 #
 # BISON
@@ -97,6 +106,19 @@ endif()
 #  DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.h
 #  COMPILE_FLAGS "-p ast_yy -Wcounterexamples"
 #)
+
+# ---
+
+#
+# gettext
+#
+
+if(NOCT_ENABLE_I18N_LIBINTL)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+  find_package(INTL REQUIRED)
+  include(GNUInstallDirs)
+  add_definitions(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
+endif()
 
 # ----------------------------------------------------------------------------
 
@@ -246,7 +268,18 @@ if(WIN32)
   endif()
 endif()
 
-# ----------------------------------------------------------------------------
+# ---
+
+#
+# LDFLAGS
+#
+
+if(NOCT_ENABLE_I18N_GNU)
+  target_link_libraries(noct    PUBLIC ${INTL_LIBRARY})
+  target_link_libraries(noctapi PUBLIC ${INTL_LIBRARY})
+endif()
+
+# ---
 
 #
 # Export variables.
@@ -344,4 +377,10 @@ if(NOCT_ENABLE_INSTALL)
     endif()
     install(FILES ${NOCT_MANPAGE} DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 RENAME noct.1)
   endif()
+
+  if(NOCT_ENABLE_I18N_LIBINTL)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
+            DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
+  endif()
+
 endif()

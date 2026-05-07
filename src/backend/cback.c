@@ -1068,7 +1068,7 @@ cback_visit_op(
 			return false;
 		break;
 	default:
-		printf("Unknow opcode.");
+		printf("Unknown opcode.");
 		return false;
 	}
 
