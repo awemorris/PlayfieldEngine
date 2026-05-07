@@ -164,6 +164,16 @@ add_library(
   src/api/api-console.c
 )
 
+# .so versioning.
+set_target_properties(noct PROPERTIES 
+    VERSION 1.0.0 
+    SOVERSION 1
+)
+set_target_properties(noctapi PROPERTIES 
+    VERSION 1.0.0 
+    SOVERSION 1
+)
+
 # ----------------------------------------------------------------------------
 
 #
