@@ -41,7 +41,8 @@ option(STRATO_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"       
 option(STRATO_ENABLE_OBJECT           "Build an object library"                 OFF)
 option(STRATO_ENABLE_STATIC           "Build a static library"                  OFF)
 option(STRATO_ENABLE_SHARED           "Build a shared libraries"                OFF)
-option(STRATO_ENABLE_DIST             "Link shared libraries"                   OFF)
+option(STRATO_ENABLE_INSTALL          "Install files"                           OFF)
+option(STRATO_ENABLE_DIST             "Use system libraries"                    OFF)
 option(STRATO_ENABLE_PACK             "Build packager"                          OFF)
 option(STRATO_ENABLE_I18N             "Enable translation"                      OFF)
 option(STRATO_ENABLE_ROT90            "Rotate screen"                           OFF)
@@ -674,6 +675,12 @@ add_library(
   ${STRATO_DEPS}
 )
 
+# .so versioning.
+set_target_properties(strato PROPERTIES 
+    VERSION 1.0.0
+    SOVERSION 1
+)
+
 # ---
 
 #
@@ -1286,4 +1293,19 @@ if(   STRATO_TARGET_LINUX
     ${GEN_SHELL_SRC} ${GEN_SHELL_HDR}
   )
   target_include_directories(strato PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+# ---
+
+#
+# Install
+#
+
+if(STRATO_ENABLE_INSTALL)
+  include(GNUInstallDirs)
+  install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/stratohal/platform.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/stratohal/c89compat.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/stratohal)
+  install(TARGETS strato RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
