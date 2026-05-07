@@ -1253,8 +1253,12 @@ endif()
 if(STRATO_ENABLE_PACK)
   add_library(
     stratopack
-    STATIC
+    ${STRATO_LIB_TYPE}
     src/archive.c
+  )
+  set_target_properties(stratopack PROPERTIES 
+    VERSION 1.0.0
+    SOVERSION 1
   )
   target_include_directories(stratopack PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endif()
@@ -1308,4 +1312,5 @@ if(STRATO_ENABLE_INSTALL)
     ${CMAKE_CURRENT_SOURCE_DIR}/include/stratohal/c89compat.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/stratohal)
   install(TARGETS strato RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(TARGETS stratopack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
