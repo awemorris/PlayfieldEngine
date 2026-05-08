@@ -755,6 +755,31 @@ noct_get_tmpvar_size(
 
 NOCT_DLL
 bool
+noct_get_args(
+	NoctEnv *env,
+	uint32_t count,
+	...)
+{
+	va_list ap;
+	struct rt_value *val;
+	uint32_t i;
+
+	assert(env != NULL);
+	assert(val != NULL);
+	assert(count <= env->frame->tmpvar_size);
+
+	va_start(ap, count);
+	for (i = 0; i < count; i++) {
+		val = va_arg(ap, struct rt_value *);
+		*val = env->frame->tmpvar[i];
+	}
+	va_end(ap);
+
+	return true;
+}
+
+NOCT_DLL
+bool
 noct_get_arg(
 	NoctEnv *env,
 	uint32_t index,

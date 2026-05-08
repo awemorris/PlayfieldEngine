@@ -31,7 +31,7 @@ we integrate Noct with game-specific APIs and refer to it as Playfield Script.
 
 ## Status
 
-**Stable.**
+**Stable,** the current version is 1.0.x.
 
 The core virtual machine is completed, and is already being used
 through integration with other projects.
@@ -39,7 +39,7 @@ through integration with other projects.
 - [Playfield Engine](https://github.com/awemorris/PlayfieldEngine)
 - [Suika3](https://github.com/awemorris/suika3).
 
-Roatmap:
+Roadmap:
 - Expanding the standard library with modular, opt-in API components.
 - Implementing a package management system for the CLI and REPL.
 
@@ -172,6 +172,22 @@ To run a script:
 noct script.noct
 ```
 
+### Compile into Bytecode
+
+To compile a script into a bytecode file:
+
+```
+noct --compile script.nb script.noct
+```
+
+### Compile into Emacs Lisp
+
+To compile a script into an Emacs Lisp file:
+
+```
+noct --elisp script.el script.noct
+```
+
 ---
 
 ## Examples
@@ -255,6 +271,28 @@ func main() {
     myCat->cry();
 }
 ```
+
+### Why D-OOP?
+
+- Moving Beyond "Implementation Inheritance":
+    - Traditional class-based inheritance is increasingly viewed as outdated,
+      with modern languages like Rust proving that composition is often a
+      superior alternative.
+    - Noct embraces this shift by focusing on the "composition of dictionaries"
+      rather than maintaining complex, dynamic inheritance hierarchies.
+- Eliminating Prototype Chains for `O(1)` Access:
+    - In conventional prototype-based languages, resolving properties through a
+      chain is a high-overhead operation that frequently triggers cache
+      misses, requiring heavy optimizations like Inline Caching.
+    - Noct eliminates the prototype chain entirely.
+    - By merging dictionaries at the time of creation, it achieves guaranteed
+      `O(1)` access to all properties.
+- Memory Locality and Hardware-Aware Design:
+    - By creating flattened copies of dictionaries, Noct ensures superior
+      memory locality.
+    - This approach is specifically designed to align with modern hardware
+      architectures, maximizing CPU cache hit rates and ensuring high affinity
+      with NUMA (Non-Uniform Memory Access) environments.
 
 ---
 
@@ -352,10 +390,11 @@ This unified approach is what makes Noct both portable and maintainable.
 
 ---
 
-## FFI API
+## Native API
 
 The Noct runtime can be embedded in C applications. This allows you to
-load, compile, and execute scripts and bytecode directly within your software.
+load, compile, and execute scripts and bytecode directly within your
+software.
 
 ```
 void call_noct(const char *file_name, const char *file_text)
@@ -383,32 +422,32 @@ appropriate header (`noct/noct.h`).
 Error handling and result introspection are left to the host
 application, giving full control over integration.
 
-For more details, see [the FFI API document](docs/ffi.md).
+For more details, see [the Native API document](docs/napi.md).
 
 ---
 
 ## Test and CI
 
-Noct is tested on Windows, macOS, and Linux.
+Noct is tested on Windows, macOS, Linux, and FreeBSD.
 
-Continuous integration is powered by GitHub Actions.  Each push to the
-main branch triggers builds and binary releases, ensuring stability
-across supported platforms.
+Our CI is running on GitHub Actions. Each push to the main branch
+triggers builds and binary releases, ensuring stability across
+supported platforms.
 
 ---
 
 ## Documentation
 
 - [Syntax](docs/syntax.md)
-- [API](docs/api.md)
-- [FFI](docs/ffi.md)
+- [Standard API](docs/api.md)
+- [Native API](docs/napi.md)
 - [Virtual Machine Specification](docs/vmspec.md)
 
 ---
 
 ## License
 
-Noct is open source, released under the zlib license.
+Noct is free/libre software, released under the permissive zlib license.
 
 This means you can use it freely — for personal, educational, or
 commercial purposes.  You're also free to modify, redistribute, and
@@ -418,7 +457,8 @@ build upon it, with minimal restrictions.
 
 ## Contributing
 
-Noct is under active development, and we welcome all kinds of
+While the core sandboxed virtual machine of Noct is already stable,
+the Standard API is under active development. We welcome all kinds of
 contributions — bug fixes, examples, documentation, ideas, or new
 features.
 
@@ -427,5 +467,3 @@ engine designed to empower creators.
 
 Whether you're here to code, teach, test, or explore — we'd love to
 have you with us.
-
-[Join the community on Discord](https://discord.gg/ybHWSqDVEX)
