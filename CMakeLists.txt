@@ -1057,6 +1057,11 @@ if(PLAYFIELD_ENABLE_INSTALL)
     install(TARGETS playfield-pack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   endif()
 
+  install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/playfield/playfield.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/playfield/c89compat.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/playfield)
+
   # Manpages.
   if(PLAYFIELD_ENABLE_BIN)
     if(   PLAYFIELD_TARGET_FREEBSD
