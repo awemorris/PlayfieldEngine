@@ -900,11 +900,9 @@ pf_log_out_of_memory(void);
 /*
  * Special initialization function for derived engines.
  */
-#ifdef PF_USE_INITHOOK
 bool
 pf_init_hook(
 	int width,
 	int height);
-#endif
 
 #endif
