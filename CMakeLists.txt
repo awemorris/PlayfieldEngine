@@ -46,8 +46,8 @@ option(PLAYFIELD_ENABLE_JIT              "Enable JIT"                           
 option(PLAYFIELD_ENABLE_I18N             "Enable translation"                         OFF)
 option(PLAYFIELD_ENABLE_I18N_LIBINTL     "Enable gettext"                             OFF)
 option(PLAYFIELD_ENABLE_PACK             "Enable packager"                            OFF)
-option(PLAYFIELD_ENABLE_BYTECOMP         "Enable bytecode compiler"                   OFF)
-option(PLAYFIELD_ENABLE_AOTCOMP          "Enable AOT compiler"                        OFF)
+option(PLAYFIELD_ENABLE_BCC              "Enable bytecode compiler"                   OFF)
+option(PLAYFIELD_ENABLE_AOTC             "Enable AOT compiler"                        OFF)
 option(PLAYFIELD_ENABLE_WEBSERVER        "Enable Web server"                          OFF)
 option(PLAYFIELD_ENABLE_EDITOR           "Enable simple editor for Windows"           OFF)
 option(PLAYFIELD_ENABLE_ROT90            "Rotate screen for GBM"                      OFF)
@@ -758,15 +758,15 @@ endif()
 # Bytecode Compiler Target
 #
 
-if(PLAYFIELD_ENABLE_BYTECOMP)
+if(PLAYFIELD_ENABLE_BCC)
   if(PLAYFIELD_TARGET_WINDOWS OR PLAYFIELD_TARGET_WINDOWS95)
-    set(PLAYFIELD_BYTECOMP_RESOURCE resources/windows/bytecomp-resource.rc)
+    set(PLAYFIELD_BCC_RESOURCE resources/windows/bytecomp-resource.rc)
   endif()
 
   add_executable(
     playfield-bcc
     src/compiler.c
-    ${PLAYFIELD_BYTECOMP_RESOURCE}
+    ${PLAYFIELD_BCC_RESOURCE}
   )
 
   target_include_directories(
@@ -795,16 +795,16 @@ endif()
 # AOT Compiler Target
 #
 
-if(PLAYFIELD_ENABLE_AOTCOMP)
+if(PLAYFIELD_ENABLE_AOTC)
   if(PLAYFIELD_TARGET_WINDOWS OR PLAYFIELD_TARGET_WINDOWS95)
-    set(PLAYFIELD_AOTCOMP_RESOURCE resources/windows/aotcomp-resource.rc)
+    set(PLAYFIELD_AOTC_RESOURCE resources/windows/aotcomp-resource.rc)
   endif()
 
   add_executable(
     playfield-aotc
     src/aot.c
     external/NoctLang/src/backend/cback.c
-    ${PLAYFIELD_AOTCOMP_RESOURCE}
+    ${PLAYFIELD_AOTC_RESOURCE}
   )
 
   target_include_directories(
@@ -971,12 +971,12 @@ if(PLAYFIELD_ENABLE_INSTALL)
   endif()
 
   # playfield-bcc
-  if(PLAYFIELD_ENABLE_BYTECOMP)
+  if(PLAYFIELD_ENABLE_BCC)
     install(TARGETS playfield-bcc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   endif()
 
   # playfield-aotc
-  if(PLAYFIELD_ENABLE_AOTCOMP)
+  if(PLAYFIELD_ENABLE_AOTC)
     install(TARGETS playfield-aotc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   endif()
 
