@@ -519,6 +519,14 @@ if(NOT PLAYFIELD_ENABLE_DIST)
   )      
 endif()
 
+# Use stub hook for library-only platforms
+if(   PLAYFIELD_TARGET_IOS
+   OR PLAYFIELD_TARGET_ANDROID
+   OR PLAYFIELD_TARGET_OPENHARMONY
+   OR PLAYFIELD_TARGET_UNITY)
+  set(PLAYFIELD_HOOK src/hook.c)
+endif()
+
 # Make a library.
 add_library(
   playfield
@@ -526,6 +534,7 @@ add_library(
   ${PLAYFIELD_BASE_SOURCES}
   ${PLAYFIELD_I18N_SOURCES}
   ${PLAYFIELD_DEPS}
+  ${PLAYFIELD_HOOK}
 )
 
 # .so versioning.
@@ -718,8 +727,14 @@ if(PLAYFIELD_ENABLE_BIN)
     if(MSVC)
       target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS)
     else()
-      target_link_options(playfieldbin PUBLIC -mwindows -static -static-libgcc)
+      target_link_options(playfieldbin PRIVATE -mwindows -static -static-libgcc -Wl,-u,WinMain -Wl,-u,_WinMain@16)
     endif()
+  endif()
+
+  # macOS
+  if(PLAYFIELD_TARGET_MACOS)
+    # Workaroudn for _main() lookup.
+    target_link_options(playfieldbin -Wl,-force_load,libstrato.a)
   endif()
 
   # Emscripten
