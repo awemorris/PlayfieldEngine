@@ -215,6 +215,7 @@ jobs:
           cmake --preset macos
           cmake --build --preset macos
           cd build-macos
+          ls -lha
           codesign --timestamp --options runtime --entitlements ../resources/macos/macos.entitlements --deep --force --sign "Developer ID Application" Playfield.app
           ditto -c -k --sequesterRsrc --keepParent Playfield.app Playfield.zip
           xcrun notarytool submit Playfield.zip --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_SECRET" --wait
