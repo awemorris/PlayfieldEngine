@@ -53,6 +53,7 @@ option(PLAYFIELD_ENABLE_EDITOR           "Enable simple editor for Windows"     
 option(PLAYFIELD_ENABLE_ROT90            "Rotate screen for GBM"                      OFF)
 option(PLAYFIELD_ENABLE_GST              "Enable Gstreamer support"                   OFF)
 option(PLAYFIELD_ENABLE_MAIN2            "Enable macOS main2()"                       OFF)
+option(PLAYFIELD_ENABLE_CONSOLE          "Enable console output"                      OFF)
 
 # ---
 
@@ -355,6 +356,10 @@ if(NOT PLAYFIELD_ENABLE_DIST)
 
   if(PLAYFIELD_ENABLE_MAIN2)
     set(STRATO_ENABLE_MAIN2 ON)
+  endif()
+
+  if(PLAYFIELD_ENABLE_CONSOLE)
+    set(STRATO_ENABLE_CONSOLE)
   endif()
 endif()
 
@@ -740,8 +745,8 @@ if(PLAYFIELD_ENABLE_BIN)
 
   # macOS
   if(PLAYFIELD_TARGET_MACOS)
-    # Workaroudn for _main() lookup.
-    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libplayfield.a)
+    # Workaround for _main() lookup.
+    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libstrato.a)
   endif()
 
   # Emscripten
