@@ -757,9 +757,9 @@ if(PLAYFIELD_ENABLE_BIN)
   endif()
 
   # macOS
-  if(PLAYFIELD_TARGET_MACOS)
+  if(PLAYFIELD_TARGET_MACOS OR PLAYFIELD_TARGET_MACOS_CLI)
     # Workaround for _main() lookup.
-    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libstrato.a)
+    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libplayfield.a)
   endif()
 
   # Emscripten
