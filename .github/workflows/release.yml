@@ -554,7 +554,7 @@ jobs:
           cp windows/build/windows-vs2022-x86/Release/playfield-pack.exe dist/SDK/windows/
           cp windows/build/windows-vs2022-x86/Release/playfield-web.exe dist/SDK/wasm/
           cp windows/build/windows-vs2022-arm64/Release/playfield.exe dist/SDK/windows/playfield-arm64.exe
-          cp samples/shoot/main.pf dist/
+          cp samples/shoot/main.ray dist/
 
       - name: Download mingw artifacts
         uses: actions/download-artifact@v4
@@ -673,7 +673,7 @@ jobs:
           cp -R resources/projects/android/gradlew.bat dist/SDK/android/
           cp -R resources/projects/android/gradle dist/SDK/android/
           mkdir -p dist/SDK/android/app/src/main/assets
-          cp samples/shoot/main.pf dist/SDK/android/app/src/main/assets/
+          cp samples/shoot/main.ray dist/SDK/android/app/src/main/assets/
           mkdir -p dist/SDK/android/app/src/main/java/io/noctvm/playfield/engineandroid
           cp external/StratoHAL/src/MainActivity.java dist/SDK/android/app/src/main/java/io/noctvm/playfield/engineandroid/
           mkdir -p dist/SDK/android/app/src/main/jniLibs/arm64-v8a
@@ -708,7 +708,7 @@ jobs:
           cp -R resources/projects/openharmony/AppScope hvigor
           cp -R resources/projects/openharmony/AppScope hvigorfile.ts
           mkdir -p dist/SDK/openharmony/entry/src/main/resources/rawfile/
-          cp samples/shoot/main.pf dist/SDK/openharmony/entry/src/main/resources/rawfile/
+          cp samples/shoot/main.ray dist/SDK/openharmony/entry/src/main/resources/rawfile/
           mkdir -p dist/SDK/openharmony/entry/libs/arm64-v8a
           mkdir -p dist/SDK/openharmony/entry/libs/arm64-x86_64
           cp openharmony-arm64/libplayfield.a dist/SDK/openharmony/entry/libs/arm64-v8a
@@ -742,7 +742,7 @@ jobs:
         run: |
           mkdir dist/SDK/unity/Assets
           mkdir dist/SDK/unity/Assets/StreamingAssets
-          cp samples/shoot/main.pf dist/SDK/unity/Assets/StreamingAssets/
+          cp samples/shoot/main.ray dist/SDK/unity/Assets/StreamingAssets/
           mkdir dist/SDK/unity/Assets/Resources
           cp external/StratoHAL/src/PlayfieldScript.cs dist/SDK/unity/Assets/
           cp external/StratoHAL/src/NormalShader.shader dist/SDK/unity/Assets/Resources/
