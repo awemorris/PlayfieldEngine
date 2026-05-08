@@ -665,6 +665,7 @@ if(NOT PLAYFIELD_ENABLE_DIST)
 else()
   target_link_libraries(playfield PUBLIC
     ${NOCT_LIBRARY}
+    noctapi
     ${STRATO_LIBRARY}
   )
 endif()
