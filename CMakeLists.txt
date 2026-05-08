@@ -694,18 +694,18 @@ target_link_libraries(playfieldbin PRIVATE playfield)
 # Windows
 if(PLAYFIELD_TARGET_WINDOWS)
   if(MSVC)
-    target_link_options(playfield PUBLIC /SUBSYSTEM:WINDOWS)
+    target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
   else()
-    target_link_options(playfield PUBLIC -mwindows -static)
+    target_link_options(playfieldbin PUBLIC -mwindows -static)
   endif()
 endif()
 
 # Windows 95
 if(PLAYFIELD_TARGET_WINDOWS95)
   if(MSVC)
-    target_link_options(playfield PUBLIC /SUBSYSTEM:WINDOWS)
+    target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS)
   else()
-    target_link_options(playfield PUBLIC -mwindows -static -static-libgcc)
+    target_link_options(playfieldbin PUBLIC -mwindows -static -static-libgcc)
   endif()
 endif()
 
@@ -713,8 +713,8 @@ endif()
 if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
-  target_link_options(playfield PRIVATE
+  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
+  target_link_options(playfieldbin PRIVATE
     -o index.html
     -sSINGLE_FILE=1
     -sTOTAL_MEMORY=536870912
@@ -733,8 +733,8 @@ endif()
 if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
   # Make the output name "index.html"
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(playfield PROPERTIES OUTPUT_NAME index)
-  target_link_options(playfield PRIVATE
+  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
+  target_link_options(playfieldbin PRIVATE
     -o index.html
     -sSINGLE_FILE=1
     -sTOTAL_MEMORY=536870912
@@ -905,10 +905,10 @@ if(PLAYFIELD_TARGET_MACOS
    AND NOT PLAYFIELD_ENABLE_STATIC
    AND NOT PLAYFIELD_ENABLE_SHARED)
   # Use capital name.
-  set_target_properties(playfield PROPERTIES OUTPUT_NAME "Playfield")
+  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "Playfield")
 
   # Make an app bundle.
-  set_target_properties(playfield PROPERTIES
+  set_target_properties(playfieldbin PROPERTIES
     MACOSX_BUNDLE TRUE
     MACOSX_BUNDLE_GUI_IDENTIFIER "io.noctvm.playfield"
     MACOSX_BUNDLE_BUNDLE_NAME "Playfield"
@@ -916,11 +916,11 @@ if(PLAYFIELD_TARGET_MACOS
 
   # Set an icon.
   set(APP_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/macos/icon512.png")
-  target_sources(playfield PRIVATE ${APP_ICON})
+  target_sources(playfieldbin PRIVATE ${APP_ICON})
   set_source_files_properties(${APP_ICON} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  set_target_properties(playfield PROPERTIES
+  set_target_properties(playfieldbin PROPERTIES
     MACOSX_BUNDLE_ICON_FILE "icon512.png"
   )
 
@@ -929,7 +929,7 @@ if(PLAYFIELD_TARGET_MACOS
   set_source_files_properties(${APP_GAME_DATA} PROPERTIES
     MACOSX_PACKAGE_LOCATION "Resources"
   )
-  target_sources(playfield PRIVATE ${APP_GAME_DATA})
+  target_sources(playfieldbin PRIVATE ${APP_GAME_DATA})
 endif()
 
 # ---

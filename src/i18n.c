@@ -44,7 +44,7 @@ void
 pf_init_locale(void)
 {
 	/* Initialize libintl. */
-#ifndef PF_USE_LIBINTL
+#ifdef PF_USE_LIBINTL
 	bindtextdomain("libplayfield", LOCALEDIR);
 	bind_textdomain_codeset("libplayfield", "UTF-8");
 #endif

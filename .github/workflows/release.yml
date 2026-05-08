@@ -109,7 +109,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libx11-dev libxpm-dev libasound2-dev mesa-common-dev flex bison libfuse2
+          sudo apt-get install -y git cmake ninja-build build-essential libasound2-dev libx11-dev libxpm-dev libwayland-dev wayland-protocols libegl1-mesa-dev libegl-dev libgles-dev libwayland-client0 libwayland-egl1 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-x libdecor-0-dev flex bison libfuse2
 
       - name: Download appimagetool
         run: |
