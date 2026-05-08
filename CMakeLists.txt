@@ -679,7 +679,12 @@ if(PLAYFIELD_ENABLE_BIN)
     src/hook.c
     ${PLAYFIELD_RESOURCES}
   )
-  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
+
+  if(PLAYFIELD_TARGET_MACOS AND PLAYFILED_ENABLE_BIN)
+    set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "Playfield")
+  else()
+    set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
+  endif()
 endif()
 
 # ---
@@ -933,9 +938,6 @@ endif()
 #
 
 if(PLAYFIELD_TARGET_MACOS AND PLAYFILED_ENABLE_BIN)
-  # Use capital name.
-  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "Playfield")
-
   # Make an app bundle.
   set_target_properties(playfieldbin PROPERTIES
     MACOSX_BUNDLE TRUE
