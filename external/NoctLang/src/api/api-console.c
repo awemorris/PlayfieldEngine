@@ -150,7 +150,7 @@ static bool serialize_printer(
 			strncat(buf, "\"", size);
 		break;
 	case NOCT_VALUE_ARRAY:
-		if (!noct_get_array_size(env, value, &items))
+		if (!noct_get_array_size(env, value, (uint32_t *)&items))
 			return false;
 		strncat(buf, "[", size);
 		for (i = 0; i < items; i++) {
@@ -165,7 +165,7 @@ static bool serialize_printer(
 		strncat(buf, "]", size);
 		break;
 	case NOCT_VALUE_DICT:
-		if (!noct_get_dict_size(env, value, &items))
+		if (!noct_get_dict_size(env, value, (uint32_t *)&items))
 			return false;
 		strncat(buf, "{", size);
 		for (i = 0; i < items; i++) {
