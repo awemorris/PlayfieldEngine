@@ -546,7 +546,6 @@
                 "PLAYFIELD_ENABLE_STATIC":     "ON",
                 "PLAYFIELD_ENABLE_JIT":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "OFF",
-                "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "OFF",
                 "PLAYFIELD_ENABLE_BCC":        "OFF",
                 "PLAYFIELD_ENABLE_AOTC":       "OFF"
