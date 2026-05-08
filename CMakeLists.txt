@@ -203,6 +203,8 @@ if(NOT PLAYFIELD_ENABLE_DIST)
   # If building with translation.
   if(PLAYFIELD_ENABLE_I18N)
     set(NOCT_ENABLE_I18N ON)
+  else()
+    set(NOCT_ENABLE_I18N OFF)
   endif()
 
   # If building for Emscripten.
@@ -734,7 +736,7 @@ if(PLAYFIELD_ENABLE_BIN)
   # macOS
   if(PLAYFIELD_TARGET_MACOS)
     # Workaroudn for _main() lookup.
-    target_link_options(playfieldbin -Wl,-force_load,libstrato.a)
+    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libstrato.a)
   endif()
 
   # Emscripten
