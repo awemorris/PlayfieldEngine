@@ -567,7 +567,7 @@ static INLINE uint16_t noct_host_to_le_16(uint16_t d) {
 /*
  * Message Translation
  */
-#if defined(NOCT_USE_TRANSLATION) && !defined(NOCT_USE_GNUGETTEXT)
+#if defined(NOCT_USE_TRANSLATION) && !defined(NOCT_USE_LIBINTL)
 
 /* Translate messages. */
 #define N_TR(s)	noct_gettext(s)
@@ -575,7 +575,7 @@ static INLINE uint16_t noct_host_to_le_16(uint16_t d) {
 /* Translator. */
 const char *noct_gettext(const char *s);
 
-#elif defined(NOCT_USE_TRANSLATION) && defined(NOCT_USE_GNUGETTEXT)
+#elif defined(NOCT_USE_TRANSLATION) && defined(NOCT_USE_LIBINTL)
 
 #include <libintl.h>
 
