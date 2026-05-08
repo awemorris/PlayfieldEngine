@@ -18,8 +18,8 @@
                 "PLAYFIELD_ENABLE_I18N":      "ON",
                 "PLAYFIELD_ENABLE_BIN":       "ON",
                 "PLAYFIELD_ENABLE_PACK":      "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_BCC":       "ON",
+                "PLAYFIELD_ENABLE_AOTC":      "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER": "ON",
                 "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
@@ -43,8 +43,8 @@
                 "PLAYFIELD_ENABLE_I18N":      "ON",
                 "PLAYFIELD_ENABLE_BIN":       "ON",
                 "PLAYFIELD_ENABLE_PACK":      "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_BCC":       "ON",
+                "PLAYFIELD_ENABLE_AOTC":      "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER": "ON",
                 "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
@@ -68,8 +68,8 @@
                 "PLAYFIELD_ENABLE_I18N":      "ON",
                 "PLAYFIELD_ENABLE_BIN":       "ON",
                 "PLAYFIELD_ENABLE_PACK":      "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":  "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":   "ON",
+                "PLAYFIELD_ENABLE_BCC":       "ON",
+                "PLAYFIELD_ENABLE_AOTC":      "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER": "ON",
                 "PLAYFIELD_ENABLE_EDITOR":    "ON"
             },
@@ -93,8 +93,8 @@
                 "PLAYFIELD_ENABLE_JIT":         "OFF",
                 "PLAYFIELD_ENABLE_I18N":        "OFF",
                 "PLAYFIELD_ENABLE_PACK":        "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "OFF",
+                "PLAYFIELD_ENABLE_BCC":         "OFF",
+                "PLAYFIELD_ENABLE_AOTC":        "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":      "OFF"
             },
             "condition": {
@@ -118,8 +118,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "OFF",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "OFF",
+                "PLAYFIELD_ENABLE_BCC":         "OFF",
+                "PLAYFIELD_ENABLE_AOTC":        "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":      "OFF"
             },
             "condition": {
@@ -144,8 +144,8 @@
                 "PLAYFIELD_ENABLE_I18N":                    "OFF",
                 "PLAYFIELD_ENABLE_BIN":                     "ON",
                 "PLAYFIELD_ENABLE_PACK":                    "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":                "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":                 "OFF",
+                "PLAYFIELD_ENABLE_BCC":                     "OFF",
+                "PLAYFIELD_ENABLE_AOTC":                    "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":                  "OFF"
             },
             "condition": {
@@ -168,8 +168,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -193,8 +193,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -218,8 +218,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "OFF"
             },
@@ -243,8 +243,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -268,8 +268,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -293,8 +293,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -319,8 +319,8 @@
                 "PLAYFIELD_ENABLE_I18N":                    "OFF",
                 "PLAYFIELD_ENABLE_BIN":                     "ON",
                 "PLAYFIELD_ENABLE_PACK":                    "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":                "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":                 "OFF",
+                "PLAYFIELD_ENABLE_BCC":                     "OFF",
+                "PLAYFIELD_ENABLE_AOTC":                    "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":                  "OFF"
             },
             "condition": {
@@ -343,8 +343,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":   "ON",
                 "PLAYFIELD_ENABLE_EDITOR":      "ON"
             },
@@ -369,8 +369,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "OFF",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "OFF",
+                "PLAYFIELD_ENABLE_BCC":         "OFF",
+                "PLAYFIELD_ENABLE_AOTC":        "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":      "OFF"
             },
             "condition": {
@@ -392,8 +392,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "OFF",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "OFF",
+                "PLAYFIELD_ENABLE_BCC":         "OFF",
+                "PLAYFIELD_ENABLE_AOTC":        "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":      "OFF"
             },
             "condition": {
@@ -415,8 +415,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
@@ -434,8 +434,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
@@ -453,8 +453,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "OFF",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":  "OFF",
                 "PLAYFIELD_ENABLE_EDITOR":     "OFF"
             }
@@ -472,8 +472,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON",
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON",
                 "PLAYFIELD_ENABLE_WEBSERVER":  "ON",
                 "PLAYFIELD_ENABLE_EDITOR":     "ON"
             }
@@ -492,8 +492,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -510,8 +510,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -528,8 +528,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -548,8 +548,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "OFF",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "OFF",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "OFF",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "OFF"
+                "PLAYFIELD_ENABLE_BCC":        "OFF",
+                "PLAYFIELD_ENABLE_AOTC":       "OFF"
             }
         },
         {
@@ -564,8 +564,8 @@
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -580,8 +580,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -596,8 +596,8 @@
                 "PLAYFIELD_ENABLE_I18N":          "ON",
                 "PLAYFIELD_ENABLE_BIN":           "ON",
                 "PLAYFIELD_ENABLE_PACK":          "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
+                "PLAYFIELD_ENABLE_BCC":           "ON",
+                "PLAYFIELD_ENABLE_AOTC":          "ON"
             }
         },
         {
@@ -612,8 +612,8 @@
                 "PLAYFIELD_ENABLE_I18N":          "ON",
                 "PLAYFIELD_ENABLE_BIN":           "ON",
                 "PLAYFIELD_ENABLE_PACK":          "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
+                "PLAYFIELD_ENABLE_BCC":           "ON",
+                "PLAYFIELD_ENABLE_AOTC":          "ON"
             }
         },
         {
@@ -628,8 +628,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -644,8 +644,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -660,8 +660,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         },
         {
@@ -676,8 +676,8 @@
                 "PLAYFIELD_ENABLE_I18N":          "ON",
                 "PLAYFIELD_ENABLE_BIN":           "ON",
                 "PLAYFIELD_ENABLE_PACK":          "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":      "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":       "ON"
+                "PLAYFIELD_ENABLE_BCC":           "ON",
+                "PLAYFIELD_ENABLE_AOTC":          "ON"
             }
         },
         {
@@ -919,8 +919,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -935,8 +935,8 @@
                 "PLAYFIELD_ENABLE_I18N":             "ON",
                 "PLAYFIELD_ENABLE_BIN":              "ON",
                 "PLAYFIELD_ENABLE_PACK":             "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":         "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":          "ON"
+                "PLAYFIELD_ENABLE_BCC":              "ON",
+                "PLAYFIELD_ENABLE_AOTC":             "ON"
             }
         },
         {
@@ -951,8 +951,8 @@
                 "PLAYFIELD_ENABLE_I18N":             "ON",
                 "PLAYFIELD_ENABLE_BIN":              "ON",
                 "PLAYFIELD_ENABLE_PACK":             "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":         "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":          "ON"
+                "PLAYFIELD_ENABLE_BCC":              "ON",
+                "PLAYFIELD_ENABLE_AOTC":             "ON"
             }
         },
         {
@@ -967,8 +967,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -983,8 +983,8 @@
                 "PLAYFIELD_ENABLE_I18N":            "ON",
                 "PLAYFIELD_ENABLE_BIN":             "ON",
                 "PLAYFIELD_ENABLE_PACK":            "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":        "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":         "ON"
+                "PLAYFIELD_ENABLE_BCC":             "ON",
+                "PLAYFIELD_ENABLE_AOTC":            "ON"
             }
         },
         {
@@ -998,8 +998,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -1013,8 +1013,8 @@
                 "PLAYFIELD_ENABLE_I18N":            "ON",
                 "PLAYFIELD_ENABLE_BIN":             "ON",
                 "PLAYFIELD_ENABLE_PACK":            "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":        "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":         "ON"
+                "PLAYFIELD_ENABLE_BCC":             "ON",
+                "PLAYFIELD_ENABLE_AOTC":            "ON"
             }
         },
         {
@@ -1030,8 +1030,8 @@
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":   "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":    "ON"
+                "PLAYFIELD_ENABLE_BCC":        "ON",
+                "PLAYFIELD_ENABLE_AOTC":       "ON"
             }
         },
         {
@@ -1047,8 +1047,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         },
         {
@@ -1064,8 +1064,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         },
         {
@@ -1081,8 +1081,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         },
         {
@@ -1098,8 +1098,8 @@
                 "PLAYFIELD_ENABLE_I18N":        "ON",
                 "PLAYFIELD_ENABLE_BIN":         "ON",
                 "PLAYFIELD_ENABLE_PACK":        "ON",
-                "PLAYFIELD_ENABLE_BYTECOMP":    "ON",
-                "PLAYFIELD_ENABLE_AOTCOMP":     "ON"
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         }
     ],
