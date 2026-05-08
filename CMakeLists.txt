@@ -11,7 +11,8 @@ option(PLAYFIELD_TARGET_WINDOWS95        "Build for Windows 95/98/Me/2000"      
 option(PLAYFIELD_TARGET_MACOS            "Build for macOS (app)"                      OFF)
 option(PLAYFIELD_TARGET_MACOS_CLI        "Build for macOS (CLI)"                      OFF)
 option(PLAYFIELD_TARGET_MACOS_LIB        "Build for macOS (library)"                  OFF)
-option(PLAYFIELD_TARGET_LINUX            "Build for Linux (X11, OpenGL)"              OFF)
+option(PLAYFIELD_TARGET_LINUX            "Build for Linux (Wayland/X11 Dual)"         OFF)
+option(PLAYFIELD_TARGET_LINUX_X11        "Build for Linux (X11, OpenGL)"              OFF)
 option(PLAYFIELD_TARGET_LINUX_WAYLAND    "Build for Linux (Wayland, OpenGL)"          OFF)
 option(PLAYFIELD_TARGET_LINUX_GBM        "Build for Linux (GBM, OpenGL ES)"           OFF)
 option(PLAYFIELD_TARGET_LINUX_FBDEV      "Build for Linux (fbdev, Soft3D)"            OFF)
@@ -22,7 +23,8 @@ option(PLAYFIELD_TARGET_OPENHARMONY      "Build for OpenHarmony (OpenGL ES)"    
 option(PLAYFIELD_TARGET_WASM             "Build for Emscripten (WebGL)"               OFF)
 option(PLAYFIELD_TARGET_WASM_LOCAL       "Build for Emscripten Local (WebGL)"         OFF)
 option(PLAYFIELD_TARGET_UNITY            "Build for Unity"                            OFF)
-option(PLAYFIELD_TARGET_FREEBSD          "Build for FreeBSD (X11, OpenGL)"            OFF)
+option(PLAYFIELD_TARGET_FREEBSD          "Build for FreeBSD (Wayland/X11 Dual)"       OFF)
+option(PLAYFIELD_TARGET_FREEBSD_X11      "Build for FreeBSD (X11, OpenGL)"            OFF)
 option(PLAYFIELD_TARGET_FREEBSD_WAYLAND  "Build for FreeBSD (Wayland, OpenGL)"        OFF)
 option(PLAYFIELD_TARGET_FREEBSD_X11SOFT  "Build for FreeBSD (X11, Soft3D)"            OFF)
 option(PLAYFIELD_TARGET_NETBSD           "Build for NetBSD (X11, OpenGL)"             OFF)
@@ -53,7 +55,9 @@ option(PLAYFIELD_ENABLE_EDITOR           "Enable simple editor for Windows"     
 option(PLAYFIELD_ENABLE_ROT90            "Rotate screen for GBM"                      OFF)
 option(PLAYFIELD_ENABLE_GST              "Enable Gstreamer support"                   OFF)
 option(PLAYFIELD_ENABLE_MAIN2            "Enable macOS main2()"                       OFF)
-option(PLAYFIELD_ENABLE_CONSOLE          "Enable console output"                      OFF)
+option(PLAYFIELD_ENABLE_CONSOLE          "Enable console debug output on Windows"     OFF)
+option(PLAYFIELD_ENABLE_UNSAFE           "Enable unsafe APIs for launchers"           OFF)
+option(PLAYFIELD_ENABLE_PORTAL           "Enable XDG Portal"                          OFF)
 
 # ---
 
@@ -107,25 +111,27 @@ else()
     set(PLAYFIELD_ENABLE_STATIC                   ON)
     set(PLAYFIELD_ENABLE_JIT                      ON)
     set(PLAYFIELD_ENABLE_I18N                     ON)
+    set(PLAYFIELD_ENABLE_BIN                      ON)
     set(PLAYFIELD_ENABLE_BUNDLE                   ON)
     set(PLAYFIELD_ENABLE_PACK                     ON)
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(PLAYFIELD_TARGET_LINUX                    ON)
     set(PLAYFIELD_ENABLE_JIT                      ON)
+    set(PLAYFIELD_ENABLE_BIN                      ON)
     set(PLAYFIELD_ENABLE_I18N                     ON)
     set(PLAYFIELD_ENABLE_PACK                     ON)
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(PLAYFIELD_TARGET_FREEBSD_X11SOFT          ON)
+    set(PLAYFIELD_TARGET_FREEBSD                  ON)
     set(PLAYFIELD_ENABLE_STATIC                   ON)
     set(PLAYFIELD_ENABLE_BIN                      ON)
     set(PLAYFIELD_ENABLE_JIT                      ON)
-    set(PLAYFIELD_ENABLE_I18N                     ON)
+    set(PLAYFIELD_ENABLE_GST                      ON)
     set(PLAYFIELD_ENABLE_PACK                     ON)
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
-    set(PLAYFIELD_TARGET_NETBSD_X11SOFT           ON)
+    set(PLAYFIELD_TARGET_NETBSD                   ON)
     set(PLAYFIELD_ENABLE_STATIC                   ON)
     set(PLAYFIELD_ENABLE_BIN                      ON)
     set(PLAYFIELD_ENABLE_JIT                      ON)
@@ -185,12 +191,7 @@ endif()
 
 if(NOT PLAYFIELD_ENABLE_DIST)
   # Disable API for embedded environments.
-  if(   PLAYFIELD_TARGET_IOS
-     OR PLAYFIELD_TARGET_ANDROID
-     OR PLAYFIELD_TARGET_OPENHARMONY
-     OR PLAYFIELD_TARGET_WASM
-     OR PLAYFIELD_TARGET_WASM_LOCAL
-     OR PLAYFIELD_TARGET_UNITY)
+  if(NOT PLAYFIELD_ENABLE_UNSAFE)
     set(NOCT_ENABLE_API OFF)
   endif()
 
@@ -266,6 +267,8 @@ if(NOT PLAYFIELD_ENABLE_DIST)
     set(STRATO_TARGET_MACOS ON)
   elseif(PLAYFIELD_TARGET_LINUX)
     set(STRATO_TARGET_LINUX ON)
+  elseif(PLAYFIELD_TARGET_LINUX_X11)
+    set(STRATO_TARGET_LINUX_X11 ON)
   elseif(PLAYFIELD_TARGET_LINUX_WAYLAND)
     set(STRATO_TARGET_LINUX_WAYLAND ON)
   elseif(PLAYFIELD_TARGET_LINUX_GBM)
@@ -288,6 +291,8 @@ if(NOT PLAYFIELD_ENABLE_DIST)
     set(STRATO_TARGET_UNITY ON)
   elseif(PLAYFIELD_TARGET_FREEBSD)
     set(STRATO_TARGET_FREEBSD ON)
+  elseif(PLAYFIELD_TARGET_FREEBSD_X11)
+    set(STRATO_TARGET_FREEBSD_X11 ON)
   elseif(PLAYFIELD_TARGET_FREEBSD_WAYLAND)
     set(STRATO_TARGET_FREEBSD_WAYLAND ON)
   elseif(PLAYFIELD_TARGET_FREEBSD_X11SOFT)
@@ -361,11 +366,14 @@ if(NOT PLAYFIELD_ENABLE_DIST)
   if(PLAYFIELD_ENABLE_CONSOLE)
     set(STRATO_ENABLE_CONSOLE)
   endif()
-endif()
 
-# libstratopack
-if(PLAYFIELD_ENABLE_PACK)
-  set(STRATO_ENABLE_PACK ON)
+  if(PLAYFIELD_ENABLE_PORTAL)
+    set(STRATO_ENABLE_PORTAL ON)
+  endif()
+
+  if(PLAYFIELD_ENABLE_PACK)
+    set(STRATO_ENABLE_PACK ON)
+  endif()
 endif()
 
 # ---
@@ -613,6 +621,11 @@ endif()
 # Emscripten
 if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
   target_compile_definitions(playfield PRIVATE PF_USE_EMSCRIPTEN)
+endif()
+
+# Unsafe
+if(PLAYFIELD_ENABLE_UNSAFE)
+    target_compile_definitions(playfield PRIVATE PF_USE_UNSAFE)
 endif()
 
 # ---

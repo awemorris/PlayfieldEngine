@@ -54,9 +54,8 @@
 #endif
 
 /* i18n.c */
-#if defined(PF_USE_TRANSLATION)
+#if defined(NOCT_USE_TRANSLATION)
 void noct_init_locale(void);
-void pf_init_locale(void);
 #endif
 
 /* Forward declaration. */
@@ -77,9 +76,8 @@ static int wide_printf(const char *format, ...);
  */
 int main(int argc, char *argv[])
 {
-#if defined(PF_USE_TRANSLATION)
+#if defined(USE_TRANSLATION)
 	noct_init_locale();
-	pf_init_locale();
 #endif
 
 	if (argc < 2 ||
@@ -152,7 +150,7 @@ static bool add_file_hook_c(const char *fname)
 
 	/* Do parse, build AST. */
 	if (!ast_build(fname, data)) {
-		wide_printf(PF_TR("Error: %s: %d: %s"),
+		wide_printf(PF_TR("Error: %s:%d: %s"),
 			    ast_get_file_name(),
 			    ast_get_error_line(),
 			    ast_get_error_message());
@@ -162,7 +160,7 @@ static bool add_file_hook_c(const char *fname)
 
 	/* Transform AST to HIR. */
 	if (!hir_build()) {
-		wide_printf(PF_TR("Error: %s: %d: %s"),
+		wide_printf(PF_TR("Error: %s:%d: %s"),
 			    hir_get_file_name(),
 			    hir_get_error_line(),
 			    hir_get_error_message());
@@ -179,7 +177,7 @@ static bool add_file_hook_c(const char *fname)
 		/* Transform HIR to LIR (bytecode). */
 		hfunc = hir_get_function(j);
 		if (!lir_build(hfunc, &lfunc)) {
-			wide_printf(PF_TR("Error: %s: %d: %s"),
+			wide_printf(PF_TR("Error: %s:%d: %s"),
 				    lir_get_file_name(),
 				    lir_get_error_line(),
 				    lir_get_error_message());

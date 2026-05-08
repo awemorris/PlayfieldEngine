@@ -157,7 +157,7 @@ hal_callback_on_event_boot(
 	int height_ret;
 	bool fullscreen_ret;
 	
-#ifdef PF_USE_TRANSLATION
+#ifdef USE_TRANSLATION
 	/* Initialize the locale. */
 	pf_init_locale();
 #endif
@@ -389,7 +389,9 @@ hal_callback_on_event_start(void)
 	hal_reset_lap_timer(&lap_origin);
 
 	/* Initialize the upper layer. */
+#ifdef PF_USE_INITHOOK
 	pf_init_hook(screen_width, screen_height);
+#endif
 
 	/* Call start(). */
 	if (!pfi_call_vm_function("start"))

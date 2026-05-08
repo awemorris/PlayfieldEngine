@@ -2,7 +2,7 @@
 
 /*
  * Playfield Engine
- * NoctLang virtrual machine
+ * Translation
  */
 
 /*-
