@@ -86,7 +86,9 @@ pfi_create_vm(
 	bool *fullscreen)
 {
 	/* Initialize the NoctLang's i18n system. */
+#ifdef PF_USE_TRANSLATION
 	noct_init_locale();
+#endif
 
 	/* Create a language runtime. */
 	if (!noct_create_vm(&vm, &env))
