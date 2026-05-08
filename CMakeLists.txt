@@ -1039,7 +1039,7 @@ if(PLAYFIELD_ENABLE_INSTALL)
 
   # playfield
   if(PLAYFIELD_ENABLE_BIN)
-    install(TARGETS playfieldbin RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(TARGETS playfieldbin RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   endif()
 
   # playfield-bcc
