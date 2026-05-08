@@ -13,8 +13,8 @@
 
 void noct_init_locale(void)
 {
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	bindtextdomain("libnoct", LOCALEDIR);
+	bind_textdomain_codeset("libnoct", "UTF-8");
 }
 
 #elif defined(NOCT_USE_TRANSLATION) && !defined(NOCT_USE_GETTEXT)

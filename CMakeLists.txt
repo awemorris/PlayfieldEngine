@@ -14,7 +14,8 @@ option(NOCT_ENABLE_OBJECT       "Build objects only"          OFF)
 option(NOCT_ENABLE_CLI          "Build a CLI binary"          ON)
 option(NOCT_ENABLE_JIT          "Enable JIT compilation"      ON)
 option(NOCT_ENABLE_I18N         "Enable translation feature"  ON)
-option(NOCT_ENABLE_I18N_LIBINTL "Enable gettext()"            OFF)
+option(NOCT_ENABLE_I18N_LIBINTL "Enable gettext"              OFF)
+option(NOCT_ENABLE_API          "Enable standard API"         ON)
 option(NOCT_ENABLE_INSTALL      "Enable installation"         ON)
 
 option(NOCT_ENABLE_MDOC         "Install mdoc(7) man page"    OFF)
@@ -120,7 +121,7 @@ if(NOCT_ENABLE_I18N_LIBINTL)
   add_definitions(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 endif()
 
-# ----------------------------------------------------------------------------
+# ---
 
 #
 # Library Targets
@@ -175,69 +176,91 @@ add_library(
   # Mandatory libraries here.
   src/api/api-math.c
 )
+set_target_properties(noct PROPERTIES 
+  VERSION 1.0.0 
+  SOVERSION 1
+)
 
 # Add the target "libnoctapi", the standard library.
-add_library(
-  noctapi
-  ${NOCT_LIB_TYPE}
+if(NOCT_ENABLE_API)
+  add_library(
+    noctapi
+    ${NOCT_LIB_TYPE}
 
-  # Optional libraries here.
-  src/api/api-system.c
-  src/api/api-console.c
-)
-
-# .so versioning.
-set_target_properties(noct PROPERTIES 
+    # Optional libraries here.
+    src/api/api-system.c
+    src/api/api-console.c
+  )
+  set_target_properties(noctapi PROPERTIES 
     VERSION 1.0.0 
     SOVERSION 1
-)
-set_target_properties(noctapi PROPERTIES 
-    VERSION 1.0.0 
-    SOVERSION 1
-)
+  )
+endif()
 
-# ----------------------------------------------------------------------------
+# ---
 
 #
 # CPPFLAGS
 #
 
 # -Iinclude
-target_include_directories(noct    PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(noctapi PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(noct PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
+if(NOCT_ENABLE_API)
+  target_include_directories(noctapi PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include)
+endif()
 
 # -Isrc/core
-target_include_directories(noct    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
-target_include_directories(noctapi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+target_include_directories(noct PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+if(NOCT_ENABLE_API)
+  target_include_directories(noctapi PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/core)
+endif()
 
 # NOCT_USE_DLL -DNOCT_DLL_IMPL
 if(NOCT_ENABLE_SHARED)
-  target_compile_definitions(noct    PRIVATE NOCT_USE_DLL NOCT_DLL_IMPL)
-  target_compile_definitions(noctapi PRIVATE NOCT_USE_DLL NOCT_DLL_IMPL)
+  target_compile_definitions(noct PRIVATE NOCT_USE_DLL NOCT_DLL_IMPL)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PRIVATE NOCT_USE_DLL NOCT_DLL_IMPL)
+  endif()
 endif()
 
 # NOCT_USE_JIT
 if(NOCT_ENABLE_JIT)
-  target_compile_definitions(noct    PRIVATE NOCT_USE_JIT)
-  target_compile_definitions(noctapi PRIVATE NOCT_USE_JIT)
+  target_compile_definitions(noct PRIVATE NOCT_USE_JIT)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PRIVATE NOCT_USE_JIT)
+  endif()
 endif()
 
 # NOCT_USE_MULTITHREAD
 if(NOCT_ENABLE_MULTITHREAD)
-  target_compile_definitions(noct    PRIVATE NOCT_USE_MULTITHREAD)
-  target_compile_definitions(noctapi PRIVATE NOCT_USE_MULTITHREAD)
+  target_compile_definitions(noct PRIVATE NOCT_USE_MULTITHREAD)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PRIVATE NOCT_USE_MULTITHREAD)
+  endif()
 endif()
 
 # NOCT_USE_TRANSLATION
 if(NOCT_ENABLE_I18N)
-  target_compile_definitions(noct    PRIVATE NOCT_USE_TRANSLATION)
-  target_compile_definitions(noctapi PRIVATE NOCT_USE_TRANSLATION)
+  target_compile_definitions(noct PRIVATE NOCT_USE_TRANSLATION)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PRIVATE NOCT_USE_TRANSLATION)
+  endif()
+endif()  
+
+# NOCT_USE_LIBINTL
+if(NOCT_ENABLE_I18N_LIBINTL)
+  target_compile_definitions(noct PRIVATE NOCT_USE_LIBINTL)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PRIVATE NOCT_USE_LIBINTL)
+  endif()
 endif()  
 
 # NOCT_TARGET_UNITY
 if(NOCT_TARGET_UNITY)
-  target_compile_definitions(noct    PUBLIC NOCT_TARGET_UNITY)
-  target_compile_definitions(noctapi PUBLIC NOCT_TARGET_UNITY)
+  target_compile_definitions(noct PUBLIC NOCT_TARGET_UNITY)
+  if(NOCT_ENABLE_API)
+    target_compile_definitions(noctapi PUBLIC NOCT_TARGET_UNITY)
+  endif()
 endif()
 
 # _CRT_SECURE_NO_WARNINGS
@@ -245,7 +268,7 @@ if(WIN32 AND MSVC)
   add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
-# ----------------------------------------------------------------------------
+# ---
 
 #
 # CFLAGS
@@ -253,18 +276,24 @@ endif()
 
 # -fPIC
 if(NOCT_ENABLE_SHARED)
-  set_target_properties(noct    PROPERTIES POSITION_INDEPENDENT_CODE ON)
-  set_target_properties(noctapi PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  set_target_properties(noct PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  if(NOCT_ENABLE_API)
+    set_target_properties(noctapi PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  endif()
 endif()
 
 # Win32 Unicode settings.
 if(WIN32)
   if(MSVC)
-    target_compile_options(noct    PRIVATE /utf-8)
-    target_compile_options(noctapi PRIVATE /utf-8)
+    target_compile_options(noct PRIVATE /utf-8)
+    if(NOCT_ENABLE_API)
+      target_compile_options(noctapi PRIVATE /utf-8)
+    endif()
   else()
-    target_compile_options(noct    PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
-    target_compile_options(noctapi PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    target_compile_options(noct PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    if(NOCT_ENABLE_API)
+      target_compile_options(noctapi PRIVATE -municode -finput-charset=utf-8 -fexec-charset=utf-8)
+    endif()
   endif()
 endif()
 
@@ -274,9 +303,11 @@ endif()
 # LDFLAGS
 #
 
-if(NOCT_ENABLE_I18N_GNU)
-  target_link_libraries(noct    PUBLIC ${INTL_LIBRARY})
-  target_link_libraries(noctapi PUBLIC ${INTL_LIBRARY})
+if(NOCT_ENABLE_I18N_INTL)
+  target_link_libraries(noct PUBLIC ${INTL_LIBRARY})
+  if(NOCT_ENABLE_API)
+    target_link_libraries(noctapi PUBLIC ${INTL_LIBRARY})
+  endif()
 endif()
 
 # ---
@@ -290,7 +321,7 @@ set(NOCT_INCLUDE_DIRS ${NOCT_INCLUDE_DIR})
 set(NOCT_LIBRARY      $<TARGET_FILE:noct> $<TARGET_FILE:noctapi>)
 set(NOCT_LIBRARIES    ${NOCT_LIBRARY})
 
-# ----------------------------------------------------------------------------
+# ---
 
 #
 # CLI Target
@@ -349,7 +380,7 @@ if(NOCT_ENABLE_CLI)
   endif()
 endif()
 
-# ----------------------------------------------------------------------------
+# ---
 
 #
 # Install
@@ -364,8 +395,10 @@ if(NOCT_ENABLE_INSTALL)
     ${CMAKE_CURRENT_SOURCE_DIR}/include/noct/c89compat.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/noct)
 
-  install(TARGETS noct    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  install(TARGETS noctapi RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(TARGETS noct RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  if(NOCT_ENABLE_API)
+    install(TARGETS noctapi RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  endif()
 
   if(NOCT_ENABLE_CLI)
     install(TARGETS noctcli RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
@@ -382,5 +415,4 @@ if(NOCT_ENABLE_INSTALL)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
             DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
   endif()
-
 endif()
