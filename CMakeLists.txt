@@ -662,12 +662,14 @@ if(   PLAYFIELD_TARGET_WINDOWS
 endif()
 
 # Make an executable.
-add_executable(
-  playfieldbin
-  src/hook.c
-  ${PLAYFIELD_RESOURCES}
-)
-set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
+if(PLAYFIELD_ENABLE_BIN)
+  add_executable(
+    playfieldbin
+    src/hook.c
+    ${PLAYFIELD_RESOURCES}
+  )
+  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
+endif()
 
 # ---
 
@@ -675,12 +677,14 @@ set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
 # CPPFLAGS for playfieldbin
 #
 
-target_include_directories(
-  playfieldbin
-  PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${NOCT_INCLUDE_DIR}
-)
+if(PLAYFIELD_ENABLE_BIN)
+  target_include_directories(
+    playfieldbin
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${NOCT_INCLUDE_DIR}
+  )
+endif()
 
 # ---
 
@@ -688,72 +692,77 @@ target_include_directories(
 # LDFLAGS for playfieldbin
 #
 
-if(NOT PLAYFIELD_ENABLE_DIST)
-  target_link_libraries(playfieldbin PRIVATE strato)
-else()
-  target_link_libraries(playfieldbin PRIVATE ${STRATO_LIBRARY})
-endif()
+if(PLAYFIELD_ENABLE_BIN)
+  target_link_libraries(playfieldbin PRIVATE playfield)
 
-target_link_libraries(playfieldbin PRIVATE playfield)
-
-# Windows
-if(PLAYFIELD_TARGET_WINDOWS)
-  if(MSVC)
-    target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
+  if(NOT PLAYFIELD_ENABLE_DIST)
+    target_link_libraries(playfieldbin PRIVATE strato)
   else()
-    target_link_options(playfieldbin PUBLIC -mwindows -static)
+    target_link_libraries(playfieldbin PRIVATE ${STRATO_LIBRARY})
   endif()
-endif()
 
-# Windows 95
-if(PLAYFIELD_TARGET_WINDOWS95)
-  if(MSVC)
-    target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS)
-  else()
-    target_link_options(playfieldbin PUBLIC -mwindows -static -static-libgcc)
+  # Add twice for circular references on callback functions.
+  target_link_libraries(playfieldbin PRIVATE playfield)
+
+  # Windows
+  if(PLAYFIELD_TARGET_WINDOWS)
+    if(MSVC)
+      target_link_options(playfieldbin PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:wWinMainCRTStartup /MANIFEST:NO)
+    else()
+      target_link_options(playfieldbin PRIVATE -mwindows -static -Wl,-u,wWinMain -Wl,-u,_wWinMain@16)
+    endif()
   endif()
-endif()
 
-# Emscripten
-if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
-  # Make the output name "index.html"
-  set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
-  target_link_options(playfieldbin PRIVATE
-    -o index.html
-    -sSINGLE_FILE=1
-    -sTOTAL_MEMORY=536870912
-    -sNO_EXIT_RUNTIME=1
-    -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString]
-    -lopenal
-    -lidbfs.js
-    --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shell.html"
-    --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/pre.js"
-    --use-preload-plugins
-    --profiling-funcs
-  )
-endif()
+  # Windows 95
+  if(PLAYFIELD_TARGET_WINDOWS95)
+    if(MSVC)
+      target_link_options(playfieldbin PUBLIC /SUBSYSTEM:WINDOWS)
+    else()
+      target_link_options(playfieldbin PUBLIC -mwindows -static -static-libgcc)
+    endif()
+  endif()
 
-# Emscripten Local
-if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
-  # Make the output name "index.html"
-  set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
-  target_link_options(playfieldbin PRIVATE
-    -o index.html
-    -sSINGLE_FILE=1
-    -sTOTAL_MEMORY=536870912
-    -sNO_EXIT_RUNTIME=1
-    -sEXPORTED_FUNCTIONS=[_onLoadProject,_setVisible,_setHidden,_malloc]
-    -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString,writeArrayToMemory]
-    -s ASYNCIFY
-    -lopenal
-    -lidbfs.js
-    --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shelllocal.html"
-    --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/prelocal.js"
-    --use-preload-plugins
-    --profiling-funcs
-  )
+  # Emscripten
+  if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
+    # Make the output name "index.html"
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
+    target_link_options(playfieldbin PRIVATE
+      -o index.html
+      -sSINGLE_FILE=1
+      -sTOTAL_MEMORY=536870912
+      -sNO_EXIT_RUNTIME=1
+      -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString]
+      -lopenal
+      -lidbfs.js
+      --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shell.html"
+      --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/pre.js"
+      --use-preload-plugins
+      --profiling-funcs
+    )
+  endif()
+
+  # Emscripten Local
+  if(PLAYFIELD_TARGET_WASM_LOCAL AND NOT PLAYFIELD_ENABLE_STATIC)
+    # Make the output name "index.html"
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME index)
+    target_link_options(playfieldbin PRIVATE
+      -o index.html
+      -sSINGLE_FILE=1
+      -sTOTAL_MEMORY=536870912
+      -sNO_EXIT_RUNTIME=1
+      -sEXPORTED_FUNCTIONS=[_onLoadProject,_setVisible,_setHidden,_malloc]
+      -sEXPORTED_RUNTIME_METHODS=[ccall,UTF8ToString,writeArrayToMemory]
+      -s ASYNCIFY
+      -lopenal
+      -lidbfs.js
+      --shell-file "${CMAKE_CURRENT_SOURCE_DIR}/src/shelllocal.html"
+      --pre-js "${CMAKE_CURRENT_SOURCE_DIR}/src/prelocal.js"
+      --use-preload-plugins
+      --profiling-funcs
+    )
+  endif()
 endif()
 
 # ---
@@ -906,9 +915,7 @@ endif()
 # macOS Bundle
 #
 
-if(PLAYFIELD_TARGET_MACOS
-   AND NOT PLAYFIELD_ENABLE_STATIC
-   AND NOT PLAYFIELD_ENABLE_SHARED)
+if(PLAYFIELD_TARGET_MACOS AND PLAYFILED_ENABLE_BIN)
   # Use capital name.
   set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "Playfield")
 
