@@ -680,7 +680,7 @@ if(PLAYFIELD_ENABLE_BIN)
     ${PLAYFIELD_RESOURCES}
   )
 
-  if(PLAYFIELD_TARGET_MACOS AND PLAYFILED_ENABLE_BIN)
+  if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BIN)
     set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "Playfield")
   else()
     set_target_properties(playfieldbin PROPERTIES OUTPUT_NAME "playfield")
@@ -937,7 +937,7 @@ endif()
 # macOS Bundle
 #
 
-if(PLAYFIELD_TARGET_MACOS AND PLAYFILED_ENABLE_BIN)
+if(PLAYFIELD_TARGET_MACOS AND PLAYFIELD_ENABLE_BIN)
   # Make an app bundle.
   set_target_properties(playfieldbin PROPERTIES
     MACOSX_BUNDLE TRUE
