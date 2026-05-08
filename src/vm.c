@@ -73,6 +73,7 @@ static bool install_api(NoctEnv *env);
 
 /* External. */
 bool init_aot_code(struct rt_env *env);
+bool noct_init_locale(void);
 
 /*
  * Create a VM, then call setup().

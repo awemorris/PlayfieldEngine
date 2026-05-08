@@ -509,6 +509,7 @@
                 "PLAYFIELD_ENABLE_JIT":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
+                "PLAYFIELD_ENABLE_CONSOLE":    "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BCC":        "ON",
                 "PLAYFIELD_ENABLE_AOTC":       "ON"
@@ -527,6 +528,7 @@
                 "PLAYFIELD_ENABLE_JIT":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "ON",
                 "PLAYFIELD_ENABLE_BIN":        "ON",
+                "PLAYFIELD_ENABLE_CONSOLE":    "ON",
                 "PLAYFIELD_ENABLE_PACK":       "ON",
                 "PLAYFIELD_ENABLE_BCC":        "ON",
                 "PLAYFIELD_ENABLE_AOTC":       "ON"
