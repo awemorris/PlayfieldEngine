@@ -272,6 +272,28 @@ func main() {
 }
 ```
 
+### Why D-OOP?
+
+- Moving Beyond "Implementation Inheritance":
+    - Traditional class-based inheritance is increasingly viewed as outdated,
+      with modern languages like Rust proving that composition is often a
+      superior alternative.
+    - Noct embraces this shift by focusing on the "composition of dictionaries"
+      rather than maintaining complex, dynamic inheritance hierarchies.
+- Eliminating Prototype Chains for `O(1)` Access:
+    - In conventional prototype-based languages, resolving properties through a
+      chain is a high-overhead operation that frequently triggers cache
+      misses, requiring heavy optimizations like Inline Caching.
+    - Noct eliminates the prototype chain entirely.
+    - By merging dictionaries at the time of creation, it achieves guaranteed
+      `O(1)` access to all properties.
+- Memory Locality and Hardware-Aware Design:
+    - By creating flattened copies of dictionaries, Noct ensures superior
+      memory locality.
+    - This approach is specifically designed to align with modern hardware
+      architectures, maximizing CPU cache hit rates and ensuring high affinity
+      with NUMA (Non-Uniform Memory Access) environments.
+
 ---
 
 ## JIT Pipeline
