@@ -157,7 +157,7 @@ hal_callback_on_event_boot(
 	int height_ret;
 	bool fullscreen_ret;
 	
-#ifdef USE_TRANSLATION
+#ifdef PF_USE_TRANSLATION
 	/* Initialize the locale. */
 	pf_init_locale();
 #endif

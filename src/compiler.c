@@ -59,8 +59,9 @@
 extern bool noct_conf_use_jit;
 
 /* i18n.c */
-#if defined(USE_TRANSLATION)
+#if defined(PF_USE_TRANSLATION)
 void noct_init_locale(void);
+void pf_init_locale(void);
 #endif
 
 /* Forward declaration. */
@@ -76,8 +77,9 @@ static int wide_printf(const char *format, ...);
 
 int main(int argc, char *argv[])
 {
-#if defined(USE_TRANSLATION)
+#if defined(PF_USE_TRANSLATION)
 	noct_init_locale();
+	pf_init_locale();
 #endif
 
 	if (argc < 2 ||

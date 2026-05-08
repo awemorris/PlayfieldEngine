@@ -73,6 +73,7 @@ static bool install_api(NoctEnv *env);
 
 /* External. */
 bool init_aot_code(struct rt_env *env);
+void noct_init_locale(void);
 
 /*
  * Create a VM, then call setup().
@@ -84,6 +85,9 @@ pfi_create_vm(
 	int *height,
 	bool *fullscreen)
 {
+	/* Initialize the NoctLang's i18n system. */
+	noct_init_locale();
+
 	/* Create a language runtime. */
 	if (!noct_create_vm(&vm, &env))
 		return false;

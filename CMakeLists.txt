@@ -359,6 +359,19 @@ endif()
 # ---
 
 #
+# gettext
+#
+
+if(PLAYFIELD_ENABLE_I18N_LIBINTL)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+  find_package(INTL REQUIRED)
+  include(GNUInstallDirs)
+  add_definitions(-DLOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
+endif()
+
+# ---
+
+#
 # Release/Debug
 #
 
@@ -545,6 +558,11 @@ if(PLAYFIELD_ENABLE_I18N)
   target_compile_definitions(playfield PRIVATE PF_USE_TRANSLATION)
 endif()
 
+# PF_USE_LIBINTL
+if(PLAYFIELD_ENABLE_I18N_LIBINTL)
+  target_compile_definitions(playfield PRIVATE PF_USE_LIBINTL)
+endif()  
+
 # DLL
 if(PLAYFIELD_ENABLE_SHARED)
   target_compile_definitions(playfield PRIVATE PF_USE_SHARED)
@@ -573,7 +591,7 @@ endif()
 
 # Emscripten
 if(PLAYFIELD_TARGET_WASM AND NOT PLAYFIELD_ENABLE_STATIC)
-  target_compile_definitions(playfield PRIVATE USE_EMSCRIPTEN)
+  target_compile_definitions(playfield PRIVATE PF_USE_EMSCRIPTEN)
 endif()
 
 # ---
@@ -617,6 +635,11 @@ else()
     ${NOCT_LIBRARY}
     ${STRATO_LIBRARY}
   )
+endif()
+
+# libintl
+if(PF_ENABLE_I18N_INTL)
+  target_link_libraries(playfield PUBLIC ${INTL_LIBRARY})
 endif()
 
 #---
@@ -1026,5 +1049,11 @@ if(PLAYFIELD_ENABLE_INSTALL)
         DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
       )
     endif()
+  endif()
+
+  # gettext
+  if(PF_ENABLE_I18N_LIBINTL)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
+            DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
   endif()
 endif()
