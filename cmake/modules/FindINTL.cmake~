@@ -1,8 +1,0 @@
-find_path(INTL_INCLUDE_DIR libintl.h)
-
-find_library(INTL_LIBRARY NAMES intl)
-
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(INTL DEFAULT_MSG INTL_LIBRARY INTL_INCLUDE_DIR)
-
-set(INTL_INCLUDE_DIRS ${INTL_INCLUDE_DIR})
