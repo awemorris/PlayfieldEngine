@@ -62,8 +62,8 @@ int command_run(int argc, char *argv[])
 	/* Register libraries. */
 	NOCT_REGISTER_ALL_APIS(env);
 
-	/* Register FFI functions. */
-	if (!register_cli_ffi(env))
+	/* Register NAPI functions. */
+	if (!register_cli_cfunc(env))
 		return 1;
 
 	/* Load a file content. */
