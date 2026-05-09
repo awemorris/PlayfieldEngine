@@ -743,11 +743,11 @@ rt_call(
 		if (func->jit_code != NULL) {
 			/* Call a JIT-generated code. */
 			if (!func->jit_code(env)) {
-				//printf("Returned from JIT code (false).\n");
+				/*printf("Returned from JIT code (false).\n");*/
 				return false;
 			}
-			//printf("Returned from JIT code (true).\n");
-			//printf("%d: %d\n", env->frame->tmpvar[0].type, env->frame->tmpvar[0].val.i);
+			/*printf("Returned from JIT code (true).\n");*/
+			/*printf("%d: %d\n", env->frame->tmpvar[0].type, env->frame->tmpvar[0].val.i);*/
 		} else {
 			/* Call the bytecode interpreter. */
 			if (!rt_visit_bytecode(env, func))
@@ -841,6 +841,7 @@ rt_make_string(
  * Make a string value. (hash version)
  */
 bool
+CDECL
 rt_make_string_with_hash(
 	struct rt_env *env,
 	struct rt_value *val,
@@ -929,6 +930,7 @@ rt_cache_string_hash(
  * Make an empty array.
  */
 bool
+CDECL
 rt_make_empty_array(
 	struct rt_env *env,
 	struct rt_value *val)
@@ -960,6 +962,8 @@ rt_get_array_size(
 	uint32_t *size)
 {
 	struct rt_array *real_arr;
+
+	UNUSED_PARAMETER(env);
 
 	assert(env != NULL);
 	assert(arr != NULL);
@@ -1212,6 +1216,7 @@ rt_make_array_copy(
  * Make an empty dictionary.
  */
 bool
+CDECL
 rt_make_empty_dict(
 	struct rt_env *env,
 	struct rt_value *val)
@@ -1244,6 +1249,8 @@ rt_get_dict_size(
 	uint32_t *size)
 {
 	struct rt_dict *real_dict;
+
+	UNUSED_PARAMETER(env);
 
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -1764,6 +1771,8 @@ rt_make_dict_copy(
 	}
 
 	RELEASE_OBJ(src_real);
+
+	*dst = d;
 
 	return true;
 }
