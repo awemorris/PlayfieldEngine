@@ -1764,6 +1764,8 @@ lir_visit_empty_array_term(
 	int dst_tmpvar,
 	struct hir_term *term)
 {
+	UNUSED_PARAMETER(term);
+
 	assert(term != NULL);
 	assert(term->type == HIR_TERM_EMPTY_ARRAY);
 
@@ -1780,6 +1782,8 @@ lir_visit_empty_dict_term(
 	int dst_tmpvar,
 	struct hir_term *term)
 {
+	UNUSED_PARAMETER(term);
+
 	assert(term != NULL);
 	assert(term->type == HIR_TERM_EMPTY_DICT);
 
@@ -1813,6 +1817,8 @@ static bool
 lir_decrement_tmpvar(
 	int tmpvar_index)
 {
+	UNUSED_PARAMETER(tmpvar_index);
+
 	assert(tmpvar_index == (int)tmpvar_top - 1);
 	assert(tmpvar_top > 0);
 
