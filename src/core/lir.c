@@ -164,7 +164,7 @@ lir_build(
 		free(bytecode);
 		bytecode = NULL;
 	}
-	bytecode = calloc(BYTECODE_BUF_SIZE, 1);
+	bytecode = noct_calloc(BYTECODE_BUF_SIZE, 1);
 	if (bytecode == NULL) {
 		lir_out_of_memory();
 		free(bytecode);
