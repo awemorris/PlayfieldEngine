@@ -748,11 +748,6 @@ if(PLAYFIELD_ENABLE_BIN)
   )
 endif()
 
-# Unity
-if(PLAYFIELD_TARGET_UNITY)
-  target_compile_definitions(playfieldbin PRIVATE PF_TARGET_UNITY)
-endif()
-
 # PC98
 if(PLAYFIELD_TARGET_PC98)
   target_compile_definitions(playfieldbin PRIVATE PF_TARGET_PC98)
