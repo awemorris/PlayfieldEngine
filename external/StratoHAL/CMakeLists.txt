@@ -36,6 +36,7 @@ option(STRATO_TARGET_HAIKU            "Build for Haiku OS (Soft3D)"             
 option(STRATO_TARGET_UWP              "Build for UWP"                           OFF)
 option(STRATO_TARGET_GDK_WINDOWS      "Build for GDK for Desktop"               OFF)
 option(STRATO_TARGET_GDK_XBOX_XS      "Build for GDK for Xbox Series X|S"       OFF)
+option(STRATO_TARGET_PC98             "Build for PC-9800 series"                OFF)
 
 # Options
 option(STRATO_ENABLE_OBJECT           "Build an object library"                 OFF)
@@ -88,6 +89,7 @@ if(   STRATO_TARGET_WINDOWS
    OR STRATO_TARGET_UWP
    OR STRATO_TARGET_GDK_WINDOWS
    OR STRATO_TARGET_GDK_XBOX_XS
+   OR STRATO_TARGET_PC98
 )
   # A target and options are manually specified.
 else()
@@ -226,11 +228,13 @@ else()
   include(cmake/zlib.cmake)
   include(cmake/libpng.cmake)
   include(cmake/jpeg.cmake)
-  include(cmake/libwebp.cmake)
+  if(NOT STRATO_TARGET_PC98)
+    include(cmake/libwebp.cmake)
+    include(cmake/brotli.cmake)
+    include(cmake/bzip2.cmake)
+  endif()
   include(cmake/libogg.cmake)
   include(cmake/libvorbis.cmake)
-  include(cmake/brotli.cmake)
-  include(cmake/bzip2.cmake)
   include(cmake/freetype.cmake)
 endif()
 
@@ -647,6 +651,17 @@ if(STRATO_TARGET_UWP)
   )
 endif()
 
+# PC-9800
+if(STRATO_TARGET_PC98)
+  set(STRATO_SOURCES
+      src/image.c
+      src/glyph.c
+      src/wave.c
+      src/stdfile.c
+      src/98main.c
+    )
+endif()
+
 # I18N
 if(STRATO_ENABLE_I18N)
   set(STRATO_I18N_SOURCES
@@ -656,19 +671,31 @@ endif()
 
 # Deps (merge third-party library objects into the target)
 if(NOT STRATO_ENABLE_DIST)
-  set(STRATO_DEPS
-      $<TARGET_OBJECTS:png>
-      $<TARGET_OBJECTS:jpeg>
-      $<TARGET_OBJECTS:webp>
-      $<TARGET_OBJECTS:vorbisfile>
-      $<TARGET_OBJECTS:vorbis>
-      $<TARGET_OBJECTS:ogg>
-      $<TARGET_OBJECTS:freetype>
-      $<TARGET_OBJECTS:brotlidec>
-      $<TARGET_OBJECTS:brotlicommon>
-      $<TARGET_OBJECTS:bz2>
-      $<TARGET_OBJECTS:z>
-  )
+  if(NOT STRATO_TARGET_PC98)
+    set(STRATO_DEPS
+        $<TARGET_OBJECTS:png>
+        $<TARGET_OBJECTS:jpeg>
+        $<TARGET_OBJECTS:webp>
+        $<TARGET_OBJECTS:vorbisfile>
+        $<TARGET_OBJECTS:vorbis>
+        $<TARGET_OBJECTS:ogg>
+        $<TARGET_OBJECTS:freetype>
+        $<TARGET_OBJECTS:brotlidec>
+        $<TARGET_OBJECTS:brotlicommon>
+        $<TARGET_OBJECTS:bz2>
+        $<TARGET_OBJECTS:z>
+    )
+  else()
+    set(STRATO_DEPS
+        $<TARGET_OBJECTS:png>
+        $<TARGET_OBJECTS:jpeg>
+        $<TARGET_OBJECTS:vorbisfile>
+        $<TARGET_OBJECTS:vorbis>
+        $<TARGET_OBJECTS:ogg>
+        $<TARGET_OBJECTS:freetype>
+        $<TARGET_OBJECTS:z>
+    )
+  endif()
 endif()
 
 # Library type.
@@ -867,6 +894,11 @@ if(STRATO_TARGET_UNITY)
   elseif(STRATO_TARGET_UNITY_XBOX)
     target_compile_definitions(strato PRIVATE HAL_UNITY_GAMECORE_XBOXSERIES)
   endif()
+endif()
+
+# PC98
+if(STRATO_TARGET_PC98)
+  target_compile_definitions(strato PUBLIC HAL_TARGET_PC98)
 endif()
 
 # GLES

@@ -146,7 +146,7 @@ hal_create_image(
 		free(*img);
 		return false;
 	}
-#elif !defined(HAL_TARGET_UNITY)
+#elif !defined(HAL_TARGET_UNITY) && !defined(HAL_TARGET_PC98)
 	if (posix_memalign((void **)&pixels, 64, (size_t)w * (size_t)h * sizeof(hal_pixel_t)) != 0) {
 		hal_log_out_of_memory();
 		free(*img);
@@ -1720,6 +1720,8 @@ hal_create_image_with_jpeg(
  * WebP
  */
 
+#if !defined(HAL_TARGET_PC98)
+
 #include <webp/decode.h>
 
 /*
@@ -1781,3 +1783,21 @@ hal_create_image_with_webp(
 
 	return true;
 }
+
+#else
+
+bool
+hal_create_image_with_webp(
+	const uint8_t *data,
+	size_t size,
+	struct hal_image **img)
+{
+	UNUSED_PARAMETER(data);
+	UNUSED_PARAMETER(size);
+	UNUSED_PARAMETER(img);
+
+	hal_log_error("WebP is not supported.");
+	return false;
+}
+
+#endif /* !defined(HAL_TARGET_PC98) */
