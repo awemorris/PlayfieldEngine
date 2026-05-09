@@ -16,8 +16,10 @@
                 "PLAYFIELD_ENABLE_JIT":    "ON",
                 "PLAYFIELD_ENABLE_BIN":    "ON",
                 "PLAYFIELD_ENABLE_MAIN2":  "ON"
-	    }
+			}
+		}
     ],
+
     "buildPresets": [
         {
             "name": "pc98",
