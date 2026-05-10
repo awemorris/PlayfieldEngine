@@ -33,6 +33,6 @@ int command_transpile_elisp(int argc, char *argv[]);
 int command_run(int argc, char *argv[]);
 int command_repl(void);
 
-bool register_cli_ffi(NoctEnv *env);
+bool register_cli_cfunc(NoctEnv *env);
 
 #endif
