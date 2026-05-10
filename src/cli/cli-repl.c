@@ -36,8 +36,8 @@ static bool run_repl(void)
 	/* Register libraries. */
 	NOCT_REGISTER_ALL_APIS(env);
 
-	/* Register FFI functions. */
-	if (!register_cli_ffi(env))
+	/* Register NAPI functions. */
+	if (!register_cli_cfunc(env))
 		return false;
 
 	wide_printf(N_TR("Noct Programming Language\n"));
@@ -56,7 +56,11 @@ static bool run_repl(void)
 		memset(entire, 0, sizeof(entire));
 
 		/* Show the prompt and get an input. */
+#if !defined(NOCT_TARGET_DOS4G)
 		wide_printf("> ");
+#else
+		printf(">\n");
+#endif
 		if (fgets(line, sizeof(line) - 1, stdin) == NULL)
 			break;
 
