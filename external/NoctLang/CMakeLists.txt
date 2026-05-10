@@ -347,7 +347,7 @@ if(NOCT_ENABLE_CLI)
     src/cli/cli-ctrans.c
     src/cli/cli-eltrans.c
     src/cli/cli-repl.c
-    src/cli/cli-cfunc.c
+    src/cli/cli-ffi.c
   )
 
   # Set the executable name.

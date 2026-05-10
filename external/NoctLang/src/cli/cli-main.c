@@ -11,14 +11,8 @@
 
 #include "cli-main.h"
 
-#if defined(NOCT_TARGET_WINDOWS)
+#ifdef _WIN32
 #include <windows.h>
-#elif defined(NOCT_TARGET_DOS4G)
-#include <sys/stat.h>
-#include <dos.h>
-#ifndef _A_SUBDIR
-#define _A_SUBDIR 0x10
-#endif
 #else
 #include <sys/stat.h>
 #include <dirent.h>
@@ -63,7 +57,7 @@ int main(int argc, char *argv[])
 /*
  * Windows Main
  */
-#if defined(NOCT_TARGET_WINDOWS)
+#ifdef _WIN32
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
     /* Dispatch to main(). */
@@ -146,7 +140,7 @@ int wide_printf(const char *format, ...)
 	size = vsnprintf(buf, sizeof(buf), format, ap);
 	va_end(ap);
 
-#if !defined(NOCT_TARGET_WINDOWS)
+#if !defined(_WIN32)
 	return printf("%s", buf);
 #else
 	/* MSVC or MinGW: Use WriteConsoleW(). (Otherwise we can't write CJK.) */
@@ -162,7 +156,7 @@ int wide_printf(const char *format, ...)
 /*
  * For POSIX
  */
-#if !defined(NOCT_TARGET_WINDOWS) && !defined(NOCT_TARGET_DOS4G)
+#if !defined(_WIN32)
 
 /*
  * Recursively add files.
@@ -209,83 +203,11 @@ bool add_file(const char *fname, bool (*add_file_hook)(const char *))
 
 	return true;
 }
-#endif
-
-/*
- * For DOS
- */
-#if defined(NOCT_TARGET_DOS4G)
-
-#ifndef _A_SUBDIR
-#define _A_SUBDIR 0x10
-#endif
-
-bool add_file(const char *fname, bool (*add_file_hook)(const char *))
-{
-	struct stat st;
-
-	if (stat(fname, &st) != 0) {
-		printf(N_TR("Cannot find %s.\n"), fname);
-		return false;
-	}
-
-	if (S_ISDIR(st.st_mode)) {
-		struct find_t ff;
-		char pattern[256 + 1];
-		unsigned rc;
-
-		printf(N_TR("Searching directory %s.\n"), fname);
-
-		snprintf(pattern, sizeof(pattern), "%s\\*.*", fname);
-
-		rc = _dos_findfirst(pattern,
-				    _A_NORMAL | _A_RDONLY | _A_HIDDEN |
-				    _A_SYSTEM | _A_SUBDIR | _A_ARCH,
-				    &ff);
-
-		if (rc != 0) {
-			wide_printf(N_TR("Skipping empty directory %s.\n"), fname);
-			return true;
-		}
-
-		do {
-			char next_path[256 + 1];
-
-			if (strcmp(ff.name, ".") == 0 || strcmp(ff.name, "..") == 0)
-				continue;
-
-			snprintf(next_path, sizeof(next_path), "%s\\%s", fname, ff.name);
-
-			if (ff.attrib & _A_SUBDIR) {
-				if (!add_file(next_path, add_file_hook))
-					return false;
-			} else {
-				printf(N_TR("Adding file %s.\n"), next_path);
-				if (!add_file_hook(next_path))
-					return false;
-			}
-
-		} while (_dos_findnext(&ff) == 0);
-
-		return true;
-	}
-
-	if (S_ISREG(st.st_mode)) {
-		wide_printf(N_TR("Adding file %s.\n"), fname);
-		if (!add_file_hook(fname))
-			return false;
-	}
-
-	return true;
-}
-
-#endif
 
 /*
  * For Windows
  */
-
-#if defined(NOCT_TARGET_WINDOWS)
+#else
 
 #define BUF_SIZE	1024
 
@@ -354,4 +276,4 @@ bool add_file(const char *fname, bool (*add_file_hook)(const char *))
 	return true;
 }
 
-#endif
+#endif	/* !defined(_WIN32) */
