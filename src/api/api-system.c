@@ -14,8 +14,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef NOCT_TARGET_WINDOWS
+#if defined(NOCT_TARGET_WINDOWS)
 #include <windows.h>
+#include <fcntl.h>
+#elif defined(NOCT_TARGET_DOS4G)
+#include <dos.h>
 #include <fcntl.h>
 #else
 #include <unistd.h>
@@ -209,6 +212,11 @@ cfunc_System_runCommand(
 			CloseHandle(pi.hThread);
 		if (pi.hProcess != NULL)
 			CloseHandle(pi.hProcess);
+	}
+#elif defined(NOCT_TARGET_DOS4G)
+	{
+		noct_error(env, "DOS4G cannot run commands.\n");
+		return false;
 	}
 #else
 	{

@@ -62,6 +62,7 @@ Roadmap:
 - *BSD
 - Game Consoles
 - Any POSIX compliant OS
+- MS-DOS (with extender)
 
 Note: On major smartphones and consoles, runtime code generation (JIT)
 is generally prohibited or tightly restricted by platform

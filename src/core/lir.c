@@ -41,7 +41,8 @@ extern int noct_conf_optimize;
 #define BYTECODE_BUF_SIZE	65536
 
 /* Bytecode array. */
-static uint8_t bytecode[BYTECODE_BUF_SIZE];
+/*static uint8_t bytecode[BYTECODE_BUF_SIZE];*/
+static uint8_t *bytecode;
 
 /* Cuurent bytecode length. */
 static uint32_t bytecode_top;
@@ -159,8 +160,18 @@ lir_build(
 	}
 
 	/* Initialize the bytecode buffer. */
+	if (bytecode != NULL) {
+		free(bytecode);
+		bytecode = NULL;
+	}
+	bytecode = noct_calloc(BYTECODE_BUF_SIZE, 1);
+	if (bytecode == NULL) {
+		lir_out_of_memory();
+		free(bytecode);
+		bytecode = NULL;
+		return false;
+	}
 	bytecode_top = 0;
-	memset(bytecode, 0, BYTECODE_BUF_SIZE);
 
 	/* Initialize the tmpvars. */
 	tmpvar_top = lir_count_local(hir_func);
@@ -223,6 +234,8 @@ lir_build(
 	}
 	(*lir_func)->bytecode_size = bytecode_top;
 	memcpy((*lir_func)->bytecode, bytecode, (size_t)bytecode_top);
+	free(bytecode);
+	bytecode = NULL;
 
 	/* Copy the file name. */
 	(*lir_func)->file_name = noct_strdup(hir_func->val.func.file_name);
