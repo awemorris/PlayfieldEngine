@@ -341,12 +341,14 @@ rt_register_lir(
 		}
 	}
 	func->bytecode_size = lir->bytecode_size;
-	func->bytecode = noct_malloc((size_t)lir->bytecode_size);
-	if (func->bytecode == NULL) {
-		rt_out_of_memory(env);
-		return false;
+	if (func->bytecode_size != 0) {
+		func->bytecode = noct_malloc((size_t)lir->bytecode_size);
+		if (func->bytecode == NULL) {
+			rt_out_of_memory(env);
+			return false;
+		}
+		memcpy(func->bytecode, lir->bytecode, (size_t)lir->bytecode_size);
 	}
-	memcpy(func->bytecode, lir->bytecode, (size_t)lir->bytecode_size);
 	func->tmpvar_size = lir->tmpvar_size;
 	func->file_name = strdup(lir->file_name);
 	if (func->file_name == NULL) {
