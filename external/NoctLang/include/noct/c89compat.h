@@ -465,6 +465,9 @@ typedef unsigned long uintptr_t;
 #if !defined(tanf)
 #define tanf tan
 #endif
+#if !defined(fmodf)
+#define fmodf fmod
+#endif
 #endif
 
 /*

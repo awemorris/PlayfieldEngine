@@ -1026,6 +1026,37 @@ hal_draw_image_3d_cross(
  * Scanline Conversion (for 3D polygon drawing)
  */
 
+static INLINE int fp32_eq(float a, float b)
+{
+    float d = a - b;
+    return d > -0.0001f && d < 0.0001f;
+}
+
+#if defined(HAL_TARGET_DOS4G)
+#undef floorf
+static INLINE int floorf(float x)
+{
+    int i = (int)x;
+    return (x < (float)i) ? i - 1 : i;
+}
+
+#undef ceilf
+static INLINE int ceilf(float x)
+{
+    int i = (int)x;
+    return (x > (float)i) ? i + 1 : i;
+}
+
+#undef lroundf
+static INLINE int lroundf(float x)
+{
+    if (x >= 0.0f)
+        return (int)(x + 0.5f);
+    else
+        return (int)(x - 0.5f);
+}
+#endif
+
 static inline void
 scanline_edge(
 	struct scbuf *scbuf,
@@ -1041,7 +1072,7 @@ scanline_edge(
 	int iy;
 
 	/* Horizontal edge. */
-	if (y1 == y2) {
+	if (fp32_eq(y1, y2)) {
 		iy = (int)lroundf(y1);
 		if (iy < 0 || iy >= SC_LINES)
 			return;
@@ -1082,7 +1113,7 @@ scanline_edge(
 	}
 
 	/* Vertical edge. */
-	if (x1 == x2) {
+	if (fp32_eq(x1, x2)) {
 		int ix = (int)ceilf(x1);
 		for (iy = (int)ceilf(y1); iy <= (int)ceilf(y2); iy++) {
 			float t, tx, ty;

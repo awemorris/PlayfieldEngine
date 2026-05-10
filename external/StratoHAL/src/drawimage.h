@@ -659,7 +659,6 @@ DRAW_IMAGE_3D_ALPHA(
 			    (float)y4,
 			    (float)src_width,
 			    (float)src_height);			    
-
 	dw = dst_image->width;
 	sw = src_image->width;
 	sh = src_image->height;

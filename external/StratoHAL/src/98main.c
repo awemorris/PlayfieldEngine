@@ -76,8 +76,7 @@ static uint8_t *fb;
 static FILE *log_fp;
 
 /* Forward Declaration */
-static void init_vram_4bpp(void);
-static void init_vram_8bpp(void);
+static void init_vram(void);
 static void cleanup_vram(void);
 static void process_input(void);
 static void flip_4bpp(void);
@@ -228,9 +227,9 @@ static void flip(void)
 
 				mask = (unsigned char)(0x80 >> bit);
 
-				if (b & 0x80)
+				if (b & 0xF0)
 					pb |= mask;
-				if (g & 0x80)
+				if (g & 0xC0)
 					pg |= mask;
 				if (r & 0x80)
 					pr |= mask;
@@ -709,22 +708,15 @@ hal_render_image_3d_cross(
 static uint32_t get_time(void)
 {
 	union REGS r;
+	uint32_t tick;
 
-	/* DOS: Get time. */
-	r.h.ah = 0x2c;
-	int386(0x21, &r, &r);
+	r.h.al = 0xff;
+	r.h.ah = 0x80;
+	int386(0x1c, &r, &r);
 
-	/*
-	 * CH = hour
-	 * CL = minute
-	 * DH = second
-	 * DL = 1/100 sec
-	 */
-	return
-		((uint32_t)r.h.ch * 60 * 60 * 1000) +
-		((uint32_t)r.h.cl * 60 * 1000) +
-		((uint32_t)r.h.dh * 1000) +
-		(uint32_t)r.h.dl * 10;
+	tick = (r.w.cx << 16) | r.w.dx;
+
+	return tick * 1000 / 32;
 }
 
 void
