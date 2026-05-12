@@ -1114,7 +1114,7 @@ hal_render_image_3d_cross(
  * Create a save directory.
  */
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	mkdir(window_title, 0777);
 	return true;

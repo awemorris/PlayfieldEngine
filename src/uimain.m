@@ -623,7 +623,7 @@ hal_log_out_of_memory(void)
 
 // Make a save directory.
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
     @autoreleasepool {
         NSString *path = [NSString stringWithFormat:@"%@/%@/%s/save",

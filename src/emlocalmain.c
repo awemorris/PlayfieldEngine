@@ -1028,7 +1028,7 @@ hal_render_image_3d_cross(
 }
 
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	return true;
 }

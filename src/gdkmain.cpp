@@ -1067,7 +1067,7 @@ win32_utf16_to_utf8(
  * Create a save directory.
  */
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	return true;
 }

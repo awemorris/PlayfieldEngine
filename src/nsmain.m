@@ -1009,7 +1009,7 @@ putTextToLogWindow(
 
 // Make a save directory.
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
     @autoreleasepool {
         if (!is_bundled) {

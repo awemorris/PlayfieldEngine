@@ -1625,7 +1625,7 @@ void update_viewport_size(
 #define hal_log_error_x11			hal_log_error
 #define hal_log_out_of_memory_x11		hal_log_out_of_memory
 #define open_log_file_x11			open_log_file
-#define hal_make_save_directory_x11		hal_make_save_directory
+#define make_save_directory_x11		make_save_directory
 #define make_real_path_x11			make_real_path
 #define hal_reset_lap_timer_x11			hal_reset_lap_timer
 #define hal_get_lap_timer_millisec_x11		hal_get_lap_timer_millisec
@@ -1758,7 +1758,7 @@ open_log_file(void)
  * Make a save directory.
  */
 bool
-hal_make_save_directory_x11(void)
+make_save_directory_x11(void)
 {
 	struct stat st = {0};
 

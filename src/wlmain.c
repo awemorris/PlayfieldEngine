@@ -1242,7 +1242,7 @@ keyboard_repeat_info(
 #define hal_log_warn_wl				hal_log_warn
 #define hal_log_error_wl			hal_log_error
 #define hal_log_out_of_memory_wl		hal_log_out_of_memory
-#define hal_make_save_directory_wl		hal_make_save_directory
+#define make_save_directory_wl		make_save_directory
 #define make_real_path_wl			make_real_path
 #define hal_reset_lap_timer_wl			hal_reset_lap_timer
 #define hal_get_lap_timer_millisec_wl		hal_get_lap_timer_millisec
@@ -1385,7 +1385,7 @@ open_log_file(void)
  * Make a save directory.
  */
 bool
-hal_make_save_directory_wl(void)
+make_save_directory_wl(void)
 {
 	struct stat st = {0};
 

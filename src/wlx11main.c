@@ -61,7 +61,7 @@ bool hal_log_info_wl(const char *s, ...);
 bool hal_log_warn_wl(const char *s, ...);
 bool hal_log_error_wl(const char *s, ...);
 bool hal_log_out_of_memory_wl(void);
-bool hal_make_save_directory_wl(void);
+bool make_save_directory_wl(void);
 char *make_real_path_wl(const char *fname);
 void hal_reset_lap_timer_wl(uint64_t *t);
 uint64_t hal_get_lap_timer_millisec_wl(uint64_t *t);
@@ -93,7 +93,7 @@ bool hal_log_info_x11(const char *s, ...);
 bool hal_log_warn_x11(const char *s, ...);
 bool hal_log_error_x11(const char *s, ...);
 bool hal_log_out_of_memory_x11(void);
-bool hal_make_save_directory_x11(void);
+bool make_save_directory_x11(void);
 char *make_real_path_x11(const char *fname);
 void hal_reset_lap_timer_x11(uint64_t *t);
 uint64_t hal_get_lap_timer_millisec_x11(uint64_t *t);
@@ -257,12 +257,12 @@ hal_log_out_of_memory(void)
 }
 
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	if (mode == MODE_WAYLAND)
-		return hal_make_save_directory_wl();
+		return make_save_directory_wl();
 	else if (mode == MODE_X11)
-		return hal_make_save_directory_x11();
+		return make_save_directory_x11();
 
 	return false;
 }

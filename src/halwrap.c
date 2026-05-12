@@ -247,7 +247,7 @@ hal_log_out_of_memory(void)
 }
 
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	wrap_make_save_directory();
 	return true;

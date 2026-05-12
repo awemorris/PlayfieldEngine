@@ -782,7 +782,7 @@ hal_leave_full_screen_mode(void)
 }
 
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	return true;
 }

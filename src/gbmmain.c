@@ -1007,7 +1007,7 @@ open_log_file(void)
  * Make a save directory.
  */
 bool
-hal_make_save_directory(void)
+make_save_directory(void)
 {
 	struct stat st = {0};
 
