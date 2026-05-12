@@ -28,7 +28,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "stratohal/platform.h"
+#include <stratohal/stratohal.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -254,7 +254,7 @@ hal_make_save_directory(void)
 }
 
 char *
-hal_make_real_path(
+make_real_path(
 	const char *fname)
 {
 	char buf[4096];
@@ -788,7 +788,7 @@ hal_check_file_exist(
 	char *path;
 	bool ret;
 
-	path = hal_make_real_path(file);
+	path = make_real_path(file);
 	if (path == NULL)
 		return false;
 
@@ -818,7 +818,7 @@ hal_open_rfile(
 		return false;
 	}
 
-	path = hal_make_real_path(file);
+	path = make_real_path(file);
 	if (path == NULL) {
 		free(*rf);
 		return false;

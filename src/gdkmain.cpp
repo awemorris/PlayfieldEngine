@@ -35,7 +35,7 @@
 
 // HAL
 extern "C" {
-#include "stratohal/platform.h"
+#include <stratohal/stratohal.h>
 #include "gdkfile.h"
 #include "d3drender.h"
 #include "xa2sound.h"
@@ -1076,7 +1076,7 @@ hal_make_save_directory(void)
  * Get a real path of a file.
  */
 char *
-hal_make_real_path(const char *fname)
+make_real_path(const char *fname)
 {
 	return NULL;
 }

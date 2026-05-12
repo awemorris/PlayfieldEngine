@@ -29,7 +29,7 @@
  */
 
 /* HAL */
-#include "stratohal/platform.h"
+#include <stratohal/stratohal.h>
 
 /* Standard C */
 #include <stdio.h>
@@ -62,7 +62,7 @@ bool hal_log_warn_wl(const char *s, ...);
 bool hal_log_error_wl(const char *s, ...);
 bool hal_log_out_of_memory_wl(void);
 bool hal_make_save_directory_wl(void);
-char *hal_make_real_path_wl(const char *fname);
+char *make_real_path_wl(const char *fname);
 void hal_reset_lap_timer_wl(uint64_t *t);
 uint64_t hal_get_lap_timer_millisec_wl(uint64_t *t);
 void hal_notify_image_update_wl(struct hal_image *img);
@@ -94,7 +94,7 @@ bool hal_log_warn_x11(const char *s, ...);
 bool hal_log_error_x11(const char *s, ...);
 bool hal_log_out_of_memory_x11(void);
 bool hal_make_save_directory_x11(void);
-char *hal_make_real_path_x11(const char *fname);
+char *make_real_path_x11(const char *fname);
 void hal_reset_lap_timer_x11(uint64_t *t);
 uint64_t hal_get_lap_timer_millisec_x11(uint64_t *t);
 void hal_notify_image_update_x11(struct hal_image *img);
@@ -268,13 +268,13 @@ hal_make_save_directory(void)
 }
 
 char *
-hal_make_real_path(
+make_real_path(
 	const char *fname)
 {
 	if (mode == MODE_WAYLAND)
-		return hal_make_real_path_wl(fname);
+		return make_real_path_wl(fname);
 	else if (mode == MODE_X11)
-		return hal_make_real_path_x11(fname);
+		return make_real_path_x11(fname);
 
 	return NULL;
 }

@@ -32,7 +32,7 @@
 
 /* HAL */
 extern "C" {
-#include "stratohal/platform.h"		/* Public Interface */
+#include <stratohal/stratohal.h>		/* Public Interface */
 #include "stdfile.h"			/* Standard C File Implementation */
 };
 
@@ -685,7 +685,7 @@ hal_make_save_directory(void)
 }
 
 char *
-hal_make_real_path(const char *fname)
+make_real_path(const char *fname)
 {
 	return strdup(fname);
 }

@@ -29,7 +29,7 @@
  */
 
 /* Base */
-#include "stratohal/platform.h"
+#include <stratohal/stratohal.h>
 
 /* HAL */
 #include "stdfile.h"	/* File */
@@ -1124,7 +1124,7 @@ hal_make_save_directory(void)
  * Create a real path.
  */
 char *
-hal_make_real_path(
+make_real_path(
 	const char *fname)
 {
 	char buf[1204];
@@ -1196,7 +1196,7 @@ hal_play_video(
 {
 	char *path;
 
-	path = hal_make_real_path(fname);
+	path = make_real_path(fname);
 
 	EM_ASM_({
 		document.getElementById("canvas").style.display = "none";
