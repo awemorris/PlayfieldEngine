@@ -181,6 +181,7 @@ main(
 static bool
 is_wslg(void)
 {
+	return false;
 	return getenv("WSL_DISTRO_NAME") != NULL ||
 	       getenv("WSLG_USE_INTERPOLATION") != NULL ||
 	       access("/mnt/wslg", F_OK) == 0;

@@ -185,7 +185,6 @@ hal_bootstrap(
 	cb->on_mouse_move    = on_mouse_move;
 	cb->on_touch_cancel  = on_touch_cancel;
 	cb->on_analog_input  = on_analog_input;
-	cb->on_swipe_start   = on_swipe_start;
 	cb->on_swipe_down    = on_swipe_down;
 	cb->on_swipe_up      = on_swipe_up;
 
@@ -471,10 +470,8 @@ on_render(void)
 	/* Call render(). */
 	if (!hal_is_video_playing()) {
 		if (!pfi_call_vm_function("render"))
-			return false;
+			return;
 	}
-
-	return true;
 }
 
 static void

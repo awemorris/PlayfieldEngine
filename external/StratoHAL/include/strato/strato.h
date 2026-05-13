@@ -166,7 +166,7 @@ struct hal_callback {
 	bool (*on_update)(void);
 
 	/* Callback for frame rendering. */
-	bool (*on_render)(void);
+	void (*on_render)(void);
 
 	/* Callback for keyboard or gamepad press. */
 	void (*on_key_press)(int key);
