@@ -54,13 +54,14 @@ jobs:
           cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
           cp resources/windows/StratoHAL.nuspec ./
           nuget pack StratoHAL.nuspec
+          tree /f /a
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows
           path: |
-            StratoHAL.1.0.0.nuget
+            *.nuget
           if-no-files-found: error
           retention-days: 7
 
@@ -216,33 +217,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build macOS arm64
+      - name: Build macOS
         run: |
-          cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=arm64
-          cmake --build --preset macos
-          mv build-macos build-macos-arm64
-          file build-macos-arm64/libstrato.a
-
-      - name: Build macOS x86_64
-        run: |
-          cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=x86_64
-          cmake --build --preset macos
-          mv build-macos build-macos-x86_64
-          file build-macos-x86_^4/libstrato.a
-
-      - name: Build iOS device
-        run: |
-          cmake --preset ios-device
-          cmake --build --preset ios-device
-
-      - name: Build iOS simulator
-        run: |
-          cmake --preset ios-simulator
-          cmake --build --preset ios-simulator
+          cmake --preset macos-arm64
+          cmake --build --preset macos-arm64
+          cmake --preset macos-x86_64
+          cmake --build --preset macos-x86_64
 
       - name: Build Universal Binary 2
         run: |
           lipo -create -output libstrato.a build-macos-arm64/libstrato.a build-macos-x86_64/libstrato.a
+
+      - name: Build iOS
+        run: |
+          cmake --preset ios-device
+          cmake --build --preset ios-device
+          cmake --preset ios-simulator
+          cmake --build --preset ios-simulator
 
       - name: Build xcframework
         run: |
@@ -311,7 +302,7 @@ jobs:
           mkdir -p aar_out/prefab/modules/strato/android.riscv64
 
           cd classes
-          jar cvf ../aar_out/classes.jar *.class
+          jar cvf ../aar_out/classes.jar *
           cd ..
 
           cp -r include/* aar_out/prefab/modules/strato/include/

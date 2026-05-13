@@ -158,11 +158,24 @@
             }
         },
         {
-            "name":           "macos",
+            "name":           "macos-arm64",
             "displayName":    "macOS",
             "generator":      "Ninja",
-            "binaryDir":      "${sourceDir}/build-macos",
-            "toolchainFile":  "${sourceDir}/cmake/toolchains/macos.cmake",
+            "binaryDir":      "${sourceDir}/build-macos-arm64",
+            "toolchainFile":  "${sourceDir}/cmake/toolchains/macos-arm64.cmake",
+            "cacheVariables": {
+                "STRATO_TARGET_MACOS":  "ON",
+                "STRATO_ENABLE_I18N":   "ON",
+                "STRATO_ENABLE_STATIC": "ON",
+                "STRATO_ENABLE_PACK":   "ON"
+            }
+        },
+        {
+            "name":           "macos-x86_64",
+            "displayName":    "macOS",
+            "generator":      "Ninja",
+            "binaryDir":      "${sourceDir}/build-macos-x86_64",
+            "toolchainFile":  "${sourceDir}/cmake/toolchains/macos-x86_64.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_MACOS":  "ON",
                 "STRATO_ENABLE_I18N":   "ON",
