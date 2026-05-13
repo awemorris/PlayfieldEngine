@@ -70,13 +70,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up dependencies
-        run: git submodule update --init
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
 
       - name: Install deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build mingw-w64
+          sudo apt-get install -y --no-install-recommends cmake ninja-build mingw-w64
 
       - name: Build
         run: |
@@ -385,6 +388,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
+
+      - name: Install apt deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison mingw-w64
+
       - name: Cache LLVM
         id: cache-llvm
         uses: actions/cache@v4
@@ -392,15 +406,7 @@ jobs:
           path: llvm-21
           key: llvm-21
 
-      - name: Install apt packages
-        run: git submodule update --init
-
-      - name: Install apt packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build flex bison mingw-w64
-
-      - name: Setup LLVM for Unity
+      - name: Install LLVM
         if: steps.cache-llvm.outputs.cache-hit != 'true'
         run: |
           curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-Linux-X64.tar.xz
@@ -430,7 +436,7 @@ jobs:
           mkdir -p out/lib/PS5
           mkdir -p out/lib/GameCoreXboxSeries
           mkdir -p out/lib/Common
-          cp build-unity-win64/strato.lib out/lib/x86_64/
+          cp build-unity-win64/libstrato.a out/lib/x86_64/
           cp build-unity-switch/libstrato.a out/lib/Switch/
           cp build-unity-ps5/libstrato.a out/lib/PS5/
           cp build-unity-xbox/strato.lib out/lib/GameCoreXboxSeries/
