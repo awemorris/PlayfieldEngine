@@ -762,13 +762,13 @@
             "generator":      "Ninja",
             "binaryDir":      "${sourceDir}/build-freebsd-x11",
             "cacheVariables": {
-                "PLAYFIELD_TARGET_FREEBSD":    "ON",
-                "PLAYFIELD_ENABLE_JIT":        "ON",
-                "PLAYFIELD_ENABLE_I18N":       "ON",
-                "PLAYFIELD_ENABLE_BIN":        "ON",
-                "PLAYFIELD_ENABLE_PACK":       "ON",
-                "PLAYFIELD_ENABLE_BCC":        "ON",
-                "PLAYFIELD_ENABLE_AOTC":       "ON"
+                "PLAYFIELD_TARGET_FREEBSD_X11": "ON",
+                "PLAYFIELD_ENABLE_JIT":         "ON",
+                "PLAYFIELD_ENABLE_I18N":        "ON",
+                "PLAYFIELD_ENABLE_BIN":         "ON",
+                "PLAYFIELD_ENABLE_PACK":        "ON",
+                "PLAYFIELD_ENABLE_BCC":         "ON",
+                "PLAYFIELD_ENABLE_AOTC":        "ON"
             }
         },
         {
