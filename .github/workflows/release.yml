@@ -52,7 +52,8 @@ jobs:
           cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
           cp out/build/windows-vs2022-x64/Release/strato.lib  build/native/lib/x64/
           cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
-          nuget pack resources/windows/StratoHAL.nuspec
+          cp resources/windows/StratoHAL.nuspec ./
+          nuget pack StratoHAL.nuspec
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
@@ -145,6 +146,7 @@ jobs:
           mkdir -p out
           mkdir -p out/usr/local/include/strato
           mkdir -p out/usr/local/lib
+          mkdir -p out/usr/local/lib/pkgconfig
           mkdir -p out/usr/local/share/cmake/Modules
           cp include/strato/strato.h out/usr/local/include/strato/
           cp include/strato/c89compat.h out/usr/local/include/strato/
@@ -153,7 +155,7 @@ jobs:
           cp -d build-linux-debian/libstrato.so* out/usr/local/lib/
           cp -d build-linux-debian/libstratopack.so out/usr/local/lib/
           cp resources/pkg-config/libstrato.pc out/usr/local/lib/pkgconfig/libstrato.pc
-          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/
+          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
           cd out
           tar ../libstrato-linux-x86_64.tar.gz *
           cd ..
@@ -295,6 +297,7 @@ jobs:
           ANDROID_JAR="${ANDROID_SDK_ROOT}/platforms/android-35/android.jar"
           mkdir classes
           javac -d classes -cp $ANDROID_JAR src/MainActivity.java
+          ls -l classes
 
       - name: Build AAR
         run: |
@@ -321,7 +324,7 @@ jobs:
           echo '{"export_libraries": [], "library_name": "libstrato"}' > aar_out/prefab/modules/strato/module.json
 
           cd aar_out
-          zip -r ../StratoHAL.aar .
+          zip -r ../StratoHAL.aar *
           cd ..
 
       - name: Upload artifact
