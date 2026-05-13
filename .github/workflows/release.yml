@@ -348,6 +348,7 @@ jobs:
           OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --build --preset openharmony-x86_64
 
       - name: Build tar.gz
+        run: |
           mkdir -p out
           mkdir -p out/src/main/cpp/third_party/StratoHAL/include/strato
           mkdir -p out/src/main/cpp/third_party/StratoHAL/lib/arm64-v8a
