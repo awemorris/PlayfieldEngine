@@ -783,7 +783,7 @@ if(STRATO_TARGET_WINDOWS95)
   target_include_directories(
     strato
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/res
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/windoes
   )
 endif()
 
