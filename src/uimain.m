@@ -56,7 +56,7 @@ static ViewController *theViewController;
 static BOOL isContinuousSwipeEnabled;
 
 // Callback
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 // Forward declaration.
 static void initGamepad(void);
@@ -151,7 +151,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
         exit(1);
     
     // Do a boot callback to acquire a screen configuration.
-    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callbak))
+    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
         exit(1);
     
     // Initialize the sound HAL.

@@ -70,8 +70,6 @@ import android.view.SurfaceHolder;
 import android.view.WindowManager.LayoutParams;
 import android.widget.LinearLayout;
 
-import androidx.annotation.RequiresApi;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;

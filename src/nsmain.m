@@ -69,7 +69,7 @@ static char *logFilePath;
 static bool releaseMode;
 
 // Callback.
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 // Forward declaration.
 static void checkBundleResource(int argc, const char *argv[]);

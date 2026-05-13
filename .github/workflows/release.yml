@@ -39,7 +39,14 @@ jobs:
 
       - name: Build nuget
         run: |
-          mkdir -p build/native/include/strato build/native/lib/x86 build/native/lib/x64 build/native/lib/arm64
+          mkdir build
+          mkdir build/native
+          mkdir build/native/include
+          mkdir build/native/include/strato
+          mkdir build/native/lib
+          mkdir build/native/lib/x86
+          mkdir build/native/lib/x64
+          mkdir build/native/lib/arm64
           cp include/strato/strato.h build/native/include/strato/
           cp include/strato/c89compat.h build/native/include/strato/
           cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
@@ -187,7 +194,7 @@ jobs:
           mkdir -p out/lib
           cp include/strato/strato.h out/include/strato/
           cp include/strato/c89compat.h out/include/strato/
-          cp build-linux/libstrato.a out/lib/
+          cp build-wasm/libstrato.a out/lib/
           cd out
           tar ../libstrato-wasm.tar.gz *
           cd ..
