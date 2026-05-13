@@ -175,6 +175,7 @@ jobs:
           cp build-wasm/libstrato.a libstrato-wasm.a
 
       - name: Build tar.gz
+        run: |
           mkdir -p out
           mkdir -p out/include/strato
           mkdir -p out/lib
