@@ -521,7 +521,7 @@ jobs:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: StratoHAL-${{ env.DATE }}-${{ env.SHORT_SHA }}
           files: |
-            windows/StratoHAL.nuget
+            windows/StratoHAL.1.0.0.nupkg
             mingw/libstrato-mingww64.tar.gz
             linux/libstrato-linux-x86_64.tar.gz
             wasm/libstrato-wasm.tar.gz
