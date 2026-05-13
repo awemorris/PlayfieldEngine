@@ -422,7 +422,6 @@ if(NOCT_ENABLE_INSTALL)
 
   install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/include/noct/noct.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/noct/aot.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/noct/c89compat.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/noct)
 
