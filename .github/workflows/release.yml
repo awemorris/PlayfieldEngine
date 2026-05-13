@@ -54,14 +54,13 @@ jobs:
           cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
           cp resources/windows/StratoHAL.nuspec ./
           nuget pack StratoHAL.nuspec
-          tree /f /a
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows
           path: |
-            *.nuget
+            StratoHAL.1.0.0.nupkg
           if-no-files-found: error
           retention-days: 7
 
