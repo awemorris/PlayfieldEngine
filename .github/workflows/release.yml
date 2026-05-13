@@ -430,7 +430,7 @@ jobs:
           mkdir -p out/lib/PS5
           mkdir -p out/lib/GameCoreXboxSeries
           mkdir -p out/lib/Common
-          cp unity-win64/libstrato.a out/lib/x86_64/
+          cp unity-win64/strato.lib out/lib/x86_64/
           cp unity-switch/libstrato.a out/lib/Switch/
           cp unity-ps5/libstrato.a out/lib/PS5/
           cp unity-xbox/strato.lib out/lib/GameCoreXboxSeries/
