@@ -29,6 +29,7 @@
  */
 
 #include <strato/strato.h>
+#include "csharp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,45 +48,45 @@ struct hal_wfile {
 };
 
 /* C# function pointers. */
-void cs_log_info(UNSAFEPTR(const char *) s);
-void cs_log_warn(UNSAFEPTR(const char *) s);
-void cs_log_error(UNSAFEPTR(const char *) s);
-void cs_log_out_of_memory(UNSAFEPTR(const char *) s);
-void cs_notify_image_update(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels);
-void cs_notify_image_free(int id);
-void cs_render_image_normal(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_add(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_sub(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha)
-void cs_render_image_dim(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_rule(int src_img, int rule_img, int threshold);
-void cs_render_image_melt(int src_img, int rule_img, int progress);
-void cs_render_image_cross(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha);
-void cs_render_image_3d_normal(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_3d_add(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_3d_sub(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_3d_dim(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-void cs_render_image_3d_cross(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
-void cs_reset_lacs_timer(UNSAFEPTR(uint64_t *) origin);
-uint64_t cs_get_lacs_timer_millisec(UNSAFEPTR(uint64_t *) origin);
-void cs_play_sound(int stream, UNSAFEPTR(void *) wave);
-void cs_stocs_sound(int stream);
-void cs_set_sound_volume(int stream, float vol);
-bool cs_is_sound_finished(int stream);
-bool cs_play_video(UNSAFEPTR(const char *) fname, bool is_skippable);
-void cs_stocs_video(void);
-bool cs_is_video_playing(void);
-bool cs_is_full_screen_supported(void);
-bool cs_is_full_screen_mode(void);
-void cs_enter_full_screen_mode(void);
-void cs_leave_full_screen_mode(void);
-void cs_get_system_language(UNSAFEPTR(char *) dst, int len);
-void cs_set_continuous_swipe_enabled(bool is_enabled);
-bool cs_check_file_exist(UNSAFEPTR(const char *) file_name);
-UNSAFEPTR(void *) cs_get_file_contents(UNSAFEPTR(const char *) file_name, UNSAFEPTR(int *) len);
-void cs_open_save_file(UNSAFEPTR(const char *) file_name);
-void cs_write_save_file(int b);
-void cs_close_save_file(void);
-void cs_free_shared(UNSAFEPTR(void *) p);
+void (*cs_log_info)(UNSAFEPTR(const char *) s);
+void (*cs_log_warn)(UNSAFEPTR(const char *) s);
+void (*cs_log_error)(UNSAFEPTR(const char *) s);
+void (*cs_log_out_of_memory)(UNSAFEPTR(const char *) s);
+void (*cs_notify_image_update)(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels);
+void (*cs_notify_image_free)(int id);
+void (*cs_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_rule)(int src_img, int rule_img, int threshold);
+void (*cs_render_image_melt)(int src_img, int rule_img, int progress);
+void (*cs_render_image_cross)(int src1_img, int src2_img, int src1_left, int src1_top, int src2_left, int src2_top, int alpha);
+void (*cs_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
+void (*cs_render_image_3d_cross)(int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha);
+void (*cs_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin);
+uint64_t (*cs_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin);
+void (*cs_play_sound)(int stream, UNSAFEPTR(void (**) wave));
+void (*cs_stop_sound)(int stream);
+void (*cs_set_sound_volume)(int stream, float vol);
+bool (*cs_is_sound_finished)(int stream);
+bool (*cs_play_video)(UNSAFEPTR(const char *) fname, bool is_skippable);
+void (*cs_stop_video)(void);
+bool (*cs_is_video_playing)(void);
+bool (*cs_is_full_screen_supported)(void);
+bool (*cs_is_full_screen_mode)(void);
+void (*cs_enter_full_screen_mode)(void);
+void (*cs_leave_full_screen_mode)(void);
+void (*cs_get_system_language)(UNSAFEPTR(char *) dst, int len);
+void (*cs_set_continuous_swipe_enabled)(bool is_enabled);
+bool (*cs_check_file_exist)(UNSAFEPTR(const char *) file_name);
+UNSAFEPTR(void *) (*cs_get_file_contents)(UNSAFEPTR(const char *) file_name, UNSAFEPTR(int *) len);
+void (*cs_open_save_file)(UNSAFEPTR(const char *) file_name);
+void (*cs_write_save_file)(int b);
+void (*cs_close_save_file)(void);
+void (*cs_free_shared)(UNSAFEPTR(void (**) p));
 
 /*
  * Initializer.
@@ -108,7 +109,7 @@ void init_hal_func_table(
 	void (*p_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void (*p_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
 	void (*p_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void (*p_render_image_3d_cross)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha),
+	void (*p_render_image_3d_cross)(int src1_img, int src2_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha),
 	void (*p_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin),
 	uint64_t (*p_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin),
 	void (*p_play_sound)(int stream, UNSAFEPTR(void *) wave),
@@ -135,8 +136,6 @@ void init_hal_func_table(
 	cs_log_warn = p_log_warn;
 	cs_log_error = p_log_error;
 	cs_log_out_of_memory = p_log_out_of_memory;
-	cs_make_save_directory = p_make_save_directory;
-	cs_make_real_path = p_make_real_path;
 	cs_notify_image_update = p_notify_image_update;
 	cs_notify_image_free = p_notify_image_free;
 	cs_render_image_normal = p_render_image_normal;
@@ -186,7 +185,7 @@ static char *window_title;
 int
 on_event_boot(int *w, int *h)
 {
-	if (!hal_bootstrap(&screen_width, &screen_height, &window_title, &hal_callback))
+	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
 		return 0;
 
 	*w = screen_width;
@@ -213,8 +212,7 @@ on_event_frame(void)
 			return 0;
 	
 	if (hal_callback.on_render != NULL)
-		if (!hal_callback.on_render())
-			return 0;
+		hal_callback.on_render();
 
 	return 1;
 }
@@ -682,24 +680,24 @@ hal_render_image_3d_cross(
 	int alpha)
 {
 	cs_render_image_3d_cross(src1_img->id,
-				   src2_img->id,
-				   src1_x1,
-				   src1_y1,
-				   src1_x2,
-				   src1_y2,
-				   src1_x3,
-				   src1_y3,
-				   src1_x4,
-				   src1_y4,
-				   src2_x1,
-				   src2_y1,
-				   src2_x2,
-				   src2_y2,
-				   src2_x3,
-				   src2_y3,
-				   src2_x4,
-				   src2_y4,
-				   alpha);
+				 src2_img->id,
+				 src1_x1,
+				 src1_y1,
+				 src1_x2,
+				 src1_y2,
+				 src1_x3,
+				 src1_y3,
+				 src1_x4,
+				 src1_y4,
+				 src2_x1,
+				 src2_y1,
+				 src2_x2,
+				 src2_y2,
+				 src2_x3,
+				 src2_y3,
+				 src2_x4,
+				 src2_y4,
+				 alpha);
 }
 
 void
@@ -827,17 +825,7 @@ bool
 hal_check_file_exist(
 	const char *file)
 {
-	char *path;
-	bool ret;
-
-	path = make_real_path(file);
-	if (path == NULL)
-		return false;
-
-	ret = cs_check_file_exist((UNSAFEPTR(char *))path);
-	free(path);
-
-	if (!ret)
+	if (!cs_check_file_exist((UNSAFEPTR(char *))file))
 		return false;
 
 	return true;
@@ -849,7 +837,6 @@ hal_open_rfile(
 	struct hal_rfile **rf)
 {
 	UNSAFEPTR(char *) p;
-	char *path;
 	int len;
 
 	*rf = malloc(sizeof(struct hal_rfile));
@@ -858,16 +845,7 @@ hal_open_rfile(
 		return false;
 	}
 
-	path = make_real_path(file);
-	if (path == NULL) {
-		free(*rf);
-		return false;
-	}
-
-	p = cs_get_file_contents((UNSAFEPTR(char *))path, (UNSAFEPTR(int *))&len);
-	free(path);
-
-	if (p == 0) {
+	if (!cs_get_file_contents((UNSAFEPTR(char *))file, (UNSAFEPTR(int *))&len)) {
 		free(*rf);
 		return false;
 	}
