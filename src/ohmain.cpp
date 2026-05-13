@@ -525,8 +525,11 @@ bool onFrame(void)
 {
     opengl_start_rendering();
 
-    if (!hal_callback.on_frame())
+    if (!hal_callback.on_update())
         return false;
+
+    hal_callback.on_render();
+   
 
     opengl_end_rendering();
 

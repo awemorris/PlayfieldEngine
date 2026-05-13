@@ -52,7 +52,7 @@ jobs:
           cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
           cp out/build/windows-vs2022-x64/Release/strato.lib  build/native/lib/x64/
           cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
-          nuget pack StratoHAL.nuspec
+          nuget pack resources/windows/StratoHAL.nuspec
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
@@ -196,7 +196,7 @@ jobs:
           cp include/strato/c89compat.h out/include/strato/
           cp build-wasm/libstrato.a out/lib/
           cd out
-          tar ../libstrato-wasm.tar.gz *
+          tar czf ../libstrato-wasm.tar.gz *
           cd ..
 
       - name: Upload Wasm

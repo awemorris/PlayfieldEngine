@@ -2,7 +2,7 @@
 
 /*
  * StratoHAL
- * Unity Plugin's C# part.
+ * HAL for Unity C#
  */
 
 /*-
@@ -38,7 +38,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
 
-public class PlayfieldScript : MonoBehaviour
+public class StratoScript : MonoBehaviour
 {
     //
     // For Rendering
@@ -57,6 +57,13 @@ public class PlayfieldScript : MonoBehaviour
     private GameObject _audio4;
 	private VideoPlayer _videoPlayer;
     private bool _isVideoPlaying;
+
+	//
+	// Constructor
+	//
+	StratoScript()
+	{
+	}
 
     //
     // On awake
@@ -253,8 +260,6 @@ public class PlayfieldScript : MonoBehaviour
                                                       IntPtr log_warn,
                                                       IntPtr log_error,
                                                       IntPtr log_out_of_memory,
-                                                      IntPtr make_save_directory,
-                                                      IntPtr make_real_path,
                                                       IntPtr notify_image_update,
                                                       IntPtr notify_image_free,
                                                       IntPtr render_image_normal,
@@ -284,13 +289,14 @@ public class PlayfieldScript : MonoBehaviour
                                                       IntPtr leave_full_screen_mode,
                                                       IntPtr get_system_language,
                                                       IntPtr set_continuous_swipe_enabled,
-                                                      IntPtr free_shared,
                                                       IntPtr check_file_exist,
                                                       IntPtr get_file_contents,
                                                       IntPtr open_save_file,
                                                       IntPtr write_save_file,
-                                                      IntPtr close_save_file);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate int delegate_on_event_boot(byte *dummy1, byte *dummy2, byte *dummy3);
+                                                      IntPtr close_save_file,
+                                                      IntPtr free_shared);
+													  
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate int delegate_on_event_boot();
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate int delegate_on_event_start();
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate int delegate_on_event_frame();
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] unsafe delegate void delegate_on_event_key_press(int key);
@@ -756,7 +762,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_init_hal_func_table))]
     static extern unsafe void init_hal_func_table(
@@ -803,15 +809,15 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_boot))]
-    static extern unsafe int on_event_boot(byte *dummy1, byte *dummy2, byte *dummy3);
+    static extern unsafe int on_event_boot(int *w, int *h);
 
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_start))]
     static extern unsafe int on_event_start();
@@ -819,7 +825,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_frame))]
     static extern unsafe int on_event_frame();
@@ -827,7 +833,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_press))]
     static extern unsafe void on_event_key_press(int key);
@@ -835,7 +841,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_key_release))]
     static extern unsafe void on_event_key_release(int key);
@@ -843,7 +849,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_press))]
     static extern unsafe void on_event_mouse_press(int button, int x, int y);
@@ -851,7 +857,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_release))]
     static extern unsafe void on_event_mouse_release(int button, int x, int y);
@@ -859,7 +865,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_mouse_move))]
     static extern unsafe void on_event_mouse_move(int x, int y);
@@ -867,7 +873,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_touch_cancel))]
     static extern unsafe void on_event_touch_cancel();
@@ -875,23 +881,23 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_down))]
-    static extern unsafe void on_event_swipe_down();
+    static extern unsafe void on_event_swipe_down(float speed, float amount);
 
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_on_event_swipe_up))]
-    static extern unsafe void on_event_swipe_up();
+    static extern unsafe void on_event_swipe_up(float speed, float amount);
 
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_get_wave_samples))]
     public static extern unsafe int get_wave_samples(byte *w, uint *buf, int samples);
@@ -899,7 +905,7 @@ public class PlayfieldScript : MonoBehaviour
 #if HAL_UNITY_SWITCH || HAL_UNITY_PS5 || HAL_UNITY_GAMECORE_XBOXSERIES
     [DllImport("__Internal")]
 #else
-    [DllImport("libplayfield")]
+    [DllImport("libstrato")]
 #endif
     [AOT.MonoPInvokeCallback(typeof(delegate_is_wave_eos))]
     public static extern unsafe bool is_wave_eos(byte *w);
@@ -933,25 +939,6 @@ public class PlayfieldScript : MonoBehaviour
     static unsafe void log_out_of_memory()
     {
         Debug.Log("Out of memory.");
-    }
-
-    [AOT.MonoPInvokeCallback(typeof(delegate_make_save_directory))]
-    static unsafe void make_save_directory()
-    {
-        // Do nothing.
-    }
-
-    [AOT.MonoPInvokeCallback(typeof(delegate_make_real_path))]
-    static unsafe void make_real_path(byte *fname, byte *dst, int len)
-    {
-        string Path = BytePtrToString(fname);
-
-        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(Path);
-        for (int i = 0; i < bytes.Length && i < len; i++)
-        {
-            dst[i] = bytes[i];
-        }
-        dst[bytes.Length] = 0;
     }
 
     [AOT.MonoPInvokeCallback(typeof(delegate_notify_image_update))]

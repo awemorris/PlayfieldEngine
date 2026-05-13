@@ -522,11 +522,11 @@ static void initGamepad(void)
 	int deltaY = touchEndY - _touchStartY;
 	if (deltaY > FLICK_Y_DISTANCE) {
         hal_callback.on_touch_cancel();
-        hal_callback.on_swipe_down();
+        hal_callback.on_swipe_down(0, 0);
         return;
 	} else if (deltaY < -FLICK_Y_DISTANCE) {
         hal_callback.on_touch_cancel();
-        hal_callback.on_swipe_up();
+        hal_callback.on_swipe_up(0, 0);
         return;
     }
 

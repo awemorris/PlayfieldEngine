@@ -114,6 +114,7 @@ public class MainActivity extends Activity {
     private native void nativeOnStart();
     private native int nativeGetScreenWidth();
     private native int nativeGetScreenHeight();
+    private native String nativeGetTitle();
     private native void nativeOnRestart();
     private native void nativeOnStop();
     private native boolean nativeOnFrame();
@@ -282,7 +283,7 @@ public class MainActivity extends Activity {
 
         if(!isFinished) {
             synchronized (syncObj) {
-                nativeStop();
+                nativeOnStop();
             }
             isFinished = true;
         }
@@ -405,7 +406,7 @@ public class MainActivity extends Activity {
 			try {
 				boolean ret = nativeOnFrame();
 				if(!ret) {
-					nativeStop();
+					nativeOnStop();
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 						finishAndRemoveTask();
 					isFinished = true;
