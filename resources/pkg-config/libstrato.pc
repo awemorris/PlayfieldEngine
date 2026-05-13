@@ -1,0 +1,32 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: StratoHAL
+Description: Strato Hardware Abstraction Layer with extensive dependencies
+Version: 1.0.0
+Cflags: -I${includedir}/strato
+Libs: -L${libdir} -lstrato
+
+Requires.private: \
+    zlib \
+    libpng \
+    libjpeg \
+    libwebp \
+    ogg \
+    vorbis \
+    vorbisfile \
+    freetype2 \
+    libbrotlicommon \
+    libbrotlidec \
+    alsa \
+    gstreamer-1.0 \
+    gstreamer-plugins-base-1.0 \
+    x11 \
+    xpm \
+    wayland-client \
+    wayland-protocols \
+    egl \
+    glesv2 \
+    libdecor-0

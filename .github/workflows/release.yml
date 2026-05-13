@@ -1,0 +1,519 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: x86
+        run: |
+          cmake --preset windows-vs2022-x86
+          cmake --build --preset windows-vs2022-x86 --config Release --parallel
+          cp out/build/windows-vs2022-x86/Release/strato.lib strato-x86.lib
+
+      - name: x64
+        run: |
+          cmake --preset windows-vs2022-x64
+          cmake --build --preset windows-vs2022-x64 --config Release --parallel
+          cp out/build/windows-vs2022-x64/Release/strato.lib strato-x64.lib
+
+      - name: arm64
+        run: |
+          cmake --preset windows-vs2022-arm64
+          cmake --build --preset windows-vs2022-arm64 --config Release --parallel
+          cp out/build/windows-vs2022-arm64/Release/strato.lib strato-arm64.lib
+
+      - name: Build nuget
+        run: |
+          mkdir -p build/native/include/strato build/native/lib/x86 build/native/lib/x64 build/native/lib/arm64
+          cp include/strato/strato.h build/native/include/strato/
+          cp include/strato/c89compat.h build/native/include/strato/
+          cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
+          cp out/build/windows-vs2022-x64/Release/strato.lib  build/native/lib/x64/
+          cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
+          nuget pack StratoHAL.nuspec
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            StratoHAL.nuget
+          if-no-files-found: error
+          retention-days: 7
+
+  build-mingw:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build mingw-w64
+
+      - name: Build
+        run: |
+          cmake --preset windows-mingw-x86_64
+          cmake --build --preset windows-mingw-x86_64
+          cmake --preset windows-mingw-x86
+          cmake --build --preset windows-mingw-x86
+
+      - name: Make tar.gz
+        run: |
+          mkdir -p out
+
+          mkdir -p out/i686-w64-mingw32/include/strato
+          mkdir -p out/i686-w64-mingw32/lib/
+          cp include/strato/strato.h out/i686-w64-mingw32/include/strato
+          cp include/strato/c89compat.h out/i686-w64-mingw32/include/strato
+          cp build-mingw-x86/libstrato.a out/i686-w64-mingw32/lib/
+
+          mkdir -p out/x86_64-w64-mingw32/include/strato
+          mkdir -p out/x86_64-w64-mingw32/lib/
+          cp include/strato/strato.h out/x86_64-w64-mingw32/include/strato
+          cp include/strato/c89compat.h out/x86_64-w64-mingw32/include/strato
+          cp build-mingw-x86_64/libstrato.a out/x86_64-w64-mingw32/lib/
+
+          cd out
+          tar czf ../libstrato-mingww64.tar.gz *
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mingw
+          path: |
+            libstrato-mingww64.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  build-linux:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git cmake ninja-build build-essential libasound2-dev libx11-dev libxpm-dev libwayland-dev wayland-protocols libegl1-mesa-dev libegl-dev libgles-dev libwayland-client0 libwayland-egl1 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-x libdecor-0-dev
+
+      - name: Build static
+        run: |
+          cmake --preset linux
+          cmake --build --preset linux
+
+      - name: Build shared
+        run: |
+          cmake --preset linux-debian
+          cmake --build --preset linux-debian
+
+      - name: Build tar.gz
+        run: |
+          mkdir -p out
+          mkdir -p out/usr/local/include/strato
+          mkdir -p out/usr/local/lib
+          mkdir -p out/usr/local/share/cmake/Modules
+          cp include/strato/strato.h out/usr/local/include/strato/
+          cp include/strato/c89compat.h out/usr/local/include/strato/
+          cp build-linux/libstrato.a out/usr/local/lib/
+          cp build-linux/libstratopack.a out/usr/local/lib/
+          cp -d build-linux-debian/libstrato.so* out/usr/local/lib/
+          cp -d build-linux-debian/libstratopack.so out/usr/local/lib/
+          cp resources/pkg-config/libstrato.pc out/usr/local/lib/pkgconfig/libstrato.pc
+          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/
+          cd out
+          tar ../libstrato-linux-x86_64.tar.gz *
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: |
+            libstrato-linux-x86_64.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  build-wasm:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Setup for Wasm
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Build for Wasm
+        run: |
+          cmake --preset wasm
+          cmake --build --preset wasm
+          cp build-wasm/libstrato.a libstrato-wasm.a
+
+      - name: Build tar.gz
+          mkdir -p out
+          mkdir -p out/include/strato
+          mkdir -p out/lib
+          cp include/strato/strato.h out/include/strato/
+          cp include/strato/c89compat.h out/include/strato/
+          cp build-linux/libstrato.a out/lib/
+          cd out
+          tar ../libstrato-wasm.tar.gz *
+          cd ..
+
+      - name: Upload Wasm
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm
+          path: |
+            libstrato-wasm.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build macOS arm64
+        run: |
+          cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=arm64
+          cmake --build --preset macos
+          mv build-macos build-macos-arm64
+
+      - name: Build macOS x86_64
+        run: |
+          cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=x86_64
+          cmake --build --preset macos
+          mv build-macos build-macos-x86_64
+
+      - name: Build iOS device
+        run: |
+          cmake --preset ios-device
+          cmake --build --preset ios-device
+
+      - name: Build iOS simulator
+        run: |
+          cmake --preset ios-simulator
+          cmake --build --preset ios-simulator
+
+      - name: Build Universal Binary 2
+        run: |
+          lipo -create -output libstrato.a build-macos-arm64/libstrato.a build-macos-x86_64/libstrato.a
+
+      - name: Build xcframework
+        run: |
+          xcodebuild -create-xcframework \
+              -library libstrato.a -headers include \
+              -library build-ios-device/libstrato.a -headers include \
+              -library build-ios-simulator/libstrato.a -headers include \
+              -output StratoHAL.xcframework
+          tar czf StratoHAL.xcframework.tar.gz StratoHAL.xcframework
+
+      - name: Upload macOS
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: |
+            StratoHAL.xcframework.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison
+
+      - name: Setup for Android
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r28c
+
+      - name: Build for Android
+        run: |
+          cmake --preset android-arm64
+          cmake --build --preset android-arm64
+          cmake --preset android-armv7
+          cmake --build --preset android-armv7
+          cmake --preset android-x86_64
+          cmake --build --preset android-x86_64
+          cmake --preset android-x86
+          cmake --build --preset android-x86
+          cmake --preset android-riscv64
+          cmake --build --preset android-riscv64
+
+      - name: Build class files
+        run: |
+          ANDROID_JAR="${ANDROID_SDK_ROOT}/platforms/android-35/android.jar"
+          mkdir classes
+          javac -d classes -cp $ANDROID_JAR src/MainActivity.java
+
+      - name: Build AAR
+        run: |
+          mkdir -p aar_out/prefab/modules/strato/include
+          mkdir -p aar_out/prefab/modules/strato/android.arm64-v8a
+          mkdir -p aar_out/prefab/modules/strato/android.armeabi-v7a
+          mkdir -p aar_out/prefab/modules/strato/android.x86_64
+          mkdir -p aar_out/prefab/modules/strato/android.x86
+          mkdir -p aar_out/prefab/modules/strato/android.riscv64
+
+          cd classes
+          jar cvf ../aar_out/classes.jar *.class
+          cd ..
+
+          cp -r include/* aar_out/prefab/modules/strato/include/
+          cp build-android-arm64/libstrato.a aar_out/prefab/modules/strato/android.arm64-v8a/
+          cp build-android-armv7/libstrato.a aar_out/prefab/modules/strato/android.armeabi-v7a/
+          cp build-android-x86_64/libstrato.a aar_out/prefab/modules/strato/android.x86_64/
+          cp build-android-x86/libstrato.a aar_out/prefab/modules/strato/android.x86/
+          cp build-android-riscv64/libstrato.a aar_out/prefab/modules/strato/android.riscv64/
+
+          echo '<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.stratohal" />' > aar_out/AndroidManifest.xml
+          echo '{"schema_version": 2, "name": "strato", "dependencies": []}' > aar_out/prefab/prefab.json
+          echo '{"export_libraries": [], "library_name": "libstrato"}' > aar_out/prefab/modules/strato/module.json
+
+          cd aar_out
+          zip -r ../StratoHAL.aar .
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: |
+            StratoHAL.aar
+          if-no-files-found: error
+          retention-days: 7
+
+  build-openharmony:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: git submodule update --init
+
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison
+
+      - name: Download OpenHarmony SDK
+        run: |
+          echo "Downloaing openharmony-native.tar.gz"
+          wget -q https://noctvm.io/ci/openharmony-native.tar.gz
+          tar xzf openharmony-native.tar.gz
+
+      - name: Build for OpenHarmony
+        run: |
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --preset openharmony-arm64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --build --preset openharmony-arm64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --preset openharmony-x86_64
+          OH_NATIVE_SDK_ROOT="$PWD/openharmony-sdk-native" cmake --build --preset openharmony-x86_64
+
+      - name: Build tar.gz
+          mkdir -p out
+          mkdir -p out/src/main/cpp/third_party/StratoHAL/include/strato
+          mkdir -p out/src/main/cpp/third_party/StratoHAL/lib/arm64-v8a
+          mkdir -p out/src/main/cpp/third_party/StratoHAL/lib/x86_64
+          cp include/strato/strato.h out/src/main/cpp/third_party/StratoHAL/include/strato/
+          cp include/strato/c89compat.h out/src/main/cpp/third_party/StratoHAL/include/strato/
+          cp build-openharmony-arm64/libstrato.a out/src/main/cpp/third_party/StratoHAL/lib/arm64-v8a/
+          cp build-openharmony-x86_64/libstrato.a out/src/main/cpp/third_party/StratoHAL/lib/x86_64/
+          cp resources/openharmony/FindStratoHAL.cmake out/src/main/cpp/
+          cd out
+          tar ../libstrato-openharmony.tar.gz *
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openharmony
+          path: |
+            libstrato-openharmony.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+  build-unity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache LLVM
+        id: cache-llvm
+        uses: actions/cache@v4
+        with:
+          path: llvm-21
+          key: llvm-21
+
+      - name: Install apt packages
+        run: git submodule update --init
+
+      - name: Install apt packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build flex bison mingw-w64
+
+      - name: Setup LLVM for Unity
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
+        run: |
+          curl -L -o llvm.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-Linux-X64.tar.xz
+          mkdir llvm-21 && tar -xJf llvm.tar.xz -C llvm-21 --strip-components=1
+
+      - name: Setup PATH for LLVM
+        run: |
+          echo "`pwd`/llvm-21/bin" >> $GITHUB_PATH
+          clang --version
+
+      - name: Build for Unity
+        run: |
+          cmake --preset unity-win64
+          cmake --build --preset unity-win64
+          cmake --preset unity-switch
+          cmake --build --preset unity-switch
+          cmake --preset unity-ps5
+          cmake --build --preset unity-ps5
+          cmake --preset unity-xbox
+          cmake --build --preset unity-xbox
+
+      - name: Make a zip
+        run: |
+          mkdir -p out/include/strato/strato
+          mkdir -p out/lib/x86_64
+          mkdir -p out/lib/Switch
+          mkdir -p out/lib/PS5
+          mkdir -p out/lib/GameCoreXboxSeries
+          mkdir -p out/lib/Common
+          cp unity-win64/libstrato.a out/lib/x86_64/
+          cp unity-switch/libstrato.a out/lib/Switch/
+          cp unity-ps5/libstrato.a out/lib/PS5/
+          cp unity-xbox/strato.lib out/lib/GameCoreXboxSeries/
+          cd out
+          zip -r ../libstrato-unity.zip *
+          cd ..
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-win64
+          path: |
+            libstrato-unity.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  zip:
+    needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-android, build-openharmony, build-unity]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows
+          path: windows
+
+      - name: Download mingw artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mingw
+          path: mingw
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos
+          path: macos
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux
+          path: linux
+
+      - name: Download wasm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm
+          path: wasm
+
+      - name: Download Android artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android
+          path: android
+
+      - name: Download OpenHarmony artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: openharmony
+          path: openharmony
+
+      - name: Download Unity artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unity
+          path: unity
+
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          name: StratoHAL-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          files: |
+            windows/StratoHAL.nuget
+            mingw/libstrato-mingww64.tar.gz
+            linux/libstrato-linux-x86_64.tar.gz
+            wasm/libstrato-wasm.tar.gz
+            macos/StratoHAL.xcframework.tar.gz
+            android/StratoHAL.aar
+            openharmony/libstrato-openharmony.tar.gz
+
+          body: |
+            These is not an official release.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

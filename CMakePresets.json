@@ -193,6 +193,7 @@
                 "STRATO_ENABLE_I18N_LIBINTL": "ON",
                 "STRATO_ENABLE_SHARED":       "ON",
                 "STRATO_ENABLE_DIST":         "ON",
+                "STRATO_ENABLE_INSTALL":      "ON",
                 "STRATO_ENABLE_PACK":         "ON"
             }
         },
@@ -300,7 +301,6 @@
             "binaryDir":      "${sourceDir}/build-android-x86",
             "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
-                "CMAKE_SHARED_LINKER_FLAGS":   "-Wl,--hash-style=both -Wl,-z,max-page-size=16384",
                 "ANDROID_PLATFORM":            "30",
                 "ANDROID_ABI":                 "x86",
                 "STRATO_TARGET_ANDROID":       "ON",
@@ -314,7 +314,6 @@
             "binaryDir":      "${sourceDir}/build-android-x86_64",
             "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
-                "CMAKE_SHARED_LINKER_FLAGS":   "-Wl,--hash-style=both -Wl,-z,max-page-size=16384",
                 "ANDROID_PLATFORM":            "30",
                 "ANDROID_ABI":                 "x86_64",
                 "STRATO_TARGET_ANDROID":       "ON",
@@ -328,7 +327,6 @@
             "binaryDir":      "${sourceDir}/build-android-armv7",
             "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
-                "CMAKE_SHARED_LINKER_FLAGS":   "-Wl,--hash-style=both -Wl,-z,max-page-size=16384",
                 "ANDROID_PLATFORM":            "30",
                 "ANDROID_ABI":                 "armeabi-v7a",
                 "STRATO_TARGET_ANDROID":       "ON",
@@ -342,7 +340,6 @@
             "binaryDir":      "${sourceDir}/build-android-arm64",
             "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
-                "CMAKE_SHARED_LINKER_FLAGS":   "-Wl,--hash-style=both -Wl,-z,max-page-size=16384",
                 "ANDROID_PLATFORM":            "30",
                 "ANDROID_ABI":                 "arm64-v8a",
                 "STRATO_TARGET_ANDROID":       "ON",
@@ -356,11 +353,10 @@
             "binaryDir":      "${sourceDir}/build-android-riscv64",
             "toolchainFile":  "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
-                "CMAKE_SHARED_LINKER_FLAGS":   "-Wl,--hash-style=both -Wl,-z,max-page-size=16384",
                 "ANDROID_PLATFORM":            "30",
                 "ANDROID_ABI":                 "riscv64",
                 "STRATO_TARGET_ANDROID":       "ON",
-                "STRATO_ENABLE_SHARED":        "ON"
+                "STRATO_ENABLE_STATIC":        "ON"
             }
         },
         {

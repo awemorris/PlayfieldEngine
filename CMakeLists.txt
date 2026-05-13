@@ -1247,6 +1247,13 @@ if(STRATO_TARGET_GENERICUNIX)
   )
 endif()
 
+# Android
+if(STRATO_TARGET_ANDROID)
+  set(CMAKE_SHARED_LINKER_FLAGS
+      "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=both -Wl,-z,max-page-size=16384"
+      CACHE STRING "" FORCE)
+endif()
+
 # GDK
 if(   STRATO_TARGET_GDK_WINDOWS
    OR STRATO_TARGET_GDK_XBOX_XS)
@@ -1358,9 +1365,9 @@ endif()
 if(STRATO_ENABLE_INSTALL)
   include(GNUInstallDirs)
   install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/stratohal/platform.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/stratohal/c89compat.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/stratohal)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/strato/strato.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/strato/c89compat.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/strato)
   install(TARGETS strato RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
   install(TARGETS stratopack RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 

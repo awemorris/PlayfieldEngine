@@ -12,8 +12,8 @@ include_directories(${NATIVERENDER_ROOT_PATH}
                     ${NATIVERENDER_ROOT_PATH}/include)
 
 set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../libs)
-add_library(suika3 STATIC IMPORTED)
-set_target_properties(suika3 PROPERTIES IMPORTED_LOCATION ${LIBS_DIR}/${OHOS_ARCH}/libsuika3.a)
+add_library(strato STATIC IMPORTED)
+set_target_properties(strato PROPERTIES IMPORTED_LOCATION ${LIBS_DIR}/${OHOS_ARCH}/libstrato.a)
 
 add_library(engine SHARED napi_init.cpp)
 target_link_libraries(
