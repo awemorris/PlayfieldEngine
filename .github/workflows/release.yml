@@ -447,7 +447,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: unity-win64
+          name: unity
           path: |
             libstrato-unity.zip
           if-no-files-found: error
