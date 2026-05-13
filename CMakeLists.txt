@@ -597,7 +597,7 @@ if(STRATO_TARGET_UNITY)
     src/image.c
     src/glyph.c
     src/wave.c
-    src/halwrap.c
+    src/csharp.c
   )
 endif()
 
