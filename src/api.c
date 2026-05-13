@@ -37,7 +37,7 @@
 #include "vm.h"
 
 #include <noct/noct.h>
-#include <stratohal/platform.h>
+#include <strato/strato.h>
 
 #include <stdio.h>
 #include <stdlib.h>
