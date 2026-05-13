@@ -1,7 +1,7 @@
 /* -*- tab-width: 8; indent-tabs-mode: t; -*- */
 
 /*
- * StratoHAL
+ * Strato HAL
  * Main code for NEC PC-9800 series (DOS/4G)
  */
 
@@ -29,7 +29,7 @@
  */
 
 /* HAL */
-#include <stratohal/stratohal.h>	/* Public Interface */
+#include <strato/strato.h>	/* Public Interface */
 #include "stdfile.h"		/* Standard C File Implementation */
 
 /* Standard C */

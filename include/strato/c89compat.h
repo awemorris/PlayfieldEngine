@@ -42,44 +42,44 @@ extern "C" {
  * Here, we define two macros that indicates the target architecture
  * and the byte order.
  *
- * |Macro               |Architecture           |
- * |--------------------|-----------------------|
- * |HAL_ARCH_X86        |x86 32-bit             |
- * |HAL_ARCH_X86_64     |x86 64-bit             |
- * |HAL_ARCH_ARM32      |ARMv7                  |
- * |HAL_ARCH_ARM64      |Armv8 / Armv9          |
- * |HAL_ARCH_PPC32      |PowerPC 32-bit         |
- * |HAL_ARCH_PPC64      |PowerPC 64-bit / POWER |
- * |HAL_ARCH_MIPS32     |MIPS 32-bit            |
- * |HAL_ARCH_MIPS64     |MIPS 64-bit            |
- * |HAL_ARCH_RISCV32    |RISC-V 32-bit          |
- * |HAL_ARCH_RISCV64    |RISC-V 64-bit          |
+ * | Macro              | Architecture           |
+ * |--------------------|------------------------|
+ * | HAL_ARCH_X86       | x86 32-bit             |
+ * | HAL_ARCH_X86_64    | x86 64-bit             |
+ * | HAL_ARCH_ARM32     | ARMv5-7                |
+ * | HAL_ARCH_ARM64     | Armv8-9                |
+ * | HAL_ARCH_PPC32     | PowerPC 32-bit         |
+ * | HAL_ARCH_PPC64     | PowerPC 64-bit / POWER |
+ * | HAL_ARCH_MIPS32    | MIPS 32-bit            |
+ * | HAL_ARCH_MIPS64    | MIPS 64-bit            |
+ * | HAL_ARCH_RISCV32   | RISC-V 32-bit          |
+ * | HAL_ARCH_RISCV64   | RISC-V 64-bit          |
  *
- * |Macro               |Byte-Order             |
- * |--------------------|-----------------------|
- * |HAL_ARCH_LE         |Little Endian          |
- * |HAL_ARCH_BE         |Big Endian             |
+ * | Macro       | Byte-Order             |
+ * |-------------|------------------------|
+ * | HAL_ARCH_LE | Little Endian          |
+ * | HAL_ARCH_BE | Big Endian             |
  */
 
+/* Detect the architecture. */
 #if (defined(__i386__) && !defined(__x86_64__)) || defined(_M_IX86)
 
 /* x86 */
 #define HAL_ARCH_X86
-#define HAL_ARCH_LE		/* Always LE */
+#define HAL_ARCH_LE	/* Always LE */
 
 #elif defined(__x86_64__) || defined(_M_X64)
 
 /* x86_64 */
 #define HAL_ARCH_X86_64
-#define HAL_ARCH_LE		/* Always LE */
+#define HAL_ARCH_LE	/* Always LE */
 
 #elif defined(__aarch64__) || defined(_M_ARM64)
 
 /* Arm64 */
 #define HAL_ARCH_ARM64
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define HAL_ARCH_BE	/* Can be BE*/
+#define HAL_ARCH_BE	/* May be BE*/
 #else
 #define HAL_ARCH_LE	/* Default, always LE on MSVC */
 #endif
@@ -88,9 +88,8 @@ extern "C" {
 
 /* Arm32 */
 #define HAL_ARCH_ARM32
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define HAL_ARCH_BE	/* Can be BE */
+#define HAL_ARCH_BE	/* May be BE */
 #else
 #define HAL_ARCH_LE	/* Default, always LE on MSVC */
 #endif
@@ -99,9 +98,8 @@ extern "C" {
 
 /* PowerPC 64 / POWER */
 #define HAL_ARCH_PPC64
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define HAL_ARCH_BE	/* Can be BE optionally */
+#define HAL_ARCH_BE	/* May be BE optionally */
 #else
 #define HAL_ARCH_LE	/* Default, no MSVC support */
 #endif
@@ -110,9 +108,8 @@ extern "C" {
 
 /* PowerPC */
 #define HAL_ARCH_PPC32
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define HAL_ARCH_LE	/* Can be LE optionally */
+#define HAL_ARCH_LE	/* May be LE optionally */
 #else
 #define HAL_ARCH_BE	/* Default, always BE on MSVC */
 #endif
@@ -121,9 +118,8 @@ extern "C" {
 
 /* MIPS64 */
 #define HAL_ARCH_MIPS64
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define HAL_ARCH_LE	/* Can be LE */
+#define HAL_ARCH_LE	/* May be LE */
 #else
 #define HAL_ARCH_BE	/* Default, no MSVC support */
 #endif
@@ -132,9 +128,8 @@ extern "C" {
 
 /* MIPS32 */
 #define HAL_ARCH_MIPS32
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define HAL_ARCH_LE	/* Can be BE optionally */
+#define HAL_ARCH_LE	/* May be BE optionally */
 #else
 #define HAL_ARCH_BE	/* Default, always BE on MSVC */
 #endif
@@ -143,9 +138,8 @@ extern "C" {
 
 /* RISC-V 64bit */
 #define HAL_ARCH_RISCV64
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define HAL_ARCH_BE	/* Can be BE optionally */
+#define HAL_ARCH_BE	/* May be BE optionally */
 #else
 #define HAL_ARCH_LE	/* Default, no MSVC support yet */
 #endif
@@ -154,9 +148,8 @@ extern "C" {
 
 /* RISC-V 32bit */
 #define HAL_ARCH_RISCV32
-
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-#define HAL_ARCH_BE	/* Can be BE optionally */
+#define HAL_ARCH_BE	/* May be BE optionally */
 #else
 #define HAL_ARCH_LE	/* Default, no MSVC support yet */
 #endif
@@ -164,30 +157,34 @@ extern "C" {
 #endif
 
 /*
- * Here, we define two macros that indicates the target platform and
+ * Here, we define a macro that indicates the target platform and
  * its characteristics.
  *
- * |Macro               |Platform              |Description                 |
- * |--------------------|----------------------|----------------------------|
- * |HAL_TARGET_WINDOWS  |Windows               |                            |
- * |HAL_TARGET_MACOS    |macOS                 |                            |
- * |HAL_TARGET_LINUX    |Linux                 |Excluding Android           |
- * |HAL_TARGET_IOS      |iOS                   |                            |
- * |HAL_TARGET_ANDROID  |Android NDK           |                            |
- * |HAL_TARGET_WASM     |Wasm                  |Emscripten                  |
- * |HAL_TARGET_UNITY    |Unity                 |Gaming Consoles             |
- * |HAL_TARGET_FREEBSD  |FreeBSD               |Excluding Gaming Consoles   |
- * |HAL_TARGET_NETBSD   |NetBSD                |                            |
- * |HAL_TARGET_OPENBSD  |OpenBSD               |                            |
- * |HAL_TARGET_SOLARIS11|Solaris 11            |                            |
- * |HAL_TARGET_SOLARIS10|Solaris 10            |                            |
- * |HAL_TARGET_BEOS     |BeOS and Haiku        |                            |
- * |HAL_TARGET_PC98     |NEC PC-9801 DOS4G     |Watcom                      |
- * |HAL_TARGET_PCAT     |PC/AT DOS4G           |Watcom                      |
+ * | Macro                  | Platform          | Description                        |
+ * |------------------------|-------------------|------------------------------------|
+ * | HAL_TARGET_WINDOWS     | Windows           | Win32 and Win64                    |
+ * | HAL_TARGET_MACOS       | macOS             | Mac OS 10.0+                       |
+ * | HAL_TARGET_LINUX       | Linux             | Excluding Android                  |
+ * | HAL_TARGET_IOS         | iOS               | iOS/iPadOS/visionOS/watchOS/tvOS   |
+ * | HAL_TARGET_ANDROID     | Android NDK       | Android 4.4+                       |
+ * | HAL_TARGET_OPENHARMONY | OpenHarmony SDK   | HarmonyOS NEXT and compatible OSes |
+ * | HAL_TARGET_WASM        | Wasm              | Emscripten                         |
+ * | HAL_TARGET_UNITY       | Unity             | Gaming Consoles                    |
+ * | HAL_TARGET_FREEBSD     | FreeBSD           | Excluding PS4/5                    |
+ * | HAL_TARGET_NETBSD      | NetBSD            |                                    |
+ * | HAL_TARGET_OPENBSD     | OpenBSD           |                                    |
+ * | HAL_TARGET_SOLARIS11   | Solaris 11        |                                    |
+ * | HAL_TARGET_SOLARIS10   | Solaris 10        |                                    |
+ * | HAL_TARGET_GENERICUNIX | Old UNIX          |                                    |
+ * | HAL_TARGET_HAIKU       | BeOS and Haiku    |                                    |
+ * | HAL_TARGET_PC98        | NEC PC-9801 DOS4G | Watcom                             |
+ * | HAL_TARGET_PCAT        | PC/AT DOS4G       | Watcom                             |
  *
- * |Macro               |Description                     |
- * |--------------------|--------------------------------|
- * |HAL_TARGET_POSIX    |Generic POSIX compliant systems |
+ * In addition, the following is defined for Linux and *BSD (excluding Apple)
+ *
+ * | Macro               | Description             |
+ * |---------------------|-------------------------|
+ * | HAL_TARGET_POSIX    | POSIX compliant systems |
  */
 
 /* Windows */
@@ -209,8 +206,13 @@ extern "C" {
 #endif
 #endif
 
-/* Linux (non-Android) */
-#if defined(__linux) && !defined(__ANDROID__) && !defined(HAL_TARGET_UNITY)
+/* Linux */
+#if defined(__linux) && \
+        ( \
+                !defined(HAL_TARGET_ANDROID) && \
+                !defined(HAL_TARGET_UNITY) && \
+                !defined(HAL_TARGET_OPENHARMONY) \
+	)
 #define HAL_TARGET_LINUX
 #ifndef HAL_TARGET_POSIX
 #define HAL_TARGET_POSIX
@@ -223,10 +225,6 @@ extern "C" {
 #ifndef HAL_TARGET_POSIX
 #define HAL_TARGET_POSIX
 #endif
-#endif
-
-/* Unity */
-#if defined(HAL_TARGET_UNITY)
 #endif
 
 /* NetBSD */
@@ -272,6 +270,22 @@ extern "C" {
 #define HAL_TARGET_HAIKU
 #endif
 
+/* Unity */
+#if defined(HAL_TARGET_UNITY)
+#endif
+
+/* OpenHarmony */
+#if defined(HAL_TARGET_OPENHARMONY)
+#endif
+
+/* PC98 */
+#if defined(HAL_TARGET_PC98)
+#endif
+
+/* PC/AT */
+#if defined(HAL_TARGET_PCAT)
+#endif
+
 /* Error: No target detected. */
 #if !defined(HAL_TARGET_WINDOWS) &&              \
     !defined(HAL_TARGET_MACOS) &&                \
@@ -284,10 +298,12 @@ extern "C" {
     !defined(HAL_TARGET_PIOSIX) &&               \
     !defined(HAL_TARGET_IOS) &&                  \
     !defined(HAL_TARGET_ANDROID) &&              \
+    !defined(HAL_TARGET_OPENHARMONY) &&          \
     !defined(HAL_TARGET_WASM) &&                 \
     !defined(HAL_TARGET_HAIKU) &&                \
     !defined(HAL_TARGET_UNITY) &&                \
-    !defined(HAL_TARGET_PC98)
+    !defined(HAL_TARGET_PC98) &&                 \
+    !defined(HAL_TARGET_PCAT)
 #error "No target detected."
 #endif
 
@@ -390,17 +406,17 @@ typedef unsigned long long uint64_t;
  * Definition of the import/export keyword.
  */
 #if defined(HAL_USE_DLL)
-#if defined(__GNUC__)
-#define HAL_DLL		__attribute__((visibility("default")))
-#elif defined(_MSC_VER)
-#if defined(DLL_IMPL)
-#define HAL_DLL		__declspec(dllexport)
+  #if defined(__GNUC__)
+    #define HAL_DLL		__attribute__((visibility("default")))
+  #elif defined(_MSC_VER)
+    #if defined(DLL_IMPL)
+      #define HAL_DLL		__declspec(dllexport)
+    #else
+      #define HAL_DLL		__declspec(dllimport)
+    #endif
+  #endif
 #else
-#define HAL_DLL		__declspec(dllimport)
-#endif
-#endif
-#else
-#define HAL_DLL
+  #define HAL_DLL
 #endif
 
 /*
@@ -466,7 +482,7 @@ typedef unsigned long long uint64_t;
 #endif
 
 /*
- * math
+ * Math
  */
 #if defined(__WATCOMC__)
 #if !defined(lroundf)
@@ -650,7 +666,7 @@ const char *hal_gettext(const char *s);
 
 #include <libintl.h>
 
-#define HAL_TR(s) dgettext("libstrato", s)
+#define HAL_TR(s)	dgettext("libstrato", s)
 
 #else
 
