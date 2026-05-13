@@ -60,7 +60,7 @@ jobs:
         with:
           name: windows
           path: |
-            StratoHAL.nuget
+            StratoHAL.1.0.0.nuget
           if-no-files-found: error
           retention-days: 7
 
@@ -157,7 +157,7 @@ jobs:
           cp resources/pkg-config/libstrato.pc out/usr/local/lib/pkgconfig/libstrato.pc
           cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
           cd out
-          tar ../libstrato-linux-x86_64.tar.gz *
+          tar czf ../libstrato-linux-x86_64.tar.gz *
           cd ..
 
       - name: Upload artifact
@@ -221,12 +221,14 @@ jobs:
           cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=arm64
           cmake --build --preset macos
           mv build-macos build-macos-arm64
+          file build-macos-arm64/libstrato.a
 
       - name: Build macOS x86_64
         run: |
           cmake --preset macos -DCMAKE_OSX_ARCHITECTURES=x86_64
           cmake --build --preset macos
           mv build-macos build-macos-x86_64
+          file build-macos-x86_^4/libstrato.a
 
       - name: Build iOS device
         run: |
@@ -375,7 +377,7 @@ jobs:
           cp build-openharmony-x86_64/libstrato.a out/src/main/cpp/third_party/StratoHAL/lib/x86_64/
           cp resources/openharmony/FindStratoHAL.cmake out/src/main/cpp/
           cd out
-          tar ../libstrato-openharmony.tar.gz *
+          tar czf ../libstrato-openharmony.tar.gz *
           cd ..
 
       - name: Upload artifact
