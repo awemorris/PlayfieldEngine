@@ -396,10 +396,12 @@ typedef unsigned long long uint64_t;
 /*
  * Definition of the CDECL keyword
  */
+#ifndef CDECL
 #if defined(STRATO_TARGET_PC98) || defined(STRATO_TARGET_PCAT)
 #define CDECL __cdecl
 #else
 #define CDECL
+#endif
 #endif
 
 /*
