@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
     private native void nativeOnStart();
     private native int nativeGetScreenWidth();
     private native int nativeGetScreenHeight();
-    private native void nativeRestart();
+    private native void nativeOnRestart();
     private native void nativeOnStop();
     private native boolean nativeOnFrame();
     private native boolean nativeOnPause();
@@ -284,7 +284,7 @@ public class MainActivity extends Activity {
 
         if(!isFinished) {
             synchronized (syncObj) {
-                nativeCleanup();
+                nativeStop();
             }
             isFinished = true;
         }
@@ -380,7 +380,7 @@ public class MainActivity extends Activity {
             if(h > height) {
                 h = height;
                 w = height / aspect;
-                scale = h / (float)viewportHeigth;
+                scale = h / (float)viewportHeight;
                 offsetX = (int)((float)(width - w) / 2.0f);
                 offsetY = 0;
             }
@@ -406,9 +406,8 @@ public class MainActivity extends Activity {
 			}
 			try {
 				boolean ret = nativeOnFrame();
-				if(!ret)
-					nativeCleanup();
-				if (!ret) {
+				if(!ret) {
+					nativeStop();
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 						finishAndRemoveTask();
 					isFinished = true;
@@ -712,7 +711,7 @@ public class MainActivity extends Activity {
 				in_flight = true;
 			}
 			try {
-				boolean ret = nativeRunFrame();
+				boolean ret = nativeOnFrame();
 				if(!ret)
 					nativeOnStop();
 				if (!ret) {

@@ -11,6 +11,10 @@ endif()
 include_directories(${NATIVERENDER_ROOT_PATH}
                     ${NATIVERENDER_ROOT_PATH}/include)
 
+target_include_directories(entry PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/strato/include
+)
+
 set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../libs)
 add_library(strato STATIC IMPORTED)
 set_target_properties(strato PROPERTIES IMPORTED_LOCATION ${LIBS_DIR}/${OHOS_ARCH}/libstrato.a)

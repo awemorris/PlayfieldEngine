@@ -29,6 +29,7 @@
  */
 
 #include <strato/strato.h>
+#include "stdfile.h"
 
 /* OpenGL */
 #include "glrender.h"
@@ -82,7 +83,7 @@ static bool is_video_playing;
 static const char *lang_code;
 
 /* Callback */
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 /*
  * Forward Declarations
@@ -126,7 +127,7 @@ start_engine(void)
 	init_lang_code();
 
 	/* Do a boot callback. */
-	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_calback))
+	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
 		return;
 
 	/* Set the rendering canvas size. */
@@ -222,10 +223,16 @@ loop_iter(
 	 */
 	/* opengl_start_rendering(); */
 
-	/* Do a frame event. */
-	hal_callback.on_frame();
+	/* Call the update callback. */
+	if (!hal_callback.on_update()) {
+		/* Exit. */
+		return;
+	}
 
-	/* Finish a rendering. */
+	/* Call the render callback. */
+	hal_callback.on_render();
+
+	/* End a frame rendering. */
 	opengl_end_rendering();
 
 	/* Reserve the next frame callback. */
@@ -1185,120 +1192,120 @@ hal_leave_full_screen_mode(void)
  * Get a system language.
  */
 EM_JS(int, get_system_lang_id, (void), {
-    const lang = window.navigator.language;
+		const lang = window.navigator.language;
 
-    /* English */
-    if (lang.startsWith("en-AU"))
-	    return 101;
-    if (lang.startsWith("en-GB"))
-	    return 102;
-    if (lang.startsWith("en-NZ"))
-	    return 103;
-    if (lang.startsWith("en-US"))
-	    return 104;
-    if (lang.startsWith("en"))
-	    return 100;
+		/* English */
+		if (lang.startsWith("en-AU"))
+			return 101;
+		if (lang.startsWith("en-GB"))
+			return 102;
+		if (lang.startsWith("en-NZ"))
+			return 103;
+		if (lang.startsWith("en-US"))
+			return 104;
+		if (lang.startsWith("en"))
+			return 100;
 
-    /* French */
-    if (lang.startsWith("fr-CA"))
-	    return 201;
-    if (lang.startsWith("fr"))
-	    return 200;
+		/* French */
+		if (lang.startsWith("fr-CA"))
+			return 201;
+		if (lang.startsWith("fr"))
+			return 200;
 
-    /* Spanish */
-    if (lang.startsWith("es-ES"))
-	    return 300;
-    if (lang.startsWith("es"))
-	    return 301;
+		/* Spanish */
+		if (lang.startsWith("es-ES"))
+			return 300;
+		if (lang.startsWith("es"))
+			return 301;
 
-    /* Chinese */
-    if (lang.startsWith("zh-TW") ||
-	lang.startsWith("zh-HK") ||
-	lang.startsWith("zh-Hant"))
-	    return 701;
-    if (lang.startsWith("zh"))
-	    return 700;
+		/* Chinese */
+		if (lang.startsWith("zh-TW") ||
+		    lang.startsWith("zh-HK") ||
+		    lang.startsWith("zh-Hant"))
+			return 701;
+		if (lang.startsWith("zh"))
+			return 700;
 
-    /* Others */
-    if (lang.startsWith("ja"))
-	    return 10;
-    if (lang.startsWith("de"))
-	    return 20;
-    if (lang.startsWith("it"))
-	    return 30;
-    if (lang.startsWith("el"))
-	    return 40;
-    if (lang.startsWith("ru"))
-	    return 50;
-    if (lang.startsWith("ko"))
-	    return 60;
+		/* Others */
+		if (lang.startsWith("ja"))
+			return 10;
+		if (lang.startsWith("de"))
+			return 20;
+		if (lang.startsWith("it"))
+			return 30;
+		if (lang.startsWith("el"))
+			return 40;
+		if (lang.startsWith("ru"))
+			return 50;
+		if (lang.startsWith("ko"))
+			return 60;
 
-    /* Fallback */
-    return -1;
-});
+		/* Fallback */
+		return -1;
+	});
 void init_lang_code(void)
 {
-    switch (get_system_lang_id()) {
-    /* English */
-    case 100:
-	    lang_code = "en";
-	    break;
-    case 101:
-	    lang_code = "en-au";
-	    break;
-    case 102:
-	    lang_code = "en-gb";
-	    break;
-    case 103:
-	    lang_code = "en-nz";
-	    break;
-    case 104:
-	    lang_code = "en-us";
-	    break;
-    /* French */
-    case 200:
-	    lang_code = "fr-fr";
-	    break;
-    case 201: lang_code = "fr-ca";
-	    break;
-    /* Spanish */
-    case 300:
-	    lang_code = "es-es";
-	    break;
-    case 301:
-	    lang_code = "es-la";
-	    break;
-    /* Chinese */
-    case 700:
-	    lang_code = "zh-cn";
-	    break;
-    case 701:
-	    lang_code = "zh-tw";
-	    break;
-    /* Others */
-    case 10:
-	    lang_code = "ja";
-	    break;
-    case 20:
-	    lang_code = "de";
-	    break;
-    case 30:
-	    lang_code = "it";
-	    break;
-    case 40:
-	    lang_code = "el";
-	    break;
-    case 50:
-	    lang_code = "ru";
-	    break;
-    case 60:
-	    lang_code = "ko";
-	    break;
-    /* Fallback */
-    default:
-	    lang_code = "en";
-	    break;
-    }
+	switch (get_system_lang_id()) {
+		/* English */
+	case 100:
+		lang_code = "en";
+		break;
+	case 101:
+		lang_code = "en-au";
+		break;
+	case 102:
+		lang_code = "en-gb";
+		break;
+	case 103:
+		lang_code = "en-nz";
+		break;
+	case 104:
+		lang_code = "en-us";
+		break;
+		/* French */
+	case 200:
+		lang_code = "fr-fr";
+		break;
+	case 201: lang_code = "fr-ca";
+		break;
+		/* Spanish */
+	case 300:
+		lang_code = "es-es";
+		break;
+	case 301:
+		lang_code = "es-la";
+		break;
+		/* Chinese */
+	case 700:
+		lang_code = "zh-cn";
+		break;
+	case 701:
+		lang_code = "zh-tw";
+		break;
+		/* Others */
+	case 10:
+		lang_code = "ja";
+		break;
+	case 20:
+		lang_code = "de";
+		break;
+	case 30:
+		lang_code = "it";
+		break;
+	case 40:
+		lang_code = "el";
+		break;
+	case 50:
+		lang_code = "ru";
+		break;
+	case 60:
+		lang_code = "ko";
+		break;
+		/* Fallback */
+	default:
+		lang_code = "en";
+		break;
+	}
 }
 
 const char *
@@ -1311,83 +1318,6 @@ void
 finish_frame_io(void)
 {
 	opengl_start_rendering();
-}
-
-/*
- * Get a system language.
- */
-const char *
-get_lang_code(void)
-{
-	return lang_code;
-}
-
-EM_JS(int, get_system_lang_code, (void), {
-	if (window.navigator.language.startsWith("en"))
-		return 0;
-	if (window.navigator.language.startsWith("fr"))
-		return 1;
-	if (window.navigator.language.startsWith("de"))
-		return 2;
-	if (window.navigator.language.startsWith("it"))
-		return 3;
-	if (window.navigator.language.startsWith("es"))
-		return 4;
-	if (window.navigator.language.startsWith("el"))
-		return 5;
-	if (window.navigator.language.startsWith("ru"))
-		return 6;
-	if (window.navigator.language.startsWith("zh_CN"))
-		return 7;
-	if (window.navigator.language.startsWith("zh_TW"))
-		return 8;
-	if (window.navigator.language.startsWith("ja"))
-		return 9;
-	return -1;
-});
-static void init_lang_code(void)
-{
-	switch (get_system_lang_code()) {
-	case 0:
-		lang_code = "en";
-		break;
-	case 1:
-		lang_code = "fr";
-		break;
-	case 2:
-		lang_code = "de";
-		break;
-	case 3:
-		lang_code = "it";
-		break;
-	case 4:
-		lang_code = "es";
-		break;
-	case 5:
-		lang_code = "el";
-		break;
-	case 6:
-		lang_code = "ru";
-		break;
-	case 7:
-		lang_code = "zh_CN";
-		break;
-	case 8:
-		lang_code = "zh_TW";
-		break;
-	case 9:
-		lang_code = "ja";
-		break;
-	default:
-		lang_code = "en";
-		break;
-	}
-}
-
-const char *
-hal_get_system_language(void)
-{
-	return lang_code;
 }
 
 void

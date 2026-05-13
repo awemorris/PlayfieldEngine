@@ -105,7 +105,7 @@ static int touchLastY;
 static bool isContinuousSwipeEnabled;
 
 // Callback.
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 // Forward declaration.
 extern "C" {

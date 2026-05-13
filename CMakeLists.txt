@@ -762,7 +762,7 @@ if(   STRATO_TARGET_WINDOWS
   target_include_directories(
     strato
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/res
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/windows
     ${CMAKE_BINARY_DIR}/dx12headers/include/directx
     ${CMAKE_BINARY_DIR}/dx12headers/include/dxguids
   )
