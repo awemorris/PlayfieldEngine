@@ -897,7 +897,6 @@ if(PLAYFIELD_ENABLE_AOTC)
   add_executable(
     playfield-aotc
     src/aot.c
-    external/NoctLang/src/backend/cback.c
     ${PLAYFIELD_AOTC_RESOURCE}
   )
 
