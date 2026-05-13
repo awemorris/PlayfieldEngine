@@ -40,7 +40,7 @@
 #include <noct/noct.h>
 
 /* StratoHAL */
-#include <stratoh/strato.h>
+#include <strato/strato.h>
 
 /* Standar C */
 #include <stdio.h>
