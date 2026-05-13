@@ -28,7 +28,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <stratohal/stratohal.h>
+#include <strato/strato.h>
 
 /* OpenGL */
 #include "glrender.h"
@@ -81,6 +81,9 @@ static bool is_video_playing;
 /* Locale */
 static const char *lang_code;
 
+/* Callback */
+struct hal_callback hal_callbak;
+
 /*
  * Forward Declarations
  */
@@ -123,7 +126,7 @@ start_engine(void)
 	init_lang_code();
 
 	/* Do a boot callback. */
-	if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height))
+	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_calback))
 		return;
 
 	/* Set the rendering canvas size. */
@@ -146,7 +149,7 @@ start_engine(void)
 		return;
 
 	/* Do a start callback. */
-	if (!hal_callback_on_event_start())
+	if (!hal_callback.on_start())
 		return;
 
 	/* Register input events. */
@@ -220,7 +223,7 @@ loop_iter(
 	/* opengl_start_rendering(); */
 
 	/* Do a frame event. */
-	hal_callback_on_event_frame();
+	hal_callback.on_frame();
 
 	/* Finish a rendering. */
 	opengl_end_rendering();
@@ -252,7 +255,7 @@ cb_mousemove(
 	y = (int)((double)mouseEvent->targetY / scale_y);
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_move(x, y);
+	hal_callback.on_mouse_move(x, y);
 
 	return EM_TRUE;
 }
@@ -280,7 +283,7 @@ cb_mousedown(
 		button = HAL_MOUSE_RIGHT;
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_press(button, x, y);
+	hal_callback.on_mouse_press(button, x, y);
 
 	return EM_TRUE;
 }
@@ -308,7 +311,7 @@ cb_mouseup(
 		button = HAL_MOUSE_RIGHT;
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_release(button, x, y);
+	hal_callback.on_mouse_release(button, x, y);
 
 	return EM_TRUE;
 }
@@ -321,11 +324,11 @@ cb_wheel(
 	void *userData)
 {
 	if (wheelEvent->deltaY > 0) {
-		hal_callback_on_event_key_press(HAL_KEY_DOWN);
-		hal_callback_on_event_key_release(HAL_KEY_DOWN);
+		hal_callback.on_key_press(HAL_KEY_DOWN);
+		hal_callback.on_key_release(HAL_KEY_DOWN);
 	} else {
-		hal_callback_on_event_key_press(HAL_KEY_UP);
-		hal_callback_on_event_key_release(HAL_KEY_UP);
+		hal_callback.on_key_press(HAL_KEY_UP);
+		hal_callback.on_key_release(HAL_KEY_UP);
 	}
 	return EM_TRUE;
 }
@@ -343,7 +346,7 @@ cb_keydown(
 	if (keycode == -1)
 		return EM_TRUE;
 
-	hal_callback_on_event_key_press(keycode);
+	hal_callback.on_key_press(keycode);
 	return EM_TRUE;
 }
 
@@ -360,7 +363,7 @@ cb_keyup(
 	if (keycode == -1)
 		return EM_TRUE;
 
-	hal_callback_on_event_key_release(keycode);
+	hal_callback.on_key_release(keycode);
 	return EM_TRUE;
 }
 
@@ -524,7 +527,7 @@ cb_touchstart(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+	hal_callback.on_mouse_press(HAL_MOUSE_LEFT, x, y);
 
 	return EM_TRUE;
 }
@@ -544,11 +547,11 @@ cb_touchmove(
 	touch_last_y = touchEvent->touches[0].targetY;
 
 	if (delta > LINE_HEIGHT) {
-		hal_callback_on_event_key_press(HAL_KEY_DOWN);
-		hal_callback_on_event_key_release(HAL_KEY_DOWN);
+		hal_callback.on_key_press(HAL_KEY_DOWN);
+		hal_callback.on_key_release(HAL_KEY_DOWN);
 	} else if (delta < -LINE_HEIGHT) {
-		hal_callback_on_event_key_press(HAL_KEY_UP);
-		hal_callback_on_event_key_release(HAL_KEY_UP);
+		hal_callback.on_key_press(HAL_KEY_UP);
+		hal_callback.on_key_release(HAL_KEY_UP);
 	}
 
 	/* Scale a mouse position. */
@@ -558,7 +561,7 @@ cb_touchmove(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_move(x, y);
+	hal_callback.on_mouse_move(x, y);
 
 	return EM_TRUE;
 }
@@ -581,19 +584,19 @@ cb_touchend(
 	y = (int)((double)touchEvent->touches[0].targetY / scale);
 
 	/* Call the event handler. */
-	hal_callback_on_event_mouse_move(x, y);
+	hal_callback.on_mouse_move(x, y);
 
 	/* Consider a two-finger tap as a right-click. */
 	if (touchEvent->numTouches == 2) {
-		hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
-		hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
+		hal_callback.on_mouse_press(HAL_MOUSE_RIGHT, x, y);
+		hal_callback.on_mouse_release(HAL_MOUSE_RIGHT, x, y);
 		return EM_TRUE;
 	}
 
 	/* Consider a one-finger tap as a left-click. */
 	if (abs(touchEvent->touches[0].targetX - touch_start_x) < OFS &&
 	    abs(touchEvent->touches[0].targetY - touch_start_y) < OFS) {
-		hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
+		hal_callback.on_mouse_release(HAL_MOUSE_LEFT, x, y);
 		return EM_TRUE;
 	}
 	
@@ -607,7 +610,7 @@ cb_touchcancel(
 	const EmscriptenTouchEvent *touchEvent,
 	void *userData)
 {
-	hal_callback_on_event_mouse_move(-1, -1);
+	hal_callback.on_mouse_move(-1, -1);
 
 	return EM_TRUE;
 }
@@ -664,7 +667,7 @@ EMSCRIPTEN_KEEPALIVE
 void
 mouseLeave(void)
 {
-	hal_callback_on_event_touch_cancel();
+	hal_callback.on_touch_cancel();
 }
 
 /*

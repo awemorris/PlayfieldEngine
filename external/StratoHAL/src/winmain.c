@@ -29,7 +29,7 @@
  */
 
 /* HAL */
-#include <stratohal/stratohal.h>
+#include <strato/strato.h>
 #include "d3drender.h"
 #include "dsound.h"
 #include "dsvideo.h"
@@ -201,6 +201,11 @@ static int nWindowWidth;
 static int nWindowHeight;
 
 /*
+ * Callback
+ */
+struct hal_callback hal_callback;
+
+/*
  * Forward Declaration
  */
 
@@ -277,14 +282,14 @@ int WINAPI WinMain(
 			break;
 
 		/* Do a start call. */
-		if (!hal_callback_on_event_start())
+		if (!hal_callback.on_start())
 			break;
 
 		/* Run the main loop. */
 		GameLoop();
 
 		/* Do a stop call.. */
-		hal_callback_on_event_stop();
+		hal_callback.on_stop();
 
 		nRet = 0;
 	} while (0);
@@ -350,7 +355,7 @@ InitApp(
 		return FALSE;
 
 	/* Do a boot callback. */
-	if (!hal_callback_on_event_boot(&pszWindowTitle, &nWindowWidth, &nWindowHeight))
+	if (!hal_bootstrap(&pszWindowTitle, &nWindowWidth, &nWindowHeight, &hal_callback))
 		return FALSE;
 
 	/* Create a window. */
@@ -668,8 +673,8 @@ RunFrame(void)
 		if(!SyncEvents())
 			return FALSE;
 
-		/* Do a frame callback. */
-		if(!hal_callback_on_event_frame())
+		/* Do a frame update callback. */
+		if(!hal_callback.on_update())
 			return FALSE;
 
 		return TRUE;
@@ -680,12 +685,15 @@ RunFrame(void)
 
 	/* Do a frame callback. */
 	bRet = TRUE;
-	if(!hal_callback_on_event_frame())
+	if(!hal_callback.on_update())
 	{
 		/* Reached an exit. */
 		bRet = FALSE;
 		bRunFrameAllow = FALSE;
 	}
+
+	/* Do a frame render callback. */
+	hal_callback.on_render();
 
 	/* End rendering. */
 	D3DEndFrame();
@@ -805,7 +813,7 @@ WndProcMain(
 		{
 			kc = ConvertKeyCode((int)wParam);
 			if(kc != -1)
-				hal_callback_on_event_key_press(kc);
+				hal_callback.on_key_press(kc);
 		}
 		return 0;
 	case WM_KEYUP:
@@ -813,7 +821,7 @@ WndProcMain(
 		{
 			kc = ConvertKeyCode((int)wParam);
 			if(kc != -1)
-				hal_callback_on_event_key_release(kc);
+				hal_callback.on_key_release(kc);
 		}
 		return 0;
 	case WM_COMMAND:
@@ -902,7 +910,7 @@ WndProcRender(
 	case WM_LBUTTONDOWN:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_press(
+			hal_callback.on_mouse_press(
 				HAL_MOUSE_LEFT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -911,7 +919,7 @@ WndProcRender(
 	case WM_LBUTTONUP:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_release(
+			hal_callback.on_mouse_release(
 				HAL_MOUSE_LEFT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -920,7 +928,7 @@ WndProcRender(
 	case WM_RBUTTONDOWN:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_press(
+			hal_callback.on_mouse_press(
 				HAL_MOUSE_RIGHT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -929,7 +937,7 @@ WndProcRender(
 	case WM_RBUTTONUP:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_release(
+			hal_callback.on_mouse_release(
 				HAL_MOUSE_RIGHT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -938,7 +946,7 @@ WndProcRender(
 	case WM_MOUSEMOVE:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_move(
+			hal_callback.on_mouse_move(
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
@@ -948,20 +956,20 @@ WndProcRender(
 		{
 			if((int)(short)HIWORD(wParam) > 0)
 			{
-				hal_callback_on_event_key_press(HAL_KEY_UP);
-				hal_callback_on_event_key_release(HAL_KEY_UP);
+				hal_callback.on_key_press(HAL_KEY_UP);
+				hal_callback.on_key_release(HAL_KEY_UP);
 			}
 			else if((int)(short)HIWORD(wParam) < 0)
 			{
-				hal_callback_on_event_key_press(HAL_KEY_DOWN);
-				hal_callback_on_event_key_release(HAL_KEY_DOWN);
+				hal_callback.on_key_press(HAL_KEY_DOWN);
+				hal_callback.on_key_release(HAL_KEY_DOWN);
 			}
 		}
 		return 0;
 	case WM_KILLFOCUS:
 		if (bRunning)
 		{
-			hal_callback_on_event_key_release(HAL_KEY_CONTROL);
+			hal_callback.on_key_release(HAL_KEY_CONTROL);
 		}
 		return 0;
 	default:
@@ -994,7 +1002,7 @@ WndProcVideo(
 	case WM_LBUTTONDOWN:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_press(
+			hal_callback.on_mouse_press(
 				HAL_MOUSE_LEFT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -1003,7 +1011,7 @@ WndProcVideo(
 	case WM_LBUTTONUP:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_release(
+			hal_callback.on_mouse_release(
 				HAL_MOUSE_LEFT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -1012,7 +1020,7 @@ WndProcVideo(
 	case WM_RBUTTONDOWN:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_press(
+			hal_callback.on_mouse_press(
 				HAL_MOUSE_RIGHT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -1021,7 +1029,7 @@ WndProcVideo(
 	case WM_RBUTTONUP:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_release(
+			hal_callback.on_mouse_release(
 				HAL_MOUSE_RIGHT,
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
@@ -1030,7 +1038,7 @@ WndProcVideo(
 	case WM_MOUSEMOVE:
 		if (bRunning)
 		{
-			hal_callback_on_event_mouse_move(
+			hal_callback.on_mouse_move(
 				(int)((float)(LOWORD(lParam) - nViewportOffsetX) / fMouseScale),
 				(int)((float)(HIWORD(lParam) - nViewportOffsetY) / fMouseScale));
 		}
@@ -1040,20 +1048,20 @@ WndProcVideo(
 		{
 			if((int)(short)HIWORD(wParam) > 0)
 			{
-				hal_callback_on_event_key_press(HAL_KEY_UP);
-				hal_callback_on_event_key_release(HAL_KEY_UP);
+				hal_callback.on_key_press(HAL_KEY_UP);
+				hal_callback.on_key_release(HAL_KEY_UP);
 			}
 			else if((int)(short)HIWORD(wParam) < 0)
 			{
-				hal_callback_on_event_key_press(HAL_KEY_DOWN);
-				hal_callback_on_event_key_release(HAL_KEY_DOWN);
+				hal_callback.on_key_press(HAL_KEY_DOWN);
+				hal_callback.on_key_release(HAL_KEY_DOWN);
 			}
 		}
 		return 0;
 	case WM_KILLFOCUS:
 		if (bRunning)
 		{
-			hal_callback_on_event_key_release(HAL_KEY_CONTROL);
+			hal_callback.on_key_release(HAL_KEY_CONTROL);
 		}
 		return 0;
 	default:
@@ -2240,8 +2248,6 @@ hal_get_system_language(void)
 		return "el";
     case LANG_RUSSIAN:
 		return "ru";
-    case LANG_JAPANESE:
-		return "ja";
     case LANG_CHINESE:
 		switch (sublangId) {
 		case SUBLANG_CHINESE_SIMPLIFIED:  return "zh-cn";
@@ -2249,6 +2255,8 @@ hal_get_system_language(void)
         case SUBLANG_CHINESE_TRADITIONAL: return "zh-tw";
         default:                          return "zh-cn";
 		}
+    case LANG_JAPANESE:
+		return "ja";
     default:
         break;
     }

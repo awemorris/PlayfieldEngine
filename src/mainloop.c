@@ -31,12 +31,11 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <strato/strato.h>
 #include "mainloop.h"
 #include "api.h"
 #include "vm.h"
 #include "i18n.h"
-
-#include <stratohal/platform.h>
 
 #include <stdio.h>
 
@@ -145,20 +144,51 @@ bool pf_is_f10_key_pressed;
 bool pf_is_f11_key_pressed;
 bool pf_is_f12_key_pressed;
 
-/*
- * This function is called when the app is going to be initialized.
- */
+/* Forward declaration. */
+static bool on_start(void);
+static bool on_update(void);
+static void on_render(void);
+static void on_stop(void);
+static void on_key_press(int key);
+static void on_key_release(int key);
+static void on_mouse_press(int button, int x, int y);
+static void on_mouse_release(int button, int x, int y);
+static void on_mouse_move(int x, int y);
+static void on_analog_input(int input, int val);
+static void on_touch_cancel(void);
+static void on_swipe_down(float speed, float amount);
+static void on_swipe_up(float speed, float amount);
+
+
+PF_DLL
 bool
-hal_callback_on_event_boot(
+hal_bootstrap(
 	char **title,
 	int *width,
-	int *height)
+	int *height,
+	struct hal_callback *cb)
 {
 	char *title_ret;
 	int width_ret;
 	int height_ret;
 	bool fullscreen_ret;
-	
+
+	/* Set the callbacks. */
+	cb->on_start         = on_start;
+	cb->on_stop          = on_stop;
+	cb->on_update        = on_update;
+	cb->on_render        = on_render;
+	cb->on_key_press     = on_key_press;
+	cb->on_key_release   = on_key_release;
+	cb->on_mouse_press   = on_mouse_press;
+	cb->on_mouse_release = on_mouse_release;
+	cb->on_mouse_move    = on_mouse_move;
+	cb->on_touch_cancel  = on_touch_cancel;
+	cb->on_analog_input  = on_analog_input;
+	cb->on_swipe_start   = on_swipe_start;
+	cb->on_swipe_down    = on_swipe_down;
+	cb->on_swipe_up      = on_swipe_up;
+
 #ifdef USE_TRANSLATION
 	/* Initialize the locale. */
 	pf_init_locale();
@@ -172,35 +202,34 @@ hal_callback_on_event_boot(
 	if (!pfi_create_vm(&title_ret, &width_ret, &height_ret, &fullscreen_ret))
 		return false;
 
-	/* Save the window size. */
-	if (!pfi_set_vm_int("screenWidth", width_ret))
+	/* Save the config. */
+	screen_width = width_ret;
+	screen_height = height_ret;
+	is_fulscreen_start = fullscreen_ret;
+
+	/* Set the screen size variables. */
+	if (!pfi_set_vm_int("screenWidth", screen_width))
 		return false;
-	if (!pfi_set_vm_int("screenHeight", height_ret))
+	if (!pfi_set_vm_int("screenHeight", screen_height))
 		return false;
 
 	/* Make the exit flag. */
 	if (!pfi_set_vm_int("exitFlag", 0))
 		return false;
 
+	/* Store the results. */
 	if (title != NULL)
 		*title = title_ret;
 	if (width != NULL)
-		*width = width_ret;
+		*width = screen_width;
 	if (height != NULL)
-		*height = height_ret;
-
-	is_fulscreen_start = fullscreen_ret;
-	screen_width = width_ret;
-	screen_height = height_ret;
+		*height = screen_height;
 
 	return true;
 }
 
-/*
- * This function is called right before the game loop.
- */
-bool
-hal_callback_on_event_start(void)
+static bool
+on_start(void)
 {
 	if (is_fulscreen_start)
 		hal_enter_full_screen_mode();
@@ -402,11 +431,8 @@ hal_callback_on_event_start(void)
 	return true;
 }
 
-/*
- * This function is called every frame periodically.
- */
-bool
-hal_callback_on_event_frame(void)
+static bool
+on_update(void)
 {
 	int exit_flag;
 
@@ -416,12 +442,6 @@ hal_callback_on_event_frame(void)
 	/* Call update(). */
 	if (!pfi_call_vm_function("update"))
 		return false;
-
-	/* Call render(). */
-	if (!hal_is_video_playing()) {
-		if (!pfi_call_vm_function("render"))
-			return false;
-	}
 
 	/* Check the exit flag. */
 	exit_flag = 0;
@@ -445,8 +465,20 @@ hal_callback_on_event_frame(void)
 	return true;
 }
 
-void
-hal_callback_on_event_stop(void)
+static void
+on_render(void)
+{
+	/* Call render(). */
+	if (!hal_is_video_playing()) {
+		if (!pfi_call_vm_function("render"))
+			return false;
+	}
+
+	return true;
+}
+
+static void
+on_stop(void)
 {
 	/* Cleanup the API */
 	pfi_cleanup_api();
@@ -457,8 +489,8 @@ hal_callback_on_event_stop(void)
 	is_running = false;
 }
 
-void
-hal_callback_on_event_key_press(
+static void
+on_key_press(
 	int key)
 {
 	if (!is_running)
@@ -770,8 +802,8 @@ hal_callback_on_event_key_press(
 	}
 }
 
-void
-hal_callback_on_event_key_release(
+static void
+on_key_release(
 	int key)
 {
 	if (!is_running)
@@ -1082,8 +1114,8 @@ hal_callback_on_event_key_release(
 	}
 }
 
-void
-hal_callback_on_event_mouse_press(
+static void
+on_mouse_press(
 	int button,
 	int x,
 	int y)
@@ -1110,8 +1142,8 @@ hal_callback_on_event_mouse_press(
 	}
 }
 
-void
-hal_callback_on_event_mouse_release(
+static void
+on_mouse_release(
 	int button,
 	int x,
 	int y)
@@ -1142,8 +1174,8 @@ hal_callback_on_event_mouse_release(
 	}
 }
 
-void
-hal_callback_on_event_mouse_move(
+static void
+on_mouse_move(
 	int x,
 	int y)
 {
@@ -1155,8 +1187,8 @@ hal_callback_on_event_mouse_move(
 	}
 }
 
-void
-hal_callback_on_event_analog_input(
+static void
+on_analog_input(
 	int input,
 	int val)
 {
@@ -1192,8 +1224,8 @@ hal_callback_on_event_analog_input(
 	}
 }
 
-void
-hal_callback_on_event_touch_cancel(void)
+static void
+on_touch_cancel(void)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;
@@ -1203,8 +1235,10 @@ hal_callback_on_event_touch_cancel(void)
 	}
 }
 
-void
-hal_callback_on_event_swipe_down(void)
+static void
+on_swipe_down(
+	float speed,
+	float amount)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;
@@ -1214,8 +1248,10 @@ hal_callback_on_event_swipe_down(void)
 	}
 }
 
-void
-hal_callback_on_event_swipe_up(void)
+static void
+on_swipe_up(
+	float speed,
+	float amount)
 {
 	if (is_running) {
 		pf_is_mouse_left_pressed = false;

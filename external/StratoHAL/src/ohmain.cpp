@@ -30,7 +30,7 @@
 
 // Base
 extern "C" {
-#include <stratohal/stratohal.h>
+#include <strato/strato.h>
 };
 
 // HAL
@@ -103,6 +103,9 @@ static int touchStartX;
 static int touchStartY;
 static int touchLastY;
 static bool isContinuousSwipeEnabled;
+
+// Callback.
+struct hal_callback hal_callbak;
 
 // Forward declaration.
 extern "C" {
@@ -464,7 +467,7 @@ onInit(void)
         return false;
 
     // Do a boot callback to acquire a screen configuration.
-    if (!hal_callback_on_event_boot(&window_title, &screen_width, &screen_height))
+    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
         return false;
     
     // Init the graphics HAL.
@@ -477,7 +480,7 @@ onInit(void)
     init_opensl_es();
 
     // Do a start callback.
-    if(!hal_callback_on_event_start()) {
+    if(!hal_callback.on_start()) {
         hal_log_error("Failed to initialize event loop.");
         return false;
     }
@@ -522,7 +525,7 @@ bool onFrame(void)
 {
     opengl_start_rendering();
 
-    if (!hal_callback_on_event_frame())
+    if (!hal_callback.on_frame())
         return false;
 
     opengl_end_rendering();
@@ -539,7 +542,7 @@ void onTouchStart(int x, int y, int points)
     touchStartY = y;
     touchLastY = y;
 
-    hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
+    hal_callback.on_mouse_press(HAL_MOUSE_LEFT, x, y);
 }
 
 //
@@ -553,14 +556,14 @@ void onTouchMove(int x, int y)
     touchLastY = y;
     if (isContinuousSwipeEnabled) {
         if (deltaY > 0 && deltaY < FLICK_Y_DISTANCE) {
-            hal_callback_on_event_key_press(HAL_KEY_DOWN);
-            hal_callback_on_event_key_release(HAL_KEY_DOWN);
+            hal_callback.on_key_press(HAL_KEY_DOWN);
+            hal_callback.on_key_release(HAL_KEY_DOWN);
             return;
         }
     }
 
     // Emulate a mouse move.
-    hal_callback_on_event_mouse_move(x, y);
+    hal_callback.on_mouse_move(x, y);
 }
 
 //
@@ -573,12 +576,12 @@ void onTouchEnd(int x, int y, int points)
 
     int deltaY = y - touchStartY;
     if (deltaY > FLICK_Y_DISTANCE) {
-        hal_callback_on_event_touch_cancel();
-        hal_callback_on_event_swipe_down();
+        hal_callback.on_touch_cancel();
+        hal_callback.on_swipe_down();
         return;
     } else if (deltaY < -FLICK_Y_DISTANCE) {
-        hal_callback_on_event_touch_cancel();
-        hal_callback_on_event_swipe_up();
+        hal_callback.on_touch_cancel();
+        hal_callback.on_swipe_up();
         return;
     }
 
@@ -586,9 +589,9 @@ void onTouchEnd(int x, int y, int points)
     if (points == 1 &&
         abs(x - touchStartX) < FINGER_DISTANCE &&
         abs(y - touchStartY) < FINGER_DISTANCE) {
-        hal_callback_on_event_touch_cancel();
-        hal_callback_on_event_mouse_press(HAL_MOUSE_LEFT, x, y);
-        hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, x, y);
+        hal_callback.on_touch_cancel();
+        hal_callback.on_mouse_press(HAL_MOUSE_LEFT, x, y);
+        hal_callback.on_mouse_release(HAL_MOUSE_LEFT, x, y);
         return;
     }
 
@@ -596,14 +599,14 @@ void onTouchEnd(int x, int y, int points)
     if (points == 2 &&
         abs(x - touchStartX) < FINGER_DISTANCE &&
         abs(y - touchStartY) < FINGER_DISTANCE) {
-        hal_callback_on_event_touch_cancel();
-        hal_callback_on_event_mouse_press(HAL_MOUSE_RIGHT, x, y);
-        hal_callback_on_event_mouse_release(HAL_MOUSE_RIGHT, x, y);
+        hal_callback.on_touch_cancel();
+        hal_callback.on_mouse_press(HAL_MOUSE_RIGHT, x, y);
+        hal_callback.on_mouse_release(HAL_MOUSE_RIGHT, x, y);
         return;
     }
 
     // Cancel the touch move.
-    hal_callback_on_event_touch_cancel();
+    hal_callback.on_touch_cancel();
 }
 
 //
@@ -611,7 +614,7 @@ void onTouchEnd(int x, int y, int points)
 //
 void onTouchCancel(void)
 {
-    hal_callback_on_event_mouse_release(HAL_MOUSE_LEFT, touchStartX, touchStartY);
+    hal_callback.on_mouse_release(HAL_MOUSE_LEFT, touchStartX, touchStartY);
 }
 
 //

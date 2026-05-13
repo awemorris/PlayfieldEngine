@@ -29,7 +29,7 @@
  */
 
 /* Base */
-#include <stratohal/stratohal.h>
+#include <strato/strato.h>
 
 /* OpenSLES */
 #include <SLES/OpenSLES.h>

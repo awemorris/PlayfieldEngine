@@ -38,7 +38,178 @@
 extern "C" {
 #endif
 
-#include <stratohal/c89compat.h>
+#include <strato/c89compat.h>
+
+/* --- */
+
+/*
+ * Callbacks
+ * - Callbacks are defined in user applications.
+ */
+
+/*
+ * Keycode.
+ */
+enum hal_key_code {
+	HAL_KEY_ESCAPE,
+	HAL_KEY_RETURN,
+	HAL_KEY_SPACE,
+	HAL_KEY_TAB,
+	HAL_KEY_BACKSPACE,
+	HAL_KEY_DELETE,
+	HAL_KEY_HOME,
+	HAL_KEY_END,
+	HAL_KEY_PAGEUP,
+	HAL_KEY_PAGEDOWN,
+	HAL_KEY_SHIFT,
+	HAL_KEY_CONTROL,
+	HAL_KEY_ALT,
+	HAL_KEY_UP,
+	HAL_KEY_DOWN,
+	HAL_KEY_LEFT,
+	HAL_KEY_RIGHT,
+	HAL_KEY_A,
+	HAL_KEY_B,
+	HAL_KEY_C,
+	HAL_KEY_D,
+	HAL_KEY_E,
+	HAL_KEY_F,
+	HAL_KEY_G,
+	HAL_KEY_H,
+	HAL_KEY_I,
+	HAL_KEY_J,
+	HAL_KEY_K,
+	HAL_KEY_L,
+	HAL_KEY_M,
+	HAL_KEY_N,
+	HAL_KEY_O,
+	HAL_KEY_P,
+	HAL_KEY_Q,
+	HAL_KEY_R,
+	HAL_KEY_S,
+	HAL_KEY_T,
+	HAL_KEY_U,
+	HAL_KEY_V,
+	HAL_KEY_W,
+	HAL_KEY_X,
+	HAL_KEY_Y,
+	HAL_KEY_Z,
+	HAL_KEY_1,
+	HAL_KEY_2,
+	HAL_KEY_3,
+	HAL_KEY_4,
+	HAL_KEY_5,
+	HAL_KEY_6,
+	HAL_KEY_7,
+	HAL_KEY_8,
+	HAL_KEY_9,
+	HAL_KEY_0,
+	HAL_KEY_F1,
+	HAL_KEY_F2,
+	HAL_KEY_F3,
+	HAL_KEY_F4,
+	HAL_KEY_F5,
+	HAL_KEY_F6,
+	HAL_KEY_F7,
+	HAL_KEY_F8,
+	HAL_KEY_F9,
+	HAL_KEY_F10,
+	HAL_KEY_F11,
+	HAL_KEY_F12,
+	HAL_KEY_GAMEPAD_UP,
+	HAL_KEY_GAMEPAD_DOWN,
+	HAL_KEY_GAMEPAD_LEFT,
+	HAL_KEY_GAMEPAD_RIGHT,
+	HAL_KEY_GAMEPAD_A,
+	HAL_KEY_GAMEPAD_B,
+	HAL_KEY_GAMEPAD_X,
+	HAL_KEY_GAMEPAD_Y,
+	HAL_KEY_GAMEPAD_L,
+	HAL_KEY_GAMEPAD_R,
+	HAL_KEY_MAX,
+};
+
+/*
+ * Mouse button.
+ */
+enum hal_mouse_button {
+	HAL_MOUSE_LEFT,
+	HAL_MOUSE_RIGHT,
+};
+
+/*
+ * Analog input.
+ */
+enum hal_analog_input {
+	HAL_ANALOG_X1,
+	HAL_ANALOG_Y1,
+	HAL_ANALOG_X2,
+	HAL_ANALOG_Y2,
+	HAL_ANALOG_L,
+	HAL_ANALOG_R,
+};
+
+/*
+ * Callback struct. (to keep ABI)
+ */
+struct hal_callback {
+	/* Callback for initial resource load. */
+	bool (*on_start)(void);
+
+	/* Callback for pause. */
+	void (*on_pause)(void);
+
+	/* Callback for application quit. */
+	void (*on_stop)(void);
+
+	/* Callback for frame update. */
+	bool (*on_update)(void);
+
+	/* Callback for frame rendering. */
+	bool (*on_render)(void);
+
+	/* Callback for keyboard or gamepad press. */
+	void (*on_key_press)(int key);
+
+	/* Callback for keyboard or gamepad release. */
+	void (*on_key_release)(int key);
+
+	/* Callback for mouse button or one-finger press. */
+	void (*on_mouse_press)(int button, int x, int y);
+
+	/* Callback for mouse button or one-finger release. */
+	void (*on_mouse_release)(int button, int x, int y);
+
+	/* Callback for mouse move or finger move. */
+	void (*on_mouse_move)(int x, int y);
+
+	/* Callback for one-finger cancel. (outside the screen) */
+	void (*on_touch_cancel)(void);
+
+	/* Callback for gamepad analog input. */
+	void (*on_analog_input)(int input, int val);
+
+	/* Callback for two-finger swipe start. (cancels the mouse press) */
+	void (*on_swipe_start)(void);
+
+	/* Callback for two-finger swipe down.*/
+	void (*on_swipe_down)(float speed, float amount);
+
+	/* Callback for two-finger swipe up.*/
+	void (*on_swipe_up)(float speed, float amount);
+
+	void *reserved[49];
+};
+
+/*
+ * Callback for bootstrap.
+ */
+bool
+hal_bootstrap(
+	char **title,
+	int *width,
+	int *height,
+	struct hal_callback *callback);
 
 /* --- */
 
@@ -46,10 +217,14 @@ extern "C" {
  * Files and Directories
  */
 
-/* Package file name */
+/*
+ * Package file name
+ */
 #define HAL_PACKAGE_FILE	"assets.arc"
 
-/* Save directory name */
+/*
+ * Save directory name
+ */
 #define HAL_SAVE_DIR		"save"
 
 /* --- */
@@ -1253,9 +1428,11 @@ bool
 hal_is_sound_finished(
 	int stream);
 
-/******************
- * Video Playback *
- ******************/
+/* --- */
+
+/*
+ * Video Playback
+ */
 
 /*
  * Start playing a video file.
@@ -1321,15 +1498,57 @@ hal_leave_full_screen_mode(void);
 /* --- */
 
 /*
+ * Locale
+ */
+
+/*
+ * Gets the system language.
+ *  - Return value can be:
+ *    - "en"      ... English
+ *    - "en-us"   ... English (America)
+ *    - "en-gb"   ... English (Britain)
+ *    - "es"      ... Spanish
+ *    - "es-es"   ... Spanish (Spain)
+ *    - "es-la"   ... Spanish (Latin America)
+ *    - "fr"      ... French
+ *    - "fr-fr"   ... French (France)
+ *    - "fr-ca"   ... French (Canada)
+ *    - "it"      ... Italian
+ *    - "de"      ... Deutsch
+ *    - "el"      ... Greek
+ *    - "ru"      ... Russian
+ *    - "zh-Hans" ... Simplified Chinese
+ *    - "zh-Hant" ... Simplified Chinese
+ *    - "ja":      Japanese
+ */
+HAL_DLL
+const char *
+hal_get_system_language(void);
+
+/* --- */
+
+/*
+ * Touch Screen
+ */
+
+/*
+ * Enable/disable message skip by touch move.
+ */
+HAL_DLL
+void
+hal_set_continuous_swipe_enabled(
+	bool is_enabled);
+
+/* --- */
+
+/*
  * Logging
+ * - Note that non-main threads including sound threads cannot call
+ *   the logging functions.
  */
 
 /*
- * Note that sound threads cannot use these logging functions.
- */
-
-/*
- * Put a "info" level log with printf formats.
+ * Put an "info" level log with printf formats.
  */
 HAL_DLL
 bool
@@ -1361,299 +1580,6 @@ hal_log_error(
 HAL_DLL
 bool
 hal_log_out_of_memory(void);
-
-/* --- */
-
-/*
- * Locale
- */
-
-/*
- * Gets the system language.
- *  - Return value can be:
- *    - "ja": Japanese
- *    - "en": English
- *    - "zh": Simplified Chinese
- *    - "tw": Traditional Chinese
- *    - "fr": French
- *    - "it": Italian
- *    - "es": Spanish (Castellano)
- *    - "de": Deutsch
- *    - "el": Greek
- *    - "ru": Russian
- *    - "other": Other (must fallback to English)
- */
-HAL_DLL
-const char *
-hal_get_system_language(void);
-
-/* --- */
-
-/*
- * Touch Screen
- */
-
-/*
- * Enable/disable message skip by touch move.
- */
-HAL_DLL
-void
-hal_set_continuous_swipe_enabled(
-	bool is_enabled);
-
-/* --- */
-
-/*
- * Callbacks
- */
-
-/*
- * Callbacks are defined outside the HAL.
- */
-
-/* Keycode. */
-enum hal_key_code {
-	HAL_KEY_ESCAPE,
-	HAL_KEY_RETURN,
-	HAL_KEY_SPACE,
-	HAL_KEY_TAB,
-	HAL_KEY_BACKSPACE,
-	HAL_KEY_DELETE,
-	HAL_KEY_HOME,
-	HAL_KEY_END,
-	HAL_KEY_PAGEUP,
-	HAL_KEY_PAGEDOWN,
-	HAL_KEY_SHIFT,
-	HAL_KEY_CONTROL,
-	HAL_KEY_ALT,
-	HAL_KEY_UP,
-	HAL_KEY_DOWN,
-	HAL_KEY_LEFT,
-	HAL_KEY_RIGHT,
-	HAL_KEY_A,
-	HAL_KEY_B,
-	HAL_KEY_C,
-	HAL_KEY_D,
-	HAL_KEY_E,
-	HAL_KEY_F,
-	HAL_KEY_G,
-	HAL_KEY_H,
-	HAL_KEY_I,
-	HAL_KEY_J,
-	HAL_KEY_K,
-	HAL_KEY_L,
-	HAL_KEY_M,
-	HAL_KEY_N,
-	HAL_KEY_O,
-	HAL_KEY_P,
-	HAL_KEY_Q,
-	HAL_KEY_R,
-	HAL_KEY_S,
-	HAL_KEY_T,
-	HAL_KEY_U,
-	HAL_KEY_V,
-	HAL_KEY_W,
-	HAL_KEY_X,
-	HAL_KEY_Y,
-	HAL_KEY_Z,
-	HAL_KEY_1,
-	HAL_KEY_2,
-	HAL_KEY_3,
-	HAL_KEY_4,
-	HAL_KEY_5,
-	HAL_KEY_6,
-	HAL_KEY_7,
-	HAL_KEY_8,
-	HAL_KEY_9,
-	HAL_KEY_0,
-	HAL_KEY_F1,
-	HAL_KEY_F2,
-	HAL_KEY_F3,
-	HAL_KEY_F4,
-	HAL_KEY_F5,
-	HAL_KEY_F6,
-	HAL_KEY_F7,
-	HAL_KEY_F8,
-	HAL_KEY_F9,
-	HAL_KEY_F10,
-	HAL_KEY_F11,
-	HAL_KEY_F12,
-	HAL_KEY_GAMEPAD_UP,
-	HAL_KEY_GAMEPAD_DOWN,
-	HAL_KEY_GAMEPAD_LEFT,
-	HAL_KEY_GAMEPAD_RIGHT,
-	HAL_KEY_GAMEPAD_A,
-	HAL_KEY_GAMEPAD_B,
-	HAL_KEY_GAMEPAD_X,
-	HAL_KEY_GAMEPAD_Y,
-	HAL_KEY_GAMEPAD_L,
-	HAL_KEY_GAMEPAD_R,
-	HAL_KEY_MAX,
-};
-
-/* Mouse button. */
-enum hal_mouse_button {
-	HAL_MOUSE_LEFT,
-	HAL_MOUSE_RIGHT,
-};
-
-/* Analog input. */
-enum hal_analog_input {
-	HAL_ANALOG_X1,
-	HAL_ANALOG_Y1,
-	HAL_ANALOG_X2,
-	HAL_ANALOG_Y2,
-	HAL_ANALOG_L,
-	HAL_ANALOG_R,
-};
-
-/* Callbacks. */
-bool hal_callback_on_event_boot(char **title, int *width, int *height);
-bool hal_callback_on_event_start(void);
-void hal_callback_on_event_stop(void);
-bool hal_callback_on_event_frame(void);
-void hal_callback_on_event_key_press(int key);
-void hal_callback_on_event_key_release(int key);
-void hal_callback_on_event_mouse_press(int button, int x, int y);
-void hal_callback_on_event_mouse_release(int button, int x, int y);
-void hal_callback_on_event_mouse_move(int x, int y);
-void hal_callback_on_event_analog_input(int input, int val);
-void hal_callback_on_event_touch_cancel(void);
-void hal_callback_on_event_swipe_down(void);
-void hal_callback_on_event_swipe_up(void);
-
-/* --- */
-
-/*
- * Foreign Language Support
- */
-
-#if !defined(HAL_USE_CSHARP) && !defined(HAL_USE_SWIFT)
-#define UNSAFEPTR(t) t
-#endif
-
-/*
- * Swift Support (Swift Function Pointers)
- */
-#if defined(HAL_USE_SWIFT)
-#define UNSAFEPTR(t)  t	/* For Swift */
-extern void (*wrap_log_info)(UNSAFEPTR(const char *) s);
-extern void (*wrap_log_warn)(UNSAFEPTR(const char *) s);
-extern void (*wrap_log_error)(UNSAFEPTR(const char *) s);
-extern void (*wrap_make_save_directory)(void);
-extern void (*wrap_make_real_path)(UNSAFEPTR(const char *) dir, UNSAFEPTR(const char *) fname, UNSAFEPTR(const char *) dst, int len);
-extern void (*wrap_notify_image_update)(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels);
-extern void (*wrap_notify_image_free)(int id);
-extern void (*wrap_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_rule)(int src_img, int rule_img, int threshold);
-extern void (*wrap_render_image_melt)(int src_img, int rule_img, int progress);
-extern void (*wrap_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha);
-extern void (*wrap_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin);
-extern uint64_t (*wrap_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin);
-extern void (*wrap_play_sound)(int stream, UNSAFEPTR(void *) wave);
-extern void (*wrap_stop_sound)(int stream);
-extern void (*wrap_set_sound_volume)(int stream, float vol);
-extern int (*wrap_is_sound_finished)(int stream);
-extern bool (*wrap_play_video)(UNSAFEPTR(const char *) fname, bool is_skippable);
-extern void (*wrap_stop_video)(void);
-extern bool (*wrap_is_video_playing)(void);
-extern bool (*wrap_is_full_screen_supported)(void);
-extern bool (*wrap_is_full_screen_mode)(void);
-extern void (*wrap_enter_full_screen_mode)(void);
-extern void (*wrap_leave_full_screen_mode)(void);
-extern void (*wrap_get_system_language)(UNSAFEPTR(char *) dst, int len);
-extern void (*wrap_set_continuous_swipe_enabled)(bool is_enabled);
-extern void (*wrap_free_shared)(UNSAFEPTR(void *) p);
-extern bool (*wrap_check_file_exist)(UNSAFEPTR(const char *) file_name);
-extern UNSAFEPTR(void *) (*wrap_get_file_contents)(UNSAFEPTR(const char *) file_name, UNSAFEPTR(int *) len);
-extern void (*wrap_open_save_file)(UNSAFEPTR(const char *) file_name);
-extern void (*wrap_write_save_file)(int b);
-extern void (*wrap_close_save_file)(void);
-#endif /* defined(HAL_USE_SWIFT) */
-
-/*
- * C# Support (hal_init_func_table() is called from C#)
- */
-#if defined(HAL_USE_CSHARP)
-
-#define UNSAFEPTR(t)  intptr_t	/* For C# */
-
-#ifdef NO_CDECL
-#define __cdecl
-#endif
-
-HAL_DLL
-void hal_init_func_table(
-	void __cdecl (*p_log_info)(UNSAFEPTR(const char *) s),
-	void __cdecl (*p_log_warn)(UNSAFEPTR(const char *) s),
-	void __cdecl (*p_log_error)(UNSAFEPTR(const char *) s),
-	void __cdecl (*p_log_out_of_memory)(void),
-	void __cdecl (*p_make_save_directory)(void),
-	void __cdecl (*p_make_real_path)(UNSAFEPTR(const char *) fname, UNSAFEPTR(const char *) dst, int len),
-	void __cdecl (*p_notify_image_update)(int id, int width, int height, UNSAFEPTR(const uint32_t *) pixels),
-	void __cdecl (*p_notify_image_free)(int id),
-	void __cdecl (*p_render_image_normal)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_add)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_sub)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_dim)(int dst_left, int dst_top, int dst_width, int dst_height, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_rule)(int src_img, int rule_img, int threshold),
-	void __cdecl (*p_render_image_melt)(int src_img, int rule_img, int progress),
-	void __cdecl (*p_render_image_cross)(int src_img, int rule_img, int src1_left, int src1_top, int src2_left, int src2_top, int progress),
-	void __cdecl (*p_render_image_3d_normal)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_3d_add)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_3d_sub)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_3d_dim)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, int src_left, int src_top, int src_width, int src_height, int alpha),
-	void __cdecl (*p_render_image_3d_cross)(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int src_img, float src1_x1, float src1_y1, float src1_x2, float src1_y2, float src1_x3, float src1_y3, float src1_x4, float src1_y4, float src2_x1, float src2_y1, float src2_x2, float src2_y2, float src2_x3, float src2_y3, float src2_x4, float src2_y4, int alpha),
-	void __cdecl (*p_reset_lap_timer)(UNSAFEPTR(uint64_t *) origin),
-	uint64_t __cdecl (*p_get_lap_timer_millisec)(UNSAFEPTR(uint64_t *) origin),
-	void __cdecl (*p_play_sound)(int stream, UNSAFEPTR(void *) wave),
-	void __cdecl (*p_stop_sound)(int stream),
-	void __cdecl (*p_set_sound_volume)(int stream, float vol),
-	bool __cdecl (*p_is_sound_finished)(int stream),
-	bool __cdecl (*p_play_video)(UNSAFEPTR(const char *) fname, bool is_skippable),
-	void __cdecl (*p_stop_video)(void),
-	bool __cdecl (*p_is_video_playing)(void),
-	bool __cdecl (*p_is_full_screen_supported)(void),
-	bool __cdecl (*p_is_full_screen_mode)(void),
-	void __cdecl (*p_enter_full_screen_mode)(void),
-	void __cdecl (*p_leave_full_screen_mode)(void),
-	void __cdecl (*p_get_system_language)(UNSAFEPTR(char *) dst, int len),
-	void __cdecl (*p_set_continuous_swipe_enabled)(bool is_enabled),
-	void __cdecl (*p_free_shared)(UNSAFEPTR(void *) p),
-	bool __cdecl (*p_check_file_exist)(UNSAFEPTR(const char *) file_name),
-	UNSAFEPTR(void *) __cdecl (*p_get_file_contents)(UNSAFEPTR(const char *) file_name, UNSAFEPTR(int *) len),
-	void __cdecl (*p_open_save_file)(UNSAFEPTR(const char *) file_name),
-	void __cdecl (*p_write_save_file)(int b),
-	void __cdecl (*p_close_save_file)(void)
-);
-
-#ifdef NO_CDECL
-#undef __cdecl
-#endif
-
-#endif /* defined(HAL_USE_CSHARP) */
-
-/***********
- * Helpers *
- ***********/
-
-#if defined(HAL_TARGET_WINDOWS)
-HAL_DLL
-const wchar_t
-*win32_utf8_to_utf16(
-	const char *s);
-
-HAL_DLL
-const char *
-win32_utf16_to_utf8(
-	const wchar_t *s);
-#endif
 
 #ifdef __cplusplus
 }
