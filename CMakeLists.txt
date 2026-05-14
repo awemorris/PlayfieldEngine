@@ -1126,4 +1126,21 @@ if(PLAYFIELD_ENABLE_INSTALL)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
             DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
   endif()
+
+  # CMake module
+  install(
+    FILES "${CMAKE_SOURCE_DIR}/cmake/modules/FindPlayfield.cmake"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/cmake/Modules"
+  )
+
+  # pkgconfig pc
+  configure_file(
+    "${CMAKE_SOURCE_DIR}/resources/pkg-config/playfield.pc.in"
+    playfield.pc
+    @ONLY
+  )
+  install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/playfield.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+  )
 endif()
