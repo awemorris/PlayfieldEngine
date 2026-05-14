@@ -1609,18 +1609,25 @@ hal_bootstrap(
     defined(HAL_TARGET_POSIX)		||	\
     defined(HAL_TARGET_MACOS)		||	\
     defined(HAL_TARGET_IOS)
-#define HAL_DEFINE_MAIN(hook)				\
+#define HAL_DEFINE_MAIN()		\
 	int main(int argc, char *argv[])		\
 	{						\
 		int hal_main(int argc, char *argv[]);	\
 		hal_bootstrap_ptr = hal_bootstrap;	\
-		hook;					\
+		return hal_main(argc, argv);		\
+	}
+#define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)		\
+	int main(int argc, char *argv[])		\
+	{						\
+		int hal_main(int argc, char *argv[]);	\
+		hal_bootstrap_ptr = hal_bootstrap;	\
+		chain_ptr = chain;			\
 		return hal_main(argc, argv);		\
 	}
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && defined(_UNICODE)
-#define HAL_DEFINE_MAIN(hook)					\
+#define HAL_DEFINE_MAIN()					\
 	int WINAPI wWinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1632,7 +1639,24 @@ hal_bootstrap(
 					LPWSTR,			\
 					int);			\
 		hal_bootstrap_ptr = hal_bootstrap;		\
-		hook;						\
+		return hal_wWinMain(hInstance,			\
+				    hPrevInstance,		\
+				    lpszCmd,			\
+				    nCmdShow);			\
+	}
+#define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
+	int WINAPI wWinMain(					\
+		HINSTANCE hInstance,				\
+		HINSTANCE hPrevInstance,			\
+		LPWSTR lpszCmd,					\
+		int nCmdShow)					\
+	{							\
+		int WINAPI hal_wWinMain(HINSTANCE,		\
+					HINSTANCE,		\
+					LPWSTR,			\
+					int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		chain_ptr = chain;				\
 		return hal_wWinMain(hInstance,			\
 				    hPrevInstance,		\
 				    lpszCmd,			\
@@ -1641,7 +1665,7 @@ hal_bootstrap(
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && !defined(_UNICODE)
-#define HAL_DEFINE_MAIN(hook)					\
+#define HAL_DEFINE_MAIN()					\
 	int WINAPI WinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1653,7 +1677,24 @@ hal_bootstrap(
 				       LPWSTR,			\
 				       int);			\
 		hal_bootstrap_ptr = hal_bootstrap;		\
-		hook;						\
+		return hal_WinMain(hInstance,			\
+				   hPrevInstance,		\
+				   lpszCmd,			\
+				   nCmdShow);			\
+	}
+#define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
+	int WINAPI WinMain(					\
+		HINSTANCE hInstance,				\
+		HINSTANCE hPrevInstance,			\
+		LPSTR lpszCmd,					\
+		int nCmdShow)					\
+	{							\
+		int WINAPI hal_WinMain(HINSTANCE,		\
+				       HINSTANCE,		\
+				       LPWSTR,			\
+				       int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		chain_ptr = chain;				\
 		return hal_WinMain(hInstance,			\
 				   hPrevInstance,		\
 				   lpszCmd,			\
@@ -1663,22 +1704,35 @@ hal_bootstrap(
 
 #if defined(HAL_TARGET_ANDROID) ||				\
     defined(HAL_TARGET_OPENHARMONY)
-#define HAL_DEFINE_MAIN(hook)					\
+#define HAL_DEFINE_MAIN()					\
 	__attribute__((constructor))				\
 	static void so_init(void)				\
 	{							\
 		hal_bootstrap_ptr = hal_bootstrap;		\
-		hook;						\
+	}
+#define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
+	__attribute__((constructor))				\
+	static void so_init(void)				\
+	{							\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		chain_ptr = chain;				\
 	}
 #endif
 
 #if defined(HAL_TARGET_WASM)
-#define HAL_DEFINE_MAIN(hook)					\
+#define HAL_DEFINE_MAIN()					\
 	int main(void)						\
 	{							\
 		int hal_main(void);				\
 		hal_bootstrap_ptr = hal_bootstrap;		\
-		hook;						\
+		return hal_main();				\
+	}
+#define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
+	int main(void)						\
+	{							\
+		int hal_main(void);				\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		chain_ptr = chain;				\
 		return hal_main();				\
 	}
 #endif
