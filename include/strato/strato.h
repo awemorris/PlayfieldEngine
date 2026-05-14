@@ -1585,7 +1585,7 @@ hal_log_out_of_memory(void);
 
 /* DLL side. */
 HAL_DLL
-bool
+extern bool
 (*hal_bootstrap_ptr)(
 	char **title,
 	int *width,
@@ -1703,7 +1703,8 @@ hal_bootstrap(
 #endif
 
 #if defined(HAL_TARGET_ANDROID) ||				\
-    defined(HAL_TARGET_OPENHARMONY)
+    defined(HAL_TARGET_OPENHARMONY) ||				\
+    (defined(HAL_TARGET_UNITY) && defined(HAL_USE_DLL))
 #define HAL_DEFINE_MAIN()					\
 	__attribute__((constructor))				\
 	static void so_init(void)				\

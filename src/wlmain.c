@@ -137,6 +137,7 @@ static bool is_gst_skippable;
 /* HAL callback. */
 #if defined(HAL_USE_X11_ONLY)
 struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 #endif
 
 /* forward declaration */

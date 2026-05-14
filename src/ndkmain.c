@@ -80,6 +80,7 @@ static bool is_continuous_swipe_enabled;
 
 /* Callback */
 struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 
 /* Delayed removal of (struct hal_rfile *) references. */
 struct hal_rfile *delayed_rfile_free_slot[DELAYED_RFILE_FREE_SLOTS];

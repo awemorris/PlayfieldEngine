@@ -53,6 +53,7 @@ static int mode;
 
 /* Callback. */
 struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 
 static bool is_wslg(void);
 

@@ -77,6 +77,7 @@ static FILE *log_fp;
 
 /* Callback. */
 static struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 
 /* Forward Declaration */
 static void init_vram(void);
