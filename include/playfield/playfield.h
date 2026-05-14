@@ -875,7 +875,7 @@ pf_log_out_of_memory(void);
 /* DLL side */
 PF_DLL
 bool
-pf_init_hook_ptr(
+(*pf_init_hook_ptr)(
 	int width,
 	int height);
 
@@ -888,6 +888,6 @@ pf_init_hook(
 /*
  * Entrypoint Definition
  */
-#define PF_DEFINE_MAIN() HAL_DEFINE_MAIN(pf_init_hook_ptr = pf_init_hook)
+#define PF_DEFINE_MAIN() HAL_DEFINE_MAIN_CHAIN(pf_init_hook_ptr, pf_init_hook)
 
 #endif

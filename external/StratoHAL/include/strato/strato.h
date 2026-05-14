@@ -201,16 +201,6 @@ struct hal_callback {
 	void *reserved[49];
 };
 
-/*
- * Callback for bootstrap.
- */
-bool
-hal_bootstrap(
-	char **title,
-	int *width,
-	int *height,
-	struct hal_callback *callback);
-
 /* --- */
 
 /*
@@ -1589,6 +1579,27 @@ hal_log_out_of_memory(void);
  * Entrypoint
  */
 
+/*
+ * Callback for bootstrap.
+ */
+
+/* DLL side. */
+HAL_DLL
+bool
+(*hal_bootstrap_ptr)(
+	char **title,
+	int *width,
+	int *height,
+	struct hal_callback *callback);
+
+/* App side. */
+bool
+hal_bootstrap(
+	char **title,
+	int *width,
+	int *height,
+	struct hal_callback *callback);
+
 #if defined(HAL_TARGET_LINUX)		||	\
     defined(HAL_TARGET_FREEBSD)		||	\
     defined(HAL_TARGET_NETBSD)		||	\
@@ -1598,26 +1609,30 @@ hal_log_out_of_memory(void);
     defined(HAL_TARGET_POSIX)		||	\
     defined(HAL_TARGET_MACOS)		||	\
     defined(HAL_TARGET_IOS)
-#define HAL_DEFINE_MAIN()				\
+#define HAL_DEFINE_MAIN(hook)				\
 	int main(int argc, char *argv[])		\
 	{						\
 		int hal_main(int argc, char *argv[]);	\
+		hal_bootstrap_ptr = hal_bootstrap;	\
+		hook;					\
 		return hal_main(argc, argv);		\
 	}
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && defined(_UNICODE)
-#define HAL_DEFINE_MAIN()							\
-	int WINAPI wWinMain(							\
-		HINSTANCE hInstance,						\
-		HINSTANCE hPrevInstance,					\
-		LPWSTR lpszCmd,								\
-		int nCmdShow)								\
-	{										\
+#define HAL_DEFINE_MAIN(hook)					\
+	int WINAPI wWinMain(					\
+		HINSTANCE hInstance,				\
+		HINSTANCE hPrevInstance,			\
+		LPWSTR lpszCmd,					\
+		int nCmdShow)					\
+	{							\
 		int WINAPI hal_wWinMain(HINSTANCE,		\
 					HINSTANCE,		\
 					LPWSTR,			\
 					int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
 		return hal_wWinMain(hInstance,			\
 				    hPrevInstance,		\
 				    lpszCmd,			\
@@ -1626,7 +1641,7 @@ hal_log_out_of_memory(void);
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && !defined(_UNICODE)
-#define HAL_DEFINE_MAIN()					\
+#define HAL_DEFINE_MAIN(hook)					\
 	int WINAPI WinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1637,6 +1652,8 @@ hal_log_out_of_memory(void);
 				       HINSTANCE,		\
 				       LPWSTR,			\
 				       int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
 		return hal_WinMain(hInstance,			\
 				   hPrevInstance,		\
 				   lpszCmd,			\
@@ -1644,12 +1661,25 @@ hal_log_out_of_memory(void);
 	}
 #endif
 
+#if defined(HAL_TARGET_ANDROID) ||				\
+    defined(HAL_TARGET_OPENHARMONY)
+#define HAL_DEFINE_MAIN(hook)					\
+	__attribute__((constructor))				\
+	static void so_init(void)				\
+	{							\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
+	}
+#endif
+
 #if defined(HAL_TARGET_WASM)
-#define HAL_DEFINE_MAIN()				\
-	int main(void)					\
-	{						\
-		int hal_main(void);			\
-		return hal_main();			\
+#define HAL_DEFINE_MAIN(hook)					\
+	int main(void)						\
+	{							\
+		int hal_main(void);				\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
+		return hal_main();				\
 	}
 #endif
 

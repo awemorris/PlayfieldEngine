@@ -9,7 +9,7 @@
  * Dummy Initialization Hook
  */
 
-#include <playfield/c89compat.h>
+#include <playfield/playfield.h>
 
 /* Entrypoint. */
 PF_DEFINE_MAIN();
