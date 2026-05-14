@@ -290,7 +290,6 @@
             "binaryDir":      "${sourceDir}/build-ios-device",
             "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-device.cmake",
             "cacheVariables": {
-                "STRATO_ENABLE_I18N":   "ON",
                 "STRATO_TARGET_IOS":    "ON",
                 "STRATO_ENABLE_STATIC": "ON"
             }
@@ -302,7 +301,6 @@
             "binaryDir":      "${sourceDir}/build-ios-simulator",
             "toolchainFile":  "${sourceDir}/cmake/toolchains/ios-simulator.cmake",
             "cacheVariables": {
-                "STRATO_ENABLE_I18N":   "ON",
                 "STRATO_TARGET_IOS":    "ON",
                 "STRATO_ENABLE_STATIC": "ON"
             }

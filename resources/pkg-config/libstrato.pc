@@ -4,7 +4,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: StratoHAL
-Description: Strato Hardware Abstraction Layer with extensive dependencies
+Description: HAL for 2D games
 Version: 1.0.0
 Cflags: -I${includedir}/strato
 Libs: -L${libdir} -lstrato
