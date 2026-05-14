@@ -1598,26 +1598,28 @@ hal_log_out_of_memory(void);
     defined(HAL_TARGET_POSIX)		||	\
     defined(HAL_TARGET_MACOS)		||	\
     defined(HAL_TARGET_IOS)
-#define HAL_DEFINE_MAIN()				\
+#define HAL_DEFINE_MAIN(hool)				\
 	int main(int argc, char *argv[])		\
 	{						\
 		int hal_main(int argc, char *argv[]);	\
+		hook;					\
 		return hal_main(argc, argv);		\
 	}
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && defined(_UNICODE)
-#define HAL_DEFINE_MAIN()							\
-	int WINAPI wWinMain(							\
-		HINSTANCE hInstance,						\
-		HINSTANCE hPrevInstance,					\
-		LPWSTR lpszCmd,								\
-		int nCmdShow)								\
-	{										\
+#define HAL_DEFINE_MAIN(hook)					\
+	int WINAPI wWinMain(					\
+		HINSTANCE hInstance,				\
+		HINSTANCE hPrevInstance,			\
+		LPWSTR lpszCmd,					\
+		int nCmdShow)					\
+	{							\
 		int WINAPI hal_wWinMain(HINSTANCE,		\
 					HINSTANCE,		\
 					LPWSTR,			\
 					int);			\
+		hook;						\
 		return hal_wWinMain(hInstance,			\
 				    hPrevInstance,		\
 				    lpszCmd,			\
@@ -1626,7 +1628,7 @@ hal_log_out_of_memory(void);
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && !defined(_UNICODE)
-#define HAL_DEFINE_MAIN()					\
+#define HAL_DEFINE_MAIN(hook)					\
 	int WINAPI WinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1637,6 +1639,7 @@ hal_log_out_of_memory(void);
 				       HINSTANCE,		\
 				       LPWSTR,			\
 				       int);			\
+		hook;						\
 		return hal_WinMain(hInstance,			\
 				   hPrevInstance,		\
 				   lpszCmd,			\
@@ -1645,11 +1648,12 @@ hal_log_out_of_memory(void);
 #endif
 
 #if defined(HAL_TARGET_WASM)
-#define HAL_DEFINE_MAIN()				\
-	int main(void)					\
-	{						\
-		int hal_main(void);			\
-		return hal_main();			\
+#define HAL_DEFINE_MAIN(hook)		\
+	int main(void)			\
+	{				\
+		int hal_main(void);	\
+		hook;			\
+		return hal_main();	\
 	}
 #endif
 
