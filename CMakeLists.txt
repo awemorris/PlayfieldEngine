@@ -595,7 +595,7 @@ target_include_directories(
 
 # DLL
 if(PLAYFIELD_ENABLE_SHARED)
-  target_compile_definitions(playfield PRIVATE PF_USE_DLL)
+  target_compile_definitions(playfield PRIVATE PF_USE_DLL HAL_USE_DLL)
 endif()
 
 # JIT
