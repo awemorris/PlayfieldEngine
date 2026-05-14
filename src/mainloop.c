@@ -31,6 +31,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <playfield/playfield.h>
 #include <strato/strato.h>
 #include "mainloop.h"
 #include "api.h"
@@ -144,7 +145,7 @@ PF_DLL bool pf_is_f10_key_pressed;
 PF_DLL bool pf_is_f11_key_pressed;
 PF_DLL bool pf_is_f12_key_pressed;
 
-PF_DLL bool(*pf_init_hook_ptr)(int width, int height);
+PF_DLL bool(*pf_init_hook_ptr)(int width, int height) = NULL;
 
 /* Forward declaration. */
 static bool on_start(void);
