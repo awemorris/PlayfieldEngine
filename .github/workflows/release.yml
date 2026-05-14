@@ -156,16 +156,16 @@ jobs:
         run: |
           mkdir -p out
           mkdir -p out/include/strato
-          mkdir -p out/lib
-          mkdir -p out/lib/pkgconfig
+          mkdir -p out/lib/x86_64-linux-gnu/
+          mkdir -p out/lib/x86_64-linux-gnu/pkgconfig
           mkdir -p out/share/cmake/Modules
           cp include/strato/strato.h out/include/strato/
           cp include/strato/c89compat.h out/include/strato/
-          cp build-linux/libstrato.a out/lib/
-          cp build-linux/libstratopack.a out/lib/
-          cp -d build-linux-debian/libstrato.so* out/lib/
-          cp -d build-linux-debian/libstratopack.so out/lib/
-          cp resources/pkg-config/strato.pc out/usr/pkgconfig/
+          cp build-linux/libstrato.a out/lib/x86_64-linux-gnu/
+          cp build-linux/libstratopack.a out/lib/x86_64-linux-gnu/
+          cp -d build-linux-debian/libstrato.so* out/lib/x86_64-linux-gnu/
+          cp -d build-linux-debian/libstratopack.so out/lib/x86_64-linux-gnu/
+          cp resources/pkg-config/strato.pc out/lib/x86_64-linux-gnu/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/share/cmake/Modules/
           cd out
           tar czf ../libstrato-linux-x86_64.tar.gz *
