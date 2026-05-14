@@ -1627,8 +1627,8 @@ hal_bootstrap(
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && defined(_UNICODE)
+#include <windows.h>
 #define HAL_DEFINE_MAIN()					\
-	#include <windows.h>					\
 	int WINAPI wWinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1646,7 +1646,6 @@ hal_bootstrap(
 				    nCmdShow);			\
 	}
 #define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
-	#include <windows.h>					\
 	int WINAPI wWinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1667,8 +1666,8 @@ hal_bootstrap(
 #endif
 
 #if defined(HAL_TARGET_WINDOWS) && !defined(_UNICODE)
+#include <windows.h>
 #define HAL_DEFINE_MAIN()					\
-	#include <windows.h>					\
 	int WINAPI WinMain(					\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
@@ -1686,8 +1685,7 @@ hal_bootstrap(
 				   nCmdShow);			\
 	}
 #define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
-	#include <windows.h>					\
-	int WINAPI WinMain(					\
+int WINAPI WinMain(						\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
 		LPSTR lpszCmd,					\
