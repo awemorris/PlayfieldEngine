@@ -473,8 +473,18 @@ jobs:
           retention-days: 7
 
   zip:
-    needs: [build-windows, build-mingw, build-linux, build-macos, build-wasm, build-android, build-openharmony, build-unity]
+    needs:
+      - build-windows
+      - build-mingw
+      - build-linux
+      - build-macos
+      - build-wasm
+      - build-android
+      - build-openharmony
+      - build-unity
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
