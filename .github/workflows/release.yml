@@ -94,18 +94,26 @@ jobs:
 
           mkdir -p out/i686-w64-mingw32/include/strato
           mkdir -p out/i686-w64-mingw32/lib/
-          cp include/strato/strato.h out/i686-w64-mingw32/include/strato
-          cp include/strato/c89compat.h out/i686-w64-mingw32/include/strato
+          mkdir -p out/i686-w64-mingw32/lib/pkgconfig
+          mkdir -p out/i686-w64-mingw32/share/cmake/Modules
+          cp include/strato/strato.h out/i686-w64-mingw32/include/strato/
+          cp include/strato/c89compat.h out/i686-w64-mingw32/include/strato/
           cp build-mingw-x86/libstrato.a out/i686-w64-mingw32/lib/
+          cp resources/pkg-config/strato.pc out/i686-w64-mingw32/lib/pkgconfig/
+          cp cmake/modules/FindStratoHAL.cmake out/i686-w64-mingw32/share/cmake/Modules/
 
           mkdir -p out/x86_64-w64-mingw32/include/strato
           mkdir -p out/x86_64-w64-mingw32/lib/
-          cp include/strato/strato.h out/x86_64-w64-mingw32/include/strato
-          cp include/strato/c89compat.h out/x86_64-w64-mingw32/include/strato
+          mkdir -p out/x86_64-w64-mingw32/lib/pkgconfig
+          mkdir -p out/x86_64-w64-mingw32/share/cmake/Modules
+          cp include/strato/strato.h out/x86_64-w64-mingw32/include/strato/
+          cp include/strato/c89compat.h out/x86_64-w64-mingw32/include/strato/
           cp build-mingw-x86_64/libstrato.a out/x86_64-w64-mingw32/lib/
+          cp resources/pkg-config/strato.pc out/x86_64-w64-mingw32/lib/pkgconfig/
+          cp cmake/modules/FindStratoHAL.cmake out/x86_64-w64-mingw32/share/cmake/Modules/
 
           cd out
-          tar czf ../libstrato-mingww64.tar.gz *
+          tar czf ../libstrato-mingw-w64.tar.gz *
           cd ..
 
       - name: Upload artifact
@@ -113,7 +121,7 @@ jobs:
         with:
           name: mingw
           path: |
-            libstrato-mingww64.tar.gz
+            libstrato-mingw-w64.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -157,7 +165,7 @@ jobs:
           cp build-linux/libstratopack.a out/usr/local/lib/
           cp -d build-linux-debian/libstrato.so* out/usr/local/lib/
           cp -d build-linux-debian/libstratopack.so out/usr/local/lib/
-          cp resources/pkg-config/libstrato.pc out/usr/local/lib/pkgconfig/libstrato.pc
+          cp resources/pkg-config/strato.pc out/usr/local/lib/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
           cd out
           tar czf ../libstrato-linux-x86_64.tar.gz *
@@ -244,14 +252,33 @@ jobs:
               -library build-ios-device/libstrato.a -headers include \
               -library build-ios-simulator/libstrato.a -headers include \
               -output StratoHAL.xcframework
-          tar czf StratoHAL.xcframework.tar.gz StratoHAL.xcframework
+          zip -r StratoHAL.xcframework.zip StratoHAL.xcframework
+
+      - name: Build tar.gz
+        run: |
+          mkdir -p out
+          mkdir -p out/usr/local/bin
+          mkdir -p out/usr/local/include/strato
+          mkdir -p out/usr/local/lib
+          mkdir -p out/usr/local/lib/pkgconfig
+          mkdir -p out/usr/local/share/cmake/Modules
+          mkdir -p out/usr/local/share/man/man1
+          cp noct out/usr/local/bin/
+          cp include/strato/strato.h out/usr/local/include/strato/
+          cp include/strato/c89compat.h out/usr/local/include/strato/
+          cp libstrato.a out/usr/local/lib/
+          cp resources/pkg-config/strato.pc out/usr/local/lib/pkgconfig/
+          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
+          cd out
+          tar czf ../libstrato-macos-universal.tar.gz *
+          cd ..
 
       - name: Upload macOS
         uses: actions/upload-artifact@v4
         with:
           name: macos
           path: |
-            StratoHAL.xcframework.tar.gz
+            StratoHAL.xcframework.zip
           if-no-files-found: error
           retention-days: 7
 
@@ -388,12 +415,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache apt packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt-packages.txt') }}
-
       - name: Install apt deps
         run: |
           sudo apt-get update
@@ -522,14 +543,27 @@ jobs:
           name: StratoHAL-${{ env.DATE }}-${{ env.SHORT_SHA }}
           files: |
             windows/StratoHAL.1.0.0.nupkg
-            mingw/libstrato-mingww64.tar.gz
+            mingw/libstrato-mingw.tar.gz
+            macos/StratoHAL.xcframework.zip
+            macos/libstrato-macos-universal.tar.gz
             linux/libstrato-linux-x86_64.tar.gz
             wasm/libstrato-wasm.tar.gz
-            macos/StratoHAL.xcframework.tar.gz
             android/StratoHAL.aar
             openharmony/libstrato-openharmony.tar.gz
 
           body: |
-            These is not an official release.
+            This is an automated nightly build. Not an official release.
+            
+            | OS          | File                             | Type             | Description                                          |
+            |-------------|----------------------------------|------------------|------------------------------------------------------|
+            | Windows     | StratoHAL.1.0.0.nupkg            | NuGet Package    | Visual Studio 2022+                                  |
+            | Windows     | libstrato-mingw-w64.tar.gz       | Tarball          | MinGW-w64                                            |
+            | macOS       | StratoHAL.xcframework.zip        | Xcode Framework  | macOS and iOS                                        |
+            | macOS       | libstrato-macos-universal.tar.gz | Tarball          | macOS                                                |
+            | Linux       | libstrato-linux-x86_64.tar.gz    | Tarball          | Linux, glibc 2.28, Debian 12+ and RHEL 8+            |
+            | Wasm        | libstrato-wasm.tar.gz            | Tarball          | Emscripten                                           |
+            | Android     | StratoHAL.aar                    | AAR              | Android NDK                                          |
+            | OpenHarmony | libstrato-openharmony.tar.gz     | Tarball          | OpenHarmony (HarmonyOS NEXT)                         |
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
