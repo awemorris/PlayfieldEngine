@@ -1685,6 +1685,7 @@ hal_bootstrap(
 				   nCmdShow);			\
 	}
 #define HAL_DEFINE_MAIN_CHAIN(chain_ptr, chain)			\
+#include <windows.h>
 int WINAPI WinMain(						\
 		HINSTANCE hInstance,				\
 		HINSTANCE hPrevInstance,			\
