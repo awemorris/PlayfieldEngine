@@ -155,18 +155,18 @@ jobs:
       - name: Build tar.gz
         run: |
           mkdir -p out
-          mkdir -p out/usr/local/include/strato
-          mkdir -p out/usr/local/lib
-          mkdir -p out/usr/local/lib/pkgconfig
-          mkdir -p out/usr/local/share/cmake/Modules
-          cp include/strato/strato.h out/usr/local/include/strato/
-          cp include/strato/c89compat.h out/usr/local/include/strato/
-          cp build-linux/libstrato.a out/usr/local/lib/
-          cp build-linux/libstratopack.a out/usr/local/lib/
-          cp -d build-linux-debian/libstrato.so* out/usr/local/lib/
-          cp -d build-linux-debian/libstratopack.so out/usr/local/lib/
-          cp resources/pkg-config/strato.pc out/usr/local/lib/pkgconfig/
-          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
+          mkdir -p out/include/strato
+          mkdir -p out/lib
+          mkdir -p out/lib/pkgconfig
+          mkdir -p out/share/cmake/Modules
+          cp include/strato/strato.h out/include/strato/
+          cp include/strato/c89compat.h out/include/strato/
+          cp build-linux/libstrato.a out/lib/
+          cp build-linux/libstratopack.a out/lib/
+          cp -d build-linux-debian/libstrato.so* out/lib/
+          cp -d build-linux-debian/libstratopack.so out/lib/
+          cp resources/pkg-config/strato.pc out/usr/pkgconfig/
+          cp cmake/modules/FindStratoHAL.cmake out/share/cmake/Modules/
           cd out
           tar czf ../libstrato-linux-x86_64.tar.gz *
           cd ..
@@ -257,18 +257,16 @@ jobs:
       - name: Build tar.gz
         run: |
           mkdir -p out
-          mkdir -p out/usr/local/bin
-          mkdir -p out/usr/local/include/strato
-          mkdir -p out/usr/local/lib
-          mkdir -p out/usr/local/lib/pkgconfig
-          mkdir -p out/usr/local/share/cmake/Modules
-          mkdir -p out/usr/local/share/man/man1
-          cp noct out/usr/local/bin/
-          cp include/strato/strato.h out/usr/local/include/strato/
-          cp include/strato/c89compat.h out/usr/local/include/strato/
-          cp libstrato.a out/usr/local/lib/
-          cp resources/pkg-config/strato.pc out/usr/local/lib/pkgconfig/
-          cp cmake/modules/FindStratoHAL.cmake out/usr/local/share/cmake/Modules/
+          mkdir -p out/include/strato
+          mkdir -p out/lib
+          mkdir -p out/lib/pkgconfig
+          mkdir -p out/share/cmake/Modules
+          mkdir -p out/share/man/man1
+          cp include/strato/strato.h out/include/strato/
+          cp include/strato/c89compat.h out/include/strato/
+          cp libstrato.a out/lib/
+          cp resources/pkg-config/strato.pc out/lib/pkgconfig/
+          cp cmake/modules/FindStratoHAL.cmake out/share/cmake/Modules/
           cd out
           tar czf ../libstrato-macos-universal.tar.gz *
           cd ..
@@ -554,16 +552,16 @@ jobs:
           body: |
             This is an automated nightly build. Not an official release.
             
-            | OS          | File                             | Type             | Description                                          |
-            |-------------|----------------------------------|------------------|------------------------------------------------------|
-            | Windows     | StratoHAL.1.0.0.nupkg            | NuGet Package    | Visual Studio 2022+                                  |
-            | Windows     | libstrato-mingw-w64.tar.gz       | Tarball          | MinGW-w64                                            |
-            | macOS       | StratoHAL.xcframework.zip        | Xcode Framework  | macOS and iOS                                        |
-            | macOS       | libstrato-macos-universal.tar.gz | Tarball          | macOS                                                |
-            | Linux       | libstrato-linux-x86_64.tar.gz    | Tarball          | Linux, glibc 2.28, Debian 12+ and RHEL 8+            |
-            | Wasm        | libstrato-wasm.tar.gz            | Tarball          | Emscripten                                           |
-            | Android     | StratoHAL.aar                    | AAR              | Android NDK                                          |
-            | OpenHarmony | libstrato-openharmony.tar.gz     | Tarball          | OpenHarmony (HarmonyOS NEXT)                         |
+            | OS          | File                             | Type             | Description                    |
+            |-------------|----------------------------------|------------------|--------------------------------|
+            | Windows     | StratoHAL.1.0.0.nupkg            | NuGet Package    | Visual Studio 2022+            |
+            | Windows     | libstrato-mingw-w64.tar.gz       | Tarball          | MinGW-w64                      |
+            | macOS       | StratoHAL.xcframework.zip        | Xcode Framework  | macOS and iOS, Xcode           |
+            | macOS       | libstrato-macos-universal.tar.gz | Tarball          | macOS (extract to /usr/local)  |
+            | Linux       | libstrato-linux-x86_64.tar.gz    | Tarball          | Linux (extract to /usr/local)  |
+            | Wasm        | libstrato-wasm.tar.gz            | Tarball          | Emscripten                     |
+            | Android     | StratoHAL.aar                    | AAR              | Android NDK                    |
+            | OpenHarmony | libstrato-openharmony.tar.gz     | Tarball          | OpenHarmony (HarmonyOS NEXT)   |
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
