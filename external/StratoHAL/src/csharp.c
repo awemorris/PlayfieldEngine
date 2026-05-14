@@ -178,6 +178,8 @@ void init_hal_func_table(
  */
 
 static struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
+
 static int screen_width;
 static int screen_height;
 static char *window_title;
@@ -185,7 +187,7 @@ static char *window_title;
 int
 on_event_boot(int *w, int *h)
 {
-	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+	if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
 		return 0;
 
 	*w = screen_width;
