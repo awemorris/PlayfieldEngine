@@ -95,7 +95,11 @@ static char get_next_random(void);
 /*
  * main
  */
-int command_archive(int argc, char *argv[])
+HAL_DLL
+int
+hal_archive(
+	int argc,
+	char *argv[])
 {
 	int i;
 
