@@ -73,6 +73,7 @@ static bool is_finished[HAL_SOUND_TRACKS];
 
 /* HAL callback. */
 struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 
 extern "C" void fill_buffer(void *cookie, void *buffer, size_t size, const media_raw_audio_format& format);
 
