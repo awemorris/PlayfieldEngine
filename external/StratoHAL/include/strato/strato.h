@@ -1593,7 +1593,7 @@ bool
 	struct hal_callback *callback);
 
 /* App side. */
-bool
+extern bool
 hal_bootstrap(
 	char **title,
 	int *width,
@@ -1609,7 +1609,7 @@ hal_bootstrap(
     defined(HAL_TARGET_POSIX)		||	\
     defined(HAL_TARGET_MACOS)		||	\
     defined(HAL_TARGET_IOS)
-#define HAL_DEFINE_MAIN()		\
+#define HAL_DEFINE_MAIN()				\
 	int main(int argc, char *argv[])		\
 	{						\
 		int hal_main(int argc, char *argv[]);	\
