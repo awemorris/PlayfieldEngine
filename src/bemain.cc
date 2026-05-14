@@ -230,7 +230,7 @@ public:
 	}
 };
 
-int main(int argc, char *argv[])
+int hal_main(int argc, char *argv[])
 {
 	NoctApplication app;
 	app.Run();

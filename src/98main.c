@@ -82,7 +82,7 @@ static void process_input(void);
 static void flip(void);
 static bool open_log_file(void);
 
-int main2(int argc, char *argv[])
+int hal_main(int argc, char *argv[])
 {
 	printf("\n"
 	       "Suika3 Game Engine for PC-9801\n"

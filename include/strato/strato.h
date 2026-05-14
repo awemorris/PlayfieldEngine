@@ -1585,4 +1585,72 @@ hal_log_out_of_memory(void);
 }
 #endif
 
+/*
+ * Entrypoint
+ */
+
+#if defined(HAL_TARGET_LINUX)		||	\
+    defined(HAL_TARGET_FREEBSD)		||	\
+    defined(HAL_TARGET_NETBSD)		||	\
+    defined(HAL_TARGET_OPENBSD)		||	\
+    defined(HAL_TARGET_SOLARIS10)	||	\
+    defined(HAL_TARGET_SOLARIS11)	||	\
+    defined(HAL_TARGET_POSIX)		||	\
+    defined(HAL_TARGET_MACOS)		||	\
+    defined(HAL_TARGET_IOS)
+#define HAL_DEFINE_MAIN()				\
+	int main(int argc, char *argv[])		\
+	{						\
+		int hal_main(int argc, char *argv[]);	\
+		return hal_main(argc, argv);		\
+	}
+#endif
+
+#if defined(HAL_TARGET_WINDOWS) && defined(_UNICODE)
+#define HAL_DEFINE_MAIN()							\
+	int WINAPI wWinMain(							\
+		HINSTANCE hInstance,						\
+		HINSTANCE hPrevInstance,					\
+		LPWSTR lpszCmd,								\
+		int nCmdShow)								\
+	{										\
+		int WINAPI hal_wWinMain(HINSTANCE,		\
+					HINSTANCE,		\
+					LPWSTR,			\
+					int);			\
+		return hal_wWinMain(hInstance,			\
+				    hPrevInstance,		\
+				    lpszCmd,			\
+				    nCmdShow);			\
+	}
+#endif
+
+#if defined(HAL_TARGET_WINDOWS) && !defined(_UNICODE)
+#define HAL_DEFINE_MAIN()					\
+	int WINAPI WinMain(					\
+		HINSTANCE hInstance,				\
+		HINSTANCE hPrevInstance,			\
+		LPSTR lpszCmd,					\
+		int nCmdShow)					\
+	{							\
+		int WINAPI hal_WinMain(HINSTANCE,		\
+				       HINSTANCE,		\
+				       LPWSTR,			\
+				       int);			\
+		return hal_WinMain(hInstance,			\
+				   hPrevInstance,		\
+				   lpszCmd,			\
+				   nCmdShow);			\
+	}
+#endif
+
+#if defined(HAL_TARGET_WASM)
+#define HAL_DEFINE_MAIN()				\
+	int main(void)					\
+	{						\
+		int hal_main(void);			\
+		return hal_main();			\
+	}
+#endif
+
 #endif

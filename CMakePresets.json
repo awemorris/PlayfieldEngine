@@ -126,8 +126,9 @@
             "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_WINDOWS": "ON",
-                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
                 "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
                 "STRATO_ENABLE_PACK":    "ON"
             }
         },
@@ -139,8 +140,9 @@
             "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-x86_64.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_WINDOWS": "ON",
-                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
                 "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
                 "STRATO_ENABLE_PACK":    "ON"
             }
         },
@@ -152,6 +154,7 @@
             "toolchainFile":  "${sourceDir}/cmake/toolchains/mingw-arm64.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_WINDOWS": "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
                 "STRATO_ENABLE_I18N":    "ON",
                 "STRATO_ENABLE_STATIC":  "ON",
                 "STRATO_ENABLE_PACK":    "ON"
@@ -164,10 +167,11 @@
             "binaryDir":      "${sourceDir}/build-macos-arm64",
             "toolchainFile":  "${sourceDir}/cmake/toolchains/macos-arm64.cmake",
             "cacheVariables": {
-                "STRATO_TARGET_MACOS":  "ON",
-                "STRATO_ENABLE_I18N":   "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_PACK":   "ON"
+                "STRATO_TARGET_MACOS":   "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -177,10 +181,11 @@
             "binaryDir":      "${sourceDir}/build-macos-x86_64",
             "toolchainFile":  "${sourceDir}/cmake/toolchains/macos-x86_64.cmake",
             "cacheVariables": {
-                "STRATO_TARGET_MACOS":  "ON",
-                "STRATO_ENABLE_I18N":   "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_PACK":   "ON"
+                "STRATO_TARGET_MACOS":   "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -189,10 +194,11 @@
             "generator":      "Ninja",
             "binaryDir":      "${sourceDir}/build-linux",
             "cacheVariables": {
-                "STRATO_TARGET_LINUX":     "ON",
-                "STRATO_ENABLE_I18N":      "ON",
-                "STRATO_ENABLE_STATIC":    "ON",
-                "STRATO_ENABLE_PACK":      "ON"
+                "STRATO_TARGET_LINUX":   "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -202,11 +208,11 @@
             "binaryDir":      "${sourceDir}/build-linux-debian",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX":        "ON",
-                "STRATO_ENABLE_I18N":         "ON",
-                "STRATO_ENABLE_I18N_LIBINTL": "ON",
+                "STRATO_ENABLE_INSTALL":      "ON",
                 "STRATO_ENABLE_SHARED":       "ON",
                 "STRATO_ENABLE_DIST":         "ON",
-                "STRATO_ENABLE_INSTALL":      "ON",
+                "STRATO_ENABLE_I18N":         "ON",
+                "STRATO_ENABLE_I18N_LIBINTL": "ON",
                 "STRATO_ENABLE_PACK":         "ON"
             }
         },
@@ -217,8 +223,9 @@
             "binaryDir":      "${sourceDir}/build-linux-x11",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_X11": "ON",
-                "STRATO_ENABLE_I18N":      "ON",
+                "STRATO_ENABLE_INSTALL":   "ON",
                 "STRATO_ENABLE_STATIC":    "ON",
+                "STRATO_ENABLE_I18N":      "ON",
                 "STRATO_ENABLE_PACK":      "ON"
             }
         },
@@ -229,8 +236,9 @@
             "binaryDir":      "${sourceDir}/build-linux-wayland",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_WAYLAND": "ON",
-                "STRATO_ENABLE_I18N":          "ON",
+                "STRATO_ENABLE_INSTALL":       "ON",
                 "STRATO_ENABLE_STATIC":        "ON",
+                "STRATO_ENABLE_I18N":          "ON",
                 "STRATO_ENABLE_PACK":          "ON"
             }
         },
@@ -241,8 +249,9 @@
             "binaryDir":      "${sourceDir}/build-linux-dri",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_DRI": "ON",
-                "STRATO_ENABLE_I18N":      "ON",
+                "STRATO_ENABLE_INSTALL":   "ON",
                 "STRATO_ENABLE_STATIC":    "ON",
+                "STRATO_ENABLE_I18N":      "ON",
                 "STRATO_ENABLE_PACK":      "ON"
             }
         },
@@ -253,9 +262,10 @@
             "binaryDir":      "${sourceDir}/build-linux-dri-rot90",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_DRI": "ON",
+                "STRATO_ENABLE_INSTALL":   "ON",
+                "STRATO_ENABLE_STATIC":    "ON",
                 "STRATO_ENABLE_ROT90":     "ON",
                 "STRATO_ENABLE_I18N":      "ON",
-                "STRATO_ENABLE_STATIC":    "ON",
                 "STRATO_ENABLE_PACK":      "ON"
             }
         },
@@ -266,8 +276,9 @@
             "binaryDir":      "${sourceDir}/build-linux-fbdev",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_FBDEV": "ON",
-                "STRATO_ENABLE_I18N":        "ON",
+                "STRATO_ENABLE_INSTALL":     "ON",
                 "STRATO_ENABLE_STATIC":      "ON",
+                "STRATO_ENABLE_I18N":        "ON",
                 "STRATO_ENABLE_PACK":        "ON"
             }
         },
@@ -278,8 +289,9 @@
             "binaryDir":      "${sourceDir}/build-linux-x11soft",
             "cacheVariables": {
                 "STRATO_TARGET_LINUX_X11SOFT": "ON",
-                "STRATO_ENABLE_I18N":          "ON",
+                "STRATO_ENABLE_INSTALL":       "ON",
                 "STRATO_ENABLE_STATIC":        "ON",
+                "STRATO_ENABLE_I18N":          "ON",
                 "STRATO_ENABLE_PACK":          "ON"
             }
         },
@@ -495,10 +507,11 @@
             "generator":      "Ninja",
             "binaryDir":      "${sourceDir}/build-freebsd",
             "cacheVariables": {
-                "STRATO_TARGET_FREEBSD":    "ON",
-                "STRATO_ENABLE_STATIC":     "ON",
-                "STRATO_ENABLE_I18N":       "ON",
-                "STRATO_ENABLE_PACK":       "ON"
+                "STRATO_TARGET_FREEBSD": "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -508,6 +521,7 @@
             "binaryDir":      "${sourceDir}/build-freebsd-x11",
             "cacheVariables": {
                 "STRATO_TARGET_FREEBSD_X11": "ON",
+                "STRATO_ENABLE_INSTALL":     "ON",
                 "STRATO_ENABLE_STATIC":      "ON",
                 "STRATO_ENABLE_I18N":        "ON",
                 "STRATO_ENABLE_PACK":        "ON"
@@ -520,6 +534,7 @@
             "binaryDir":      "${sourceDir}/build-freebsd-wayland",
             "cacheVariables": {
                 "STRATO_TARGET_FREEBSD_WAYLAND": "ON",
+                "STRATO_ENABLE_INSTALL":         "ON",
                 "STRATO_ENABLE_STATIC":          "ON",
                 "STRATO_ENABLE_I18N":            "ON",
                 "STRATO_ENABLE_PACK":            "ON"
@@ -532,6 +547,7 @@
             "binaryDir":      "${sourceDir}/build-freebsd-x11soft",
             "cacheVariables": {
                 "STRATO_TARGET_FREEBSD_X11SOFT": "ON",
+                "STRATO_ENABLE_INSTALL":         "ON",
                 "STRATO_ENABLE_STATIC":          "ON",
                 "STRATO_ENABLE_I18N":            "ON",
                 "STRATO_ENABLE_PACK":            "ON"
@@ -543,10 +559,11 @@
             "generator":      "Ninja",
             "binaryDir":      "${sourceDir}/build-netbsd",
             "cacheVariables": {
-                "STRATO_TARGET_NETBSD": "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_I18N":   "ON",
-                "STRATO_ENABLE_PACK":   "ON"
+                "STRATO_TARGET_NETBSD":  "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -556,6 +573,7 @@
             "binaryDir":      "${sourceDir}/build-netbsd-x11soft",
             "cacheVariables": {
                 "STRATO_TARGET_NETBSD_X11SOFT": "ON",
+                "STRATO_ENABLE_INSTALL":        "ON",
                 "STRATO_ENABLE_STATIC":         "ON",
                 "STRATO_ENABLE_I18N":           "ON",
                 "STRATO_ENABLE_PACK":           "ON"
@@ -568,6 +586,7 @@
             "binaryDir":      "${sourceDir}/build-openbsd",
             "cacheVariables": {
                 "STRATO_TARGET_OPENBSD": "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
                 "STRATO_ENABLE_STATIC":  "ON",
                 "STRATO_ENABLE_I18N":    "ON",
                 "STRATO_ENABLE_PACK":    "ON"
@@ -580,7 +599,8 @@
             "binaryDir":      "${sourceDir}/build-openbsd-x11soft",
             "cacheVariables": {
                 "STRATO_TARGET_OPENBSD_X11SOFT": "ON",
-                "STRATO_ENABLE_STATIC":    "ON",
+                "STRATO_ENABLE_INSTALL":         "ON",
+                "STRATO_ENABLE_STATIC":          "ON",
                 "STRATO_ENABLE_I18N":            "ON",
                 "STRATO_ENABLE_PACK":            "ON"
             }
@@ -594,6 +614,7 @@
                 "CMAKE_C_COMPILER":        "cc",
                 "CMAKE_CXX_COMPILER":      "CC",
                 "STRATO_TARGET_SOLARIS11": "ON",
+                "STRATO_ENABLE_INSTALL":   "ON",
                 "STRATO_ENABLE_STATIC":    "ON",
                 "STRATO_ENABLE_I18N":      "ON",
                 "STRATO_ENABLE_PACK":      "ON"
@@ -608,6 +629,7 @@
                 "CMAKE_C_COMPILER":        "cc",
                 "CMAKE_CXX_COMPILER":      "CC",
                 "STRATO_TARGET_SOLARIS10": "ON",
+                "STRATO_ENABLE_INSTALL":   "ON",
                 "STRATO_ENABLE_STATIC":    "ON",
                 "STRATO_ENABLE_I18N":      "ON",
                 "STRATO_ENABLE_PACK":      "ON"
@@ -622,6 +644,7 @@
                 "CMAKE_C_COMPILER":          "xlc",
                 "CMAKE_CXX_COMPILER":        "xlc++",
                 "STRATO_TARGET_GENERICUNIX": "ON",
+                "STRATO_ENABLE_INSTALL":     "ON",
                 "STRATO_ENABLE_STATIC":      "ON",
                 "STRATO_ENABLE_I18N":        "ON",
                 "STRATO_ENABLE_PACK":        "ON"
@@ -636,7 +659,8 @@
                 "CMAKE_C_COMPILER":          "cc",
                 "CMAKE_CXX_COMPILER":        "aCC",
                 "STRATO_TARGET_GENERICUNIX": "ON",
-                "STRATO_ENABLE_STATIC": "ON",
+                "STRATO_ENABLE_INSTALL":     "ON",
+                "STRATO_ENABLE_STATIC":      "ON",
                 "STRATO_ENABLE_I18N":        "ON",
                 "STRATO_ENABLE_PACK":        "ON"
             }
@@ -650,7 +674,8 @@
                 "CMAKE_C_COMPILER":          "cc",
                 "CMAKE_CXX_COMPILER":        "c++",
                 "STRATO_TARGET_GENERICUNIX": "ON",
-                "STRATO_ENABLE_STATIC": "ON",
+                "STRATO_ENABLE_INSTALL":     "ON",
+                "STRATO_ENABLE_STATIC":      "ON",
                 "STRATO_ENABLE_I18N":        "ON",
                 "STRATO_ENABLE_PACK":        "ON"
             }
@@ -661,12 +686,13 @@
             "generator":      "Unix Makefiles",
             "binaryDir":      "${sourceDir}/build-haiku",
             "cacheVariables": {
-                "CMAKE_C_COMPILER":    "gcc",
-                "CMAKE_CXX_COMPILER":  "g++",
-                "STRATO_TARGET_HAIKU": "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_I18N":  "ON",
-                "STRATO_ENABLE_PACK":  "ON"
+                "CMAKE_C_COMPILER":      "gcc",
+                "CMAKE_CXX_COMPILER":    "g++",
+                "STRATO_TARGET_HAIKU":   "ON",
+                "STRATO_ENABLE_INSTALL": "ON",
+                "STRATO_ENABLE_STATIC":  "ON",
+                "STRATO_ENABLE_I18N":    "ON",
+                "STRATO_ENABLE_PACK":    "ON"
             }
         },
         {
@@ -677,8 +703,7 @@
             "toolchainFile":  "${sourceDir}/cmake/toolchains/openwatcom-dos4gw.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_PC98":   "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_MAIN2":  "ON"
+                "STRATO_ENABLE_STATIC": "ON"
 	    }
         }
     ],
