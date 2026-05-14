@@ -83,11 +83,12 @@ static void showLogAtExit(void);
 // main
 //
 
-#if defined(HAL_USE_MAIN2)
-#define main main2
-#endif
-
-int main(int argc, const char *argv[]) {
+HAL_DLL
+int
+hal_main(
+        int argc,
+        const char *argv[])
+{
     // Use "." for numeric points.
     setlocale(LC_NUMERIC, "C");
 
@@ -1012,6 +1013,7 @@ putTextToLogWindow(
 //
 
 // Make a save directory.
+HAL_DLL
 bool
 make_save_directory(void)
 {
@@ -1053,6 +1055,7 @@ make_save_directory(void)
 }
 
 // Get a real path for a file.
+HAL_DLL
 char *
 make_real_path(
         const char *fname)
@@ -1111,6 +1114,7 @@ make_real_path(
 }
 
 // Show an INFO log.
+HAL_DLL
 bool
 hal_log_info(
         const char *s, ...)
@@ -1144,6 +1148,7 @@ hal_log_info(
 }
 
 // Show a WARN log.
+HAL_DLL
 bool
 hal_log_warn(
         const char *s, ...)
@@ -1177,6 +1182,7 @@ hal_log_warn(
 }
 
 // Show an ERROR log.
+HAL_DLL
 bool
 hal_log_error(
         const char *s,
@@ -1211,6 +1217,7 @@ hal_log_error(
 }
 
 // Show an Out-of-memory error.
+HAL_DLL
 bool
 hal_log_out_of_memory(void)
 {
@@ -1300,6 +1307,7 @@ showLogAtExit(void)
 }
 
 // Reset a lap timer.
+HAL_DLL
 void
 hal_reset_lap_timer(
         uint64_t *origin)
@@ -1311,6 +1319,7 @@ hal_reset_lap_timer(
 }
 
 // Get a timer lap
+HAL_DLL
 uint64_t
 hal_get_lap_timer_millisec(
         uint64_t *origin)
@@ -1328,6 +1337,7 @@ hal_get_lap_timer_millisec(
 }
 
 // Play a video.
+HAL_DLL
 bool
 hal_play_video(
         const char *fname,
@@ -1347,6 +1357,7 @@ hal_play_video(
 }
 
 // Stop a video.
+HAL_DLL
 void
 hal_stop_video(void)
 {
@@ -1355,6 +1366,7 @@ hal_stop_video(void)
 
 // Check if video is playing back.
 //
+HAL_DLL
 bool
 hal_is_video_playing(void)
 {
@@ -1362,6 +1374,7 @@ hal_is_video_playing(void)
 }
 
 // Check if the full screen mode is supported.
+HAL_DLL
 bool
 hal_is_full_screen_supported(void)
 {
@@ -1369,6 +1382,7 @@ hal_is_full_screen_supported(void)
 }
 
 // Check if operating in the full screen mode.
+HAL_DLL
 bool
 hal_is_full_screen_mode(void)
 {
@@ -1376,6 +1390,7 @@ hal_is_full_screen_mode(void)
 }
 
 // Enter the full screen mode.
+HAL_DLL
 void
 hal_enter_full_screen_mode(void)
 {
@@ -1383,6 +1398,7 @@ hal_enter_full_screen_mode(void)
 }
 
 // Leave the full screen mode.
+HAL_DLL
 void
 hal_leave_full_screen_mode(void)
 {
@@ -1390,6 +1406,7 @@ hal_leave_full_screen_mode(void)
 }
 
 // Get a system language.
+HAL_DLL
 const char *
 hal_get_system_language(void)
 {
@@ -1448,6 +1465,7 @@ hal_get_system_language(void)
 }
 
 // Not used in macOS.
+HAL_DLL
 void
 hal_set_continuous_swipe_enabled(
         bool is_enabled)

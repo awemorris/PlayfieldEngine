@@ -49,7 +49,6 @@ option(STRATO_ENABLE_I18N             "Enable translation"                      
 option(STRATO_ENABLE_I18N_LIBINTL     "Enable gettext"                          OFF)
 option(STRATO_ENABLE_ROT90            "Rotate screen"                           OFF)
 option(STRATO_ENABLE_GST              "Enable Gstreamer support"                OFF)
-option(STRATO_ENABLE_MAIN2            "Enable macOS main2()"                    OFF)
 option(STRATO_ENABLE_CONSOLE          "Enable console debug output"             OFF)
 option(STRATO_ENABLE_PORTAL           "Enable XDG Portal"                       OFF)
 

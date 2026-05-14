@@ -129,7 +129,7 @@ void hal_set_continuous_swipe_enabled_x11(bool is_enabled);
 /* Main. */
 HAL_DLL
 int
-main(
+hal_main(
 	int argc,
 	char *argv[])
 {

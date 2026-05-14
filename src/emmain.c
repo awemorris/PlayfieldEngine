@@ -100,7 +100,7 @@ static void init_lang_code(void);
  * main()
  */
 int
-main(void)
+hal_main(void)
 {
 	/* Initialize the locale. */
 	init_lang_code();

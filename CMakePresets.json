@@ -703,8 +703,7 @@
             "toolchainFile":  "${sourceDir}/cmake/toolchains/openwatcom-dos4gw.cmake",
             "cacheVariables": {
                 "STRATO_TARGET_PC98":   "ON",
-                "STRATO_ENABLE_STATIC": "ON",
-                "STRATO_ENABLE_MAIN2":  "ON"
+                "STRATO_ENABLE_STATIC": "ON"
 	    }
         }
     ],
