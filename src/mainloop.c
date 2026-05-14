@@ -144,6 +144,8 @@ PF_DLL bool pf_is_f10_key_pressed;
 PF_DLL bool pf_is_f11_key_pressed;
 PF_DLL bool pf_is_f12_key_pressed;
 
+PF_DLL bool(*pf_init_hook_ptr)(int width, int height);
+
 /* Forward declaration. */
 static bool on_start(void);
 static bool on_update(void);
@@ -422,7 +424,7 @@ on_start(void)
 	hal_reset_lap_timer(&lap_origin);
 
 	/* Initialize the upper layer. */
-	pf_init_hook(screen_width, screen_height);
+	pf_init_hook_ptr(screen_width, screen_height);
 
 	/* Call start(). */
 	if (!pfi_call_vm_function("start"))

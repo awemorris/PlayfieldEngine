@@ -874,7 +874,7 @@ pf_log_out_of_memory(void);
 
 /* DLL side */
 PF_DLL
-bool
+extern bool
 (*pf_init_hook_ptr)(
 	int width,
 	int height);
