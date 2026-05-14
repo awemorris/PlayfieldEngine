@@ -12,7 +12,7 @@
 #include <playfield/playfield.h>
 
 /* Entrypoint. */
-PF_DEFINE_MAIN();
+PF_DEFINE_MAIN()
 
 /*
  * Initialization function for derived engines.
