@@ -29,6 +29,7 @@
  */
 
 #include <strato/strato.h>
+#include "csharp.h"
 
 #include <stdio.h>
 #include <stdlib.h>

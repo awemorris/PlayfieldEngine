@@ -1,4 +1,4 @@
-v/* -*- coding: utf-8; tab-width: 4; indent-tabs-mode: nil; -*- */
+/* -*- coding: utf-8; tab-width: 4; indent-tabs-mode: nil; -*- */
 
 /*
  * StratoHAL
@@ -69,7 +69,7 @@ static char *logFilePath;
 static bool releaseMode;
 
 // Callback.
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 // Forward declaration.
 static void checkBundleResource(int argc, const char *argv[]);
