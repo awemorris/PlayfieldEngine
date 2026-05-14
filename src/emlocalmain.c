@@ -127,7 +127,7 @@ start_engine(void)
 	init_lang_code();
 
 	/* Do a boot callback. */
-	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+	if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
 		return;
 
 	/* Set the rendering canvas size. */

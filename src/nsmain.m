@@ -258,7 +258,7 @@ static void checkBundleResource(int argc, const char *argv[])
     }
 
     // Do a boot callback to acquire a window configuration.
-    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback)) {
+    if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback)) {
         NSLog(@"Startup file failed.");
         showLogAtExit();
         [NSApp terminate:nil];

@@ -328,7 +328,7 @@ init_hal(
 		return false;
 
 	/* Do a boot callback. */
-	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+	if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
 		return false;
 
 	/* Initialize the sound HAL. */

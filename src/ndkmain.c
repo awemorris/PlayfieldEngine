@@ -119,10 +119,10 @@ Java_io_noctvm_strato_MainActivity_nativeOnBootstrap(
 	}
 
 	/* Do a boot callback to acquire a screen configuration. */
-	if (!hal_bootstrap(&window_title,
-			   &screen_width,
-			   &screen_height,
-			   &hal_callback)) {
+	if (!hal_bootstrap_ptr(&window_title,
+			       &screen_width,
+			       &screen_height,
+			       &hal_callback)) {
 		hal_log_error("Initialization failed.");
 		return;
 	}

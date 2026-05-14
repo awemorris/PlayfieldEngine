@@ -467,7 +467,7 @@ onInit(void)
         return false;
 
     // Do a boot callback to acquire a screen configuration.
-    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+    if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
         return false;
     
     // Init the graphics HAL.

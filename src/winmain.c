@@ -348,7 +348,7 @@ InitApp(
 		return FALSE;
 
 	/* Do a boot callback. */
-	if (!hal_bootstrap(&pszWindowTitle, &nWindowWidth, &nWindowHeight, &hal_callback))
+	if (!hal_bootstrap_ptr(&pszWindowTitle, &nWindowWidth, &nWindowHeight, &hal_callback))
 		return FALSE;
 
 	/* Create a window. */
