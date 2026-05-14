@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(StratoHAL LANGUAGES C CXX)
+project(StratoHAL VERSION 1.0 LANGUAGES C)
 
 #
 # Configuration
@@ -1374,5 +1374,33 @@ if(STRATO_ENABLE_INSTALL)
   if(STRATO_ENABLE_I18N_LIBINTL)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
             DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
+  endif()
+
+  # CMake module
+  install(
+    FILES "${CMAKE_SOURCE_DIR}/cmake/modules/FindStratoHAL.cmake"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/cmake/Modules"
+  )
+
+  # pkgconfig pc
+  configure_file(
+    "${CMAKE_SOURCE_DIR}/resources/pkg-config/strato.pc.in"
+    strato.pc
+    @ONLY
+  )
+  install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/strato.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+  )
+  if(STRATO_ENABLE_PACK)
+    configure_file(
+      "${CMAKE_SOURCE_DIR}/resources/pkg-config/stratopack.pc.in"
+      stratopack.pc
+      @ONLY
+    )
+    install(
+      FILES "${CMAKE_CURRENT_BINARY_DIR}/stratopack.pc"
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+    )
   endif()
 endif()
