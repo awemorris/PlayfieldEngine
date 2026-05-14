@@ -105,7 +105,7 @@ static int touchLastY;
 static bool isContinuousSwipeEnabled;
 
 // Callback.
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 // Forward declaration.
 extern "C" {
@@ -525,8 +525,11 @@ bool onFrame(void)
 {
     opengl_start_rendering();
 
-    if (!hal_callback.on_frame())
+    if (!hal_callback.on_update())
         return false;
+
+    hal_callback.on_render();
+   
 
     opengl_end_rendering();
 
@@ -577,11 +580,11 @@ void onTouchEnd(int x, int y, int points)
     int deltaY = y - touchStartY;
     if (deltaY > FLICK_Y_DISTANCE) {
         hal_callback.on_touch_cancel();
-        hal_callback.on_swipe_down();
+        hal_callback.on_swipe_down(0, 0);
         return;
     } else if (deltaY < -FLICK_Y_DISTANCE) {
         hal_callback.on_touch_cancel();
-        hal_callback.on_swipe_up();
+        hal_callback.on_swipe_up(0, 0);
         return;
     }
 

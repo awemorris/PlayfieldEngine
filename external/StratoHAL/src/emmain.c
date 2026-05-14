@@ -77,7 +77,7 @@ static int screen_height;
 static const char *lang_code;
 
 /* Callback. */
-struct hal_callback hal_callbak;
+struct hal_callback hal_callback;
 
 /*
  * Forward Declaration
@@ -225,15 +225,18 @@ loop_iter(
 	/* Fill sound buffer. */
 	fill_sound_buffer();
 
+	/* Call the update callback. */
+	if (!hal_callback.on_update()) {
+		/* Exit. */
+		stop = true;
+		return EM_FALSE;
+	}
+
 	/* Start a frame rendering. */
 	opengl_start_rendering();
 
-	/* Call a frame callback. */
-	if (!hal_callback.on_frame()) {
-		/* Exit. */
-		stop = true;
-		EM_FALSE;
-	}
+	/* Call the render callback. */
+	hal_callback.on_render();
 
 	/* End a frame rendering. */
 	opengl_end_rendering();
@@ -583,11 +586,11 @@ cb_touchend(
 	delta_y = touchEvent->touches[0].targetY - touch_start_y;
 	if (delta_y > FLICK_Y_DISTANCE) {
 		hal_callback.on_touch_cancel();
-		hal_callback.on_swipe_down();
+		hal_callback.on_swipe_down(0, 0);
 		return EM_TRUE;
 	} else if (delta_y < -FLICK_Y_DISTANCE) {
 		hal_callback.on_touch_cancel();
-		hal_callback.on_swipe_up();
+		hal_callback.on_swipe_up(0, 0);
 		return EM_TRUE;
 	}
 

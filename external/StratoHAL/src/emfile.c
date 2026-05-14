@@ -294,7 +294,6 @@ hal_get_rfile_string(
 	char c;
 
 	assert(f != NULL);
-	assert(f->fp != NULL);
 	assert(buf != NULL);
 	assert(size > 0);
 
