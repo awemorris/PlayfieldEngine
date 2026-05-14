@@ -110,7 +110,7 @@ hal_main(void)
 		return 1;
 
 	/* Do a boot callback. */
-	if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+	if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
 		return 1;
 
 	/* Mount IDBFS for save data. */

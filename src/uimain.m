@@ -151,7 +151,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
         exit(1);
     
     // Do a boot callback to acquire a screen configuration.
-    if (!hal_bootstrap(&window_title, &screen_width, &screen_height, &hal_callback))
+    if (!hal_bootstrap_ptr(&window_title, &screen_width, &screen_height, &hal_callback))
         exit(1);
     
     // Initialize the sound HAL.

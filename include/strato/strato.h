@@ -201,16 +201,6 @@ struct hal_callback {
 	void *reserved[49];
 };
 
-/*
- * Callback for bootstrap.
- */
-bool
-hal_bootstrap(
-	char **title,
-	int *width,
-	int *height,
-	struct hal_callback *callback);
-
 /* --- */
 
 /*
@@ -1589,6 +1579,27 @@ hal_log_out_of_memory(void);
  * Entrypoint
  */
 
+/*
+ * Callback for bootstrap.
+ */
+
+/* DLL side. */
+HAL_DLL
+bool
+(*hal_bootstrap_ptr)(
+	char **title,
+	int *width,
+	int *height,
+	struct hal_callback *callback);
+
+/* App side. */
+bool
+hal_bootstrap(
+	char **title,
+	int *width,
+	int *height,
+	struct hal_callback *callback);
+
 #if defined(HAL_TARGET_LINUX)		||	\
     defined(HAL_TARGET_FREEBSD)		||	\
     defined(HAL_TARGET_NETBSD)		||	\
@@ -1602,6 +1613,7 @@ hal_log_out_of_memory(void);
 	int main(int argc, char *argv[])		\
 	{						\
 		int hal_main(int argc, char *argv[]);	\
+		hal_bootstrap_ptr = hal_bootstrap;	\
 		hook;					\
 		return hal_main(argc, argv);		\
 	}
@@ -1619,6 +1631,7 @@ hal_log_out_of_memory(void);
 					HINSTANCE,		\
 					LPWSTR,			\
 					int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
 		hook;						\
 		return hal_wWinMain(hInstance,			\
 				    hPrevInstance,		\
@@ -1639,6 +1652,7 @@ hal_log_out_of_memory(void);
 				       HINSTANCE,		\
 				       LPWSTR,			\
 				       int);			\
+		hal_bootstrap_ptr = hal_bootstrap;		\
 		hook;						\
 		return hal_WinMain(hInstance,			\
 				   hPrevInstance,		\
@@ -1647,13 +1661,25 @@ hal_log_out_of_memory(void);
 	}
 #endif
 
+#if defined(HAL_TARGET_ANDROID) ||				\
+    defined(HAL_TARGET_OPENHARMONY)
+#define HAL_DEFINE_MAIN(hook)					\
+	__attribute__((constructor))				\
+	static void so_init(void)				\
+	{							\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
+	}
+#endif
+
 #if defined(HAL_TARGET_WASM)
-#define HAL_DEFINE_MAIN(hook)		\
-	int main(void)			\
-	{				\
-		int hal_main(void);	\
-		hook;			\
-		return hal_main();	\
+#define HAL_DEFINE_MAIN(hook)					\
+	int main(void)						\
+	{							\
+		int hal_main(void);				\
+		hal_bootstrap_ptr = hal_bootstrap;		\
+		hook;						\
+		return hal_main();				\
 	}
 #endif
 
