@@ -57,6 +57,7 @@ static BOOL isContinuousSwipeEnabled;
 
 // Callback
 struct hal_callback hal_callback;
+HAL_DLL bool (*hal_bootstrap_ptr)(char **title, int *width, int *height, struct hal_callback *callback);
 
 // Forward declaration.
 static void initGamepad(void);
