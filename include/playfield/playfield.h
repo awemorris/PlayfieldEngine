@@ -889,10 +889,6 @@ pf_init_hook(
  * Entrypoint Definition
  */
 #include <strato/strato.h>
-#define PF_DEFINE_MAIN()								\
-	struct hal_callback;								\
-	bool (*hal_bootstrap_ptr)(char **, int *, int *, struct hal_callback *);	\
-	bool hal_bootstrap(char **, int *, int *, struct hal_callback *);		\
-	HAL_DEFINE_MAIN_CHAIN(pf_init_hook_ptr, pf_init_hook)
+#define PF_DEFINE_MAIN() HAL_DEFINE_MAIN_CHAIN(pf_init_hook_ptr, pf_init_hook)
 
 #endif

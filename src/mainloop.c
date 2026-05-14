@@ -161,9 +161,6 @@ static void on_touch_cancel(void);
 static void on_swipe_down(float speed, float amount);
 static void on_swipe_up(float speed, float amount);
 
-/* Define an entrypoint function if needed. */
-HAL_DEFINE_MAIN()
-
 /* Bootstrap callback. */
 PF_DLL
 bool
