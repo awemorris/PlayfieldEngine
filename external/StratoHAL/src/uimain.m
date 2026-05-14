@@ -65,7 +65,7 @@ static void initGamepad(void);
 // Main
 //
 
-int main2(int argc, char * argv[]) {
+int hal_main(int argc, char * argv[]) {
     setlocale(LC_NUMERIC, "C");
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));

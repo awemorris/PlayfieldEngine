@@ -246,23 +246,16 @@ static VOID ProcessGraphNotify(VOID);
 void check_cpuid(void);
 
 /*
- * For a libraried version.
- */
-#ifdef WINMAIN2
-#define wWinMain wWinMain2
-#endif
-
-/*
  * WinMain
  */
 #ifdef _UNICODE
-int WINAPI wWinMain(
+int WINAPI hal_wWinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPWSTR lpszCmd,
 	int nCmdShow)
 #else
-int WINAPI WinMain(
+int WINAPI hal_WinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPSTR lpszCmd,

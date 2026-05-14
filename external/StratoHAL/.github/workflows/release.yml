@@ -99,7 +99,8 @@ jobs:
           cp include/strato/strato.h out/i686-w64-mingw32/include/strato/
           cp include/strato/c89compat.h out/i686-w64-mingw32/include/strato/
           cp build-mingw-x86/libstrato.a out/i686-w64-mingw32/lib/
-          cp resources/pkg-config/strato.pc out/i686-w64-mingw32/lib/pkgconfig/
+          cp build-mingw-x86/strato.pc out/i686-w64-mingw32/lib/pkgconfig/
+          cp build-mingw-x86/stratopack.pc out/i686-w64-mingw32/lib/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/i686-w64-mingw32/share/cmake/Modules/
 
           mkdir -p out/x86_64-w64-mingw32/include/strato
@@ -109,7 +110,8 @@ jobs:
           cp include/strato/strato.h out/x86_64-w64-mingw32/include/strato/
           cp include/strato/c89compat.h out/x86_64-w64-mingw32/include/strato/
           cp build-mingw-x86_64/libstrato.a out/x86_64-w64-mingw32/lib/
-          cp resources/pkg-config/strato.pc out/x86_64-w64-mingw32/lib/pkgconfig/
+          cp build-mingw-x86_64/strato.pc out/x86_64-w64-mingw32/lib/pkgconfig/
+          cp build-mingw-x86_64/stratopack.pc out/x86_64-w64-mingw32/lib/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/x86_64-w64-mingw32/share/cmake/Modules/
 
           cd out
@@ -165,7 +167,8 @@ jobs:
           cp build-linux/libstratopack.a out/lib/x86_64-linux-gnu/
           cp -d build-linux-debian/libstrato.so* out/lib/x86_64-linux-gnu/
           cp -d build-linux-debian/libstratopack.so out/lib/x86_64-linux-gnu/
-          cp resources/pkg-config/strato.pc out/lib/x86_64-linux-gnu/pkgconfig/
+          cp build-linux/strato.pc out/lib/x86_64-linux-gnu/pkgconfig/
+          cp build-linux/stratopack.pc out/lib/x86_64-linux-gnu/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/share/cmake/Modules/
           cd out
           tar czf ../libstrato-linux-x86_64.tar.gz *
@@ -265,7 +268,8 @@ jobs:
           cp include/strato/strato.h out/include/strato/
           cp include/strato/c89compat.h out/include/strato/
           cp libstrato.a out/lib/
-          cp resources/pkg-config/strato.pc out/lib/pkgconfig/
+          cp build-macos-arm64/strato.pc out/lib/pkgconfig/
+          cp build-macos-arm64/stratopack.pc out/lib/pkgconfig/
           cp cmake/modules/FindStratoHAL.cmake out/share/cmake/Modules/
           cd out
           tar czf ../libstrato-macos-universal.tar.gz *

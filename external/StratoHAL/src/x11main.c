@@ -253,7 +253,7 @@ static Bool want_configure(Display* d, XEvent* ev, XPointer arg);
 #if defined(HAL_USE_X11_ONLY)
 HAL_DLL
 int
-main(
+hal_main(
      int argc,
      char *argv[])
 {

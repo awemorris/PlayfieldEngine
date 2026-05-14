@@ -230,7 +230,7 @@ static struct libdecor_interface decor_iface = {
 #if defined(HAL_USE_WAYLAND_ONLY)
 HAL_DLL
 int
-main(
+hal_main(
 	int argc,
 	char *argv[])
 {
