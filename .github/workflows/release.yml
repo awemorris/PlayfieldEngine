@@ -756,7 +756,7 @@ jobs:
       - name: Copy for Android
         run: |
           mkdir dist/SDK/android
-          unzip android/Playfield-Android-Studio.zip -x dist/SDK/android
+          unzip android/Playfield-Android-Studio.zip -d dist/SDK/android
 
       - name: Download OpenHarmony artifacts
         uses: actions/download-artifact@v4
@@ -766,7 +766,7 @@ jobs:
 
       - name: Copy for OpenHarmony
         run: |
-          unzip openharmony/Playfield-OpenHarmony-DevEco.zip -x dist/SDK
+          unzip openharmony/Playfield-OpenHarmony-DevEco.zip -d dist/SDK
 
       - name: Download Unity artifacts
         uses: actions/download-artifact@v4
@@ -794,7 +794,7 @@ jobs:
       - name: Copy for Unity
         run: |
           mkdir dist/SDK/unity
-          unzip unity/Playfield-Unity.zip -x dist/SDK
+          unzip unity/Playfield-Unity.zip -d dist/SDK
 
       - name: Download mkdocs artifacts
         uses: actions/download-artifact@v4
