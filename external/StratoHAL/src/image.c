@@ -1035,7 +1035,7 @@ static INLINE int fp32_eq(float a, float b)
     return d > -0.0001f && d < 0.0001f;
 }
 
-#if defined(HAL_TARGET_DOS4G)
+#if defined(HAL_TARGET_PC98)
 #undef floorf
 static INLINE int floorf(float x)
 {
