@@ -521,7 +521,7 @@ jobs:
         with:
           name: openharmony-arm64
           path: |
-          Playfield-OpenHarmony-DevEco.zip
+            Playfield-OpenHarmony-DevEco.zip
           if-no-files-found: error
           retention-days: 7
 
