@@ -130,7 +130,7 @@ jobs:
           cp build-mingw-x86_64/playfield-aotc.exe out/x86_64-w64-mingw32/bin/
           cp build-mingw-x86_64/playfield-bcc.exe out/x86_64-w64-mingw32/bin/
           cp build-mingw-x86_64/playfield-pack.exe out/x86_64-w64-mingw32/bin/
-          cp include/playfield/playfield.h out/ix86_64-w64-mingw32/include/playfield/
+          cp include/playfield/playfield.h out/x86_64-w64-mingw32/include/playfield/
           cp include/playfield/c89compat.h out/x86_64-w64-mingw32/include/playfield/
           cp external/NoctLang/include/noct/noct.h out/x86_64-w64-mingw32/include/noct/
           cp external/NoctLang/include/noct/c89compat.h out/x86_64-w64-mingw32/include/noct/
