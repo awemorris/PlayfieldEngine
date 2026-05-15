@@ -218,19 +218,18 @@ jobs:
       - name: Build macOS project
         run: |
           mkdir macos
-          mkdir macos/project
-          mkdir macos/project/Resources
-          mkdir macos/project/Resources/video
-          cp resources/assets.arc macos/project/Resources/
+          mkdir macos/Resources
+          mkdir macos/Resources/video
+          cp resources/assets.arc macos/Resources/
 
-          mkdir macos/project/Game.xcodeproj
-          cp resources/projects/macos/Game.xcodeproj/project.pbxproj macos/project/Game.xcodeproj/
+          mkdir macos/Game.xcodeproj
+          cp resources/projects/macos/Game.xcodeproj/project.pbxproj macos/Game.xcodeproj/
 
-          mkdir macos/project/Game
-          cp -R Playfield.xcframework macos/project/Game/
-          cp -R resources/projects/macos/Game/Assets.xcassets macos/project/Game/
-          cp resources/projects/macos/Game/main.m macos/project/Game/
-          cp resources/macos/macos.entitlements macos/project/Game/Game.entitlements
+          mkdir macos/Game
+          cp -R Playfield.xcframework macos/Game/
+          cp -R resources/projects/macos/Game/Assets.xcassets macos/Game/
+          cp resources/projects/macos/Game/main.m macos/Game/
+          cp resources/macos/macos.entitlements macos/Game/Game.entitlements
 
           zip -r Playfield-macOS-Xcode.zip macos
 
