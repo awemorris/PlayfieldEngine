@@ -254,7 +254,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build flex bison
+          sudo apt-get install -y cmake ninja-build
 
       - name: Setup for Android
         uses: nttld/setup-ndk@v1
@@ -328,7 +328,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build flex bison
+          sudo apt-get install -y cmake ninja-build
 
       - name: Download OpenHarmony SDK
         run: |
@@ -416,7 +416,7 @@ jobs:
       - name: Install apt deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build flex bison mingw-w64
+          sudo apt-get install -y cmake ninja-build mingw-w64
 
       - name: Cache LLVM
         id: cache-llvm
