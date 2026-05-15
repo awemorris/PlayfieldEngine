@@ -534,10 +534,6 @@ if(NOT PLAYFIELD_ENABLE_DIST)
     set(
       PLAYFIELD_DEPS
       $<TARGET_OBJECTS:png>
-      $<TARGET_OBJECTS:jpeg>
-      $<TARGET_OBJECTS:vorbisfile>
-      $<TARGET_OBJECTS:vorbis>
-      $<TARGET_OBJECTS:ogg>
       $<TARGET_OBJECTS:freetype>
       $<TARGET_OBJECTS:z>
     )      
