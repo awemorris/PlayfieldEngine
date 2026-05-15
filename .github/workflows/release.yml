@@ -893,7 +893,13 @@ jobs:
           name: Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}
 
           body: |
+            Playfield Engine
+            ================
+            
             This is an automated nightly build. Not an official release.
+            
+            Playfield Engine is a framework to build a custom 2D game engine.
+            It has a scripting language with a high-performance runtime, and runs virtually everywhere.
             
             | OS          | File                               | Type                       | Description                    |
             |-------------|------------------------------------|----------------------------|--------------------------------|
