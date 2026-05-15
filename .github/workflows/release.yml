@@ -22,6 +22,9 @@ jobs:
           cmake --preset windows-vs2022-x86
           cmake --build --preset windows-vs2022-x86 --config Release
           cp out/build/windows-vs2022-x86/Release/playfield.exe playfield-win32.exe
+          cp out/build/windows-vs2022-x86/Release/playfield-web.exe playfield-aotcc.exe
+          cp out/build/windows-vs2022-x86/Release/playfield-web.exe playfield-bcc.exe
+          cp out/build/windows-vs2022-x86/Release/playfield-web.exe playfield-pack.exe
           cp out/build/windows-vs2022-x86/Release/playfield-web.exe playfield-web.exe
 
       - name: Build for x64
@@ -69,6 +72,9 @@ jobs:
             playfield-win32.exe
             playfield-win64.exe
             playfield-arm64.exe
+            playfield-aotc.exe
+            playfield-bcc.exe
+            playfield-pack.exe
             playfield-web.exe
           if-no-files-found: error
           retention-days: 7
@@ -702,8 +708,11 @@ jobs:
 
           mkdir dist/SDK/windows
           cp windows/playfield-win64.exe dist/playfield.exe
-          cp windows/playfield-arm64.exe dist/SDK/windows/playfield-arm64.exe
-          cp mingw/playfield-win32.exe dist/SDK/windows/playfield-win32.exe
+          cp windows/playfield-arm64.exe dist/SDK/windows/
+          cp mingw/playfield-win32.exe dist/SDK/windows/
+          cp windows/playfield-aotc.exe dist/SDK/windows/
+          cp windows/playfield-bcc.exe dist/SDK/windows/
+          cp windows/playfield-pack.exe dist/SDK/windows/
 
           mkdir -p dist/SDK/wasm
           cp windows/playfield-web.exe dist/SDK/wasm/
@@ -815,8 +824,8 @@ jobs:
 
       - name: Build ZIP
         run: |
-          mv dist "Playfield-$DATE-$SHORT_SHA"
-          7z a -tzip -mx=9 "Playfield-$DATE-$SHORT_SHA.zip" "Playfield-$DATE-$SHORT_SHA"
+          mv dist "PlayfieldEngine"
+          7z a -tzip -mx=9 Playfield-SDK-Full.zip "Playfield
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -825,24 +834,7 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: |
-            Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip
-            windows/Playfield.1.0.0.nupgk
-            windows/playfield-win64.exe
-            windows/playfield-arm64.exe
-            mingw/playfield-win32.exe
-            macos/Playfield.dmg
-            macos/Playfield-macOS-Xcode.zip
-            macos/playfield-macos-universal.tar.gz
-            linux/Playfied-x86_64.AppImage
-            linux/playfield-linux-x86_64.tar.gz
-            macos/Playfield-iOS-Xcode.zip
-            android/Playfield-Android-Studio.zip
-            openharmony/Playfield-OpenHarmony-DevEco.zip
-            playfield-wasm.html
-            wasm/playfield-wasm.tar.gz
-            unity/Playfield-Unity.zip
-            mkdocs/playfield-documents.zip
+
           body: |
             This is an automated nightly build. Not an official release.
             
@@ -861,3 +853,22 @@ jobs:
             | Android     | Playfield-Android-Studio.zip                       | Android Studio Project     | Android NDK                    |
             | OpenHarmony | Playfield-OpenHarmony-DevEco.zip                   | OpenHarmony DevEco Project | OpenHarmony (HarmonyOS NEXT)   |
             | Documents   | playfield-documents.zip                            | ZIP                        | Documents                      |
+
+          files: |
+            Playfield-Full-SDK.zip
+            windows/Playfield.1.0.0.nupgk
+            windows/playfield-win64.exe
+            windows/playfield-arm64.exe
+            mingw/playfield-win32.exe
+            macos/Playfield.dmg
+            macos/Playfield-macOS-Xcode.zip
+            macos/playfield-macos-universal.tar.gz
+            linux/Playfied-x86_64.AppImage
+            linux/playfield-linux-x86_64.tar.gz
+            macos/Playfield-iOS-Xcode.zip
+            android/Playfield-Android-Studio.zip
+            openharmony/Playfield-OpenHarmony-DevEco.zip
+            playfield-wasm.html
+            wasm/playfield-wasm.tar.gz
+            unity/Playfield-Unity.zip
+            mkdocs/playfield-documents.zip
