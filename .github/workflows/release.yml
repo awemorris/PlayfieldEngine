@@ -24,7 +24,7 @@ jobs:
           cp out/build/windows-vs2022-x86/Release/playfield.exe playfield-win32.exe
           cp out/build/windows-vs2022-x86/Release/playfield-aotc.exe ./
           cp out/build/windows-vs2022-x86/Release/playfield-bcc.exe ./
-          cp out/build/windows-vs2022-x86/Release/playfield-pac.exe ./
+          cp out/build/windows-vs2022-x86/Release/playfield-pack.exe ./
           cp out/build/windows-vs2022-x86/Release/playfield-web.exe ./
 
       - name: Build for x64
