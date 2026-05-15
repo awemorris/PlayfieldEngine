@@ -616,10 +616,10 @@ jobs:
           mkdir unity/Assets/Plugins/PS5
           mkdir unity/Assets/Plugins/GameCoreXboxSeries
           mkdir unity/Assets/Plugins/Common
-          cp unity-win64/libplayfield.dll unity/Assets/Plugins/x86_64/strato.dll
-          cp unity-switch/libplayfield.a unity/Assets/Plugins/Switch/libstrato.a
-          cp unity-ps5/libplayfield.a unity/Assets/Plugins/PS5/libstrato.a
-          cp unity-xbox/playfield.lib unity/Assets/Plugins/GameCoreXboxSeries/strato.lib
+          cp build-unity-win64/libplayfield.dll unity/Assets/Plugins/x86_64/strato.dll
+          cp build-unity-switch/libplayfield.a unity/Assets/Plugins/Switch/libstrato.a
+          cp build-unity-ps5/libplayfield.a unity/Assets/Plugins/PS5/libstrato.a
+          cp build-unity-xbox/playfield.lib unity/Assets/Plugins/GameCoreXboxSeries/strato.lib
 
           cp docs/readme/unity.md unity/
 
