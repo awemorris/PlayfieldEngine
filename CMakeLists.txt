@@ -959,7 +959,7 @@ if(STRATO_ENABLE_I18N)
 endif()
 
 # gettext
-if(NOCT_ENABLE_I18N_LIBINTL)
+if(STRATO_ENABLE_I18N_LIBINTL)
   target_compile_definitions(strato PRIVATE HAL_USE_LIBINTL)
 endif()  
 
