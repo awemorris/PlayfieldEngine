@@ -720,11 +720,11 @@ jobs:
           mkdir -p dist/SDK/macos
           cp macos/Playfield.dmg dist/SDK/macos/
 
-          unzip macos/Playfield-macOS-Xcode.zip -d dst/SDK/macos
-          mv dst/SDK/macos/macos dst/SDK/macos/project
+          unzip macos/Playfield-macOS-Xcode.zip -d dist/SDK/macos
+          mv dist/SDK/macos/macos dist/SDK/macos/project
 
-          mkdir dst/SDK/macos/root
-          tar xzf macos/playfield-macos-universal.tar.gz -C dst/SDK/macos/root
+          mkdir dist/SDK/macos/root
+          tar xzf macos/playfield-macos-universal.tar.gz -C dist/SDK/macos/root
 
       - name: Download Linux artifacts
         uses: actions/download-artifact@v4
@@ -744,8 +744,8 @@ jobs:
         run: |
           mkdir -p dist/SDK/ios
 
-          unzip macos/Playfield-iOS-Xcode.zip -d dst/SDK/ios
-          mv dst/SDK/ios/ios dst/SDK/ios/project
+          unzip macos/Playfield-iOS-Xcode.zip -d dist/SDK/ios
+          mv dist/SDK/ios/ios dist/SDK/ios/project
 
       - name: Download Android artifacts
         uses: actions/download-artifact@v4
