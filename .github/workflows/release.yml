@@ -720,8 +720,8 @@ jobs:
           mkdir -p dist/SDK/macos
           cp macos/Playfield.dmg dist/SDK/macos/
 
-          mkdir dst/SDK/macos/project
-          unzip macos/Playfield-macOS-Xcode.zip -x dst/SDK/macos/project
+          unzip macos/Playfield-macOS-Xcode.zip -d dst/SDK/macos
+          mv dst/SDK/macos/macos dst/SDK/macos/project
 
           mkdir dst/SDK/macos/root
           tar xzf macos/playfield-macos-universal.tar.gz -C dst/SDK/macos/root
@@ -740,22 +740,12 @@ jobs:
           mkdir dist/SDK/linux/root
           tar xzf linux/playfield-linux-x86_64.tar.gz -C dist/SDK/linux/root
 
-      - name: Download wasm artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: wasm
-          path: wasm
-
-      - name: Copy for Wasm
+      - name: Copy for iOS
         run: |
-          mkdir dist/SDK/wasm
-          cp wasm/index.html dist/SDK/wasm/
-          cp resources/assets.arc dist/SDK/wasm/
+          mkdir -p dist/SDK/ios
 
-          mkdir dist/SDK/wasm/root
-          tar xzf wasm/playfield-wasm.tar.gz -C dist/SDK/wasm/root
-
-          cp wasm/index.html playfield-wasm.html
+          unzip macos/Playfield-iOS-Xcode.zip -d dst/SDK/ios
+          mv dst/SDK/ios/ios dst/SDK/ios/project
 
       - name: Download Android artifacts
         uses: actions/download-artifact@v4
@@ -783,6 +773,23 @@ jobs:
         with:
           name: unity
           path: unity
+
+      - name: Download wasm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm
+          path: wasm
+
+      - name: Copy for Wasm
+        run: |
+          mkdir dist/SDK/wasm
+          cp wasm/index.html dist/SDK/wasm/
+          cp resources/assets.arc dist/SDK/wasm/
+
+          mkdir dist/SDK/wasm/root
+          tar xzf wasm/playfield-wasm.tar.gz -C dist/SDK/wasm/root
+
+          cp wasm/index.html playfield-wasm.html
 
       - name: Copy for Unity
         run: |
