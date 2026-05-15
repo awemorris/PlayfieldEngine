@@ -231,9 +231,6 @@ if(NOT PLAYFIELD_ENABLE_DIST)
   # Others
   set(NOCT_ENABLE_CLI OFF)
   set(NOCT_ENABLE_INSTALL OFF)
-  set(NOCT_ENABLE_CBACKEND OFF)
-  set(NOCT_ENABLE_BCBACKEND OFF)
-  set(NOCT_ENABLE_ELBACKEND OFF)
 
   # Magic:
   #  merge object files that consists in libnoct.a into libplayfield.a.
