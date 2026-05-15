@@ -824,8 +824,8 @@ jobs:
 
       - name: Build ZIP
         run: |
-          mv dist "PlayfieldEngine"
-          7z a -tzip -mx=9 Playfield-SDK-Full.zip "Playfield
+          mv dist Playfield-Engine
+          7z a -tzip -mx=9 Playfield-SDK-Full.zip Playfield-Engine
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -838,21 +838,21 @@ jobs:
           body: |
             This is an automated nightly build. Not an official release.
             
-            | OS          | File                                               | Type                       | Description                    |
-            |-------------|----------------------------------------------------|----------------------------|--------------------------------|
-            | Full        | Playfiled-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip | ZIP                        | Full Distribution              |
-            | Windows     | Playfield.1.0.0.nupkg                              | NuGet Package              | Visual Studio 2022+            |
-            | Windows     | playfield-mingw-w64.tar.gz                         | Tarball                    | MinGW-w64                      |
-            | macOS       | Playfield.xcframework.zip                          | Xcode Framework            | macOS and iOS, Xcode           |
-            | macOS       | Playfield-macOS-Xcode.zip                          | Xcode Project              | macOS Xcode Project            |
-            | macOS       | playfield-macos-universal.tar.gz                   | Tarball                    | macOS (extract to /usr/local)  |
-            | Linux       | Playfield-x86_64.AppImage                          | AppImage                   | Linux AppImage                 |
-            | Linux       | playfield-linux-x86_64.tar.gz                      | Tarball                    | Linux (extract to /usr/local)  |
-            | Wasm        | playfield-wasm.html                                | Wasm                       | Emscripten                     |
-            | Wasm        | playfield-wasm.tar.gz                              | Tarball                    | Emscripten                     |
-            | Android     | Playfield-Android-Studio.zip                       | Android Studio Project     | Android NDK                    |
-            | OpenHarmony | Playfield-OpenHarmony-DevEco.zip                   | OpenHarmony DevEco Project | OpenHarmony (HarmonyOS NEXT)   |
-            | Documents   | playfield-documents.zip                            | ZIP                        | Documents                      |
+            | OS          | File                               | Type                       | Description                    |
+            |-------------|------------------------------------|----------------------------|--------------------------------|
+            | Full        | Playfiled-Full-SDK.zip             | ZIP                        | Full Distribution              |
+            | Windows     | Playfield.1.0.0.nupkg              | NuGet Package              | Visual Studio 2022+            |
+            | Windows     | playfield-mingw-w64.tar.gz         | Tarball                    | MinGW-w64                      |
+            | macOS       | Playfield.xcframework.zip          | Xcode Framework            | macOS and iOS, Xcode           |
+            | macOS       | Playfield-macOS-Xcode.zip          | Xcode Project              | macOS Xcode Project            |
+            | macOS       | playfield-macos-universal.tar.gz   | Tarball                    | macOS (extract to /usr/local)  |
+            | Linux       | Playfield-x86_64.AppImage          | AppImage                   | Linux AppImage                 |
+            | Linux       | playfield-linux-x86_64.tar.gz      | Tarball                    | Linux (extract to /usr/local)  |
+            | Wasm        | playfield-wasm.html                | Wasm                       | Emscripten                     |
+            | Wasm        | playfield-wasm.tar.gz              | Tarball                    | Emscripten                     |
+            | Android     | Playfield-Android-Studio.zip       | Android Studio Project     | Android NDK                    |
+            | OpenHarmony | Playfield-OpenHarmony-DevEco.zip   | OpenHarmony DevEco Project | OpenHarmony (HarmonyOS NEXT)   |
+            | Documents   | playfield-documents.zip            | ZIP                        | Documents                      |
 
           files: |
             Playfield-Full-SDK.zip
