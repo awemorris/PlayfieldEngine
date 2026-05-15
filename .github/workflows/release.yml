@@ -187,7 +187,6 @@ jobs:
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
 
       - name: Build for macOS
-        shell: bash
         run: |
           cmake --preset macos
           cmake --build --preset macos
@@ -196,7 +195,6 @@ jobs:
           cmake --build --preset macos-cli
 
       - name: Build for iOS
-        shell: bash
         run: |
           cmake --preset ios-device
           cmake --build --preset ios-device
@@ -224,7 +222,6 @@ jobs:
           cd ..
 
       - name: Build .xcframework
-        shell: bash
         run: |
           xcodebuild \
             -create-xcframework \
