@@ -503,7 +503,7 @@ jobs:
       - name: Upload OpenHarmony artifact
         uses: actions/upload-artifact@v4
         with:
-          name: openharmony-arm64
+          name: openharmony
           path: |
             Playfield-OpenHarmony-DevEco.zip
           if-no-files-found: error
