@@ -510,7 +510,7 @@ jobs:
           cmake --preset pc98
           cmake --build --preset pc98
 
-      - name: Make a zip
+      - name: Make LZH
         run: |
           mkdir -p out/include/strato
           mkdir -p out/lib
@@ -612,16 +612,6 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: StratoHAL-${{ env.DATE }}-${{ env.SHORT_SHA }}
-          files: |
-            windows/StratoHAL.1.0.0.nupkg
-            mingw/strato-mingw.tar.gz
-            macos/StratoHAL.xcframework.zip
-            macos/strato-macos-universal.tar.gz
-            linux/strato-linux-x86_64.tar.gz
-            wasm/strato-wasm.tar.gz
-            android/StratoHAL.aar
-            openharmony/strato-openharmony.tar.gz
-            pc98/strato-openharmony.tar.gz
           body: |
             StratoHAL 🌍🚀
             ==============
@@ -640,4 +630,15 @@ jobs:
             | Android     | StratoHAL.aar                    | AAR              | Android NDK                                  |
             | Wasm        | strato-wasm.tar.gz               | Tarball          | Emscripten                                   |
             | OpenHarmony | strato-openharmony.tar.gz        | Tarball          | OpenHarmony (HarmonyOS NEXT)                 |
-            | DOS         | strato-pc98.lzh                  | Library          | DOS4GW: PC-9801, PC/AT, OS/2, Windows 3.1-XP |
+            | PC-9801     | strato-pc98.lzh                  | Library          | PC-9801 MS-DOS DOS4GW                        |
+
+          files: |
+            windows/StratoHAL.1.0.0.nupkg
+            mingw/strato-mingw.tar.gz
+            macos/StratoHAL.xcframework.zip
+            macos/strato-macos-universal.tar.gz
+            linux/strato-linux-x86_64.tar.gz
+            android/StratoHAL.aar
+            wasm/strato-wasm.tar.gz
+            openharmony/strato-openharmony.tar.gz
+            pc98/strato-pc98.lzh
