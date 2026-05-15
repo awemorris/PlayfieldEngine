@@ -482,7 +482,7 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake p7zip
+          sudo apt-get install -y cmake jlha-utils
 
       - name: Cache Watcom
         id: cache-watcom
@@ -518,7 +518,7 @@ jobs:
           cp include/strato/c89compat.h out/include/strato/
           cp build-pc98/strato.lib out/lib/
           cd out
-          7z a -tlzh ../strato-pc98.lzh *
+          jlha a ../strato-pc98.lzh *
           cd ..
 
       - name: Upload binary
