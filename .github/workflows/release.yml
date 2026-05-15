@@ -766,7 +766,7 @@ jobs:
 
       - name: Copy for OpenHarmony
         run: |
-          unzip openharmony/Playfield-OpenHarmony-DevEcoStudio.zip -x dist/SDK
+          unzip openharmony/Playfield-OpenHarmony-DevEco.zip -x dist/SDK
 
       - name: Download Unity artifacts
         uses: actions/download-artifact@v4
@@ -839,7 +839,7 @@ jobs:
             linux/playfield-linux-x86_64.tar.gz
             macos/Playfield-iOS-Xcode.zip
             android/Playfield-Android-Studio.zip
-            openharmony/Playfield-OpenHarmony-DevEcoStudio.zip
+            openharmony/Playfield-OpenHarmony-DevEco.zip
             playfield-wasm.html
             wasm/playfield-wasm.tar.gz
             unity/Playfield-Unity.zip
