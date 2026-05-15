@@ -756,10 +756,10 @@ jobs:
           mkdir dist/SDK/unity/Assets/Plugins/PS5
           mkdir dist/SDK/unity/Assets/Plugins/GameCoreXboxSeries
           mkdir dist/SDK/unity/Assets/Plugins/Common
-          cp unity-win64/playfield.dll dist/SDK/unity/Assets/Plugins/x86_64/strato.dll
-          cp unity-switch/libplayfield.a dist/SDK/unity/Assets/Plugins/Switch/
-          cp unity-ps5/libplayfield.a dist/SDK/unity/Assets/Plugins/PS5/
-          cp unity-xbox/playfield.lib dist/SDK/unity/Assets/Plugins/GameCoreXboxSeries/
+          cp unity-win64/libplayfield.dll dist/SDK/unity/Assets/Plugins/x86_64/strato.dll
+          cp unity-switch/libplayfield.a dist/SDK/unity/Assets/Plugins/Switch/libstrato.a
+          cp unity-ps5/libplayfield.a dist/SDK/unity/Assets/Plugins/PS5/libstrato.a
+          cp unity-xbox/playfield.lib dist/SDK/unity/Assets/Plugins/GameCoreXboxSeries/strato.lib
           cp docs/readme/unity.md dist/SDK/unity/
 
       - name: Download mkdocs artifacts
