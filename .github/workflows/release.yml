@@ -50,10 +50,10 @@ jobs:
           mkdir build/native/lib/arm64
           cp include/playfield/playfield.h build/native/include/playfield/
           cp include/playfield/c89compat.h build/native/include/playfield/
-          cp external/include/NoctLang/include/noct/noct.h build/native/include/noct/
-          cp external/include/NoctLang/include/noct/c89compat.h build/native/include/noct/
-          cp external/include/StratoHAL/include/strato/strato.h build/native/include/strato/
-          cp external/include/StratoHAL/include/strato/c89compat.h build/native/include/strato/
+          cp external/NoctLang/include/noct/noct.h build/native/include/noct/
+          cp external/NoctLang/include/noct/c89compat.h build/native/include/noct/
+          cp external/StratoHAL/include/strato/strato.h build/native/include/strato/
+          cp external/StratoHAL/include/strato/c89compat.h build/native/include/strato/
           cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
           cp out/build/windows-vs2022-x64/Release/strato.lib  build/native/lib/x64/
           cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
@@ -82,15 +82,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
-
-      - name: Setup MinGW-w64
-        if: steps.cache-mingw.outputs.cache-hit != 'true'
-        run: |
-          echo "Downloaing mingw-w64-11.0."
-          wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
-          tar xJf mingw-w64-11.0.tar.bz2
-          echo "$PWD/mingw-w64-11.0/bin" >> $GITHUB_PATH
+          sudo apt-get install -y cmake ninja-build mingw-w64
 
       - name: Build
         run: |
@@ -282,8 +274,8 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h out/include/noct/
           cp external/StratoHAL/include/strato/strato.h out/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h out/include/strato/
-          cp build-macos/libplayfield.a out/lib/
-          cp build-macos/playfield.pc out/lib/pkgconfig/
+          cp build-macos-cli/libplayfield.a out/lib/
+          cp build-macos-cli/playfield.pc out/lib/pkgconfig/
           cp cmake/modules/FindPlayfield.cmake out/share/cmake/Modules/
           cd out
           tar czf ../playfield-macos-universal.tar.gz *
@@ -362,6 +354,7 @@ jobs:
       - name: Build tar.gz
         run: |
           mkdir -p out
+          mkdir -p out/bin
           mkdir -p out/include/playfield
           mkdir -p out/include/noct
           mkdir -p out/include/strato
@@ -448,7 +441,7 @@ jobs:
           cp build-android-x86/libplayfield.so android/app/src/main/jniLibs/x86/libstrato.so
           mkdir -p android/app/src/main/jniLibs/riscv64
           cp build-android-riscv64/libplayfield.so android/app/src/main/jniLibs/riscv64/libstrato.so
-          zip -r Playfield-Android-Sstudio.zip android
+          zip -r Playfield-Android-Studio.zip android
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -500,8 +493,8 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/noct/
           cp external/StratoHAL/include/strato/strato.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
-          cp build-openharmony-arm64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
-          cp build-openharmony-x86_64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/x86_64/
+          cp build-openharmony-arm64/libplayfield.a openharmony/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
+          cp build-openharmony-x86_64/libplayfield.a openharmony/entry/src/main/cpp/third_party/playfield/lib/x86_64/
           cp samples/shoot/main.ray openharmony/entry/src/main/resources/rawfile/
           zip -r Playfield-OpenHarmony-DevEco.zip openharmony
 
@@ -568,13 +561,7 @@ jobs:
       - name: Install apt packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
-
-      - name: Setup MinGW-w64
-        run: |
-          echo "Downloaing mingw-w64-11.0."
-          wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
-          tar xJf mingw-w64-11.0.tar.bz2
+          sudo apt-get install -y cmake ninja-build mingw-w64
 
       - name: Cache LLVM
         id: cache-llvm
