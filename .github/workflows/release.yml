@@ -31,7 +31,7 @@ jobs:
           cp out/build/windows-vs2022-x64/Release/playfield.exe playfield-win64.exe
 
       - name: Build for arm64
-        run: >
+        run: |
           cmake --preset windows-vs2022-arm64
           cmake --build --preset windows-vs2022-arm64 --config Release
           cp out/build/windows-vs2022-arm64/Release/playfield.exe playfield-arm64.exe
@@ -84,22 +84,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
 
-      - name: Cache MinGW-w64
-        id: cache-mingw
-        uses: actions/cache@v4
-        with:
-          path: mingw-w64-11.0
-          key: mingw-11
-
       - name: Setup MinGW-w64
         if: steps.cache-mingw.outputs.cache-hit != 'true'
         run: |
           echo "Downloaing mingw-w64-11.0."
           wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
           tar xJf mingw-w64-11.0.tar.bz2
-
-      - name: Setup PATH
-        run: |
           echo "$PWD/mingw-w64-11.0/bin" >> $GITHUB_PATH
 
       - name: Build
@@ -292,7 +282,7 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h out/include/noct/
           cp external/StratoHAL/include/strato/strato.h out/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h out/include/strato/
-          cp libplayfield.a out/lib/
+          cp build-macos/libplayfield.a out/lib/
           cp build-macos/playfield.pc out/lib/pkgconfig/
           cp cmake/modules/FindPlayfield.cmake out/share/cmake/Modules/
           cd out
@@ -318,11 +308,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download appimagetool
-        run: |
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-          chmod +x appimagetool-x86_64.AppImage
-
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -344,7 +329,13 @@ jobs:
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
             gstreamer1.0-x \
-            libdecor-0-dev
+            libdecor-0-dev \
+            libfuse2
+
+      - name: Download appimagetool
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
 
       - name: Build static
         run: |
@@ -448,23 +439,23 @@ jobs:
           mkdir -p android/app/src/main/java/io/noctvm/strato
           cp external/StratoHAL/src/MainActivity.java android/app/src/main/java/io/noctvm/strato/
           mkdir -p android/app/src/main/jniLibs/arm64-v8a
-          cp android-arm64/libplayfield.so android/app/src/main/jniLibs/arm64-v8a/libstrato.so
+          cp build-android-arm64/libplayfield.so android/app/src/main/jniLibs/arm64-v8a/libstrato.so
           mkdir -p android/app/src/main/jniLibs/armeabi-v7a
-          cp android-armv7/libplayfield.so android/app/src/main/jniLibs/armeabi-v7a/libstrato.so
+          cp build-android-armv7/libplayfield.so android/app/src/main/jniLibs/armeabi-v7a/libstrato.so
           mkdir -p android/app/src/main/jniLibs/x86_64
-          cp android-x86_64/libplayfield.so android/app/src/main/jniLibs/x86_64/libstrato.so
+          cp build-android-x86_64/libplayfield.so android/app/src/main/jniLibs/x86_64/libstrato.so
           mkdir -p android/app/src/main/jniLibs/x86
-          cp android-x86/libplayfield.so android/app/src/main/jniLibs/x86/libstrato.so
+          cp build-android-x86/libplayfield.so android/app/src/main/jniLibs/x86/libstrato.so
           mkdir -p android/app/src/main/jniLibs/riscv64
-          cp android-riscv64/libplayfield.so android/app/src/main/jniLibs/riscv64/libstrato.so
-          zip -r playfield-android-studio.zip android
+          cp build-android-riscv64/libplayfield.so android/app/src/main/jniLibs/riscv64/libstrato.so
+          zip -r Playfield-Android-Sstudio.zip android
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: android
           path: |
-            playfield-android-studio.zip
+            Playfield-Android-Studio.zip
           if-no-files-found: error
           retention-days: 7
 
@@ -509,8 +500,8 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/noct/
           cp external/StratoHAL/include/strato/strato.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
-          cp openharmony-arm64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
-          cp openharmony-x86_64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/x86_64/
+          cp build-openharmony-arm64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
+          cp build-openharmony-x86_64/libplayfield.a openharmony/entry/entry/src/main/cpp/third_party/playfield/lib/x86_64/
           cp samples/shoot/main.ray openharmony/entry/src/main/resources/rawfile/
           zip -r Playfield-OpenHarmony-DevEco.zip openharmony
 
@@ -553,7 +544,7 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h out/include/noct/
           cp external/StratoHAL/include/strato/strato.h out/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h out/include/strato/
-          cp build-wasm/libstrato.a out/lib/
+          cp build-wasm/libplayfield.a out/lib/
           cd out
           tar czf ../playfield-wasm.tar.gz *
           cd ..
@@ -579,15 +570,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
 
-      - name: Cache MinGW-w64
-        id: cache-mingw
-        uses: actions/cache@v4
-        with:
-          path: mingw-w64-11.0
-          key: mingw-11
-
       - name: Setup MinGW-w64
-        if: steps.cache-mingw.outputs.cache-hit != 'true'
         run: |
           echo "Downloaing mingw-w64-11.0."
           wget -q https://noctvm.io/ci/mingw-w64-11.0.tar.bz2
