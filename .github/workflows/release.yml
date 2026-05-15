@@ -122,6 +122,8 @@ jobs:
           cp cmake/modules/FindPlayfield.cmake out/i686-w64-mingw32/share/cmake/Modules/
 
           mkdir -p out/x86_64-w64-mingw32/bin
+          mkdir -p out/x86_64-w64-mingw32/include/playfield
+          mkdir -p out/x86_64-w64-mingw32/include/noct
           mkdir -p out/x86_64-w64-mingw32/include/strato
           mkdir -p out/x86_64-w64-mingw32/lib
           mkdir -p out/x86_64-w64-mingw32/lib/pkgconfig
