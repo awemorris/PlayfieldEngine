@@ -630,7 +630,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: unity-xbox
+          name: unity
           path: |
             Playfield-Unity.zip
           if-no-files-found: error
