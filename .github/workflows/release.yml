@@ -804,7 +804,7 @@ jobs:
 
       - name: Copy documents
         run: |
-          tar xzf mkdocs/playfield-documents.tar.gz -C dist/SDK/
+          unzip mkdocs/playfield-documents.zip -C dist/SDK/
           cp -R samples dist/SDK/samples
 
       - name: Get current date
@@ -843,19 +843,22 @@ jobs:
             playfield-wasm.html
             wasm/playfield-wasm.tar.gz
             unity/Playfield-Unity.zip
+            mkdocs/playfield-documents.zip
           body: |
             This is an automated nightly build. Not an official release.
             
-            | OS          | File                             | Type                       | Description                    |
-            |-------------|----------------------------------|----------------------------|--------------------------------|
-            | Windows     | Playfield.1.0.0.nupkg            | NuGet Package              | Visual Studio 2022+            |
-            | Windows     | playfield-mingw-w64.tar.gz       | Tarball                    | MinGW-w64                      |
-            | macOS       | Playfield.xcframework.zip        | Xcode Framework            | macOS and iOS, Xcode           |
-            | macOS       | Playfield-macOS-Xcode.zip        | Xcode Project              | macOS Xcode Project            |
-            | macOS       | playfield-macos-universal.tar.gz | Tarball                    | macOS (extract to /usr/local)  |
-            | Linux       | Playfield-x86_64.AppImage        | AppImage                   | Linux AppImage                 |
-            | Linux       | playfield-linux-x86_64.tar.gz    | Tarball                    | Linux (extract to /usr/local)  |
-            | Wasm        | playfield-wasm.html              | Wasm                       | Emscripten                     |
-            | Wasm        | playfield-wasm.tar.gz            | Tarball                    | Emscripten                     |
-            | Android     | Playfield-Android-Studio.zip     | Android Studio Project     | Android NDK                    |
-            | OpenHarmony | Playfield-OpenHarmony-DevEco.zip | OpenHarmony DevEco Project | OpenHarmony (HarmonyOS NEXT)   |
+            | OS          | File                                               | Type                       | Description                    |
+            |-------------|----------------------------------------------------|----------------------------|--------------------------------|
+            | Full        | Playfiled-${{ env.DATE }}-${{ env.SHORT_SHA }}.zip | ZIP                        | Full Distribution              |
+            | Windows     | Playfield.1.0.0.nupkg                              | NuGet Package              | Visual Studio 2022+            |
+            | Windows     | playfield-mingw-w64.tar.gz                         | Tarball                    | MinGW-w64                      |
+            | macOS       | Playfield.xcframework.zip                          | Xcode Framework            | macOS and iOS, Xcode           |
+            | macOS       | Playfield-macOS-Xcode.zip                          | Xcode Project              | macOS Xcode Project            |
+            | macOS       | playfield-macos-universal.tar.gz                   | Tarball                    | macOS (extract to /usr/local)  |
+            | Linux       | Playfield-x86_64.AppImage                          | AppImage                   | Linux AppImage                 |
+            | Linux       | playfield-linux-x86_64.tar.gz                      | Tarball                    | Linux (extract to /usr/local)  |
+            | Wasm        | playfield-wasm.html                                | Wasm                       | Emscripten                     |
+            | Wasm        | playfield-wasm.tar.gz                              | Tarball                    | Emscripten                     |
+            | Android     | Playfield-Android-Studio.zip                       | Android Studio Project     | Android NDK                    |
+            | OpenHarmony | Playfield-OpenHarmony-DevEco.zip                   | OpenHarmony DevEco Project | OpenHarmony (HarmonyOS NEXT)   |
+            | Documents   | playfield-documents.zip                            | ZIP                        | Documents                      |
