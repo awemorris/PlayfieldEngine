@@ -54,9 +54,9 @@ jobs:
           cp external/NoctLang/include/noct/c89compat.h build/native/include/noct/
           cp external/StratoHAL/include/strato/strato.h build/native/include/strato/
           cp external/StratoHAL/include/strato/c89compat.h build/native/include/strato/
-          cp out/build/windows-vs2022-x86/Release/strato.lib  build/native/lib/x86/
-          cp out/build/windows-vs2022-x64/Release/strato.lib  build/native/lib/x64/
-          cp out/build/windows-vs2022-arm64/Release/strato.lib build/native/lib/arm64/
+          cp out/build/windows-vs2022-x86/Release/playfield.lib  build/native/lib/x86/
+          cp out/build/windows-vs2022-x64/Release/playfield.lib  build/native/lib/x64/
+          cp out/build/windows-vs2022-arm64/Release/playfield.lib build/native/lib/arm64/
           cp resources/windows/Playfield.nuspec ./
           nuget pack Playfield.nuspec
 
@@ -107,10 +107,10 @@ jobs:
           mkdir -p out/i686-w64-mingw32/lib
           mkdir -p out/i686-w64-mingw32/lib/pkgconfig
           mkdir -p out/i686-w64-mingw32/share/cmake/Modules
-          cp windows-mingw-x86/playfield.exe out/i686-w64-mingw32/bin/
-          cp windows-mingw-x86/playfield-aotc.exe out/i686-w64-mingw32/bin/
-          cp windows-mingw-x86/playfield-bcc.exe out/i686-w64-mingw32/bin/
-          cp windows-mingw-x86/playfield-pack.exe out/i686-w64-mingw32/bin/
+          cp build-mingw-x86/playfield.exe out/i686-w64-mingw32/bin/
+          cp build-mingw-x86/playfield-aotc.exe out/i686-w64-mingw32/bin/
+          cp build-mingw-x86/playfield-bcc.exe out/i686-w64-mingw32/bin/
+          cp build-mingw-x86/playfield-pack.exe out/i686-w64-mingw32/bin/
           cp include/playfield/playfield.h out/i686-w64-mingw32/include/playfield/
           cp include/playfield/c89compat.h out/i686-w64-mingw32/include/playfield/
           cp external/NoctLang/include/noct/noct.h out/i686-w64-mingw32/include/noct/
@@ -126,9 +126,9 @@ jobs:
           mkdir -p out/x86_64-w64-mingw32/lib
           mkdir -p out/x86_64-w64-mingw32/lib/pkgconfig
           mkdir -p out/x86_64-w64-mingw32/share/cmake/Modules
-          cp windows-mingw-x86_64/playfield.exe out/x86_64-w64-mingw32/bin/
-          cp windows-mingw-x86_64/playfield-aotc.exe out/x86_64-w64-mingw32/bin/
-          cp windows-mingw-x86_64/playfield-bcc.exe out/x86_64-w64-mingw32/bin/
+          cp build-mingw-x86_64/playfield.exe out/x86_64-w64-mingw32/bin/
+          cp build-mingw-x86_64/playfield-aotc.exe out/x86_64-w64-mingw32/bin/
+          cp build-mingw-x86_64/playfield-bcc.exe out/x86_64-w64-mingw32/bin/
           cp windows-mingw-x86_64/playfield-pack.exe out/x86_64-w64-mingw32/bin/
           cp include/playfield/playfield.h out/ix86_64-w64-mingw32/include/playfield/
           cp include/playfield/c89compat.h out/x86_64-w64-mingw32/include/playfield/
@@ -367,10 +367,10 @@ jobs:
           cp build-linux/playfield-pack out/bin/
           cp include/playfield/playfield.h out/include/playfield/
           cp include/playfield/c89compat.h out/include/playfield/
-          cp exteral/NoctLang/include/noct/noct.h out/include/noct/
-          cp exteral/NoctLang/include/noct/c89compat.h out/include/noct/
-          cp exteral/StratoHAL/include/strato/strato.h out/include/strato/
-          cp exteral/StratoHAL/include/strato/c89compat.h out/include/strato/
+          cp external/NoctLang/include/noct/noct.h out/include/noct/
+          cp external/NoctLang/include/noct/c89compat.h out/include/noct/
+          cp external/StratoHAL/include/strato/strato.h out/include/strato/
+          cp external/StratoHAL/include/strato/c89compat.h out/include/strato/
           cp build-linux/libplayfield.a out/lib/x86_64-linux-gnu/
           cp build-linux/playfield.pc out/lib/x86_64-linux-gnu/pkgconfig/
           cp cmake/modules/FindPlayfield.cmake out/share/cmake/Modules/
@@ -594,6 +594,7 @@ jobs:
 
       - name: Build project
         run: |
+          mkdir unity
           mkdir unity/Assets
           mkdir unity/Assets/StreamingAssets
 
