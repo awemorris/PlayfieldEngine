@@ -225,6 +225,7 @@ jobs:
 
       - name: Build .xcframework
         shell: bash
+        run: |
           xcodebuild \
             -create-xcframework \
             -library build-macos/libplayfield.a -headers include \
