@@ -698,7 +698,6 @@ jobs:
       - build-linux
       - build-macos
       - build-wasm
-      - build-ios
       - build-android
       - build-openharmony
       - build-unity
