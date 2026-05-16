@@ -750,6 +750,7 @@ jobs:
       - build-openharmony
       - build-unity
       - build-pc98
+      - build-pcat
       - build-mkdocs
     runs-on: ubuntu-latest
     steps:
@@ -895,7 +896,7 @@ jobs:
       - name: Copy for PC/AT
         run: |
           mkdir dist/SDK/msdos
-          cp pc98/pf-at.exe dist/SDK/msdos/
+          cp pcat/pf-at.exe dist/SDK/msdos/
 
       - name: Download mkdocs artifacts
         uses: actions/download-artifact@v4
