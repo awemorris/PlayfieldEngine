@@ -223,41 +223,20 @@ jobs:
 
       - name: Build macOS project
         run: |
-          mkdir macos
+          cp -R resources/projects/macos macos
           mkdir macos/Resources
           mkdir macos/Resources/video
           cp resources/assets.arc macos/Resources/
-
-          mkdir macos/Game.xcodeproj
-          cp resources/projects/macos/Game.xcodeproj/project.pbxproj macos/Game.xcodeproj/
-
-          mkdir macos/Game
           cp -R Playfield.xcframework macos/Game/
-          cp -R resources/projects/macos/Game/Assets.xcassets macos/Game/
-          cp resources/projects/macos/Game/main.m macos/Game/
-          cp resources/macos/macos.entitlements macos/Game/Game.entitlements
-
           zip -r Playfield-macOS-Xcode.zip macos
 
       - name: Build iOS project
         run: |
-          mkdir ios
-
+          cp -R resources/projects/ios ios
           mkdir ios/Resources/
           mkdir ios/Resources/video
           cp resources/assets.arc ios/Resources/
-
-          mkdir ios/ios.xcodeproj
-          cp resources/projects/ios/ios.xcodeproj/project.pbxproj ios/ios.xcodeproj/
-
-          mkdir ios/ios
-          cp -R Playfield.xcframework ios/ios/
-          cp -R resources/projects/ios/ios/Assets.xcassets ios/ios/
-          cp resources/projects/ios/ios/entry.c ios/ios/
-          cp resources/projects/ios/ios/Info.plist ios/ios/
-          cp resources/projects/ios/ios/ios.entitlements ios/ios/
-          cp resources/projects/ios/ios/LaunchScreen.storyboard ios/ios/
-
+          cp -R Playfield.xcframework ios/Game/
           zip -r Playfield-iOS-Xcode.zip ios
 
       - name: Build tar.gz
