@@ -4,9 +4,10 @@ struct hal_callback;
 struct rt_env;
 
 // Pointers for initialization.
+struct rt_env;
 extern bool (*hal_bootstrap_ptr)(char **, int *, int *, struct hal_callback *);
 extern bool (*pf_init_hook_ptr)(int, int);
-exrern bool (*pf_init_aot_code_ptr)(void *);
+extern bool (*pf_init_aot_code_ptr)(struct rt_env *);
 
 // Defined in Playfield Engine.
 bool hal_bootstrap(char **, int *, int *, struct hal_callback *);

@@ -5,12 +5,14 @@
  *  $ playfield-aotc script1.ray script2.ray ...
  */
 
+#include <stdbool.h>
+
 struct rt_env;
 
 /* Please replace. */
 bool init_aot_code(struct rt_env *env)
 {
-	UNUSED_PARAMETER(env);
+	(void)env;
 
 	return true;
 }
