@@ -895,7 +895,7 @@ jobs:
 
       - name: Copy for PC/AT
         run: |
-          mkdir dist/SDK/msdos
+          mkdir -p dist/SDK/msdos
           cp pcat/pf-at.exe dist/SDK/msdos/
 
       - name: Download mkdocs artifacts
