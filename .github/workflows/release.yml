@@ -658,7 +658,7 @@ jobs:
           command -v wlink || true
           cmake --preset pc98
           cmake --build --preset pc98
-          mv build-pc98/playfield.exe pf98.exe
+          mv build-pc98/playfield.exe pf-98.exe
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
