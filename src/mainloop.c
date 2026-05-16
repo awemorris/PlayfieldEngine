@@ -146,8 +146,9 @@ PF_DLL bool pf_is_f11_key_pressed;
 PF_DLL bool pf_is_f12_key_pressed;
 
 /* Init hooks. */
+struct rt_env;
 PF_DLL bool (*pf_init_hook_ptr)(int width, int height) = NULL;
-PF_DLL bool (*pf_init_aot_code_ptr)(void *);
+PF_DLL bool (*pf_init_aot_code_ptr)(struct rt_env *);
 
 /* Forward declaration. */
 static bool on_start(void);

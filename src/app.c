@@ -16,7 +16,7 @@
  * init_aot_code() is defined in the library.c file.
  * To use AOT code, replace the file by the output of playfield-aotc.
  */
-bool init_aot_code(NoctEnv *env);
+bool init_aot_code(struct rt_env *env);
 
 /*
  * This function will be defined by customized engines to inject their APIs.

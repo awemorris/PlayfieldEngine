@@ -880,9 +880,10 @@ extern bool
 	int height);
 
 /* DLL side. */
+struct rt_env;
 PF_DLL
 extern bool
-(*pf_init_aot_code_ptr)(void *);
+(*pf_init_aot_code_ptr)(struct rt_env *env);
 
 /*
  * Entrypoint Definition
