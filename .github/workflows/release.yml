@@ -664,7 +664,52 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pc98
-          path: pf98.exe
+          path: pf-98.exe
+
+  build-pcat:
+    name: Build for IBM PC/AT
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake
+
+      - name: Cache Watcom
+        id: cache-watcom
+        uses: actions/cache@v4
+        with:
+          path: openwatcom-1.9
+          key: openwatcom-1.9
+
+      - name: Configure OpenWatcom
+        if: steps.cache-watcom.outputs.cache-hit != 'true'
+        run: |
+          wget https://noctvm.io/ci/openwatcom-1.9.tar.gz
+          tar xzf openwatcom-1.9.tar.gz
+
+      - name: Build
+        run: |
+          export WATCOM="$PWD/openwatcom-1.9"
+          export INCLUDE="$WATCOM/h"
+          export EDPATH="$WATCOM/eddat"
+          export PATH="$WATCOM/binl:$WATCOM/binw:$PATH"
+          echo "$WATCOM"
+          ls -lha "$WATCOM/binl"
+          command -v wcl386 || true
+          command -v wlink || true
+          cmake --preset pcat
+          cmake --build --preset pcat
+          mv build-pcat/playfield.exe pf-at.exe
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: pcat
+          path: pf-at.exe
 
   build-mkdocs:
     name: Build documents
@@ -839,7 +884,18 @@ jobs:
       - name: Copy for PC98
         run: |
           mkdir dist/SDK/msdos
-          cp pc98/pf98.exe dist/SDK/msdos/
+          cp pc98/pf-98.exe dist/SDK/msdos/
+
+      - name: Download PC/AT artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pcat
+          path: pcat
+
+      - name: Copy for PC/AT
+        run: |
+          mkdir dist/SDK/msdos
+          cp pc98/pf-at.exe dist/SDK/msdos/
 
       - name: Download mkdocs artifacts
         uses: actions/download-artifact@v4
@@ -901,7 +957,8 @@ jobs:
             | Wasm        | playfield-wasm.html                | Wasm                       | Emscripten                     |
             | Wasm        | playfield-wasm.tar.gz              | Tarball                    | Emscripten                     |
             | Unity       | Playfield-Unity.zip                | Unity Plugin + Project     | Unity (Win64/Switch/PS5/Xbox)  |
-            | NEC PC-9801 | pf98.exe                           | Executable                 | NEC PC-9801 DOS4G (386+, 16MB) |
+            | NEC PC-9801 | pf-98.exe                          | Executable                 | NEC PC-9801 DOS4G (386+, 16MB) |
+            | IBM PC/AT   | pf-at.exe                          | Executable                 | IBM PC/AT DOS4G (386+, 16MB)   |
             | Documents   | playfield-documents.zip            | ZIP                        | Documents                      |
 
           files: |
@@ -923,5 +980,6 @@ jobs:
             playfield-wasm.html
             wasm/playfield-wasm.tar.gz
             unity/Playfield-Unity.zip
-            pc98/pf98.exe
+            pc98/pf-98.exe
+            pcat/pf-at.exe
             mkdocs/playfield-documents.zip
