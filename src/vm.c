@@ -396,13 +396,13 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 		if (!noct_get_int(env, value, &ival))
 			return false;
 		snprintf(digits, sizeof(digits), "%d", ival);
-		strncat(buf, digits, size);
+		strcat_s(buf, size, digits);
 		break;
 	case NOCT_VALUE_FLOAT:
 		if (!noct_get_float(env, value, &fval))
 			return false;
 		snprintf(digits, sizeof(digits), "%f", fval);
-		strncat(buf, digits, size);
+		strcat_s(buf, size, digits);
 		break;
 	case NOCT_VALUE_STRING:
 		if (!noct_get_string(env, value, &sval))
@@ -416,7 +416,7 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 	case NOCT_VALUE_ARRAY:
 		if (!noct_get_array_size(env, value, &items))
 			return false;
-		strncat(buf, "[", size);
+		strcat_s(buf, size, "[");
 		for (i = 0; i < items; i++) {
 			NoctValue elem;
 			if (!noct_get_array_elem(env, value, i, &elem))
@@ -426,12 +426,12 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 			if (i != items - 1)
 				strncat(buf, ", ", size);
 		}
-		strncat(buf, "]", size);
+		strcat_s(buf, size, "]");
 		break;
 	case NOCT_VALUE_DICT:
 		if (!noct_get_dict_size(env, value, &items))
 			return false;
-		strncat(buf, "{", size);
+		strcat_s(buf, size, "{");
 		for (i = 0; i < items; i++) {
 			NoctValue k, v;
 			if (!noct_get_dict_key_by_index(env, value, i, &k))
@@ -446,7 +446,7 @@ static bool serialize_printer(NoctEnv *env, char *buf, size_t size, NoctValue *v
 			if (i != items - 1)
 				strncat(buf, ", ", size);
 		}
-		strncat(buf, "}", size);
+		strcat_s(buf, size, "}");
 		break;
 	case NOCT_VALUE_FUNC:
 		strncat(buf, "<func>", size);
@@ -1437,7 +1437,8 @@ deserialize_save_data_recursively(
 			char key[SER_STRING_MAX];
 			if (!ser_get_string(ctx, &sval))
 				return false;
-			strcpy(key, sval);
+			strncpy(key, sval, SER_STRING_MAX - 1);
+			key[SER_STRING_MAX - 1] = '\0';
 			if (!deserialize_save_data_recursively(env, &elem, ctx))
 				return false;
 			if (!noct_set_dict_elem(env, value, key, &elem))
