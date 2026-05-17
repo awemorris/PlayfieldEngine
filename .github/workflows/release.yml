@@ -404,30 +404,72 @@ jobs:
           cmake --preset android-riscv64
           cmake --build --preset android-riscv64
 
+      - name: Build class files
+        run: |
+          ANDROID_JAR="${ANDROID_SDK_ROOT}/platforms/android-35/android.jar"
+          mkdir classes
+          javac -d classes -cp $ANDROID_JAR external/StratoHAL/src/MainActivity.java
+          ls -l classes
+
+      - name: Build AAR
+        run: |
+          # Make directory tree.
+          mkdir -p aar_out/prefab/modules/playfield/include
+          mkdir -p aar_out/prefab/modules/playfield/libs/android.arm64-v8a
+          mkdir -p aar_out/prefab/modules/playfield/libs/android.armeabi-v7a
+          mkdir -p aar_out/prefab/modules/playfield/libs/android.x86_64
+          mkdir -p aar_out/prefab/modules/playfield/libs/android.x86
+          mkdir -p aar_out/prefab/modules/playfield/libs/android.riscv64
+
+          # Make the JAR file.
+          cd classes
+          jar cvf ../aar_out/classes.jar *
+          cd ..
+
+          # Copy the header files.
+          cp -R include/playfield aar_out/prefab/modules/playfield/include/
+          cp -R external/NoctLang/include/noct aar_out/prefab/modules/playfield/include/
+          cp -R external/StratoHAL/include/strato aar_out/prefab/modules/playfield/include/
+
+          # Copy libplayfield.a.
+          cp build-android-arm64/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.arm64-v8a/
+          cp build-android-armv7/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.armeabi-v7a/
+          cp build-android-x86_64/libplayfield.a  aar_out/prefab/modules/playfield/libs/android.x86_64/
+          cp build-android-x86/libplayfield.a     aar_out/prefab/modules/playfield/libs/android.x86/
+          cp build-android-riscv64/libplayfield.a aar_out/prefab/modules/playfield/libs/android.riscv64/
+
+          # Copy the default resource.
+          cp -R resources/android/res aar_out/
+
+          # Copy meta data.
+          cp resources/android/AndroidManifest.xml aar_out/AndroidManifest.xml
+          cp resources/android/prefab.json aar_out/prefab/
+          cp resources/android/module.json aar_out/prefab/modules/playfield/
+          echo '{"abi": "arm64-v8a",   "api": 19, "ndk": 27, "stl": "none", "static": true}' > aar_out/prefab/modules/playfield/libs/android.arm64-v8a/abi.json
+          echo '{"abi": "armeabi-v7a", "api": 19, "ndk": 27, "stl": "none", "static": true}' > aar_out/prefab/modules/playfield/libs/android.armeabi-v7a/abi.json
+          echo '{"abi": "x86_64",      "api": 19, "ndk": 27, "stl": "none", "static": true}' > aar_out/prefab/modules/playfield/libs/android.x86_64/abi.json
+          echo '{"abi": "x86",         "api": 19, "ndk": 27, "stl": "none", "static": true}' > aar_out/prefab/modules/playfield/libs/android.x86/abi.json
+          echo '{"abi": "riscv64",     "api": 35, "ndk": 27, "stl": "none", "static": true}' > aar_out/prefab/modules/playfield/libs/android.riscv64/abi.json
+
+          # Make an AAR file.
+          cd aar_out
+          zip -r ../Playfield.aar *
+          cd ..
+
       - name: Build project
         run: |
-          mkdir android
-          cp -R resources/projects/android/app android/
-          cp -R resources/projects/android/gradle.properties android/
-          cp -R resources/projects/android/build.gradle android/
-          cp -R resources/projects/android/gradlew android/
-          cp -R resources/projects/android/settings.gradle android/
-          cp -R resources/projects/android/gradlew.bat android/
-          cp -R resources/projects/android/gradle android/
+          # Copy the project template.
+          cp -R resources/projects/android android
+
+          # Copy the AAR.
+          mkdir -p android/app/libs
+          cp Playfield.aar android/app/libs
+
+          # Copy the sample game assets.
           mkdir -p android/app/src/main/assets
           cp samples/shoot/main.ray android/app/src/main/assets/
-          mkdir -p android/app/src/main/java/io/noctvm/strato
-          cp external/StratoHAL/src/MainActivity.java android/app/src/main/java/io/noctvm/strato/
-          mkdir -p android/app/src/main/jniLibs/arm64-v8a
-          cp build-android-arm64/libplayfield.so android/app/src/main/jniLibs/arm64-v8a/libstrato.so
-          mkdir -p android/app/src/main/jniLibs/armeabi-v7a
-          cp build-android-armv7/libplayfield.so android/app/src/main/jniLibs/armeabi-v7a/libstrato.so
-          mkdir -p android/app/src/main/jniLibs/x86_64
-          cp build-android-x86_64/libplayfield.so android/app/src/main/jniLibs/x86_64/libstrato.so
-          mkdir -p android/app/src/main/jniLibs/x86
-          cp build-android-x86/libplayfield.so android/app/src/main/jniLibs/x86/libstrato.so
-          mkdir -p android/app/src/main/jniLibs/riscv64
-          cp build-android-riscv64/libplayfield.so android/app/src/main/jniLibs/riscv64/libstrato.so
+
+          # Make a ZIP file.
           zip -r Playfield-Android-Studio.zip android
 
       - name: Upload artifact
