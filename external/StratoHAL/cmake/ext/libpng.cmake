@@ -6,7 +6,6 @@ file(ARCHIVE_EXTRACT
 file(GLOB LIBPNG_EXTRACTED_DIR ${CMAKE_BINARY_DIR}/libpng-*)
 file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/libpng)
 file(RENAME ${LIBPNG_EXTRACTED_DIR} ${CMAKE_BINARY_DIR}/libpng)
-
 file(
   COPY        ${CMAKE_BINARY_DIR}/libpng/scripts/pnglibconf.h.prebuilt
   DESTINATION ${CMAKE_BINARY_DIR}/libpng
@@ -15,6 +14,38 @@ file(RENAME
   ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h.prebuilt
   ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h
 )
+file(READ ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h PNGCONF)
+string(REPLACE "#define PNG_CONSOLE_IO_SUPPORTED"  "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_STDIO_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_SIMPLIFIED_WRITE_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_INT_FUNCTIONS_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_CUSTOMIZE_COMPRESSION_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_CUSTOMIZE_ZTXT_COMPRESSION_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_16BIT_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_BGR_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_CHECK_FOR_INVALID_INDEX_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_COMPRESSED_TEXT_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_FILLER_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_FILTER_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_FLUSH_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_GET_PALETTE_MAX_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_INTERLACING_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_INVERT_ALPHA_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_INVERT_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_OPTIMIZE_CMF_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_PACK_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_PACKSWAP_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_SHIFT_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_SWAP_ALPHA_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_SWAP_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_TEXT_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_TRANSFORMS_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_UNKNOWN_CHUNKS_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_USER_TRANSFORM_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_WRITE_WEIGHTED_FILTER_SUPPORTED" "" PNGCONF "${PNGCONF}")
+string(REPLACE "#define PNG_SAVE_INT_32_SUPPORTED" "" PNGCONF "${PNGCONF}")
+file(WRITE ${CMAKE_BINARY_DIR}/libpng/pnglibconf.h "${PNGCONF}")
 
 file(GLOB LIBPNG_HEADERS ${CMAKE_BINARY_DIR}/libpng/*.h)
 file(
@@ -27,17 +58,13 @@ add_library(png OBJECT
   ${CMAKE_BINARY_DIR}/libpng/pngread.c
   ${CMAKE_BINARY_DIR}/libpng/pngrutil.c
   ${CMAKE_BINARY_DIR}/libpng/pngtrans.c
-  ${CMAKE_BINARY_DIR}/libpng/pngwtran.c
   ${CMAKE_BINARY_DIR}/libpng/png.c
   ${CMAKE_BINARY_DIR}/libpng/pngmem.c
   ${CMAKE_BINARY_DIR}/libpng/pngrio.c
   ${CMAKE_BINARY_DIR}/libpng/pngset.c
-  ${CMAKE_BINARY_DIR}/libpng/pngwio.c
-  ${CMAKE_BINARY_DIR}/libpng/pngwutil.c
   ${CMAKE_BINARY_DIR}/libpng/pngerror.c
   ${CMAKE_BINARY_DIR}/libpng/pngpread.c
   ${CMAKE_BINARY_DIR}/libpng/pngrtran.c
-  ${CMAKE_BINARY_DIR}/libpng/pngwrite.c
   ${CMAKE_BINARY_DIR}/libpng/arm/arm_init.c
   ${CMAKE_BINARY_DIR}/libpng/arm/filter_neon_intrinsics.c
   ${CMAKE_BINARY_DIR}/libpng/arm/filter_neon.S
@@ -50,9 +77,16 @@ target_include_directories(png PRIVATE ${CMAKE_BINARY_DIR}/libpng)
 target_include_directories(png PUBLIC  ${CMAKE_BINARY_DIR}/libpng)
 set(PNG_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/libpng)
 
+target_compile_definitions(png
+  PUBLIC _XOPEN_SOURCE=600
+  PNG_NO_WRITE_SUPPORTED
+  PNG_NO_SIMPLIFIED_WRITE_SUPPORTED
+  PNG_NO_CONSOLE_IO
+  PNG_NO_STDIO
+)
+
 target_link_libraries(png PRIVATE z)
 
-target_compile_definitions(png PUBLIC _XOPEN_SOURCE=600)
 
 # Suppress compilation errors.
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
