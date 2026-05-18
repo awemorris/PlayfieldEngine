@@ -1131,11 +1131,6 @@
             "configurePreset": "macos-cli"
         },
         {
-            "name": "macos-lib",
-            "configurePreset": "macos-lib",
-	    "configuration":   "Release"
-        },
-        {
             "name": "linux",
             "configurePreset": "linux"
         },
