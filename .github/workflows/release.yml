@@ -432,11 +432,11 @@ jobs:
           cp -R external/StratoHAL/include/strato aar_out/prefab/modules/playfield/include/
 
           # Copy libplayfield.a.
-          cp build-android-arm64/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.arm64-v8a/
-          cp build-android-armv7/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.armeabi-v7a/
-          cp build-android-x86_64/libplayfield.a  aar_out/prefab/modules/playfield/libs/android.x86_64/
-          cp build-android-x86/libplayfield.a     aar_out/prefab/modules/playfield/libs/android.x86/
-          cp build-android-riscv64/libplayfield.a aar_out/prefab/modules/playfield/libs/android.riscv64/
+          cp build-android-arm64/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.arm64-v8a/playfield.lib
+          cp build-android-armv7/libplayfield.a   aar_out/prefab/modules/playfield/libs/android.armeabi-v7a/playfield.lib
+          cp build-android-x86_64/libplayfield.a  aar_out/prefab/modules/playfield/libs/android.x86_64/playfield.lib
+          cp build-android-x86/libplayfield.a     aar_out/prefab/modules/playfield/libs/android.x86/playfield.lib
+          cp build-android-riscv64/libplayfield.a aar_out/prefab/modules/playfield/libs/android.riscv64/playfield.lib
 
           # Copy the default resource.
           cp -R resources/android/res aar_out/
@@ -509,22 +509,20 @@ jobs:
         run: |
           cp -R resources/projects/openharmony ./
 
-          mkdir -p openharmony
-          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/include/playfield
-          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/include/noct
-          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/include/strato
+          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R include/playfield include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R external/NoctLang/include/noct include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R external/StratoHAL/include/strato include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
+
           mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a
-          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/lib/x86_64
-          mkdir -p openharmony/entry/src/main/resources/rawfile/
-          cp include/playfield/playfield.h openharmony/entry/src/main/cpp/third_party/playfield/include/playfield/
-          cp include/playfield/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/playfield/
-          cp external/NoctLang/include/noct/noct.h openharmony/entry/src/main/cpp/third_party/playfield/include/noct/
-          cp external/NoctLang/include/noct/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/noct/
-          cp external/StratoHAL/include/strato/strato.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
-          cp external/StratoHAL/include/strato/c89compat.h openharmony/entry/src/main/cpp/third_party/playfield/include/strato/
           cp build-openharmony-arm64/libplayfield.a openharmony/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
+
+          mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/lib/x86_64
           cp build-openharmony-x86_64/libplayfield.a openharmony/entry/src/main/cpp/third_party/playfield/lib/x86_64/
+
+          mkdir -p openharmony/entry/src/main/resources/rawfile/
           cp samples/shoot/main.ray openharmony/entry/src/main/resources/rawfile/
+
           zip -r Playfield-OpenHarmony-DevEco.zip openharmony
 
       - name: Upload OpenHarmony artifact
