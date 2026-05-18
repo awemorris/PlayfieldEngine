@@ -501,10 +501,16 @@ set(PLAYFIELD_BASE_SOURCES
 
 # I18N Source
 if(PLAYFIELD_ENABLE_I18N)
-  set(PLAYFIELD_I18N_SOURCES
-    src/i18n.c
-    src/translation.c
-  )
+  if(NOT PLAYFIELD_ENABLE_I18N_LIBINTL)
+    set(PLAYFIELD_I18N_SOURCES
+      src/i18n.c
+      src/translation.c
+    )
+  else()
+    set(PLAYFIELD_I18N_SOURCES
+      src/i18n.c
+    )
+  endif()
 endif()
 
 # Determine the library type.
@@ -1166,7 +1172,7 @@ if(PLAYFIELD_ENABLE_INSTALL)
   endif()
 
   # gettext
-  if(PF_ENABLE_I18N_LIBINTL)
+  if(PLAYFIELD_ENABLE_I18N_LIBINTL)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/
             DESTINATION ${CMAKE_INSTALL_FULL_LOCALEDIR})
   endif()
