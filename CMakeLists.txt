@@ -555,7 +555,8 @@ endif()
 
 # If building to merge into a downstream library,
 # don't include aot_init_code() because the downstream defines it.
-if(   PLAYFIELD_TARGET_IOS
+if(   PLAYFIELD_TARGET_MACOS
+   OR PLAYFIELD_TARGET_IOS
    OR PLAYFIELD_TARGET_ANDROID
    OR PLAYFIELD_TARGET_OPENHARMONY
    OR PLAYFIELD_TARGET_UNITY)
