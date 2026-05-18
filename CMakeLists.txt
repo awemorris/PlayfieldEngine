@@ -745,6 +745,7 @@ if(PLAYFIELD_ENABLE_BIN)
   add_executable(
     playfieldbin
     src/app.c
+    src/library.c
     ${PLAYFIELD_RESOURCES}
   )
 

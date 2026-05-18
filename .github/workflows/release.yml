@@ -510,9 +510,9 @@ jobs:
           cp -R resources/projects/openharmony ./
 
           mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/include/
-          cp -R include/playfield include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
-          cp -R external/NoctLang/include/noct include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
-          cp -R external/StratoHAL/include/strato include/suika3 openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R include/playfield openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R external/NoctLang/include/noct openharmony/entry/src/main/cpp/third_party/playfield/include/
+          cp -R external/StratoHAL/include/strato openharmony/entry/src/main/cpp/third_party/playfield/include/
 
           mkdir -p openharmony/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a
           cp build-openharmony-arm64/libplayfield.a openharmony/entry/src/main/cpp/third_party/playfield/lib/arm64-v8a/
