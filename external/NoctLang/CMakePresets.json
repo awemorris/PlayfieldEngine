@@ -31,7 +31,7 @@
             "binaryDir":      "${sourceDir}/build-shared",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":         "Release",
-                "NOCT_ENABLE_STATIC":       "ON",
+                "NOCT_ENABLE_SHARED":       "ON",
                 "NOCT_ENABLE_CLI":          "ON",
                 "NOCT_ENABLE_JIT":          "ON",
                 "NOCT_ENABLE_I18N":         "ON",
