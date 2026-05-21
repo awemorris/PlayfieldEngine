@@ -754,15 +754,6 @@ endif()
 if(PLAYFIELD_ENABLE_BIN)
   target_link_libraries(playfieldbin PRIVATE playfield)
 
-  if(NOT PLAYFIELD_ENABLE_DIST)
-    target_link_libraries(playfieldbin PRIVATE strato)
-  else()
-    target_link_libraries(playfieldbin PRIVATE StratoHAL::strato)
-  endif()
-
-  # Add twice for circular references on callback functions.
-  target_link_libraries(playfieldbin PRIVATE playfield)
-
   # Windows
   if(PLAYFIELD_TARGET_WINDOWS)
     if(MSVC)
