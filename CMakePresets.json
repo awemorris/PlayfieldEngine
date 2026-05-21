@@ -356,6 +356,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":            "Release",
                 "CMAKE_OSX_DEPLOYMENT_TARGET": "10.11",
+                "CMAKE_OSX_ARCHITECTURES":     "x86_64;arm64",
                 "PLAYFIELD_TARGET_MACOS":      "ON",
                 "PLAYFIELD_ENABLE_JIT":        "ON",
                 "PLAYFIELD_ENABLE_I18N":       "ON",
@@ -374,6 +375,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":            "Release",
                 "CMAKE_OSX_DEPLOYMENT_TARGET": "10.11",
+                "CMAKE_OSX_ARCHITECTURES":     "x86_64;arm64",
                 "PLAYFIELD_TARGET_MACOS_CLI":  "ON",
                 "PLAYFIELD_ENABLE_INSTALL":    "ON",
                 "PLAYFIELD_ENABLE_JIT":        "ON",
