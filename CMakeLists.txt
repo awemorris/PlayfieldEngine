@@ -754,6 +754,15 @@ endif()
 if(PLAYFIELD_ENABLE_BIN)
   target_link_libraries(playfieldbin PRIVATE playfield)
 
+  if(NOT PLAYFIELD_ENABLE_DIST)
+    target_link_libraries(playfieldbin PRIVATE strato)
+  else()
+    target_link_libraries(playfieldbin PRIVATE StratoHAL::strato)
+  endif()
+
+  # Add twice for circular references on callback functions.
+  target_link_libraries(playfieldbin PRIVATE playfield)
+
   # Windows
   if(PLAYFIELD_TARGET_WINDOWS)
     if(MSVC)
@@ -775,7 +784,7 @@ if(PLAYFIELD_ENABLE_BIN)
   # macOS
   if(PLAYFIELD_TARGET_MACOS OR PLAYFIELD_TARGET_MACOS_CLI)
     # Workaround for _main() lookup.
-    target_link_options(playfieldbin PRIVATE -Wl,-force_load,libplayfield.a)
+    target_link_options(playfieldbin PRIVATE -Wl,-force_load,$<TARGET_FILE:playfield>)
   endif()
 
   # Emscripten
