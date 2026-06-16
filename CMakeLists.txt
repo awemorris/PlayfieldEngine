@@ -784,7 +784,7 @@ if(PLAYFIELD_ENABLE_BIN)
   # macOS
   if(    NOT PLAYFIELD_ENABLE_STATIC
      AND NOT PLAYFIELD_ENABLE_SHARED
-     AND NOT PLAYFIELD_ENABLE_OBJECT
+     AND NOT PLAYFIELD_ENABLE_OBJECT)
     if(PLAYFIELD_TARGET_MACOS OR PLAYFIELD_TARGET_MACOS_CLI)
       # Workaround for _main() lookup.
       target_link_options(playfieldbin PRIVATE -Wl,-force_load,$<TARGET_FILE:playfield>)
