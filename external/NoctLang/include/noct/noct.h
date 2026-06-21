@@ -287,7 +287,7 @@ bool
 noct_make_int(
 	NoctEnv *env,
 	NoctValue *val,
-	int32_t i);
+	int i);
 
 /*
  * Makes a long value.
@@ -403,7 +403,7 @@ bool
 noct_get_int(
 	NoctEnv *env,
 	NoctValue *val,
-	int32_t *i);
+	int *i);
 
 /*
  * Retrieves an integer from a value with type checking.
@@ -574,23 +574,11 @@ noct_get_dict_size(
  */
 NOCT_DLL
 bool
-noct_get_dict_key_by_index(
+noct_get_dict_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
 	size_t index,
-	NoctValue *key);
-
-/*
- * Retrieves a dictionary value by index.
- *
- * This function can be used to traverse dictionary entries in order.
- */
-NOCT_DLL
-bool
-noct_get_dict_value_by_index(
-	NoctEnv *env,
-	NoctValue *dict,
-	size_t index,
+	NoctValue *key,
 	NoctValue *val);
 
 /*
@@ -965,7 +953,7 @@ noct_get_array_elem_check_int(
 	NoctValue *array,
 	uint32_t index,
 	NoctValue *val,
-	int32_t *i);
+	int *i);
 
 /*
  * Convenience function to retrieve a long element from an array
@@ -1151,7 +1139,7 @@ noct_set_array_elem_make_int(
 	NoctValue *array,
 	uint32_t index,
 	NoctValue *val,
-	int32_t i);
+	int i);
 
 /*
  * Convenience function to set a long element in an array.
@@ -1279,7 +1267,7 @@ noct_get_dict_elem_check_int(
 	NoctValue *dict,
 	const char *key,
 	NoctValue *val,
-	int32_t *i);
+	int *i);
 
 /*
  * Convenience function to retrieve a long value associated with a
@@ -1469,7 +1457,7 @@ noct_set_dict_elem_make_int(
 	NoctValue *dict,
 	const char *key,
 	NoctValue *val,
-	int32_t i);
+	int i);
 
 /*
  * Convenience function to set a long value for a key in a dictionary.
@@ -1581,7 +1569,7 @@ noct_get_arg_check_int(
 	NoctEnv *env,
 	uint32_t index,
 	NoctValue *val,
-	int32_t *i);
+	int *i);
 
 /*
  * Convenience function to retrieve a long function argument with
@@ -1767,7 +1755,7 @@ bool
 noct_set_return_make_int(
 	NoctEnv *env,
 	NoctValue *val,
-	int32_t i);
+	int i);
 
 /*
  * Convenience function to set a long return value for the current

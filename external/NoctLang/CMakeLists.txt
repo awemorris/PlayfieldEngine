@@ -31,7 +31,8 @@ option(NOCT_ENABLE_MDOC         "Install mdoc(7) man page"         OFF)
 #
 option(NOCT_TARGET_UNITY        "Build for Unity"                  OFF)
 option(NOCT_TARGET_OPENHARMONY  "Build for OpenHarmony"            OFF)
-option(NOCT_TARGET_DOS4G        "Build for Unity"                  OFF)
+option(NOCT_TARGET_MACOS7       "Build for MacOS 7"                OFF)
+option(NOCT_TARGET_DOS4G        "Build for DOS4G"                  OFF)
 
 # ---
 
@@ -332,9 +333,14 @@ if(NOCT_TARGET_UNITY)
   endif()
 endif()
 
+# MacOS 7 Target
+if(NOCT_TARGET_MACOS7)
+  list(APPEND NOCT_PUBLIC_CPPFLAGS NOCT_TARGET_MACOS7 NOCT_MEMORY_SMALL)
+endif()
+
 # DOS4G Target
 if(NOCT_TARGET_DOS4G)
-  list(APPEND NOCT_PUBLIC_CPPFLAGS NOCT_TARGET_DOS4G)
+  list(APPEND NOCT_PUBLIC_CPPFLAGS NOCT_TARGET_DOS4G NOCT_MEMORY_SMALL)
 endif()
 
 # _CRT_SECURE_NO_WARNINGS

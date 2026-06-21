@@ -408,7 +408,7 @@ bool
 noct_get_int(
 	NoctEnv *env,
 	NoctValue *val,
-	int32_t *i)
+	int *i)
 {
 	assert(env != NULL);
 	assert(val != NULL);
@@ -733,11 +733,12 @@ noct_get_dict_size(
 
 NOCT_DLL
 bool
-noct_get_dict_key_by_index(
+noct_get_dict_by_index(
 	NoctEnv *env,
 	NoctValue *dict,
 	size_t index,
-	NoctValue *key)
+	NoctValue *key,
+	NoctValue *val)
 {
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -750,32 +751,7 @@ noct_get_dict_key_by_index(
 	}
 
 	/* Load the key. */
-	if (!rt_get_dict_key_by_index(env, dict, index, key))
-		return false;
-
-	return true;
-}
-
-NOCT_DLL
-bool
-noct_get_dict_value_by_index(
-	NoctEnv *env,
-	NoctValue *dict,
-	size_t index,
-	NoctValue *val)
-{
-	assert(env != NULL);
-	assert(dict != NULL);
-	assert(val != NULL);
-	
-	/* Check the type. */
-	if (dict->type != NOCT_VALUE_DICT) {
-		rt_error(env, N_TR("Not a dictionary."));
-		return false;
-	}
-
-	/* Load the value. */
-	if (!rt_get_dict_value_by_index(env, dict, index, val))
+	if (!rt_get_dict_by_index(env, dict, index, key, val))
 		return false;
 
 	return true;
@@ -1441,7 +1417,7 @@ noct_get_array_elem_check_int(
 	NoctValue *array,
 	uint32_t index,
 	NoctValue *val,
-	int32_t *i)
+	int *i)
 {
 	int type;
 
@@ -1690,7 +1666,7 @@ noct_set_array_elem_make_int(
 	NoctValue *array,
 	uint32_t index,
 	NoctValue *val,
-	int32_t i)
+	int i)
 {
 	assert(env != NULL);
 	assert(array != NULL);
@@ -1815,7 +1791,7 @@ noct_get_dict_elem_check_int(
 	NoctValue *dict,
 	const char *key,
 	NoctValue *val,
-	int32_t *i)
+	int *i)
 {
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -2057,7 +2033,7 @@ noct_set_dict_elem_make_int(
 	NoctValue *dict,
 	const char *key,
 	NoctValue *val,
-	int32_t i)
+	int i)
 {
 	assert(env != NULL);
 	assert(dict != NULL);
@@ -2186,7 +2162,7 @@ noct_get_arg_check_int(
 	NoctEnv *env,
 	uint32_t index,
 	NoctValue *val,
-	int32_t *i)
+	int *i)
 {
 	assert(env != NULL);
 	assert(val != NULL);
@@ -2499,7 +2475,7 @@ bool
 noct_set_return_make_int(
 	NoctEnv *env,
 	NoctValue *val,
-	int32_t i)
+	int i)
 {
 	assert(env != NULL);
 	assert(val != NULL);
