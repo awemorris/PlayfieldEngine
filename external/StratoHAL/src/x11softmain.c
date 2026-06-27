@@ -99,6 +99,7 @@ static Pixmap icon = BadAlloc;
 static Pixmap icon_mask = BadAlloc;
 static Atom delete_message = BadAlloc;
 static XImage *ximage;
+static bool is_server_big_endian;
 
 /* Image */
 static struct hal_image *back_image;
@@ -336,6 +337,9 @@ bool init_x11_graphics(void)
 			free(pixels);
 			return false;
 		}
+
+		if (ximage->red_mask == 0xff000000)
+			is_server_big_endian = true;
 
 		colormap = XCreateColormap(display, root, vi.visual, AllocNone);
 		if (colormap == None) {
@@ -890,7 +894,20 @@ run_frame(void)
 	/* Flip. */
 	if (flip) {
 		/* Quantize the back image if bpp != 32. */
-		if (bpp == 16) {
+#if defined(HAL_ARCH_BE)
+		if (bpp == 32 && !is_server_big_endian) {
+#else
+		if (bpp == 32 && is_server_big_endian) {
+#endif
+			int x, y;
+			hal_pixel_t *src = (hal_pixel_t *)back_image->pixels;
+			for (y = 0; y < screen_height; y++) {
+				for (x = 0; x < screen_width; x++) {
+					*src = hal_host_to_le_32(*src);
+					src++;
+				}
+			}
+		} else if (bpp == 16) {
 			int x, y;
 			hal_pixel_t *src = (hal_pixel_t *)back_image->pixels;
 			for (y = 0; y < screen_height; y++) {
