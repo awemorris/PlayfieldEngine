@@ -1,4 +1,4 @@
-Shader "NoctVM/AddShader"
+Shader "NoctVM/SubShader"
 {
     Properties
     {
@@ -20,7 +20,7 @@ Shader "NoctVM/AddShader"
         Cull Off
 
         Blend SrcAlpha One
-        BlendOp Add
+        BlendOp Sub
 
         Pass
         {
