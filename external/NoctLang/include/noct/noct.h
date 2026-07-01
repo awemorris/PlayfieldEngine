@@ -737,6 +737,16 @@ noct_get_packed_size(
 	size_t *size);
 
 /*
+ * Get the number of the function parameters.
+ */
+NOCT_DLL
+bool
+noct_get_func_param_count(
+	NoctEnv *env,
+	NoctFunc *f,
+	size_t *size);
+
+/*
  * Retrieves a tmpvar size from the current stack frame.
  */
 NOCT_DLL
@@ -951,7 +961,7 @@ bool
 noct_get_array_elem_check_int(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	int *i);
 
@@ -977,7 +987,7 @@ bool
 noct_get_array_elem_check_long(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	int64_t *l);
 
@@ -1003,7 +1013,7 @@ bool
 noct_get_array_elem_check_float(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	float *f);
 
@@ -1029,7 +1039,7 @@ bool
 noct_get_array_elem_check_double(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	double *lf);
 
@@ -1050,7 +1060,7 @@ bool
 noct_get_array_elem_check_string(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	const char **data);
 
@@ -1071,7 +1081,7 @@ bool
 noct_get_array_elem_check_array(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val);
 
 /*
@@ -1091,7 +1101,7 @@ bool
 noct_get_array_elem_check_dict(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val);
 
 /*
@@ -1111,7 +1121,7 @@ bool
 noct_get_array_elem_check_func(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	NoctFunc **f);
 
@@ -1137,7 +1147,7 @@ bool
 noct_set_array_elem_make_int(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	int i);
 
@@ -1163,7 +1173,7 @@ bool
 noct_set_array_elem_make_long(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	int64_t l);
 
@@ -1189,7 +1199,7 @@ bool
 noct_set_array_elem_make_float(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	float f);
 
@@ -1215,7 +1225,7 @@ bool
 noct_set_array_elem_make_double(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	double lf);
 
@@ -1236,7 +1246,7 @@ bool
 noct_set_array_elem_make_string(
 	NoctEnv *env,
 	NoctValue *array,
-	uint32_t index,
+	size_t index,
 	NoctValue *val,
 	const char *data);
 
