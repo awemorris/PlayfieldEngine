@@ -554,7 +554,7 @@ pf_write_texture(
 	}
 	
 	if (!hal_write_image(tex_tbl[tex_id].img, wf)) {
-		pf_log_error(PF_TR("Cannot open file \"%s\"."), file);
+		pf_log_error(PF_TR("Cannot write file \"%s\"."), file);
 		hal_close_wfile(wf);
 		return false;
 	}
