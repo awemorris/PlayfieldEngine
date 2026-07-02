@@ -980,6 +980,7 @@ jobs:
         with:
           tag_name: nightly-${{ env.DATE }}-${{ env.SHORT_SHA }}
           name: Playfield-${{ env.DATE }}-${{ env.SHORT_SHA }}
+          prerelease: true
 
           body: |
             Playfield Engine
